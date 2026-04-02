@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" name="color-scheme" content="light dark"/>
+        <!-- <meta charset="utf-8" name="color-scheme" content="light dark"/> -->
+        <meta charset="utf-8"/>
         <title>
             Assignment 0: Vector Library
         </title>
@@ -13,5 +14,37 @@
         </canvas>
         <script src="../lib/cuon-matrix-cse160.js"></script>
         <script src="asgn0.js"></script>
+        <!-- input fields for first vector -->
+        <div>
+            <label>v1: x 
+                <input type="number" id="v1x"> y 
+                <input type="number" id="v1y"> 
+            </label>
+        </div>
+        <!-- input field for second vector -->
+        <div>
+            <label>
+                v2: 
+                x <input type="number" id="v2x"> 
+                y <input type="number" id="v2y">
+            </label>
+        </div>
+        <button onclick="handleDrawEvent()">Draw</button>
+
+        <div>
+            <label>Operation: 
+            <select id="operation">
+                <option value="add">Add</option>
+                <option value="subtract">Subtract</option>
+                <option value="multiply">Multiply</option>
+                <option value="divide">Divide</option>
+                <option value="magnitude">Magnitude</option>
+                <option value="normalize">Normalize</option>
+            </select>
+            Scalar: <input type="number" id="scalar">
+            </label>
+        </div>
+        <button onclick="handleDrawOperationEvent()">Draw</button>
+        
     </body>
 </html>

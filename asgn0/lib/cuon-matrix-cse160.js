@@ -106,7 +106,7 @@ class Vector3 {
     mul(scalar) {
         if (!(typeof scalar === 'number'))
         {
-          console.warn("Can't multiply a Vector3 by a non-Number");
+          console.warn(`Can't multiply a Vector3 by a non-Number: ${scalar}`);
           return this;
         }
 
