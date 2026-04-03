@@ -86,6 +86,14 @@ function handleDrawOperationEvent()
             res1 = v1.normalize();
             res2 = v2.normalize();
             break;
+        case 'angle':
+            const angle = angleBetween(v1, v2);
+            console.log('Angle:',angle);
+            break;
+        case 'area':
+            const area = areaTriangle(v1, v2);
+            console.log('Area of the triangle: ', area);
+            break;
         default:
             console.log(`Invalid operation: ${operation}`);
             return;
@@ -99,6 +107,26 @@ function handleDrawOperationEvent()
     {
         drawVector(res2, 'green');
     }
+}
+
+function angleBetween(v1, v2)
+{
+    const dot = Vector3.dot(v1,v2);
+    const magnitudes = v1.magnitude() * v2.magnitude();
+
+    if (magnitudes === 0) return 0;
+
+    let angle = Math.acos(dot / magnitudes);
+    // Convert from radians to degrees
+    angle = angle * (180 / Math.PI);
+    return angle;
+}
+
+function areaTriangle(v1, v2)
+{
+    const cross = Vector3.cross(v1, v2);
+    const area = 0.5 * cross.magnitude();
+    return area;
 }
 
 function clearRectangle()
