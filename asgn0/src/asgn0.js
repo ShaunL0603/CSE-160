@@ -9,7 +9,6 @@ function main()
         return;
     }
 
-    
     // Get the rendering context for 2DCG <- (2)
     const ctx = canvas.getContext('2d');
     
@@ -79,8 +78,8 @@ function handleDrawOperationEvent()
         case 'magnitude':
             res1 = v1.magnitude();
             res2 = v2.magnitude();
-            console.log(`Magnitude of v1: ${res1}`);
-            console.log(`Magnitude of v2: ${res2}`);
+            console.log(`Magnitude v1: ${res1}`);
+            console.log(`Magnitude v2: ${res2}`);
             break;
         case 'normalize':
             res1 = v1.normalize();
