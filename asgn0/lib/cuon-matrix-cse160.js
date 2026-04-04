@@ -158,12 +158,6 @@ class Vector3 {
       * @return scalar
       */
     magnitude() {
-        if (this.elements.length !== 3)
-        {
-          console.warn("Can't calculate the magnitude of a non-3D vector");
-          return 0;
-        }
-
         let m = Math.sqrt(this.elements[0] * this.elements[0] 
                           + this.elements[1] * this.elements[1] 
                           + this.elements[2] * this.elements[2]);
@@ -175,16 +169,10 @@ class Vector3 {
       * @return this
       */
     normalize() {
-        if (this.elements.length !== 3)
+        let magnitudeOfVector = this.magnitude();
+        if (magnitudeOfVector !== 0)
         {
-          console.warn("Can't normalize a non-3D vector");
-          return this;
-        }
-
-        let v = this.magnitude();
-        if (v > 0)
-        {
-          this.div(v);
+            this.div(magnitudeOfVector);
         }
         return this;
     };
