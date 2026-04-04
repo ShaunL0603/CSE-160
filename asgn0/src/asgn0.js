@@ -72,6 +72,13 @@ function handleDrawOperationEvent()
             break;
         case 'divide':
             scalar = parseFloat(document.getElementById('scalar').value);
+
+            if (scalar === 0) 
+            {
+                console.log('Cannot divide by zero');
+                return;
+            }
+
             res1 = v1.div(scalar);
             res2 = v2.div(scalar);
             break;
