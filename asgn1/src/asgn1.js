@@ -29,6 +29,17 @@ var a_Position;
 var u_FragColor;
 let u_Size;
 
+// Constants
+const TRIANGLE = 0;
+const SQUARE = 1;
+const CIRCLE = 2;
+
+// Globals related to UI elements
+let g_selectedColor = [1.0, 0.0, 0.0, 1.0];
+let g_selectedSize = 10;
+let g_selectedType = TRIANGLE;
+let g_selectedSegments = 10;
+
 function main() {
   // sets up canvas and gl variables
   setupWebGL();
@@ -55,7 +66,6 @@ function setupWebGL()
   canvas = document.getElementById('webgl');
 
   // Get the rendering context for WebGL
-  //gl = getWebGLContext(canva);
   gl = canvas.getContext("webgl", { preserveDrawingBuffer: true});
   if (!gl) {
     console.log('Failed to get the rendering context for WebGL');
@@ -91,16 +101,25 @@ function connectVarialbesToGLSL() {
   }
 }
 
-let g_selectedColor = [1.0, 0.0, 0.0, 1.0];
-let g_selectedSize = 10;
 function addActionsForHTMLUI() {
-  
+
+  // Add actions for the shape selection buttons
+  document.getElementById('squareButton').onclick = function() { g_selectedType = SQUARE; };
+  document.getElementById('triangleButton').onclick = function() { g_selectedType = TRIANGLE; };
+  document.getElementById('circleButton').onclick = function() { g_selectedType = CIRCLE  ; };
+
+  // Add actions for the color selection sliders
   document.getElementById('redSlider').addEventListener('mouseup', function() { g_selectedColor[0] = this.value/100; });
   document.getElementById('greenSlider').addEventListener('mouseup', function() { g_selectedColor[1] = this.value/100; });
   document.getElementById('blueSlider').addEventListener('mouseup', function() { g_selectedColor[2] = this.value/100; });
 
+  // Add action for the size selection slider
   document.getElementById('sizeSlider').addEventListener('mouseup', function() { g_selectedSize = this.value; });
 
+  // Add action for the circle segment selection slider
+  document.getElementById('segmentSlider').addEventListener('mouseup', function() { g_selectedSegments = this.value; });
+  
+  // Add action for the clear canvas button
   document.getElementById('clearButton').onclick = function() { g_ShapesList = []; renderAllShapes() };
 }
 
@@ -110,12 +129,20 @@ function click(ev) {
   // Extract the event click and return it in WebGL coordinates
   [x, y] = convertCoordinatesEventToGL(ev);
 
-  // Create and store the new point
-  let point = new Point();
-  point.position = [x, y];
-  point.color = g_selectedColor.slice();
-  point.size = g_selectedSize;
-  g_ShapesList.push(point);
+  // Create and store the new triangle
+  let shapeType;
+  if ( g_selectedType == TRIANGLE) {
+    shapeType = new Triangle();
+  } else if ( g_selectedType == SQUARE) {
+    shapeType = new Square();
+  } else if ( g_selectedType == CIRCLE) {
+    shapeType = new Circle();
+    shapeType.segments = g_selectedSegments;
+  }
+  shapeType.position = [x, y];
+  shapeType.color = g_selectedColor.slice();
+  shapeType.size = g_selectedSize;
+  g_ShapesList.push(shapeType);
   
   renderAllShapes();
 }
@@ -139,8 +166,4 @@ function renderAllShapes() {
   for(var i = 0; i < len; i++) {
     g_ShapesList[i].render();
   }
-}
-
-function clearRectangle() {
-    gl.clear(gl.COLOR_BUFFER_BIT)
 }
