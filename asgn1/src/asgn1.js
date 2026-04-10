@@ -40,6 +40,8 @@ let g_selectedSize = 10;
 let g_selectedType = TRIANGLE;
 let g_selectedSegments = 10;
 let g_dragMode = false;
+let g_selectedScaleX = 1.0;
+let g_selectedScaleY = 1.0;
 
 function main() {
   // sets up canvas and gl variables
@@ -131,11 +133,18 @@ function addActionsForHTMLUI() {
   
   // Add action for the circle segment selection slider
   document.getElementById('segmentSlider').addEventListener('mouseup', function() { g_selectedSegments = this.value; });
+  document.getElementById('segmentValue').innerText = document.getElementById('segmentSlider').value;
+  document.getElementById('segmentSlider').addEventListener('input', function() { document.getElementById('segmentValue').innerText = this.value; });
   
   // Add action for the clear canvas button
   document.getElementById('clearButton').onclick = function() { g_ShapesList = []; renderAllShapes() };
   
+  // Add action for the drag mode checkbox
   document.getElementById('dragModeCheckbox').addEventListener('change', function() { g_dragMode = this.checked; });
+
+  // Add actions for the scale shape number inputs
+  document.getElementById('scaleXSlider').addEventListener('input', function() { g_selectedScaleX = this.value; });
+  document.getElementById('scaleYSlider').addEventListener('input', function() { g_selectedScaleY = this.value; });
 }
 
 let g_ShapesList = [];
@@ -159,6 +168,8 @@ function click(ev) {
     shapeType.position = [x, y];
     shapeType.color = g_selectedColor.slice();
     shapeType.size = g_selectedSize;
+    shapeType.scaleX = g_selectedScaleX;
+    shapeType.scaleY = g_selectedScaleY;
     g_ShapesList.push(shapeType);
   } else {
     // Check if the click is inside any shape and if so, update the position of that shape to the click position
