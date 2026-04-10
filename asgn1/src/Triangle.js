@@ -1,9 +1,24 @@
-class Triangle {
+class Point {
+  constructor() {
+      this.type = "point";
+      this.position = [0.0, 0.0, 0.0];
+      this.color = [1.0, 1.0, 1.0, 1.0];
+      this.size = 10.0;
+      this.scaleX = 1.0;
+      this.scaleY = 1.0;
+  }
+
+  contains(x, y) {
+    var d = this.size / 200.0;
+    return (x >= this.position[0] - d && x <= this.position[0] + d && 
+            y >= this.position[1] - d && y <= this.position[1] + d);
+  }
+}
+
+class Triangle extends Point {
     constructor() {
+        super();
         this.type = "triangle";
-        this.position = [0.0, 0.0, 0.0];
-        this.color = [1.0, 1.0, 1.0, 1.0];
-        this.size = 10.0;
     }
 
     render() {
@@ -20,12 +35,10 @@ class Triangle {
     }
 }
 
-class Square {
+class Square extends Point {
   constructor() {
+      super();
       this.type = "square";
-      this.position = [0.0, 0.0, 0.0];
-      this.color = [1.0, 1.0, 1.0, 1.0];
-      this.size = 10.0;
   }
 
   render() {
@@ -36,19 +49,20 @@ class Square {
       gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
       // Pass the size of a square to u_Size variable
       gl.uniform1f(u_Size, this.size);  
+
       // Draw
       var d = this.size/200.0; // delta
-      drawTriangle([xy[0]-d, xy[1]+d, xy[0]-d, xy[1]-d, xy[0]+d, xy[1]+d]);
-      drawTriangle([xy[0]+d, xy[1]+d, xy[0]-d, xy[1]-d, xy[0]+d, xy[1]-d]);
+      var scaledX = d * this.scaleX;
+      var scaledY = d * this.scaleY;
+      drawTriangle([xy[0]-scaledX, xy[1]+scaledY, xy[0]-scaledX, xy[1]-scaledY, xy[0]+scaledX, xy[1]+scaledY]);
+      drawTriangle([xy[0]+scaledX, xy[1]+scaledY, xy[0]-scaledX, xy[1]-scaledY, xy[0]+scaledX, xy[1]-scaledY]);
   }
 }
 
-class Circle {
+class Circle extends Point {
   constructor() {
+      super();
       this.type = "circle";
-      this.position = [0.0, 0.0, 0.0];
-      this.color = [1.0, 1.0, 1.0, 1.0];
-      this.size = 10.0;
       this.segments = 10;
   }
 
@@ -62,7 +76,7 @@ class Circle {
       gl.uniform1f(u_Size, this.size);
       // Draw
       var d = this.size/200.0;
-      let angleStep = 360/this.segments;
+      var angleStep = 360/this.segments;
       for (var angle = 0; angle < 360; angle=angle+angleStep) {
         let centerPt = [xy[0], xy[1]];
         let angle1 = angle;

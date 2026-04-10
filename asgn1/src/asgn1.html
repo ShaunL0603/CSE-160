@@ -16,12 +16,13 @@
     </p>
 
     <p>Drawing Mode:</p>
-
     <p>
       <button type="button" id="squareButton">Squares</button>
       <button type="button" id="triangleButton">Triangles</button>
       <button type="button" id="circleButton">Circles</button>
     </p>
+
+    <p>Switch to Drag Mode (drag shape across canvas): <input type="checkbox" id="dragModeCheckbox"></p>
 
     <p>Shape Color:</p>
     <p>
@@ -29,10 +30,20 @@
       Green <input type="range" min="0" max="100" value="0" class="slider" id="greenSlider">
       Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSlider">
     </p>
+    <p>RGB: <span id="rgbValue">rgb(100, 0, 0)</span></p>
 
     <p>
-      Shape Size: <input type="range" min="5" max="40" value="10" class="slider" id="sizeSlider">
-      (Circles) Segment Count: <input type="range" min="3" max="100" value="10" class="slider" id="segmentSlider">
+      Shape Size (<span id="sizeValue">10</span>): <input type="range" min="4" max="40" value="10" class="slider" id="sizeSlider">
+      (Circles) Segment Count: <input type="range" min="3" max="25" value="10" class="slider" id="segmentSlider">
+    </p>
+
+    <p>
+      Scale Shape: X <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" id="scaleXSlider">
+      Y <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" id="scaleYSlider">
+    <p>
+      X and Y scale is between 0.5 and 5, and can be changed in increments of 0.1. 
+      The default scale is 1, which means the shape will be drawn at its original size. 
+      A scale of 0.5 will make it half as large.
     </p>
     
     <script src="../lib/cuon-matrix-cse160.js"></script>
@@ -41,5 +52,6 @@
     <script src="../lib/webgl-debug.js"></script>
     <script src="Triangle.js"></script>
     <script src="asgn1.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="assets/asgn1.css"> -->
   </body>
 </html>
