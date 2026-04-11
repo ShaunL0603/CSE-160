@@ -22,7 +22,11 @@
       <button type="button" id="circleButton">Circles</button>
     </p>
 
-    <p>Switch to Drag Mode (drag shape across canvas): <input type="checkbox" id="dragModeCheckbox"></p>
+    <p>
+      Drag Mode (drag shape across canvas): <input type="checkbox" id="dragModeCheckbox">
+      Delete Mode: <input type="checkbox" id="deleteModeCheckbox">
+    </p>
+    
 
     <p>Shape Color:</p>
     <p>
@@ -31,6 +35,14 @@
       Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSlider">
     </p>
     <p>RGB: <span id="rgbValue">rgb(100, 0, 0)</span></p>
+
+    <p>Canvas Color:</p>
+    <p>
+      Red <input type="range" min="0" max="100" value="0" class="slider" id="redSliderForCanvas">
+      Green <input type="range" min="0" max="100" value="0" class="slider" id="greenSliderForCanvas">
+      Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSliderForCanvas">
+    </p>
+    <p>RGB: <span id="rgbValueForCanvas">rgb(0, 0, 0)</span> <button id="changeCanvasColor">Change Canvas Color</button></p>
 
     <p>
       Shape Size (<span id="sizeValue">10</span>): <input type="range" min="4" max="40" value="10" class="slider" id="sizeSlider">

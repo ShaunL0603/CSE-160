@@ -35,13 +35,19 @@ const SQUARE = 1;
 const CIRCLE = 2;
 
 // Globals related to UI elements
+let g_canvasColor = [0.0, 0.0, 0.0, 1.0];
+let g_ShapesList = [];
+let g_selectedShape = null;
+let g_selectedType = TRIANGLE;
 let g_selectedColor = [1.0, 0.0, 0.0, 1.0];
 let g_selectedSize = 10;
-let g_selectedType = TRIANGLE;
 let g_selectedSegments = 10;
-let g_dragMode = false;
 let g_selectedScaleX = 1.0;
 let g_selectedScaleY = 1.0;
+let g_dragMode = false;
+let g_lastCoords = [null, null];
+let g_minDistance = 0.05;
+let g_deleteMode = false;
 
 function main() {
   // sets up canvas and gl variables
@@ -55,12 +61,8 @@ function main() {
   // Register function (event handler) to be called on a mouse press
   canvas.onmousedown = click;
   canvas.onmousemove = function(ev) { if (ev.buttons == 1) { click(ev) }; };
-  
-  // Specify the color for clearing <canvas>
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  
-  // Clear <canvas>
-  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  clearCanvas([0.0, 0.0, 0.0, 1.0]);
 }
 
 function setupWebGL()
@@ -125,6 +127,22 @@ function addActionsForHTMLUI() {
     g_selectedColor[2] = this.value/100; 
     document.getElementById('rgbValue').innerText = `rgb(${document.getElementById('redSlider').value}, ${document.getElementById('greenSlider').value}, ${this.value})`;
   });
+
+  // Add actions for the color selection sliders of canvas and display text on page
+  document.getElementById('rgbValueForCanvas').innerText = `rgb(${document.getElementById('redSliderForCanvas').value}, ${document.getElementById('greenSliderForCanvas').value}, ${document.getElementById('blueSliderForCanvas').value})`;
+  document.getElementById('redSliderForCanvas').addEventListener('input', function() { 
+    g_canvasColor[0] = this.value/100; 
+    document.getElementById('rgbValueForCanvas').innerText = `rgb(${this.value}, ${document.getElementById('greenSliderForCanvas').value}, ${document.getElementById('blueSliderForCanvas').value})`;
+  });
+  document.getElementById('greenSliderForCanvas').addEventListener('input', function() { 
+    g_canvasColor[1] = this.value/100; 
+    document.getElementById('rgbValueForCanvas').innerText = `rgb(${document.getElementById('redSliderForCanvas').value}, ${this.value}, ${document.getElementById('blueSliderForCanvas').value})`;
+  });
+  document.getElementById('blueSliderForCanvas').addEventListener('input', function() { 
+    g_canvasColor[2] = this.value/100; 
+    document.getElementById('rgbValueForCanvas').innerText = `rgb(${document.getElementById('redSliderForCanvas').value}, ${document.getElementById('greenSliderForCanvas').value}, ${this.value})`;
+  });
+  document.getElementById('changeCanvasColor').onclick = function() { clearCanvas(g_canvasColor); };
   
   // Add action for the size selection slider
   document.getElementById('sizeSlider').addEventListener('mouseup', function() { g_selectedSize = this.value; });
@@ -137,25 +155,39 @@ function addActionsForHTMLUI() {
   document.getElementById('segmentSlider').addEventListener('input', function() { document.getElementById('segmentValue').innerText = this.value; });
   
   // Add action for the clear canvas button
-  document.getElementById('clearButton').onclick = function() { g_ShapesList = []; renderAllShapes() };
+  document.getElementById('clearButton').onclick = function() { g_ShapesList = []; renderAllShapes(); };
   
-  // Add action for the drag mode checkbox
+  // Add actions for cursor modes
   document.getElementById('dragModeCheckbox').addEventListener('change', function() { g_dragMode = this.checked; });
+  document.getElementById('deleteModeCheckbox').addEventListener('change', function() { g_deleteMode = this.checked; });
 
   // Add actions for the scale shape number inputs
   document.getElementById('scaleXSlider').addEventListener('input', function() { g_selectedScaleX = this.value; });
   document.getElementById('scaleYSlider').addEventListener('input', function() { g_selectedScaleY = this.value; });
 }
 
-let g_ShapesList = [];
-let g_selectedShape = null;
 function click(ev) {
   
   // Extract the event click and return it in WebGL coordinates
   [x, y] = convertCoordinatesEventToGL(ev);
+
+  if (g_deleteMode) {
+    // Check if the click is inside any shape and if so, delete that shape
+    for (let i = g_ShapesList.length - 1; i >= 0; i--) {
+      if (g_ShapesList[i].contains(x, y)) {
+        g_ShapesList.splice(i, 1);
+        renderAllShapes();
+        return;
+      }
+    }
+  }
   
-  if (!g_dragMode) {
-    // Create and store the new triangle
+  if (!g_dragMode && !g_deleteMode) {
+
+    if (!checkDistance()) {
+      return;
+    }
+    // Create and store the new shape
     let shapeType;
     if ( g_selectedType == TRIANGLE) {
       shapeType = new Triangle();
@@ -171,8 +203,9 @@ function click(ev) {
     shapeType.scaleX = g_selectedScaleX;
     shapeType.scaleY = g_selectedScaleY;
     g_ShapesList.push(shapeType);
+
   } else {
-    // Check if the click is inside any shape and if so, update the position of that shape to the click position
+    // Check if the click is inside any shape and if so, update the position of that shape to the cursor position
     for (let i = g_ShapesList.length - 1; i >= 0; i--) {
       if (g_ShapesList[i].contains(x, y)) {
         g_ShapesList[i].position = [x, y];
@@ -202,5 +235,32 @@ function renderAllShapes() {
   var len = g_ShapesList.length;
   for(var i = 0; i < len; i++) {
     g_ShapesList[i].render();
+  }
+}
+
+// Prevent creating a new shape if the click is too close to the last created shape
+function checkDistance() {
+    if (g_lastCoords[0] !== null) {
+      let dx = x- g_lastCoords[0];
+      let dy = y - g_lastCoords[1];
+      let distance = Math.sqrt(dx*dx + dy*dy);
+
+      if (distance < g_minDistance) {
+        return false;
+      }
+    }
+    g_lastCoords = [x, y];
+    return true;
+}
+
+function clearCanvas(canvasColor) {
+  // Specify the color for clearing <canvas>
+  gl.clearColor(canvasColor[0], canvasColor[1], canvasColor[2], canvasColor[3]);
+  
+  // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  if (g_ShapesList.length > 0) {
+    renderAllShapes();
   }
 }
