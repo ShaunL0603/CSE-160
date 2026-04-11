@@ -3,63 +3,16 @@
   <head>
     <!-- <meta charset="utf-8" name="color-scheme" content="light dark"/> -->
     <meta charset="utf-8" />
-    <title>Change a point color</title>
+    <title>Assignment 1: Paint Program</title>
   </head>
 
   <body onload="main()">
-    <canvas id="webgl" width="400" height="400">
-      Please use a browser that supports "canvas"
-    </canvas>
-
-    <p><button type="button" id="clearButton">Clear Canvas</button></p>
-
-    <p>Drawing Mode:</p>
-    <p>
-      <button type="button" id="squareButton">Squares</button>
-      <button type="button" id="triangleButton">Triangles</button>
-      <button type="button" id="circleButton">Circles</button>
-    </p>
-
-    <p>
-      Drag Mode: <input type="checkbox" id="dragModeCheckbox">
-      Delete Mode: <input type="checkbox" id="deleteModeCheckbox">
-    </p>
-    
-
-    <p>Shape Color:</p>
-    <p>
-      Red <input type="range" min="0" max="100" value="100" class="slider" id="redSlider">
-      Green <input type="range" min="0" max="100" value="0" class="slider" id="greenSlider">
-      Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSlider">
-      Transparency <input type="range" min="1" max="100" value="100" class="slider" id="alphaSlider">
-    </p>
-    <p>RGB: <span id="rgbaValue">rgb(100, 0, 0, 100)</span></p>
-
-    <p>Canvas Color:</p>
-    <p>
-      Red <input type="range" min="0" max="100" value="0" class="slider" id="redSliderForCanvas">
-      Green <input type="range" min="0" max="100" value="0" class="slider" id="greenSliderForCanvas">
-      Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSliderForCanvas">
-      Transparency <input type="range" min="0" max="100" value="100" class="slider" id="alphaSliderForCanvas">
-    </p>
-    <p>RGB: <span id="rgbaValueForCanvas">rgb(0, 0, 0, 100)</span> <button id="changeCanvasColor">Change Canvas Color</button></p>
-
-    <p>
-      Shape Size (<span class="slider-value" id="sizeValue">10</span>): <input type="range" min="4" max="40" value="10" class="slider" id="sizeSlider">
-      (Circles) Segment Count <span id="segmentValue" class="slider-value">10</span>: <input type="range" min="3" max="30" value="10" class="slider" id="segmentSlider">
-    </p>
-
-    <p>
-      Scale Shape: X <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" onchange="if (this.value > 5) this.value = 5; if (this.value < 0.5) this.value = 0.5;" id="scaleXSlider">
-      Y <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" onchange="if (this.value > 5) this.value = 5; if (this.value < 0.5) this.value = 0.5;" id="scaleYSlider">
-    </p>
-
-    <p>What is awesome:</p>
+    <h2>What is awesome:</h2>
     <ul>
       <li>Can set the color for the canvas.</li>
         <ul>
           <li>Clicking the 'Change Canvas Color' does not delete shapes that were palced on screen. Need to click 'Clear canvas' to actually clear everything.</li>
-          <li>Clearing canvas also doesn't reset the canvas color to the default black color, it stays on the same color user picked.</li>
+          <li>Clearing canvas doesn't reset the canvas color to the default black color, it stays on the same color user picked.</li>
         </ul>
       <li>Can see the rgba values when changing the color sliders.</li>
       <li>Two new modes:
@@ -73,14 +26,69 @@
         </ul>
       </li>
       <li>For shapes and the canvas you can change the alpha value and thus the transparency.</li>
-      <li>You can scale all shapes (Squares, Triangles, and Circles) witg size but also it's x or y axis individually.
+      <li>You can scale all shapes (Squares, Triangles, and Circles) by adjusting size slider but also by inputing a scaler value for the x or y axis individually.
         <ul>
           <li>Range is arbitrarily set between 0.5 and 5</li>
-          <li>Going below 1 shrinks the shape, e.g. 0.5 creates a shape half as big.</li>
-          <li>Default scale at 1</li>
+          <li>Going below 1 shrinks the shape, e.g. 0.5 creates a shape half as big, relative to size. If size = 10, scale x = 0.5, final shape will have a dimension where x = 5 and y = 10.</li>
+          <li>Default scale at 1 for both x and y.</li>
         </ul>
-      <li>When painting (dragging mouse) there is a minimum distance before a new shape is created</li>
+      <li>When painting (dragging mouse) there is a minimum distance before a new shape is created.</li>
     </ul>
+
+    <h2>Painting and reference image</h2>
+    <p>Pained using the paint program</p>
+    <img src="../asgn1-img.png" width="400" height="400" alt="Painted image inspired by minecraft with a tree next to a body of water. What is suppose to be clouds spells out my initials SL.">
+    <img src="../asgn1-reference-img.jpg" width="400" height="400" alt="Reference image used to help with painting final painting in paint program. ">
+
+    <div style="padding-top: 40px">
+      <canvas id="webgl" width="400" height="400">
+        Please use a browser that supports "canvas"
+      </canvas>
+    </div>
+
+    <p><button type="button" id="clearButton">Clear Canvas</button></p>
+
+    <h3>Drawing Mode:</h3>
+    <p>
+      <button type="button" id="squareButton">Squares</button>
+      <button type="button" id="triangleButton">Triangles</button>
+      <button type="button" id="circleButton">Circles</button>
+    </p>
+
+    <p>
+      Enable Drag Mode: <input type="checkbox" id="dragModeCheckbox">
+      Enable Delete Mode: <input type="checkbox" id="deleteModeCheckbox">
+    </p>
+    
+
+    <h3>Shape Color:</h3>
+    <p>
+      Red <input type="range" min="0" max="100" value="100" class="slider" id="redSlider">
+      Green <input type="range" min="0" max="100" value="0" class="slider" id="greenSlider">
+      Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSlider">
+      Transparency <input type="range" min="1" max="100" value="100" class="slider" id="alphaSlider">
+    </p>
+    <p>RGB: <span id="rgbaValue">rgb(100, 0, 0, 100)</span></p>
+
+    <h3>Canvas Color:</h3>
+    <p>
+      Red <input type="range" min="0" max="100" value="0" class="slider" id="redSliderForCanvas">
+      Green <input type="range" min="0" max="100" value="0" class="slider" id="greenSliderForCanvas">
+      Blue <input type="range" min="0" max="100" value="0" class="slider" id="blueSliderForCanvas">
+      Transparency <input type="range" min="0" max="100" value="100" class="slider" id="alphaSliderForCanvas">
+    </p>
+    <p>RGB: <span id="rgbaValueForCanvas">rgb(0, 0, 0, 100)</span> <button id="changeCanvasColor">Change Canvas Color</button></p>
+
+    <h3>Modify shape:</h3>
+    <p>
+      Shape Size (<span class="slider-value" id="sizeValue">10</span>): <input type="range" min="4" max="40" value="10" class="slider" id="sizeSlider">
+      (Circles) Segment Count <span id="segmentValue" class="slider-value">10</span>: <input type="range" min="3" max="30" value="10" class="slider" id="segmentSlider">
+    </p>
+
+    <p>
+      Scale Shape: X <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" onchange="if (this.value > 5) this.value = 5; if (this.value < 0.5) this.value = 0.5;" id="scaleXSlider">
+      Y <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" onchange="if (this.value > 5) this.value = 5; if (this.value < 0.5) this.value = 0.5;" id="scaleYSlider">
+    </p>
     
     <script src="../lib/cuon-matrix-cse160.js"></script>
     <script src="../lib/cuon-utils.js"></script>
