@@ -238,6 +238,18 @@ function renderAllShapes() {
   }
 }
 
+function clearCanvas(canvasColor) {
+  // Specify the color for clearing <canvas>
+  gl.clearColor(canvasColor[0], canvasColor[1], canvasColor[2], canvasColor[3]);
+  
+  // Clear <canvas>
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  
+  if (g_ShapesList.length > 0) {
+    renderAllShapes();
+  }
+}
+
 // Prevent creating a new shape if the click is too close to the last created shape
 function checkDistance() {
     if (g_lastCoords[0] !== null) {
@@ -251,16 +263,4 @@ function checkDistance() {
     }
     g_lastCoords = [x, y];
     return true;
-}
-
-function clearCanvas(canvasColor) {
-  // Specify the color for clearing <canvas>
-  gl.clearColor(canvasColor[0], canvasColor[1], canvasColor[2], canvasColor[3]);
-  
-  // Clear <canvas>
-  gl.clear(gl.COLOR_BUFFER_BIT);
-
-  if (g_ShapesList.length > 0) {
-    renderAllShapes();
-  }
 }

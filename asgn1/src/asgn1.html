@@ -45,13 +45,13 @@
     <p>RGB: <span id="rgbValueForCanvas">rgb(0, 0, 0)</span> <button id="changeCanvasColor">Change Canvas Color</button></p>
 
     <p>
-      Shape Size (<span id="sizeValue">10</span>): <input type="range" min="4" max="40" value="10" class="slider" id="sizeSlider">
-      (Circles) Segment Count <span id="segmentValue">10</span>: <input type="range" min="3" max="30" value="10" class="slider" id="segmentSlider">
+      Shape Size (<span class="slider-value" id="sizeValue">10</span>): <input type="range" min="4" max="40" value="10" class="slider" id="sizeSlider">
+      (Circles) Segment Count <span id="segmentValue" class="slider-value">10</span>: <input type="range" min="3" max="30" value="10" class="slider" id="segmentSlider">
     </p>
 
     <p>
-      Scale Shape: X <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" id="scaleXSlider">
-      Y <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" id="scaleYSlider">
+      Scale Shape: X <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" onchange="if (this.value > 5) this.value = 5; if (this.value < 0.5) this.value = 0.5;" id="scaleXSlider">
+      Y <input type="number" min="0.5" max="5" value="1" step="0.1" class="number" onchange="if (this.value > 5) this.value = 5; if (this.value < 0.5) this.value = 0.5;" id="scaleYSlider">
     <p>
       X and Y scale is between 0.5 and 5, and can be changed in increments of 0.1. 
       The default scale is 1, which means the shape will be drawn at its original size. 
@@ -62,6 +62,7 @@
     <script src="../lib/cuon-utils.js"></script>
     <script src="../lib/webgl-utils.js"></script>
     <script src="../lib/webgl-debug.js"></script>
+    <link rel="stylesheet" href="assets/asgn1.css">
     <script src="Triangle.js"></script>
     <script src="asgn1.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="assets/asgn1.css"> -->
