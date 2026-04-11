@@ -46,7 +46,6 @@ let g_selectedScaleX = 1.0;
 let g_selectedScaleY = 1.0;
 let g_dragMode = false;
 let g_lastCoords = [null, null];
-let g_minDistance = 0.05;
 let g_deleteMode = false;
 
 function main() {
@@ -113,7 +112,7 @@ function addActionsForHTMLUI() {
   // Add actions for the shape selection buttons
   document.getElementById('squareButton').onclick = function() { g_selectedType = SQUARE; };
   document.getElementById('triangleButton').onclick = function() { g_selectedType = TRIANGLE; };
-  document.getElementById('circleButton').onclick = function() { g_selectedType = CIRCLE  ; };
+  document.getElementById('circleButton').onclick = function() { g_selectedType = CIRCLE; };
 
   // Add actions for the color selection sliders and display text on page
   document.getElementById('rgbaValue').innerText = `rgba(${document.getElementById('redSlider').value}, ${document.getElementById('greenSlider').value}, ${document.getElementById('blueSlider').value}, ${document.getElementById('alphaSlider').value})`;
@@ -269,7 +268,8 @@ function checkDistance() {
       let dy = y - g_lastCoords[1];
       let distance = Math.sqrt(dx*dx + dy*dy);
 
-      if (distance < g_minDistance) {
+      let minDistance = (g_selectedSize / 200.0) * 0.75;
+      if (distance < minDistance) {
         return false;
       }
     }
