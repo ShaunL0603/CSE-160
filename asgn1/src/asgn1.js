@@ -33,6 +33,9 @@ var u_Size;
 const TRIANGLE = 0;
 const SQUARE = 1;
 const CIRCLE = 2;
+// Constants for scaling x or y values
+const minScale = 0.5;
+const maxScale = 5;
 
 // Globals related to UI elements
 let g_canvasColor = [0.0, 0.0, 0.0, 1.0];
@@ -173,8 +176,8 @@ function addActionsForHTMLUI() {
   document.getElementById('deleteModeCheckbox').addEventListener('change', function() { g_deleteMode = this.checked; });
 
   // Add actions for the scale shape number inputs
-  document.getElementById('scaleXSlider').addEventListener('input', function() { g_selectedScaleX = this.value; });
-  document.getElementById('scaleYSlider').addEventListener('input', function() { g_selectedScaleY = this.value; });
+  document.getElementById('scaleXSlider').addEventListener('input', function() { g_selectedScaleX = checkScaleValue(Number(this.value)); });
+  document.getElementById('scaleYSlider').addEventListener('input', function() { g_selectedScaleY = checkScaleValue(Number(this.value)); });
 }
 
 function click(ev) {
@@ -267,7 +270,8 @@ function checkDistance() {
       let dx = x- g_lastCoords[0];
       let dy = y - g_lastCoords[1];
       let distance = Math.sqrt(dx*dx + dy*dy);
-
+      
+      // Calculate distance between shapes and take their size into account
       let minDistance = (g_selectedSize / 200.0) * 0.75;
       if (distance < minDistance) {
         return false;
@@ -275,4 +279,14 @@ function checkDistance() {
     }
     g_lastCoords = [x, y];
     return true;
+}
+
+function checkScaleValue(scaler) {
+  if (scaler > 5) {
+    return maxScale;
+  } else if (scaler < 0.5) {
+    return minScale;
+  }
+
+  return scaler; // default
 }
