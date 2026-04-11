@@ -1,3 +1,4 @@
+<!-- HTML paint program created by Shaun Lagon 11/04/2026 for CSE 160 -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,7 +8,8 @@
   </head>
 
   <body onload="main()">
-    <h2>What is awesome:</h2>
+    <h1>Welcome to my painting program!</h1>
+    <h2>First what's awsome?</h2>
     <ul>
       <li>Can set the color for the canvas.</li>
         <ul>
@@ -20,6 +22,7 @@
           <li>Drag mode where you can drag individual shapes across the canvas with the mouse.</li>
             <ul>
               <li>Know that you can not place shapes if this mode is checked.</li>
+              <li><span style="color: red">Note</span>: One issue occurs when moving the mouse too fast. Can lose hold of the shape or grab other shapes.</li>
               <li>See README.md for more information.</li>
             </ul>
           <li>Delete mode where you can delete individual shapes on the canas.</li>
@@ -40,7 +43,8 @@
     <img src="../asgn1-img.png" width="400" height="400" alt="Painted image inspired by minecraft with a tree next to a body of water. What is suppose to be clouds spells out my initials SL.">
     <img src="../asgn1-reference-img.jpg" width="400" height="400" alt="Reference image used to help with painting final painting in paint program. ">
 
-    <div style="padding-top: 40px">
+    <h1 style="padding-top: 20px">Painting Program</h1>
+    <div>
       <canvas id="webgl" width="400" height="400">
         Please use a browser that supports "canvas"
       </canvas>
