@@ -54,7 +54,6 @@ function main() {
   setupWebGL();
   // set up GLSL shader programs and connect GLSL variables
   connectVarialbesToGLSL();
-  
   // Set up actions for the HTML UI elements
   addActionsForHTMLUI();
   
@@ -71,11 +70,14 @@ function setupWebGL()
   canvas = document.getElementById('webgl');
   
   // Get the rendering context for WebGL
-  gl = canvas.getContext("webgl", { preserveDrawingBuffer: true});
+  gl = canvas.getContext("webgl", { preserveDrawingBuffer: true, premultipliedAlpha: false });
   if (!gl) {
     console.log('Failed to get the rendering context for WebGL');
     return;
   }
+
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 }
 
 function connectVarialbesToGLSL() {
@@ -112,36 +114,46 @@ function addActionsForHTMLUI() {
   document.getElementById('squareButton').onclick = function() { g_selectedType = SQUARE; };
   document.getElementById('triangleButton').onclick = function() { g_selectedType = TRIANGLE; };
   document.getElementById('circleButton').onclick = function() { g_selectedType = CIRCLE  ; };
-  
+
   // Add actions for the color selection sliders and display text on page
-  document.getElementById('rgbValue').innerText = `rgb(${document.getElementById('redSlider').value}, ${document.getElementById('greenSlider').value}, ${document.getElementById('blueSlider').value})`;
+  document.getElementById('rgbaValue').innerText = `rgba(${document.getElementById('redSlider').value}, ${document.getElementById('greenSlider').value}, ${document.getElementById('blueSlider').value}, ${document.getElementById('alphaSlider').value})`;
   document.getElementById('redSlider').addEventListener('input', function() { 
     g_selectedColor[0] = this.value/100; 
-    document.getElementById('rgbValue').innerText = `rgb(${this.value}, ${document.getElementById('greenSlider').value}, ${document.getElementById('blueSlider').value})`;
+    document.getElementById('rgbaValue').innerText = `rgba(${this.value}, ${document.getElementById('greenSlider').value}, ${document.getElementById('blueSlider').value}, ${document.getElementById('alphaSlider').value})`;
   });
   document.getElementById('greenSlider').addEventListener('input', function() { 
     g_selectedColor[1] = this.value/100; 
-    document.getElementById('rgbValue').innerText = `rgb(${document.getElementById('redSlider').value}, ${this.value}, ${document.getElementById('blueSlider').value})`;
+    document.getElementById('rgbaValue').innerText = `rgba(${document.getElementById('redSlider').value}, ${this.value}, ${document.getElementById('blueSlider').value}, ${document.getElementById('alphaSlider').value})`;
   });
   document.getElementById('blueSlider').addEventListener('input', function() { 
     g_selectedColor[2] = this.value/100; 
-    document.getElementById('rgbValue').innerText = `rgb(${document.getElementById('redSlider').value}, ${document.getElementById('greenSlider').value}, ${this.value})`;
+    document.getElementById('rgbaValue').innerText = `rgba(${document.getElementById('redSlider').value}, ${document.getElementById('greenSlider').value}, ${this.value}, ${document.getElementById('alphaSlider').value})`;
   });
-
+  document.getElementById('alphaSlider').addEventListener('input', function() {
+    g_selectedColor[3] = this.value/100;;
+    document.getElementById('rgbaValue').innerText = `rgba(${document.getElementById('redSlider').value}, ${document.getElementById('greenSlider').value}, ${document.getElementById('blueSlider').value}, ${this.value})`;
+  })
+  
   // Add actions for the color selection sliders of canvas and display text on page
-  document.getElementById('rgbValueForCanvas').innerText = `rgb(${document.getElementById('redSliderForCanvas').value}, ${document.getElementById('greenSliderForCanvas').value}, ${document.getElementById('blueSliderForCanvas').value})`;
+  document.getElementById('rgbaValueForCanvas').innerText = `rgba(${document.getElementById('redSliderForCanvas').value}, ${document.getElementById('greenSliderForCanvas').value}, ${document.getElementById('blueSliderForCanvas').value}, ${document.getElementById('alphaSliderForCanvas').value})`;
   document.getElementById('redSliderForCanvas').addEventListener('input', function() { 
     g_canvasColor[0] = this.value/100; 
-    document.getElementById('rgbValueForCanvas').innerText = `rgb(${this.value}, ${document.getElementById('greenSliderForCanvas').value}, ${document.getElementById('blueSliderForCanvas').value})`;
+    document.getElementById('rgbaValueForCanvas').innerText = `rgba(${this.value}, ${document.getElementById('greenSliderForCanvas').value}, ${document.getElementById('blueSliderForCanvas').value}, ${document.getElementById('alphaSliderForCanvas').value})`;
   });
   document.getElementById('greenSliderForCanvas').addEventListener('input', function() { 
     g_canvasColor[1] = this.value/100; 
-    document.getElementById('rgbValueForCanvas').innerText = `rgb(${document.getElementById('redSliderForCanvas').value}, ${this.value}, ${document.getElementById('blueSliderForCanvas').value})`;
+    document.getElementById('rgbaValueForCanvas').innerText = `rgba(${document.getElementById('redSliderForCanvas').value}, ${this.value}, ${document.getElementById('blueSliderForCanvas').value}, ${document.getElementById('alphaSliderForCanvas').value})`;
   });
   document.getElementById('blueSliderForCanvas').addEventListener('input', function() { 
     g_canvasColor[2] = this.value/100; 
-    document.getElementById('rgbValueForCanvas').innerText = `rgb(${document.getElementById('redSliderForCanvas').value}, ${document.getElementById('greenSliderForCanvas').value}, ${this.value})`;
+    document.getElementById('rgbaValueForCanvas').innerText = `rgba(${document.getElementById('redSliderForCanvas').value}, ${document.getElementById('greenSliderForCanvas').value}, ${this.value}, ${document.getElementById('alphaSliderForCanvas').value})`;
   });
+  document.getElementById('alphaSliderForCanvas').addEventListener('input', function() { 
+    g_canvasColor[3] = this.value/100; 
+    document.getElementById('rgbaValueForCanvas').innerText = `rgba(${document.getElementById('redSliderForCanvas').value}, ${document.getElementById('greenSliderForCanvas').value}, ${document.getElementById('blueSliderForCanvas').value}, ${this.value})`;
+  });
+
+  // Add action to change the canvas color
   document.getElementById('changeCanvasColor').onclick = function() { clearCanvas(g_canvasColor); };
   
   // Add action for the size selection slider
