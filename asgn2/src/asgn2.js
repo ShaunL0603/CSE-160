@@ -31,7 +31,9 @@ var u_ModelMatrix;
 var u_GlobalRotateMatrix;
 
 // Global variables
-let g_globalAngle = 0.0;
+let g_globalXAngle = 0.0;
+let g_globalYAngle = 0.0;
+let g_globalZAngle = 0.0;
 let g_redraw = false;
 
 function main() {
@@ -47,10 +49,8 @@ function main() {
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   
-  // Clear <canvas>
-  //gl.clear(gl.COLOR_BUFFER_BIT);
   renderAllShapes();
-  redraw();
+  requestAnimationFrame(tick);
 }
 
 function setupWebGL()
@@ -64,6 +64,8 @@ function setupWebGL()
     console.log('Failed to get the rendering context for WebGL');
     return;
   }
+
+  gl.enable(gl.DEPTH_TEST);
 }
 
 function connectVariablesToGLSL() {
@@ -101,7 +103,9 @@ function connectVariablesToGLSL() {
 }
 
 function addActionsForHtmlUI() {
-  document.getElementById("angleSlider").addEventListener("mousemove", function() { g_globalAngle = this.value; g_redraw = true; renderAllShapes(); });
+  document.getElementById("angleXSlider").addEventListener("mousemove", function() { g_globalXAngle = this.value; g_redraw = true; renderAllShapes(); });
+  document.getElementById("angleYSlider").addEventListener("mousemove", function() { g_globalYAngle = this.value; g_redraw = true; renderAllShapes(); });
+  document.getElementById("angleZSlider").addEventListener("mousemove", function() { g_globalZAngle = this.value; g_redraw = true; renderAllShapes(); });
 }
 
 function click(ev) {
@@ -124,11 +128,11 @@ function renderAllShapes() {
 
   var startTime = performance.now();
 
-  var globalRotMat = new Matrix4().rotate(g_globalAngle, 0, 1, 0);
+  var globalRotMat = new Matrix4().rotate(g_globalXAngle, 1, 0, 0).rotate(g_globalYAngle, 0, 1, 0).rotate(g_globalZAngle, 0, 0, 1);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
   
   // clear canvas
-  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   var body = new Cube();
   body.color = [1.0, 0.0, 0.0, 1.0];
@@ -138,13 +142,13 @@ function renderAllShapes() {
 
   var left = new Cube();
   left.color = [1.0, 1.0, 0.0, 1.0];
-  left.matrix.translate(0.7, 0.0, 0.0);
+  left.matrix.translate(0.8, 0.0, 0.0);
   left.matrix.rotate(45, 0, 0, 1);
   left.matrix.scale(0.25, 0.7, 0.5);
   left.render();
 
   var duration = performance.now() - startTime;
-  sendTextToHTML("ms:" +Math.floor(duration) + " fps:" + Math.floor(10000/duration), "numdot");
+  sendTextToHTML("ms:" + Math.floor(duration) + " fps:" + Math.floor(10000/duration), "numdot");
 }
 
 function sendTextToHTML(text, htmlID) {
@@ -159,10 +163,11 @@ function sendTextToHTML(text, htmlID) {
 
 // Redraw the canvas if g_redraw is true, loop to continuously check
 // if g_redraw is true.
-function redraw() {
+function tick() {
+  //console.log(performance.now())
   if (g_redraw) {
     renderAllShapes();
     g_redraw = false;
   }
-  requestAnimationFrame(redraw);
+  requestAnimationFrame(tick);
 }
