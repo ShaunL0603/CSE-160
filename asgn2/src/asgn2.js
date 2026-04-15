@@ -35,6 +35,7 @@ let g_globalXAngle = 0.0;
 let g_globalYAngle = 0.0;
 let g_globalZAngle = 0.0;
 let g_redraw = false;
+let g_globalZoom = 1.0;
 
 function main() {
   // sets up canvas and gl variables
@@ -44,8 +45,24 @@ function main() {
   // Set up actions for the HTML UI elements
   addActionsForHtmlUI();
 
-  canvas.onmousedown = click;
-  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); } };
+  canvas.onmousedown = clickAndDrag;
+  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { clickAndDrag(ev); } };
+  // Add event listener for mouse wheel to zoom in and out
+  canvas.addEventListener("wheel", function(ev) {
+    ev.preventDefault();
+
+    if (ev.deltaY > 0) {
+      g_globalZoom *= 0.9;
+    }
+    else {
+      g_globalZoom *= 1.1;
+    }
+
+    g_globalZoom = Math.max(0.1, Math.min(5.0, g_globalZoom));
+
+    g_redraw = true;
+    renderAllShapes();
+  }, { passive: false });
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   
@@ -103,18 +120,17 @@ function connectVariablesToGLSL() {
 }
 
 function addActionsForHtmlUI() {
-  document.getElementById("angleXSlider").addEventListener("mousemove", function() { g_globalXAngle = this.value; g_redraw = true; renderAllShapes(); });
-  document.getElementById("angleYSlider").addEventListener("mousemove", function() { g_globalYAngle = this.value; g_redraw = true; renderAllShapes(); });
-  document.getElementById("angleZSlider").addEventListener("mousemove", function() { g_globalZAngle = this.value; g_redraw = true; renderAllShapes(); });
-
-  document.getElementById("angleXSlider").addEventListener("input", function() { document.getElementById("angleXValue").textContent = this.value; });
-  document.getElementById("angleYSlider").addEventListener("input", function() { document.getElementById("angleYValue").textContent = this.value; });
-  document.getElementById("angleZSlider").addEventListener("input", function() { document.getElementById("angleZValue").textContent = this.value; });
+  // Unused
 }
 
-function click(ev) {
-  var [x, y] = convertCoordinatesEventToGL(ev);
-  //console.log([x, y]);
+function clickAndDrag(ev) {
+  let moveSensitivity = 0.5;
+
+  g_globalXAngle -= moveSensitivity * ev.movementY;
+  g_globalYAngle -= moveSensitivity * ev.movementX;
+
+  g_redraw = true;
+  renderAllShapes();
 }
 
 function convertCoordinatesEventToGL(ev) {
@@ -132,7 +148,12 @@ function renderAllShapes() {
 
   var startTime = performance.now();
 
-  var globalRotMat = new Matrix4().rotate(g_globalXAngle, 1, 0, 0).rotate(g_globalYAngle, 0, 1, 0).rotate(g_globalZAngle, 0, 0, 1);
+  // First rotate about X, then Y, then Z.
+  var globalRotMat = new Matrix4()
+    .scale(g_globalZoom, g_globalZoom, g_globalZoom)
+    .rotate(g_globalXAngle, 1, 0, 0)
+    .rotate(g_globalYAngle, 0, 1, 0)
+    .rotate(g_globalZAngle, 0, 0, 1);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
   
   // clear canvas
