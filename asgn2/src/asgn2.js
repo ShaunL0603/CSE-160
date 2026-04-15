@@ -34,8 +34,11 @@ var u_GlobalRotateMatrix;
 let g_globalXAngle = 0.0;
 let g_globalYAngle = 0.0;
 let g_globalZAngle = 0.0;
+let g_animalXAngle = 0.0;
+let g_animalYAngle = 0.0;
+let g_animalZAngle = 0.0;
 let g_redraw = false;
-let g_globalZoom = 1.0;
+let g_globalZoom = 0.2;
 let rotateSensitivity = 0.5;
 
 function main() {
@@ -121,61 +124,83 @@ function connectVariablesToGLSL() {
 }
 
 function addActionsForHtmlUI() {
+  // Add event listener for rotate sensitivity slider
   document.getElementById("rotateSensitivity").addEventListener("input", function(ev) {
     rotateSensitivity = parseFloat(ev.target.value);
+  });
+
+  // Add event listeners for animal rotation inputs
+  document.getElementById("rotateAnimalX").addEventListener("input", function(ev) {
+    rotateAnimal("x", parseFloat(ev.target.value));
+  });
+  document.getElementById("rotateAnimalY").addEventListener("input", function(ev) {
+    rotateAnimal("y", parseFloat(ev.target.value));
+  });
+  document.getElementById("rotateAnimalZ").addEventListener("input", function(ev) {
+    rotateAnimal("z", parseFloat(ev.target.value));
   });
 }
 
 function clickAndDrag(ev) {
   g_globalXAngle -= rotateSensitivity * ev.movementY;
   g_globalYAngle -= rotateSensitivity * ev.movementX;
-
+  
   g_redraw = true;
   renderAllShapes();
 }
 
-// function convertCoordinatesEventToGL(ev) {
-//   var x = ev.clientX; // x coordinate of a mouse pointer
-//   var y = ev.clientY; // y coordinate of a mouse pointer
-//   var rect = ev.target.getBoundingClientRect();
-  
-//   x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
-//   y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
-
-//   return ([x, y]);
-// }
+function rotateAnimal(axis, rotateValue) {
+  if (axis === "x") {
+    g_animalXAngle = (!(Number.isNaN(rotateValue))) ? rotateValue : 0;
+  }
+  else if (axis === "y") {
+    g_animalYAngle = (!(Number.isNaN(rotateValue))) ? rotateValue : 0;
+  }
+  else if (axis === "z") {
+    g_animalZAngle = (!(Number.isNaN(rotateValue))) ? rotateValue : 0;
+  }
+  g_redraw = true;
+  renderAllShapes();
+}
 
 function renderAllShapes() {
-
   var startTime = performance.now();
 
-  // First rotate about X, then Y, then Z.
   var globalRotMat = new Matrix4()
     .scale(g_globalZoom, g_globalZoom, g_globalZoom)
     .rotate(g_globalXAngle, 1, 0, 0)
     .rotate(g_globalYAngle, 0, 1, 0)
     .rotate(g_globalZAngle, 0, 0, 1);
   gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
-  
+    
   // clear canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   var base = new Cube();
   base.color = [0.0, 0.3, 0.03, 1.0];
-  base.matrix.scale(6, 0.5, 6);
-  base.matrix.translate(-0.5, -2.1, -0.5);
+  base.matrix.setTranslate(0.0, 0.0, 0.0);
+  base.matrix.rotate(0.0, 1.0, 0.0, 0.0);
+  base.matrix.translate(-3.0 ,-0.5 , -3.0);
+  base.matrix.scale(6.0, 0.4, 6.0);
   base.render();
-
+    
+  gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
   var body = new Cube();
   body.color = [1.0, 0.0, 0.0, 1.0];
-  body.matrix.translate(-0.25, -0.5, 0.0);
+  body.matrix.setTranslate(0.0, 0.0, 0.0);
+  body.matrix.rotate(g_animalXAngle, 1, 0, 0);
+  body.matrix.rotate(g_animalYAngle, 0, 1, 0);
+  body.matrix.rotate(g_animalZAngle, 0, 0, 1);;
+  var bodyMat = new Matrix4(body.matrix);
+  body.matrix.translate(-0.3, 0, -0.3);
   body.matrix.scale(0.5, 1, 0.5);
   body.render();
 
   var left = new Cube();
   left.color = [1.0, 1.0, 0.0, 1.0];
-  left.matrix.translate(0.8, 0.0, 0.0);
-  left.matrix.rotate(45, 0, 0, 1);
+  left.matrix = bodyMat;
+  left.matrix.translate(0.4, 1, -0.3);
+  left.matrix.rotate(-135, 0, 0, 1);
   left.matrix.scale(0.25, 0.7, 0.5);
   left.render();
 

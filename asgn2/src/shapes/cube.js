@@ -6,8 +6,6 @@ class Cube {
   }
 
   render() {
-
-    //var xy = this.position;
     var rgba = this.color;
 
     // Pass the color of a circle to u_FragColor variable
