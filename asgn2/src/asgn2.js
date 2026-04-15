@@ -36,6 +36,7 @@ let g_globalYAngle = 0.0;
 let g_globalZAngle = 0.0;
 let g_redraw = false;
 let g_globalZoom = 1.0;
+let rotateSensitivity = 0.5;
 
 function main() {
   // sets up canvas and gl variables
@@ -120,29 +121,29 @@ function connectVariablesToGLSL() {
 }
 
 function addActionsForHtmlUI() {
-  // Unused
+  document.getElementById("rotateSensitivity").addEventListener("input", function(ev) {
+    rotateSensitivity = parseFloat(ev.target.value);
+  });
 }
 
 function clickAndDrag(ev) {
-  let moveSensitivity = 0.5;
-
-  g_globalXAngle -= moveSensitivity * ev.movementY;
-  g_globalYAngle -= moveSensitivity * ev.movementX;
+  g_globalXAngle -= rotateSensitivity * ev.movementY;
+  g_globalYAngle -= rotateSensitivity * ev.movementX;
 
   g_redraw = true;
   renderAllShapes();
 }
 
-function convertCoordinatesEventToGL(ev) {
-  var x = ev.clientX; // x coordinate of a mouse pointer
-  var y = ev.clientY; // y coordinate of a mouse pointer
-  var rect = ev.target.getBoundingClientRect();
+// function convertCoordinatesEventToGL(ev) {
+//   var x = ev.clientX; // x coordinate of a mouse pointer
+//   var y = ev.clientY; // y coordinate of a mouse pointer
+//   var rect = ev.target.getBoundingClientRect();
   
-  x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
-  y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
+//   x = ((x - rect.left) - canvas.width/2)/(canvas.width/2);
+//   y = (canvas.height/2 - (y - rect.top))/(canvas.height/2);
 
-  return ([x, y]);
-}
+//   return ([x, y]);
+// }
 
 function renderAllShapes() {
 
@@ -158,6 +159,12 @@ function renderAllShapes() {
   
   // clear canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  var base = new Cube();
+  base.color = [0.0, 0.3, 0.03, 1.0];
+  base.matrix.scale(6, 0.5, 6);
+  base.matrix.translate(-0.5, -2.1, -0.5);
+  base.render();
 
   var body = new Cube();
   body.color = [1.0, 0.0, 0.0, 1.0];
