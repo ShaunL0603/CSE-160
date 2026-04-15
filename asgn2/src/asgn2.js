@@ -106,6 +106,10 @@ function addActionsForHtmlUI() {
   document.getElementById("angleXSlider").addEventListener("mousemove", function() { g_globalXAngle = this.value; g_redraw = true; renderAllShapes(); });
   document.getElementById("angleYSlider").addEventListener("mousemove", function() { g_globalYAngle = this.value; g_redraw = true; renderAllShapes(); });
   document.getElementById("angleZSlider").addEventListener("mousemove", function() { g_globalZAngle = this.value; g_redraw = true; renderAllShapes(); });
+
+  document.getElementById("angleXSlider").addEventListener("input", function() { document.getElementById("angleXValue").textContent = this.value; });
+  document.getElementById("angleYSlider").addEventListener("input", function() { document.getElementById("angleYValue").textContent = this.value; });
+  document.getElementById("angleZSlider").addEventListener("input", function() { document.getElementById("angleZValue").textContent = this.value; });
 }
 
 function click(ev) {
