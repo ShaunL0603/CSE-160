@@ -29,17 +29,18 @@ var a_Position;
 var u_FragColor;
 var u_ModelMatrix;
 var u_GlobalRotateMatrix;
+var u_ProjectionMatrix;
 
-// Global variables
-let g_globalXAngle = 0.0;
-let g_globalYAngle = 0.0;
+// Global variables for interacting
+let g_globalXAngle = -12.0;
+let g_globalYAngle = -45.0;
 let g_globalZAngle = 0.0;
 let g_animalXAngle = 0.0;
 let g_animalYAngle = 0.0;
 let g_animalZAngle = 0.0;
 let g_redraw = false;
 let g_globalZoom = 0.2;
-let rotateSensitivity = 0.5;
+let rotateSensitivity = 0.2;
 
 function main() {
   // sets up canvas and gl variables
@@ -183,26 +184,8 @@ function renderAllShapes() {
   base.matrix.translate(-3.0 ,-0.5 , -3.0);
   base.matrix.scale(6.0, 0.4, 6.0);
   base.render();
-    
-  gl.uniformMatrix4fv(u_GlobalRotateMatrix, false, globalRotMat.elements);
-  var body = new Cube();
-  body.color = [1.0, 0.0, 0.0, 1.0];
-  body.matrix.setTranslate(0.0, 0.0, 0.0);
-  body.matrix.rotate(g_animalXAngle, 1, 0, 0);
-  body.matrix.rotate(g_animalYAngle, 0, 1, 0);
-  body.matrix.rotate(g_animalZAngle, 0, 0, 1);;
-  var bodyMat = new Matrix4(body.matrix);
-  body.matrix.translate(-0.3, 0, -0.3);
-  body.matrix.scale(0.5, 1, 0.5);
-  body.render();
-
-  var left = new Cube();
-  left.color = [1.0, 1.0, 0.0, 1.0];
-  left.matrix = bodyMat;
-  left.matrix.translate(0.4, 1, -0.3);
-  left.matrix.rotate(-135, 0, 0, 1);
-  left.matrix.scale(0.25, 0.7, 0.5);
-  left.render();
+  
+  makeKoala();
 
   var duration = performance.now() - startTime;
   sendTextToHTML("ms:" + Math.floor(duration) + " fps:" + Math.floor(10000/duration), "numdot");
