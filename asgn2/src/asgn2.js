@@ -140,6 +140,16 @@ function addActionsForHtmlUI() {
   document.getElementById("rotateAnimalZ").addEventListener("input", function(ev) {
     rotateAnimal("z", parseFloat(ev.target.value));
   });
+
+  // Actions for arm rotations
+  document.getElementById("rotateUpperLeftArm").addEventListener("input", function(ev) {
+    rotateUpperLeftArm = parseFloat(ev.target.value);
+    renderAllShapes();
+  });
+  document.getElementById("rotateLowerLeftArm").addEventListener("input", function(ev) {
+    rotateLowerLeftArm = parseFloat(ev.target.value);
+    renderAllShapes();
+  });
 }
 
 function clickAndDrag(ev) {

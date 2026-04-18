@@ -24,6 +24,11 @@
       z <input id="rotateAnimalZ" type="number" min="-180" max="180" value="0" step="1" onchange="if (Number.isNaN(parseFloat(this.value))) { this.value = 0; }">
     </p>
     
+    <p>Left Arm:</p>
+    <p>
+      Upper: <input id="rotateUpperLeftArm" type="range" min="45" max="140" value="45" step="1">
+      Lower: <input id="rotateLowerLeftArm" type="range" min="0" max="90" value="0" step="1">
+    
     <script src="../lib/cuon-matrix-cse160.js"></script>
     <script src="../lib/cuon-utils.js"></script>
     <script src="../lib/webgl-utils.js"></script>

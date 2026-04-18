@@ -1,6 +1,12 @@
+// Global variables
 const koalaGreyColorMat = [0.57, 0.56, 0.54, 1.0];
 const koalaWhiteColorMat = [1.0, 0.98, 0.93, 1.0];
 const koalaBlackColorMat = [0.2, 0.2, 0.2, 1.0];
+
+// Global rotation variables
+let rotateUpperLeftArm = 45;
+let rotateLowerLeftArm = 0;
+
 
 function makeKoala() {
     // torso cube of koala, root of animal
@@ -268,10 +274,10 @@ function makeKoalaArms(rootCube) {
     var shoulderBase1 = new Cube();
     shoulderBase1.color = koalaGreyColorMat;
     shoulderBase1.matrix = new Matrix4(rootCube.matrix);
-    shoulderBase1.matrix.translate(-0.15, 0.8, 0.1);
+    shoulderBase1.matrix.translate(-0.15, 0.7, 0.2);
     shoulderBase1.matrix.scale(1.3, 0.5, 0.6);
     shoulderBase1.render();
-
+    
     var shoulderBase2 = new Cube();
     shoulderBase2.color = koalaGreyColorMat;
     shoulderBase2.matrix = new Matrix4(shoulderBase1.matrix);
@@ -285,29 +291,41 @@ function makeKoalaArms(rootCube) {
     shoulderBack.matrix.translate(0.05, 0.0, 1.0);
     shoulderBack.matrix.scale(0.9, 0.9, 0.2);
     shoulderBack.render();
-    
-    // var shoulderBase3 = new Cube();
-    // shoulderBase3.color = koalaGreyColorMat;
-    // shoulderBase3.matrix = new Matrix4(shoulderBase2.matrix);
-    // shoulderBase3.matrix.translate(0.05, 1.0, 0.0);
-    // shoulderBase3.matrix.scale(0.9, 1.0, 1.0);
-    // shoulderBase3.render();
 
-    var leftArm1 = new Cube();
-    leftArm1.color = koalaGreyColorMat;
-    leftArm1.matrix = new Matrix4(rootCube.matrix);
-    leftArm1.matrix.translate(-0.3, 0.5, 0.17);
-    leftArm1.matrix.rotate(80, 1, 0, 0);
-    leftArm1.matrix.scale(0.25, 0.7, 0.4);
-    leftArm1.matrix.translate(0.0, -0.5, -1.5);
-    leftArm1.render();
+    var shoulderJoint = new Cube();
+    shoulderJoint.color
 
-    var leftArm2 = new Cube();
-    leftArm2.color = koalaGreyColorMat;
-    leftArm2.matrix = new Matrix4(leftArm1.matrix);
-    leftArm2.matrix.translate(0.0, -1.0, 0.15);
-    leftArm2.matrix.rotate(20, 1, 0, 0);
-    leftArm2.matrix.scale(1.0, 1.0, 0.7);
-    leftArm2.matrix.translate(0.0, 0.3, -0.5);
-    leftArm2.render();
+    var upperLeftArm = new Cube();
+    upperLeftArm.color = koalaGreyColorMat;
+    upperLeftArm.matrix = new Matrix4(shoulderBase1.matrix);
+    upperLeftArm.matrix.translate(0.2, 0.15, 0.3);
+    upperLeftArm.matrix.rotate(rotateUpperLeftArm, 1, 0, 0);
+    upperLeftArm.matrix.translate(0.0, 0.1, -0.1);
+    var upperLeftArmMat = new Matrix4(upperLeftArm.matrix);
+    upperLeftArm.matrix.scale(-0.25, -1.5, -0.8);
+    upperLeftArm.render();
+
+    var lowerLeftArm = new Cube();
+    lowerLeftArm.color = koalaGreyColorMat;
+    lowerLeftArm.matrix = new Matrix4(upperLeftArmMat);
+    lowerLeftArm.matrix.translate(0.0, -1.6, -0.11);
+    lowerLeftArm.matrix.rotate(rotateLowerLeftArm, 1, 0, 0);
+    lowerLeftArm.matrix.translate(0.0, 0.1, -0.1);
+    lowerLeftArm.matrix.scale(-0.25, -1.7, -0.6);
+    lowerLeftArm.render();
 }
+
+// remember to put the extra parameters on not just rootCube
+function testCube(rootCube, x, y, z, s_x, s_y, s_z) {
+    var test = new Cube();
+    test.color = [1.0, 1.0, 0.0, 1.0];
+    test.matrix = new Matrix4(rootCube.matrix);
+    test.matrix.translate(x, y, z);
+    test.matrix.rotate(45, 1, 0, 0);
+    test.matrix.scale(s_x, s_y, s_z);
+    test.render();
+}
+
+// rotation
+    // shoulderBase1.matrix.rotate(, 1, 0, 0);
+    // shoulderBase1.matrix.translate(0.0, 0.1, -0.1);
