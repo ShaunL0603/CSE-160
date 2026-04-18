@@ -177,13 +177,13 @@ function renderAllShapes() {
   // clear canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  var base = new Cube();
-  base.color = [0.0, 0.3, 0.03, 1.0];
-  base.matrix.setTranslate(0.0, 0.0, 0.0);
-  base.matrix.rotate(0.0, 1.0, 0.0, 0.0);
-  base.matrix.translate(-3.0 ,-0.5 , -3.0);
-  base.matrix.scale(6.0, 0.4, 6.0);
-  base.render();
+  // var base = new Cube();
+  // base.color = [0.0, 0.3, 0.03, 1.0];
+  // base.matrix.setTranslate(0.0, 0.0, 0.0);
+  // base.matrix.rotate(0.0, 1.0, 0.0, 0.0);
+  // base.matrix.translate(-3.0 ,-0.5 , -3.0);
+  // base.matrix.scale(6.0, 0.4, 6.0);
+  // base.render();
   
   makeKoala();
 
