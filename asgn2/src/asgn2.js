@@ -143,13 +143,25 @@ function addActionsForHtmlUI() {
 
   // Actions for arm rotations
   document.getElementById("rotateUpperLeftArm").addEventListener("input", function(ev) {
-    rotateUpperLeftArm = parseFloat(ev.target.value);
+    rotateUpperLeftArm = parseFloat(ev.target.value) * -1;
     renderAllShapes();
   });
   document.getElementById("rotateLowerLeftArm").addEventListener("input", function(ev) {
     rotateLowerLeftArm = parseFloat(ev.target.value);
     renderAllShapes();
   });
+  document.getElementById("rotateLeftWristX").addEventListener("input", function(ev) {
+    rotateLeftWristX = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
+  document.getElementById("rotateLeftWristY").addEventListener("input", function(ev) {
+    rotateLeftWristY = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
+  document.getElementById("rotateLeftWristZ").addEventListener("input", function(ev) {
+    rotateLeftWristZ = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
 }
 
 function clickAndDrag(ev) {
