@@ -4,37 +4,66 @@ const koalaWhiteColorMat = [1.0, 0.98, 0.93, 1.0];
 const koalaBlackColorMat = [0.2, 0.2, 0.2, 1.0];
 
 // Global rotation variables
-let rotateUpperLeftArm = -10;
-let rotateLowerLeftArm = 30;
-let rotateLeftWristX = 0;
-let rotateLeftWristY = 0;
-let rotateLeftWristZ = 0;
+    // Left Arm rotation
+    let rotateUpperLeftArm = -10;
+    let rotateLowerLeftArm = 30;
+    let rotateLeftWristX = 0;
+    let rotateLeftWristY = 0;
+    let rotateLeftWristZ = 0;
 
+    // Right Arm rotations
+    let rotateUpperRightArm = -10;
+    let rotateLowerRightArm = 30;
+    let rotateRightWristX = 0;
+    let rotateRightWristY = 0;
+    let rotateRightWristZ = 0;
+
+    // Left Leg rotations
+    let rotateUpperLeftLeg = 0;
+    let rotateLowerLeftLeg = 0;
+    let rotateLeftAnkleX = 0;
+    let rotateLeftAnkleY = 0;
+    let rotateLeftAnkleZ = 0;
+
+    // Right Leg rotations
+    let rotateUpperRightLeg = 0;
+    let rotateLowerRightLeg = 0;
+    let rotateRightAnkleX = 0;
+    let rotateRightAnkleY = 0;
+    let rotateRightAnkleZ = 0;
+
+    // Head rotations
+    let rotateHeadX = 0;
+    let rotateHeadY = 0;
+    let rotateHeadZ = 0;
+    
 
 function makeKoala() {
     // torso cube of koala, root of animal
     var mainTorso = new Cube();
     mainTorso.color = koalaGreyColorMat;
-    mainTorso.matrix.setTranslate(-1.0, -3.0, 0.0);
+    mainTorso.matrix.setTranslate(0.0, -7.0, 0.0);
     mainTorso.matrix.rotate(g_animalXAngle, 1.0, 0.0, 0.0);
     mainTorso.matrix.rotate(g_animalYAngle, 0.0, 1.0, 0.0);
     mainTorso.matrix.rotate(g_animalZAngle, 0.0, 0.0, 1.0);
+    var mainTorsoMat = new Matrix4(mainTorso.matrix);
     mainTorso.matrix.scale(5, 4, 4);
     mainTorso.render();
     
-    makeKoalaTorso(mainTorso);
-    makeKoalaHead(mainTorso);
-    makeKoalaArms(mainTorso);
-    makeKoalaLegs(mainToroso);
+    makeKoalaTorso(mainTorsoMat);
+    makeKoalaHead(mainTorsoMat);
+    makeKoalaArms(mainTorsoMat);
+    makeKoalaLowerTorso(mainTorsoMat);
+    makeKoalaLegs(mainTorsoMat);
 }
 
 // Create extra cubes for torso
 function makeKoalaTorso(rootCube) {
     var upperTorso1 = new Cube();
     upperTorso1.color = koalaGreyColorMat;
-    upperTorso1.matrix = new Matrix4(rootCube.matrix);
-    upperTorso1.matrix.translate(0.05, 1.0, 0.05);
-    upperTorso1.matrix.scale(0.9, 0.1, 0.9);
+    upperTorso1.matrix = new Matrix4(rootCube);
+    upperTorso1.matrix.translate(0.25, 4.0, 0.2);
+    upperTorso1.matrix.scale(4.5, 0.4, 3.6);
     upperTorso1.render();
     
     var upperTorso2 = new Cube();
@@ -50,13 +79,6 @@ function makeKoalaTorso(rootCube) {
     upperTorso3.matrix.translate(0.05, 1.0, 0.0);
     upperTorso3.matrix.scale(0.9, 1.0, 0.9);
     upperTorso3.render();
-    
-    // var upperTorso4 = new Cube();
-    // upperTorso4.color = koalaGreyColorMat;
-    // upperTorso4.matrix = new Matrix4(upperTorso3.matrix);
-    // upperTorso4.matrix.translate(0.05, 1.0, 0.0);
-    // upperTorso4.matrix.scale(0.9, 1.0, 0.9);
-    // upperTorso4.render();
     
     var upperTorso5 = new Cube();
     upperTorso5.color = koalaGreyColorMat;
@@ -87,9 +109,9 @@ function makeKoalaTorso(rootCube) {
 
     var belly1 = new Cube();
     belly1.color = koalaWhiteColorMat;
-    belly1.matrix = new Matrix4(rootCube.matrix);
-    belly1.matrix.translate(0.05, 0.0, -0.08);
-    belly1.matrix.scale(0.9, 0.99, 0.1);
+    belly1.matrix = new Matrix4(rootCube);
+    belly1.matrix.translate(0.25, 0.0, -0.32);
+    belly1.matrix.scale(4.5, 3.96, 0.4);
     belly1.render();
 
     var belly2 = new Cube();
@@ -132,14 +154,19 @@ function makeKoalaTorso(rootCube) {
 function makeKoalaHead(rootCube) {
     var mainHead = new Cube();
     mainHead.color = koalaGreyColorMat;
-    mainHead.matrix = new Matrix4(rootCube.matrix);
-    mainHead.matrix.translate(0.15, 1.6, -0.1);
-    mainHead.matrix.scale(0.7, 0.8, 0.8);
+    mainHead.matrix = new Matrix4(rootCube);
+    mainHead.matrix.translate(2.5, 8.0, 1.2);
+    mainHead.matrix.rotate(rotateHeadX, 1, 0, 0);
+    mainHead.matrix.rotate(rotateHeadY, 0, 1, 0);
+    mainHead.matrix.rotate(rotateHeadZ, 0, 0, 1);
+    var mainHeadMat = new Matrix4(mainHead.matrix);
+    mainHead.matrix.scale(3.5, 3.2, 3.2);
+    mainHead.matrix.translate(-0.5, -0.5, -0.5);
     mainHead.render();
 
     var leftHeadCube = new Cube();
     leftHeadCube.color = koalaGreyColorMat;
-    leftHeadCube.matrix = new Matrix4(mainHead.matrix);
+    leftHeadCube.matrix = new Matrix4(mainHeadMat);
     leftHeadCube.matrix.translate(-0.1, 0.1, 0.1);
     leftHeadCube.matrix.scale(0.1, 0.8, 0.8);
     leftHeadCube.render();
@@ -152,14 +179,14 @@ function makeKoalaHead(rootCube) {
 
     var upperHeadCube = new Cube();
     upperHeadCube.color = koalaGreyColorMat;
-    upperHeadCube.matrix = new Matrix4(mainHead.matrix);
+    upperHeadCube.matrix = new Matrix4(mainHeadMat);
     upperHeadCube.matrix.translate(0.1, 1.0, 0.05);
     upperHeadCube.matrix.scale(0.8, 0.1, 0.9);
     upperHeadCube.render();
 
     var backHeadCube = new Cube();
     backHeadCube.color = koalaGreyColorMat;
-    backHeadCube.matrix = new Matrix4(mainHead.matrix);
+    backHeadCube.matrix = new Matrix4(mainHeadMat);
     backHeadCube.matrix.translate(0.1, 0.1, 1.0);
     backHeadCube.matrix.scale(0.8, 0.8, 0.1);
     backHeadCube.render();
@@ -187,7 +214,7 @@ function makeKoalaHead(rootCube) {
 
     var mainEar1 = new Cube();
     mainEar1.color = koalaGreyColorMat;
-    mainEar1.matrix = new Matrix4(mainHead.matrix);
+    mainEar1.matrix = new Matrix4(mainHeadMat);
     mainEar1.matrix.translate(-0.5, 0.65, 0.5);
     mainEar1.matrix.scale(2.0, 0.5, 0.2);
     mainEar1.render();
@@ -245,7 +272,7 @@ function makeKoalaHead(rootCube) {
 function makeKoalaFace(rootCube) {
     var nose = new Cube();
     nose.color = koalaBlackColorMat;
-    nose.matrix = new Matrix4(rootCube.matrix);
+    nose.matrix = new Matrix4(rootCube);
     nose.matrix.translate(0.35, 0.62, -0.7);
     nose.matrix.rotate(45, 1, 0, 0);
     nose.matrix.scale(0.3, 1.0, 1.0);
@@ -253,7 +280,7 @@ function makeKoalaFace(rootCube) {
 
     var leftEye = new Cube();
     leftEye.color = koalaBlackColorMat;
-    leftEye.matrix = new Matrix4(rootCube.matrix);
+    leftEye.matrix = new Matrix4(rootCube);
     leftEye.matrix.translate(0.0, 1.2, 0.5);
     leftEye.matrix.scale(0.3, 0.4, 1.0);
     leftEye.render();
@@ -276,9 +303,9 @@ function makeKoalaFace(rootCube) {
 function makeKoalaArms(rootCube) {
     var shoulderBase1 = new Cube();
     shoulderBase1.color = koalaGreyColorMat;
-    shoulderBase1.matrix = new Matrix4(rootCube.matrix);
-    shoulderBase1.matrix.translate(0.0, 0.9, 0.1);
-    shoulderBase1.matrix.scale(1.0, 0.5, 0.6);
+    shoulderBase1.matrix = new Matrix4(rootCube);
+    shoulderBase1.matrix.translate(0.0, 3.6, 0.4);
+    shoulderBase1.matrix.scale(5.0, 2.0, 2.4);
     shoulderBase1.render();
     
     var shoulderBase2 = new Cube();
@@ -295,13 +322,15 @@ function makeKoalaArms(rootCube) {
     shoulderBack.matrix.scale(0.9, 0.9, 0.2);
     shoulderBack.render();
 
+    // Left Arm
     var leftShoulderJoint = new Cube();
     leftShoulderJoint.color = koalaGreyColorMat;
-    leftShoulderJoint.matrix = new Matrix4(rootCube.matrix);
-    leftShoulderJoint.matrix.translate(-0.055, 1.1, 0.4);
+    leftShoulderJoint.matrix = new Matrix4(rootCube);
+    leftShoulderJoint.matrix.translate(-0.275, 4.4, 1.6);
+    var leftShoulderJointMatNoRotate = new Matrix4(leftShoulderJoint.matrix)
     leftShoulderJoint.matrix.rotate(rotateUpperLeftArm, 1, 0, 0);
     var leftShoulderJointMat = new Matrix4(leftShoulderJoint.matrix)
-    leftShoulderJoint.matrix.scale(-0.11, -0.5, -0.5);
+    leftShoulderJoint.matrix.scale(-0.44, -2.0, -2.0);
     leftShoulderJoint.matrix.translate(-0.5, -0.5, -0.5);
     leftShoulderJoint.render();
 
@@ -339,6 +368,56 @@ function makeKoalaArms(rootCube) {
     leftWristJoint.matrix.scale(-0.11, -0.5, -0.5);
     leftWristJoint.matrix.translate(-0.5, -0.5, -0.5);
     leftWristJoint.render();
+
+    // Rigt Arm
+    var rightShoulderJoint = new Cube();
+    rightShoulderJoint.color = koalaGreyColorMat;
+    rightShoulderJoint.matrix = new Matrix4(leftShoulderJointMatNoRotate);
+    rightShoulderJoint.matrix.translate(1.11, 0.0, 0.0);
+    rightShoulderJoint.matrix.rotate(rotateUpperRightArm, 1, 0, 0);
+    var rightShoulderJointMat = new Matrix4(rightShoulderJoint.matrix)
+    rightShoulderJoint.matrix.scale(-0.11, -0.5, -0.5);
+    rightShoulderJoint.matrix.translate(-0.5, -0.5, -0.5);
+    rightShoulderJoint.render();
+
+    var upperRightArm = new Cube();
+    upperRightArm.color = koalaGreyColorMat;
+    upperRightArm.matrix = new Matrix4(rightShoulderJoint.matrix);
+    upperRightArm.matrix.translate(0.0, 0.05, 1.0);
+    upperRightArm.matrix.scale(0.99, 0.9, 1.1);
+    upperRightArm.render();
+
+    var rightElbowJoint = new Cube();
+    rightElbowJoint.color = koalaGreyColorMat;
+    rightElbowJoint.matrix = new Matrix4(rightShoulderJointMat);
+    rightElbowJoint.matrix.translate(0.0, 0.0, -0.8);
+    rightElbowJoint.matrix.rotate(rotateLowerRightArm, 1, 0, 0);
+    var rightElbowJointMat = new Matrix4(rightElbowJoint.matrix);
+    rightElbowJoint.matrix.scale(-0.11, -0.5, -0.5);
+    rightElbowJoint.matrix.translate(-0.5, -0.5, -0.5);
+    rightElbowJoint.render();
+
+    var lowerRightArm = new Cube();
+    lowerRightArm.color = koalaGreyColorMat;
+    lowerRightArm.matrix = new Matrix4(rightElbowJointMat);
+    lowerRightArm.matrix.translate(0.05, 0.225, -0.25);
+    lowerRightArm.matrix.scale(-0.1, -0.45, -0.7);
+    lowerRightArm.render();
+
+    var rightWristJoint = new Cube();
+    rightWristJoint.color = koalaGreyColorMat;
+    rightWristJoint.matrix = new Matrix4(rightElbowJointMat);
+    rightWristJoint.matrix.translate(0.0, 0.0, -1.0);
+    rightWristJoint.matrix.rotate(rotateRightWristX, 1, 0, 0);
+    rightWristJoint.matrix.rotate(rotateRightWristY, 0, 1, 0);
+    rightWristJoint.matrix.rotate(rotateRightWristZ, 0, 0, 1);
+    rightWristJoint.matrix.scale(-0.11, -0.5, -0.5);
+    rightWristJoint.matrix.translate(-0.5, -0.5, -0.5);
+    rightWristJoint.render();
+}
+
+function makeKoalaLowerTorso(rootCube) {
+    // add code
 }
 
 function makeKoalaLegs(rootCube) {

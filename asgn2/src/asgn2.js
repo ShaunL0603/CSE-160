@@ -141,7 +141,7 @@ function addActionsForHtmlUI() {
     rotateAnimal("z", parseFloat(ev.target.value));
   });
 
-  // Actions for arm rotations
+  // Actions for left arm rotations
   document.getElementById("rotateUpperLeftArm").addEventListener("input", function(ev) {
     rotateUpperLeftArm = parseFloat(ev.target.value) * -1;
     renderAllShapes();
@@ -160,6 +160,42 @@ function addActionsForHtmlUI() {
   })
   document.getElementById("rotateLeftWristZ").addEventListener("input", function(ev) {
     rotateLeftWristZ = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
+
+  // Actions for right arm rotations
+  document.getElementById("rotateUpperRightArm").addEventListener("input", function(ev) {
+    rotateUpperRightArm = parseFloat(ev.target.value) * -1;
+    renderAllShapes();
+  });
+  document.getElementById("rotateLowerRightArm").addEventListener("input", function(ev) {
+    rotateLowerRightArm = parseFloat(ev.target.value);
+    renderAllShapes();
+  });
+  document.getElementById("rotateRightWristX").addEventListener("input", function(ev) {
+    rotateRightWristX = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
+  document.getElementById("rotateRightWristY").addEventListener("input", function(ev) {
+    rotateRightWristY = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
+  document.getElementById("rotateRightWristZ").addEventListener("input", function(ev) {
+    rotateRightWristZ = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
+
+  // Actions for head rotation
+  document.getElementById("rotateHeadX").addEventListener("input", function(ev) {
+    rotateHeadX = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
+    document.getElementById("rotateHeadY").addEventListener("input", function(ev) {
+    rotateHeadY = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
+    document.getElementById("rotateHeadZ").addEventListener("input", function(ev) {
+    rotateHeadZ = parseFloat(ev.target.value);
     renderAllShapes();
   })
 }
