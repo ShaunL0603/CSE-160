@@ -167,8 +167,8 @@ function makeKoalaHead(rootCube) {
     var leftHeadCube = new Cube();
     leftHeadCube.color = koalaGreyColorMat;
     leftHeadCube.matrix = new Matrix4(mainHeadMat);
-    leftHeadCube.matrix.translate(-0.1, 0.1, 0.1);
-    leftHeadCube.matrix.scale(0.1, 0.8, 0.8);
+    leftHeadCube.matrix.translate(-2.1, -1.3, -1.3);
+    leftHeadCube.matrix.scale(0.35, 2.56, 2.56);
     leftHeadCube.render();
 
     var rightHeadCube = new Cube();
@@ -180,15 +180,16 @@ function makeKoalaHead(rootCube) {
     var upperHeadCube = new Cube();
     upperHeadCube.color = koalaGreyColorMat;
     upperHeadCube.matrix = new Matrix4(mainHeadMat);
-    upperHeadCube.matrix.translate(0.1, 1.0, 0.05);
-    upperHeadCube.matrix.scale(0.8, 0.1, 0.9);
+    upperHeadCube.matrix.translate(-1.4, 1.6, -1.4);
+    upperHeadCube.matrix.scale(2.8, 0.32, 2.88);
     upperHeadCube.render();
 
     var backHeadCube = new Cube();
     backHeadCube.color = koalaGreyColorMat;
     backHeadCube.matrix = new Matrix4(mainHeadMat);
-    backHeadCube.matrix.translate(0.1, 0.1, 1.0);
-    backHeadCube.matrix.scale(0.8, 0.8, 0.1);
+    backHeadCube.matrix.translate(-1.4, -1.28, 1.6);
+    var backHeadCubeMat = new Matrix4(backHeadCube.matrix);
+    backHeadCube.matrix.scale(2.8, 2.56, 0.32);
     backHeadCube.render();
 
     var frontHeadCube1 = new Cube();
@@ -215,8 +216,8 @@ function makeKoalaHead(rootCube) {
     var mainEar1 = new Cube();
     mainEar1.color = koalaGreyColorMat;
     mainEar1.matrix = new Matrix4(mainHeadMat);
-    mainEar1.matrix.translate(-0.5, 0.65, 0.5);
-    mainEar1.matrix.scale(2.0, 0.5, 0.2);
+    mainEar1.matrix.translate(-3.5, 0.48, 0.0);
+    mainEar1.matrix.scale(7, 1.6, 0.64);
     mainEar1.render();
 
     var mainEar2 = new Cube();
@@ -265,7 +266,7 @@ function makeKoalaHead(rootCube) {
     rightEarFront2.matrix.translate(3.75, 0.0, 0.0);
     rightEarFront2.render();
     
-    makeKoalaFace(frontHeadCube1);
+    makeKoalaFace(backHeadCubeMat);
 }
 
 // Create cubes for face features
@@ -273,16 +274,17 @@ function makeKoalaFace(rootCube) {
     var nose = new Cube();
     nose.color = koalaBlackColorMat;
     nose.matrix = new Matrix4(rootCube);
-    nose.matrix.translate(0.35, 0.62, -0.7);
+    nose.matrix.translate(1.2, 1.7, -4.0);
+    var noseMatNoRotate = new Matrix4(nose.matrix);
     nose.matrix.rotate(45, 1, 0, 0);
-    nose.matrix.scale(0.3, 1.0, 1.0);
+    nose.matrix.scale(0.5, 1.2, 1.2);
     nose.render();
 
     var leftEye = new Cube();
     leftEye.color = koalaBlackColorMat;
     leftEye.matrix = new Matrix4(rootCube);
-    leftEye.matrix.translate(0.0, 1.2, 0.5);
-    leftEye.matrix.scale(0.3, 0.4, 1.0);
+    leftEye.matrix.translate(0.0, 2.1, -3.5);
+    leftEye.matrix.scale(0.8, 0.5, 0.5);
     leftEye.render();
     
     var rightEye = new Cube();
@@ -293,10 +295,9 @@ function makeKoalaFace(rootCube) {
 
     var mouth = new Cube();
     mouth.color = koalaBlackColorMat;    
-    mouth.matrix = new Matrix4(nose.matrix);
-    mouth.matrix.translate(-0.4, -0.01, 1.4);
-    mouth.matrix.rotate(-45, 1, 0, 0);
-    mouth.matrix.scale(1.8, 0.5, 1.0);
+    mouth.matrix = new Matrix4(noseMatNoRotate);
+    mouth.matrix.translate(-0.55, -1.7, 0.6);
+    mouth.matrix.scale(1.5, 0.6, 0.36);
     mouth.render();
 }
 
@@ -326,7 +327,7 @@ function makeKoalaArms(rootCube) {
     var leftShoulderJoint = new Cube();
     leftShoulderJoint.color = koalaGreyColorMat;
     leftShoulderJoint.matrix = new Matrix4(rootCube);
-    leftShoulderJoint.matrix.translate(-0.275, 4.4, 1.6);
+    leftShoulderJoint.matrix.translate(-0.22, 4.4, 1.6);
     var leftShoulderJointMatNoRotate = new Matrix4(leftShoulderJoint.matrix)
     leftShoulderJoint.matrix.rotate(rotateUpperLeftArm, 1, 0, 0);
     var leftShoulderJointMat = new Matrix4(leftShoulderJoint.matrix)
@@ -344,39 +345,39 @@ function makeKoalaArms(rootCube) {
     var leftElbowJoint = new Cube();
     leftElbowJoint.color = koalaGreyColorMat;
     leftElbowJoint.matrix = new Matrix4(leftShoulderJointMat);
-    leftElbowJoint.matrix.translate(0.0, 0.0, -0.8);
+    leftElbowJoint.matrix.translate(0.0, 0.0, -3.2);
     leftElbowJoint.matrix.rotate(rotateLowerLeftArm, 1, 0, 0);
     var leftElbowJointMat = new Matrix4(leftElbowJoint.matrix);
-    leftElbowJoint.matrix.scale(-0.11, -0.5, -0.5);
+    leftElbowJoint.matrix.scale(-0.44, -2.0, -2.0);
     leftElbowJoint.matrix.translate(-0.5, -0.5, -0.5);
     leftElbowJoint.render();
 
     var lowerLeftArm = new Cube();
     lowerLeftArm.color = koalaGreyColorMat;
     lowerLeftArm.matrix = new Matrix4(leftElbowJointMat);
-    lowerLeftArm.matrix.translate(0.05, 0.225, -0.25);
-    lowerLeftArm.matrix.scale(-0.1, -0.45, -0.7);
+    lowerLeftArm.matrix.translate(0.2, 0.9, -1.0);
+    lowerLeftArm.matrix.scale(-0.4, -1.8, -3.0);
     lowerLeftArm.render();
 
     var leftWristJoint = new Cube();
     leftWristJoint.color = koalaGreyColorMat;
     leftWristJoint.matrix = new Matrix4(leftElbowJointMat);
-    leftWristJoint.matrix.translate(0.0, 0.0, -1.0);
+    leftWristJoint.matrix.translate(0.0, 0.0, -4.0);
     leftWristJoint.matrix.rotate(rotateLeftWristX, 1, 0, 0);
     leftWristJoint.matrix.rotate(rotateLeftWristY, 0, 1, 0);
     leftWristJoint.matrix.rotate(rotateLeftWristZ, 0, 0, 1);
-    leftWristJoint.matrix.scale(-0.11, -0.5, -0.5);
+    leftWristJoint.matrix.scale(-0.4, -2.0, -2.0);
     leftWristJoint.matrix.translate(-0.5, -0.5, -0.5);
     leftWristJoint.render();
 
     // Rigt Arm
     var rightShoulderJoint = new Cube();
     rightShoulderJoint.color = koalaGreyColorMat;
-    rightShoulderJoint.matrix = new Matrix4(leftShoulderJointMatNoRotate);
-    rightShoulderJoint.matrix.translate(1.11, 0.0, 0.0);
+    rightShoulderJoint.matrix = new Matrix4(rootCube);
+    rightShoulderJoint.matrix.translate(5.26, 4.4, 1.6);
     rightShoulderJoint.matrix.rotate(rotateUpperRightArm, 1, 0, 0);
     var rightShoulderJointMat = new Matrix4(rightShoulderJoint.matrix)
-    rightShoulderJoint.matrix.scale(-0.11, -0.5, -0.5);
+    rightShoulderJoint.matrix.scale(-0.55, -2.0, -2.0);
     rightShoulderJoint.matrix.translate(-0.5, -0.5, -0.5);
     rightShoulderJoint.render();
 
@@ -390,28 +391,28 @@ function makeKoalaArms(rootCube) {
     var rightElbowJoint = new Cube();
     rightElbowJoint.color = koalaGreyColorMat;
     rightElbowJoint.matrix = new Matrix4(rightShoulderJointMat);
-    rightElbowJoint.matrix.translate(0.0, 0.0, -0.8);
+    rightElbowJoint.matrix.translate(0.0, 0.0, -3.2);
     rightElbowJoint.matrix.rotate(rotateLowerRightArm, 1, 0, 0);
     var rightElbowJointMat = new Matrix4(rightElbowJoint.matrix);
-    rightElbowJoint.matrix.scale(-0.11, -0.5, -0.5);
+    rightElbowJoint.matrix.scale(-0.55, -2.0, -2.0);
     rightElbowJoint.matrix.translate(-0.5, -0.5, -0.5);
     rightElbowJoint.render();
 
     var lowerRightArm = new Cube();
     lowerRightArm.color = koalaGreyColorMat;
     lowerRightArm.matrix = new Matrix4(rightElbowJointMat);
-    lowerRightArm.matrix.translate(0.05, 0.225, -0.25);
-    lowerRightArm.matrix.scale(-0.1, -0.45, -0.7);
+    lowerRightArm.matrix.translate(0.25, 0.9, -1.0);
+    lowerRightArm.matrix.scale(-0.4, -1.8, -3.0);
     lowerRightArm.render();
 
     var rightWristJoint = new Cube();
     rightWristJoint.color = koalaGreyColorMat;
     rightWristJoint.matrix = new Matrix4(rightElbowJointMat);
-    rightWristJoint.matrix.translate(0.0, 0.0, -1.0);
+    rightWristJoint.matrix.translate(0.0, 0.0, -4.0);
     rightWristJoint.matrix.rotate(rotateRightWristX, 1, 0, 0);
     rightWristJoint.matrix.rotate(rotateRightWristY, 0, 1, 0);
     rightWristJoint.matrix.rotate(rotateRightWristZ, 0, 0, 1);
-    rightWristJoint.matrix.scale(-0.11, -0.5, -0.5);
+    rightWristJoint.matrix.scale(-0.5, -2.0, -2.0);
     rightWristJoint.matrix.translate(-0.5, -0.5, -0.5);
     rightWristJoint.render();
 }
