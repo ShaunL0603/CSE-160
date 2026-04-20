@@ -40,7 +40,8 @@ let g_animalYAngle = 0.0;
 let g_animalZAngle = 0.0;
 let g_redraw = false;
 let g_globalZoom = 0.2;
-let rotateSensitivity = 0.2;
+let g_rotateSensitivity = 0.2;
+let g_movementSensitivity = 0.01;
 
 function main() {
   // sets up canvas and gl variables
@@ -50,8 +51,8 @@ function main() {
   // Set up actions for the HTML UI elements
   addActionsForHtmlUI();
 
-  canvas.onmousedown = clickAndDrag;
-  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { clickAndDrag(ev); } };
+  canvas.onmousedown = click;
+  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); } };
   // Add event listener for mouse wheel to zoom in and out
   canvas.addEventListener("wheel", function(ev) {
     ev.preventDefault();
@@ -127,7 +128,7 @@ function connectVariablesToGLSL() {
 function addActionsForHtmlUI() {
   // Add event listener for rotate sensitivity slider
   document.getElementById("rotateSensitivity").addEventListener("input", function(ev) {
-    rotateSensitivity = parseFloat(ev.target.value);
+    g_rotateSensitivity = parseFloat(ev.target.value);
   });
 
   // Add event listeners for animal rotation inputs
@@ -143,67 +144,86 @@ function addActionsForHtmlUI() {
 
   // Actions for left arm rotations
   document.getElementById("rotateUpperLeftArm").addEventListener("input", function(ev) {
-    rotateUpperLeftArm = parseFloat(ev.target.value) * -1;
+    g_rotateUpperLeftArm = parseFloat(ev.target.value) * -1;
     renderAllShapes();
   });
   document.getElementById("rotateLowerLeftArm").addEventListener("input", function(ev) {
-    rotateLowerLeftArm = parseFloat(ev.target.value);
+    g_rotateLowerLeftArm = parseFloat(ev.target.value);
     renderAllShapes();
   });
   document.getElementById("rotateLeftWristX").addEventListener("input", function(ev) {
-    rotateLeftWristX = parseFloat(ev.target.value);
+    g_rotateLeftWristX = parseFloat(ev.target.value);
     renderAllShapes();
   })
   document.getElementById("rotateLeftWristY").addEventListener("input", function(ev) {
-    rotateLeftWristY = parseFloat(ev.target.value);
+    g_rotateLeftWristY = parseFloat(ev.target.value);
     renderAllShapes();
   })
   document.getElementById("rotateLeftWristZ").addEventListener("input", function(ev) {
-    rotateLeftWristZ = parseFloat(ev.target.value);
+    g_rotateLeftWristZ = parseFloat(ev.target.value);
     renderAllShapes();
   })
 
   // Actions for right arm rotations
   document.getElementById("rotateUpperRightArm").addEventListener("input", function(ev) {
-    rotateUpperRightArm = parseFloat(ev.target.value) * -1;
+    g_rotateUpperRightArm = parseFloat(ev.target.value) * -1;
     renderAllShapes();
   });
   document.getElementById("rotateLowerRightArm").addEventListener("input", function(ev) {
-    rotateLowerRightArm = parseFloat(ev.target.value);
+    g_rotateLowerRightArm = parseFloat(ev.target.value);
     renderAllShapes();
   });
   document.getElementById("rotateRightWristX").addEventListener("input", function(ev) {
-    rotateRightWristX = parseFloat(ev.target.value);
+    g_rotateRightWristX = parseFloat(ev.target.value);
     renderAllShapes();
   })
   document.getElementById("rotateRightWristY").addEventListener("input", function(ev) {
-    rotateRightWristY = parseFloat(ev.target.value);
+    g_rotateRightWristY = parseFloat(ev.target.value);
     renderAllShapes();
   })
   document.getElementById("rotateRightWristZ").addEventListener("input", function(ev) {
-    rotateRightWristZ = parseFloat(ev.target.value);
+    g_rotateRightWristZ = parseFloat(ev.target.value);
     renderAllShapes();
   })
 
   // Actions for head rotation
   document.getElementById("rotateHeadX").addEventListener("input", function(ev) {
-    rotateHeadX = parseFloat(ev.target.value);
+    g_rotateHeadX = parseFloat(ev.target.value);
     renderAllShapes();
   })
     document.getElementById("rotateHeadY").addEventListener("input", function(ev) {
-    rotateHeadY = parseFloat(ev.target.value);
+    g_rotateHeadY = parseFloat(ev.target.value);
     renderAllShapes();
   })
     document.getElementById("rotateHeadZ").addEventListener("input", function(ev) {
-    rotateHeadZ = parseFloat(ev.target.value);
+    g_rotateHeadZ = parseFloat(ev.target.value);
     renderAllShapes();
   })
+
+  // Actions for left leg rotation
+  document.getElementById("rotateUpperLeftLeg").addEventListener("input", function(ev) {
+    g_rotateUpperLeftLeg = parseFloat(ev.target.value);
+    renderAllShapes();
+  });
+  document.getElementById("rotateLowerLeftLeg").addEventListener("input", function(ev) {
+    g_rotateLowerLeftLeg = parseFloat(ev.target.value);
+    renderAllShapes();
+  });
 }
 
-function clickAndDrag(ev) {
-  g_globalXAngle -= rotateSensitivity * ev.movementY;
-  g_globalYAngle -= rotateSensitivity * ev.movementX;
-  
+function click(ev) {
+
+  if (ev.shiftKey) {
+    // console.log("moving animal");
+    g_koalaPosX += ev.movementX * g_movementSensitivity;
+    g_koalaPosY -= ev.movementY * g_movementSensitivity;
+    g_koalaPosZ -= ev.movementX * g_movementSensitivity;
+
+  } else {
+    g_globalXAngle -= g_rotateSensitivity * ev.movementY;
+    g_globalYAngle -= g_rotateSensitivity * ev.movementX;
+  }
+
   g_redraw = true;
   renderAllShapes();
 }
