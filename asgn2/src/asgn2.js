@@ -131,6 +131,14 @@ function addActionsForHtmlUI() {
     g_rotateSensitivity = parseFloat(ev.target.value);
   });
 
+  // Add event listener for resetting animal position
+  document.getElementById("resetAnimalPos").addEventListener("click", function(ev) {
+    g_koalaPosX = 0;
+    g_koalaPosY = 0;
+    g_koalaPosZ = 0;
+    renderAllShapes();
+  })
+
   // Add event listeners for animal rotation inputs
   document.getElementById("rotateAnimalX").addEventListener("input", function(ev) {
     rotateAnimal("x", parseFloat(ev.target.value));
@@ -206,7 +214,7 @@ function addActionsForHtmlUI() {
     renderAllShapes();
   });
   document.getElementById("rotateLowerLeftLeg").addEventListener("input", function(ev) {
-    g_rotateLowerLeftLeg = parseFloat(ev.target.value);
+    g_rotateLowerLeftLeg = parseFloat(ev.target.value) * -1;
     renderAllShapes();
   });
 }

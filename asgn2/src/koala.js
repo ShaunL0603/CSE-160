@@ -4,7 +4,7 @@ const g_koalaWhiteColorMat = [1.0, 0.98, 0.93, 1.0];
 const g_koalaBlackColorMat = [0.2, 0.2, 0.2, 1.0];
 let g_koalaScaleX = 5.0;
 let g_koalaScaleY = 6.0;
-let g_koalaScaleZ = 4.5;
+let g_koalaScaleZ = 5.0;
 let g_koalaPosX = 0.0;
 let g_koalaPosY = 0.0;
 let g_koalaPosZ = 0.0;
@@ -26,7 +26,7 @@ let g_koalaPosZ = 0.0;
 
     // Left Leg rotations
     let g_rotateUpperLeftLeg = 10;
-    let g_rotateLowerLeftLeg = 30;
+    let g_rotateLowerLeftLeg = -30;
     let g_rotateLeftAnkleX = 0;
     let g_rotateLeftAnkleY = 0;
     let g_rotateLeftAnkleZ = 0;
@@ -115,8 +115,8 @@ function makeKoalaTorso(rootCube) {
     var lowerTorso1 = new Cube();
     lowerTorso1.color = g_koalaGreyColorMat;
     lowerTorso1.matrix = new Matrix4(rootCube);
-    lowerTorso1.matrix.translate(-0.25, -2.0, -0.4);
-    lowerTorso1.matrix.scale(5.0, 3.0, 5.4);
+    lowerTorso1.matrix.translate(-0.25, -2.0, -0.39);
+    lowerTorso1.matrix.scale(5.0, 3.0, 5.39);
     lowerTorso1.render();
 
     var belly1 = new Cube();
@@ -231,8 +231,8 @@ function makeKoalaHead(rootCube) {
     var mainEar1 = new Cube();
     mainEar1.color = g_koalaGreyColorMat;
     mainEar1.matrix = new Matrix4(mainHeadMat);
-    mainEar1.matrix.translate(-3.5, 0.48, 0.0);
-    mainEar1.matrix.scale(7, 1.6, 0.64);
+    mainEar1.matrix.translate(-4.2, 0.4, -0.4);
+    mainEar1.matrix.scale(8.4, 1.92, 0.768);
     mainEar1.render();
 
     var mainEar2 = new Cube();
@@ -470,10 +470,27 @@ function makeKoalaLegs(rootCube) {
     
     var leftUpperLeg = new Cube();
     leftUpperLeg.color = g_koalaGreyColorMat;
-    leftUpperLeg.matrix = leftHipJoint1Mat;
-    leftUpperLeg.matrix.translate(-1.4, -1.4, -4.0);
-    leftUpperLeg.matrix.scale(2.8, 2.8, 3.5);
+    leftUpperLeg.matrix = new Matrix4(leftHipJoint1Mat);
+    leftUpperLeg.matrix.translate(-1.3, -1.3, -4.0);
+    leftUpperLeg.matrix.scale(2.6, 2.6, 2.5);
     leftUpperLeg.render();
+
+    var kneeJoint = new Cube();
+    kneeJoint.color = g_koalaGreyColorMat;
+    kneeJoint.matrix = new Matrix4(leftHipJoint1Mat);
+    kneeJoint.matrix.translate(0.05, -0.16, -4.0);
+    kneeJoint.matrix.rotate(g_rotateLowerLeftLeg, 1, 0, 0);
+    var kneeJointMat = new Matrix4(kneeJoint.matrix);
+    kneeJoint.matrix.scale(2.9, 2.9, 2.9);
+    kneeJoint.matrix.translate(-0.5, -0.5, -0.5);
+    kneeJoint.render();
+
+    var leftLowerLeg = new Cube();
+    leftLowerLeg.color = g_koalaGreyColorMat;
+    leftLowerLeg.matrix = new Matrix4(kneeJointMat);
+    leftLowerLeg.matrix.translate(-1.3, -1.3, -4.8);
+    leftLowerLeg.matrix.scale(2.6, 2.6, 3.5);
+    leftLowerLeg.render();
 }
 
 // remember to put the extra parameters in, not just rootCube
