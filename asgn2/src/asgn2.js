@@ -32,12 +32,9 @@ var u_GlobalRotateMatrix;
 var u_ProjectionMatrix;
 
 // Global variables for interacting
-let g_globalXAngle = -12.0;
-let g_globalYAngle = -45.0;
-let g_globalZAngle = 0.0;
-let g_animalXAngle = 0.0;
-let g_animalYAngle = 0.0;
-let g_animalZAngle = 0.0;
+let g_globalXAngle = 0;
+let g_globalYAngle = 0;
+let g_globalZAngle = 0;
 let g_redraw = false;
 let g_globalZoom = 0.2;
 let g_rotateSensitivity = 0.2;
