@@ -5,7 +5,7 @@ const g_koalaBlackColorMat = [0.2, 0.2, 0.2, 1.0];
 let g_koalaScaleX = 1.5;
 let g_koalaScaleY = 3.0;
 let g_koalaScaleZ = 3.0;
-let g_koalaPosX = 10.0;
+let g_koalaPosX = 20.0;
 let g_koalaPosY = 0.0;
 let g_koalaPosZ = 0.0;
 let g_animalXAngle = 0.0;
@@ -45,6 +45,9 @@ let g_animalZAngle = 0.0;
     let g_rotateHeadX = 0;
     let g_rotateHeadY = 0;
     let g_rotateHeadZ = 0;
+
+    // Jaw rotations
+    let g_rotateLowerJawY = 0;
     
 function makeKoala() {
     // torso cube of koala, root of animal
@@ -95,25 +98,45 @@ function makeKoalaTorso(rootCubeMat) {
     lowerTorso2.matrix.translate(4.5, -0.2, 0.0);
     lowerTorso2.matrix.scale(g_koalaScaleX * 2.0, g_koalaScaleY * 2.3, g_koalaScaleZ * 2.25);
     lowerTorso2.render();
+
+    var backNeck1 = new Cube();
+    backNeck1.color = g_koalaGreyColorMat;
+    backNeck1.matrix = new Matrix4(rootCubeMat);
+    backNeck1.matrix.translate(-5.0, 3.0, 0.0);
+    backNeck1.matrix.rotate(45, 0, 0, 1);
+    backNeck1.matrix.scale(g_koalaScaleX * 2.0, g_koalaScaleY * 2.0, g_koalaScaleZ * 2.0);
+    backNeck1.matrix.translate(-0.5, -0.5, -0.5);
+    backNeck1.render();
+
+    var backNeck2 = new Cube();
+    backNeck2.color = g_koalaGreyColorMat;
+    backNeck2.matrix = new Matrix4(rootCubeMat);
+    backNeck2.matrix.translate(-7.7, 4.8, 0.0);
+    backNeck2.matrix.rotate(67.5, 0, 0, 1);
+    backNeck2.matrix.scale(g_koalaScaleX * 2.5, g_koalaScaleY * 0.7, g_koalaScaleZ * 2.0);
+    backNeck2.matrix.translate(-0.5, -0.5, -0.5);
+    backNeck2.render();
+
+    var backNeck3 = new Cube();
+    backNeck3.color = g_koalaGreyColorMat;
+    backNeck3.matrix = new Matrix4(rootCubeMat);
+    backNeck3.matrix.translate(-8.8, 5.1, 0.0);
+    backNeck3.matrix.rotate(90, 0, 0, 1);
+    backNeck3.matrix.scale(g_koalaScaleX * 2.5, g_koalaScaleY * 0.61, g_koalaScaleZ * 2.0);
+    backNeck3.matrix.translate(-0.5, -0.5, -0.5);
+    backNeck3.render();
 }
 
-function makeKoalaHead(rootCubeMat) {
-    var backNeck = new Cube();
-    backNeck.color = g_koalaGreyColorMat;
-    backNeck.matrix = new Matrix4(rootCubeMat);
-    backNeck.matrix.translate(-8.0, 4.0, -0.5);
-    backNeck.matrix.scale(1.0, 1.0, 1.0);
-    backNeck.render();
-    
+function makeKoalaHead(rootCubeMat) {    
     var neck1 = new Cube();
     neck1.color = g_koalaGreyColorMat;
     neck1.matrix = new Matrix4(rootCubeMat);
-    neck1.matrix.translate(-10.7, 3.075, 0.0);
+    neck1.matrix.translate(-9.8, 3.3, 0.0);
     neck1.matrix.rotate(g_rotateHeadX * 0.3, 1, 0, 0);
     neck1.matrix.rotate(g_rotateHeadY * 0.3, 0, 1, 0);
     neck1.matrix.rotate(g_rotateHeadZ * 0.3, 0, 0, 1);
     var neck1Mat = new Matrix4(neck1.matrix);
-    neck1.matrix.scale(g_koalaScaleX * 2.66, g_koalaScaleY * 2.0, g_koalaScaleZ * 2.0);
+    neck1.matrix.scale(g_koalaScaleX * 1.66, g_koalaScaleY * 2.6, g_koalaScaleZ * 2.3);
     neck1.matrix.translate(-0.5, -0.5, -0.5);
     neck1.render();
 
@@ -125,31 +148,68 @@ function makeKoalaHead(rootCubeMat) {
     neck2.matrix.rotate(g_rotateHeadY * 0.3, 0, 1, 0);
     neck2.matrix.rotate(g_rotateHeadZ * 0.3, 0, 0, 1);
     var neck2Mat = new Matrix4(neck2.matrix);
-    neck2.matrix.scale(3.0, 6.66, 6.66);
+    neck2.matrix.scale(g_koalaScaleX * 1.66, g_koalaScaleY * 2.7, g_koalaScaleZ * 2.4);
     neck2.matrix.translate(-0.5, -0.5, -0.5);
     neck2.render();
 
     var neck3 = new Cube();
     neck3.color = g_koalaGreyColorMat;
     neck3.matrix = new Matrix4(neck2Mat);
-    neck3.matrix.translate(-2.0, 0.0, 0.0);
+    neck3.matrix.translate(-1.0, 0.0, 0.0);
     neck3.matrix.rotate(g_rotateHeadX * 0.3, 1, 0, 0);
     neck3.matrix.rotate(g_rotateHeadY * 0.3, 0, 1, 0);
     neck3.matrix.rotate(g_rotateHeadZ * 0.3, 0, 0, 1);
-    neck3.matrix.scale(3.0, 7.32, 7.32);
+    var neck3Mat = new Matrix4(neck3.matrix);
+    neck3.matrix.scale(g_koalaScaleX * 1.66, g_koalaScaleY * 2.8, g_koalaScaleZ * 2.45);
     neck3.matrix.translate(-0.5, -0.5, -0.5);
     neck3.render();
-    
-    // var head1 = new Cube();
-    // head1.color = g_koalaGreyColorMat;
-    // head1.matrix = new Matrix4(neckMat);
-    // head1.matrix.translate(-1.0, 0.0, 0.0);
-    // head1.matrix.rotate(g_rotateHeadX, 1, 0, 0);
-    // head1.matrix.rotate(g_rotateHeadY, 0, 1, 0);
-    // head1.matrix.rotate(g_rotateHeadZ, 0, 0, 1);
-    // head1.matrix.scale(3.0, 8.0, 8.0);
-    // head1.matrix.translate(-0.5, -0.5, -0.5);
-    // head1.render();
+
+    var head1 = new Cube();
+    head1.color = g_koalaGreyColorMat;
+    head1.matrix = new Matrix4(neck3Mat);
+    head1.matrix.translate(-6.0, 1.5, -3.9);
+    head1.matrix.scale(g_koalaScaleX * 4.0, g_koalaScaleY * 1.0, g_koalaScaleZ * 2.6);
+    head1.render()
+
+    var head2 = new Cube();
+    head2.color = g_koalaGreyColorMat;
+    head2.matrix = new Matrix4(neck3Mat);
+    head2.matrix.translate(-7.2, 0.5, -4.05);
+    head2.matrix.scale(g_koalaScaleX * 4.2, g_koalaScaleY * 1.0, g_koalaScaleZ * 2.7);
+    head2.render()
+
+    var head3 = new Cube();
+    head3.color = g_koalaGreyColorMat;
+    head3.matrix = new Matrix4(neck3Mat);
+    head3.matrix.translate(-8.0, -2.0, -4.05);
+    head3.matrix.scale(g_koalaScaleX * 4.5, g_koalaScaleY * 1.6, g_koalaScaleZ * 2.7);
+    head3.render()
+
+    var upperJaw = new Cube();
+    upperJaw.color = g_koalaGreyColorMat;
+    upperJaw.matrix = new Matrix4(neck3Mat);
+    upperJaw.matrix.translate(-10.2, -4.7, -3.6);
+    var upperJawMat = new Matrix4(upperJaw.matrix);
+    upperJaw.matrix.scale(g_koalaScaleX * 6.0, g_koalaScaleY * 0.9, g_koalaScaleZ * 2.4);
+    upperJaw.render()
+
+    var lowerBackJaw = new Cube();
+    lowerBackJaw.color = g_koalaGreyColorMat;
+    lowerBackJaw.matrix = new Matrix4(upperJawMat);
+    lowerBackJaw.matrix.translate(9.0, -0.6, 3.6);
+    lowerBackJaw.matrix.rotate(45, 0, 0, 1);
+    lowerBackJaw.matrix.scale(g_koalaScaleX * 1.0, g_koalaScaleY * 1.0, g_koalaScaleZ * 2.4);
+    lowerBackJaw.matrix.translate(-0.5, -0.5, -0.5);
+    lowerBackJaw.render();
+
+    var lowerJawBase = new Cube();
+    lowerJawBase.color = g_koalaGreyColorMat;
+    lowerJawBase.matrix = upperJawMat;
+    lowerJawBase.matrix.translate(5.0, -1.0, 3.6);
+    lowerJawBase.matrix.rotate(g_rotateLowerJawY, 0, 0, 1);
+    lowerJawBase.matrix.scale(g_koalaScaleX * 5.5, g_koalaScaleY * 0.5, g_koalaScaleZ * 2.4);
+    lowerJawBase.matrix.translate(-0.5, -0.5, -0.5);
+    lowerJawBase.render()
 }
 
 function makeKoalaArms(rootCubeMat) {

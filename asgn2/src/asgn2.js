@@ -61,7 +61,7 @@ function main() {
       g_globalZoom *= 1.1;
     }
 
-    g_globalZoom = Math.max(0.1, Math.min(5.0, g_globalZoom));
+    g_globalZoom = Math.max(0.01, Math.min(5.0, g_globalZoom));
 
     g_redraw = true;
     renderAllShapes();
@@ -214,6 +214,12 @@ function addActionsForHtmlUI() {
     g_rotateLowerLeftLeg = parseFloat(ev.target.value) * -1;
     renderAllShapes();
   });
+
+  // Action for lower jaw rotation
+  document.getElementById("rotateLowerJaw").addEventListener("input", function(ev) {
+    g_rotateLowerJawY = parseFloat(ev.target.value);
+    renderAllShapes();
+  })
 }
 
 function click(ev) {
