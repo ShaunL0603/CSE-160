@@ -27,8 +27,8 @@ function makeKoala() {
     mainTorso.matrix.translate(-0.5, -0.5, -0.5);
     mainTorso.render();
     
-    // makeKoalaTorso(mainTorsoMat);
-    // makeKoalaHead(mainTorsoMat);
+    makeKoalaTorso(mainTorsoMat);
+    makeKoalaHead(mainTorsoMat);
     makeKoalaArms(mainTorsoMat);
     // makeKoalaLegs(mainTorsoMat);
 }

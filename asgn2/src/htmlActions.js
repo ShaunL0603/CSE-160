@@ -51,8 +51,20 @@ function addActionsForHtmlUI() {
         g_rotateLeftThumb1 = parseFloat(ev.target.value);
         renderAllShapes();
     });
+    document.getElementById("rotateLeftSecondThumb").addEventListener("input", function(ev) {
+        g_rotateLeftThumb2 = parseFloat(ev.target.value);
+        renderAllShapes();
+    });
     document.getElementById("rotateLeftIndexFinger").addEventListener("input", function(ev) {
         g_rotateLeftIndexFinger = parseFloat(ev.target.value);
+        renderAllShapes();
+    });
+    document.getElementById("rotateLeftMiddleFinger").addEventListener("input", function(ev) {
+        g_rotateLeftMiddleFinger = parseFloat(ev.target.value);
+        renderAllShapes();
+    });
+    document.getElementById("rotateLeftPinkyFinger").addEventListener("input", function(ev) {
+        g_rotateLeftPinkyFinger = parseFloat(ev.target.value);
         renderAllShapes();
     });
 

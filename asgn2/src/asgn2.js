@@ -130,8 +130,8 @@ function click(ev) {
   if (ev.shiftKey) {
     // console.log("moving animal");
     g_koalaPosX += ev.movementX * g_movementSensitivity;
-    g_koalaPosY -= ev.movementY * g_movementSensitivity;
-    g_koalaPosZ -= ev.movementX * g_movementSensitivity;
+    g_koalaPosY += ev.movementY * g_movementSensitivity;
+    g_koalaPosZ += ev.movementX * g_movementSensitivity;
 
   } else {
     g_globalXAngle -= g_rotateSensitivity * ev.movementY;

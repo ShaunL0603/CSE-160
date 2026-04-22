@@ -49,14 +49,14 @@ function makeKoalaArms(rootCubeMat) {
     var lowerLeftArmBone = new Cube();
     lowerLeftArmBone.color = g_yellow;
     lowerLeftArmBone.matrix = new Matrix4(leftElbowJointMat);
-    lowerLeftArmBone.matrix.translate(-0.75, -6.0, -0.75)
-    lowerLeftArmBone.matrix.scale(g_koalaScaleX * 1.0, g_koalaScaleY * 1.5, g_koalaScaleZ * 0.5);
+    lowerLeftArmBone.matrix.translate(-0.75, -8.7, -0.75)
+    lowerLeftArmBone.matrix.scale(g_koalaScaleX * 1.0, g_koalaScaleY * 2.5, g_koalaScaleZ * 0.5);
     lowerLeftArmBone.render();
 
     var leftWristJoint = new Cube();
     leftWristJoint.color = g_green;
     leftWristJoint.matrix = new Matrix4(leftElbowJointMat);
-    leftWristJoint.matrix.translate(0.0, -6.0, 0.0);
+    leftWristJoint.matrix.translate(0.0, -8.7, 0.0);
     leftWristJoint.matrix.rotate(g_rotateLeftWristX, 1, 0, 0);
     leftWristJoint.matrix.rotate(g_rotateLeftWristY, 0, 1, 0);
     leftWristJoint.matrix.rotate(g_rotateLeftWristZ, 0, 0, 1);
@@ -106,14 +106,14 @@ function makeKoalaArms(rootCubeMat) {
     var lowerRightArmBone = new Cube();
     lowerRightArmBone.color = g_yellow;
     lowerRightArmBone.matrix = new Matrix4(rightElbowJointMat);
-    lowerRightArmBone.matrix.translate(-0.75, -6.0, -0.75);
-    lowerRightArmBone.matrix.scale(g_koalaScaleX * 1.0, g_koalaScaleY * 1.5, g_koalaScaleZ * 0.5);
+    lowerRightArmBone.matrix.translate(-0.75, -8.7, -0.75);
+    lowerRightArmBone.matrix.scale(g_koalaScaleX * 1.0, g_koalaScaleY * 2.5, g_koalaScaleZ * 0.5);
     lowerRightArmBone.render();
 
     var rightWristJoint = new Cube();
     rightWristJoint.color = g_green;
     rightWristJoint.matrix = new Matrix4(rightElbowJointMat);
-    rightWristJoint.matrix.translate(0.0, -6.0, 0.0);
+    rightWristJoint.matrix.translate(0.0, -8.7, 0.0);
     rightWristJoint.matrix.rotate(g_rotateRightWristX, 1, 0, 0);
     rightWristJoint.matrix.rotate(g_rotateRightWristY, 0, 1, 0);
     rightWristJoint.matrix.rotate(g_rotateRightWristZ, 0, 0, 1);
