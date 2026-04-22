@@ -79,7 +79,7 @@ function makeKoalaArms(rootCubeMat) {
     var rightShoulderJoint = new Cube();
     rightShoulderJoint.color = g_green;
     rightShoulderJoint.matrix = new Matrix4(rootCubeMat);
-    rightShoulderJoint.matrix.translate(0.5, 0.0, 5.5);
+    rightShoulderJoint.matrix.translate(-0.5, 0.0, 5.5);
     rightShoulderJoint.matrix.rotate(g_rotateUpperRightArm, 0, 0, 1);
     var rightShoulderJointMat = new Matrix4(rightShoulderJoint.matrix);
     rightShoulderJoint.matrix.scale(g_koalaScaleX * 2.0, g_koalaScaleY * 1.0, g_koalaScaleZ * 1.0);

@@ -22,31 +22,32 @@
         
         <h2>Transform Options</h2>
 
-        <h2>Rotate:</h2>
-        <p>Animal:</p>
+        <h3>Rotate:</h3>
+        <p>Whole Animal:</p>
         <p>
           x <input id="rotateAnimalX" type="number" min="-180" max="180" value="0" step="1" onchange="if (Number.isNaN(parseFloat(this.value))) { this.value = 0; }">
           y <input id="rotateAnimalY" type="number" min="-180" max="180" value="0" step="1" onchange="if (Number.isNaN(parseFloat(this.value))) { this.value = 0; }">
           z <input id="rotateAnimalZ" type="number" min="-180" max="180" value="0" step="1" onchange="if (Number.isNaN(parseFloat(this.value))) { this.value = 0; }">
         </p>
-
-        <p>Jaw</p>
+        
+        <h4 style="padding-top: 30px">Rotations for Head</h4>
+        <p>Head:</p>
+          x <input id="rotateHeadX" type="number" min="-90" max="90" value="0" step="1">
+          y <input id="rotateHeadY" type="number" min="-90" max="90" value="0" step="1">
+          z <input id="rotateHeadZ" type="number" min="-90" max="90" value="0" step="1">
         <p>
           Lower Jaw: <input id="rotateLowerJaw" type="range" min="0" max="20" value="00" step="1">
         </p>
-
+        
+        <h4 style="padding-top: 30px">Rotatons for Legs</h4>
         <p>Left Leg</p>
         <p>
           Upper: <input id="rotateUpperLeftLeg" type="range" min="10" max="55" value="10" step="1">
           Lower: <input id="rotateLowerLeftLeg" type="range" min="30" max="100" value="30" step="1">
         </p>
 
-        <p>Head:</p>
-          x <input id="rotateHeadX" type="number" min="-90" max="90" value="0" step="1">
-          y <input id="rotateHeadY" type="number" min="-90" max="90" value="0" step="1">
-          z <input id="rotateHeadZ" type="number" min="-90" max="90" value="0" step="1">
-        
-        <p>Left Arm:
+        <h4 style="padding-top: 30px">Rotations for Arms</h4>
+        <p>Left Arm:</p>
         <p>
           Upper: <input id="rotateUpperLeftArm" type="range" min="10" max="75" value="10" step="1">
           Lower: <input id="rotateLowerLeftArm" type="range" min="30" max="100" value="30" step="1">
@@ -54,8 +55,13 @@
           Wrist (y): <input id="rotateLeftWristY" type="number" min="-90" max="90" value="0" step="1">
           Wrist (z): <input id="rotateLeftWristZ" type="number" min="-90" max="90" value="0" step="1">
         </p>
+        <p>Left fingers:</p>
+        <p>
+          First thumb: <input id="rotateLeftFirstThumb" type="range" min="0" max="45" value="0" step="1">
+          Index: <input id="rotateLeftIndexFinger" type="range" min="0" max="45" value="0" step="1">
+        </p>
         
-        <p>Right Arm:
+        <p style="padding-top: 10px">Right Arm:</p>
         <p>
           Upper: <input id="rotateUpperRightArm" type="range" min="10" max="75" value="10" step="1">
           Lower: <input id="rotateLowerRightArm" type="range" min="30" max="100" value="30" step="1">
