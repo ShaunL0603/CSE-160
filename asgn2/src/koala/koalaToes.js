@@ -1,23 +1,23 @@
-let g_rotateLeftThumb1 = 0;
-let g_rotateLeftThumb2 = 0;
-let g_rotateLeftIndexFinger = 0;
-let g_rotateLeftMiddleFinger = 0;
-let g_rotateLeftPinkyFinger = 0;
+let g_rotateLeftToe1 = 0;
+let g_rotateLeftToe2 = 0;
+let g_rotateLeftToe3 = 0;
+let g_rotateLeftToe4 = 0;
+let g_rotateLeftToe5 = 0;
 
-let g_rotateRightThumb1 = 0;
-let g_rotateRightThumb2 = 0;
-let g_rotateRightIndexFinger = 0;
-let g_rotateRightMiddleFinger = 0;
-let g_rotateRightPinkyFinger = 0;
+let g_rotateRightToe1 = 0;
+let g_rotateRightToe2 = 0;
+let g_rotateRightToe3 = 0;
+let g_rotateRightToe4 = 0;
+let g_rotateRightToe5 = 0;
 
 function makeKoalaFingys(rootCubeMat, LEFT) {
     // Get correct rotation
-    var rotateThumb1 = LEFT ? g_rotateLeftThumb1 : g_rotateRightThumb1;
-    var rotateThumb2 = LEFT ? g_rotateLeftThumb2 : g_rotateRightThumb2;
-    var rotateIndexFinger = LEFT ? g_rotateLeftIndexFinger : g_rotateRightIndexFinger;
-    var rotateMiddleFinger = LEFT ? g_rotateLeftMiddleFinger : g_rotateRightMiddleFinger;
-    var rotatePinkyFinger = LEFT ? g_rotateLeftPinkyFinger : g_rotateRightPinkyFinger;
-    // FIRST THUMB
+    var rotateToe1 = LEFT ? g_rotateLeftToe1 : g_rotateRightToe1;
+    var rotateToe2 = LEFT ? g_rotateLeftToe2 : g_rotateRightToe2;
+    var rotateToe3 = LEFT ? g_rotateLeftToe3 : g_rotateRightToe3;
+    var rotateToe4 = LEFT ? g_rotateLeftToe4 : g_rotateRightToe4;
+    var rotateToe5 = LEFT ? g_rotateLeftToe5 : g_rotateRightToe5;
+    // FIRST TOE
     var fingyJoint1 = new Cube();
     fingyJoint1.color = g_green;
     fingyJoint1.matrix = new Matrix4(rootCubeMat);
@@ -58,7 +58,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     thumbBone2.matrix.scale(g_koalaScaleX * 0.125, g_koalaScaleY * 0.0625, g_koalaScaleZ * 0.4);
     thumbBone2.render();
 
-    // SECOND THUMB OR ANOTHER FINGER
+    // SECOND TOE
     var fingyJoint2 = new Cube();
     fingyJoint2.color = g_green;
     fingyJoint2.matrix = new Matrix4(rootCubeMat);
@@ -99,7 +99,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     secondThumbBone2.matrix.scale(g_koalaScaleX * 0.125, g_koalaScaleY * 0.0625, g_koalaScaleZ * 0.4);
     secondThumbBone2.render();
 
-    // INDEX? FINGER
+    // THIRD TOE
     var fingyJoint3 = new Cube();
     fingyJoint3.color = g_green;
     fingyJoint3.matrix = new Matrix4(rootCubeMat);
@@ -152,7 +152,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     indexBone3.matrix.scale(g_koalaScaleX * 0.125, g_koalaScaleY * 0.4, g_koalaScaleZ * 0.0625);
     indexBone3.render();
 
-    // MIDDLE? FINGER
+    // FOURTH TOE
     var fingyJoint4 = new Cube();
     fingyJoint4.color = g_green;
     fingyJoint4.matrix = new Matrix4(rootCubeMat);
@@ -205,7 +205,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     middleBone3.matrix.scale(g_koalaScaleX * 0.125, g_koalaScaleY * 0.4, g_koalaScaleZ * 0.0625);
     middleBone3.render();
 
-    // PINKY? FINGER
+    // FIFTH TOE
     var fingyJoint5 = new Cube();
     fingyJoint5.color = g_green;
     fingyJoint5.matrix = new Matrix4(rootCubeMat);

@@ -7,13 +7,19 @@ const g_green = [0.0, 1.0, 0.0, 1.0];
 let g_koalaScaleX = 1.5;
 let g_koalaScaleY = 3.0;
 let g_koalaScaleZ = 3.0;
-let g_koalaPosX = -5.0;
+let g_koalaPosX = 0.0;
 let g_koalaPosY = 15.0;
 let g_koalaPosZ = 0.0;
 let g_animalXAngle = 0.0;
-let g_animalYAngle = -90.0;
+let g_animalYAngle = 0.0;
 let g_animalZAngle = 0.0;
-    
+
+// Global booleans for finger movement
+const LEFT = 1;
+const RIGHT = 0;
+const ARM = 1;
+const LEG = 0;
+
 function makeKoala() {
     // torso cube of koala, root of animal
     var mainTorso = new Cube();
@@ -27,8 +33,8 @@ function makeKoala() {
     mainTorso.matrix.translate(-0.5, -0.5, -0.5);
     mainTorso.render();
     
-    makeKoalaTorso(mainTorsoMat);
-    makeKoalaHead(mainTorsoMat);
+    // makeKoalaTorso(mainTorsoMat);
+    // makeKoalaHead(mainTorsoMat);
     makeKoalaArms(mainTorsoMat);
-    // makeKoalaLegs(mainTorsoMat);
+    makeKoalaLegs(mainTorsoMat);
 }

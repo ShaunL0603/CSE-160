@@ -118,7 +118,7 @@ function addActionsForHtmlUI() {
     renderAllShapes();
     });
     document.getElementById("rotateLowerLeftLeg").addEventListener("input", function(ev) {
-    g_rotateLowerLeftLeg = parseFloat(ev.target.value);
+    g_rotateLowerLeftLeg = -parseFloat(ev.target.value);
     renderAllShapes();
     });
 }

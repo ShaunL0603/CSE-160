@@ -1,7 +1,3 @@
-// Global variables
-const LEFT = 1;
-const RIGHT = 0;
-
 // Global rotation variables
     // Left Arm rotation
     let g_rotateUpperLeftArm = 10;
@@ -75,7 +71,7 @@ function makeKoalaArms(rootCubeMat) {
     makeKoalaFingys(leftWristJointMat, LEFT);
 
     // RIGHT ARM CUBES
-    // reflecting left leg
+    // reflecting left arm
     var rightShoulderJoint = new Cube();
     rightShoulderJoint.color = g_green;
     rightShoulderJoint.matrix = new Matrix4(rootCubeMat);

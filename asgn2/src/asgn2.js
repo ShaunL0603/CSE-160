@@ -33,7 +33,7 @@ var u_ProjectionMatrix;
 
 // Global variables for interacting
 let g_globalXAngle = 0;
-let g_globalYAngle = 0;
+let g_globalYAngle = -90;
 let g_globalZAngle = 0;
 let g_redraw = false;
 let g_globalZoom = 0.1;
@@ -129,9 +129,9 @@ function connectVariablesToGLSL() {
 function click(ev) {
   if (ev.shiftKey) {
     // console.log("moving animal");
-    g_koalaPosX += ev.movementX * g_movementSensitivity;
-    g_koalaPosY += ev.movementY * g_movementSensitivity;
-    g_koalaPosZ += ev.movementX * g_movementSensitivity;
+    g_koalaPosX -= ev.movementX * g_movementSensitivity;
+    g_koalaPosY -= ev.movementY * g_movementSensitivity;
+    g_koalaPosZ -= ev.movementX * g_movementSensitivity;
 
   } else {
     g_globalXAngle -= g_rotateSensitivity * ev.movementY;
