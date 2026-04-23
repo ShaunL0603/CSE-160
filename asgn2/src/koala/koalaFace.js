@@ -1,19 +1,19 @@
 function makeKoalaFace(rootCubeMat) {
     makeEars(rootCubeMat);
 
-    var leftEye = new Sphere();
-    leftEye.color = g_koalaBlackColorMat;
-    leftEye.matrix = new Matrix4(rootCubeMat);
-    leftEye.matrix.translate(-6.0, 0.0, 1.0);
-    leftEye.matrix.scale(1.0, 1.0, 1.0);
-    leftEye.render();
+    // var leftEye = new Sphere();
+    // leftEye.color = g_koalaBlackColorMat;
+    // leftEye.matrix = new Matrix4(rootCubeMat);
+    // leftEye.matrix.translate(-6.0, 0.0, 1.0);
+    // leftEye.matrix.scale(1.0, 1.0, 1.0);
+    // leftEye.render();
 
-    var rightEye = new Sphere();
-    rightEye.color = g_koalaBlackColorMat;
-    rightEye.matrix = new Matrix4(rootCubeMat);
-    rightEye.matrix.translate(-6.0, 0.0, 6.8);
-    rightEye.matrix.scale(1.0, 1.0, 1.0);
-    rightEye.render();
+    // var rightEye = new Sphere();
+    // rightEye.color = g_koalaBlackColorMat;
+    // rightEye.matrix = new Matrix4(rootCubeMat);
+    // rightEye.matrix.translate(-6.0, 0.0, 6.8);
+    // rightEye.matrix.scale(1.0, 1.0, 1.0);
+    // rightEye.render();
 }
 
 function makeEars(rootCubeMat) {
