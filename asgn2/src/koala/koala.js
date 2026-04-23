@@ -1,18 +1,21 @@
 // Global variables
-const g_koalaGreyColorMat = [0.57, 0.56, 0.54, 1.0];
-const g_koalaWhiteColorMat = [1.0, 0.98, 0.93, 1.0];
-const g_koalaBlackColorMat = [0.2, 0.2, 0.2, 1.0];
-const g_yellow = [1.0, 1.0, 0.0, 1.0];
-const g_green = [0.0, 1.0, 0.0, 1.0];
-let g_koalaScaleX = 1.5;
-let g_koalaScaleY = 3.0;
-let g_koalaScaleZ = 3.0;
-let g_koalaPosX = 0.0;
-let g_koalaPosY = 15.0;
-let g_koalaPosZ = 0.0;
-let g_animalXAngle = 0.0;
-let g_animalYAngle = 0.0;
-let g_animalZAngle = 0.0;
+    // Colors
+    const g_koalaGreyColorMat = [0.57, 0.56, 0.54, 1.0];
+    const g_koalaWhiteColorMat = [1.0, 0.98, 0.93, 1.0];
+    const g_koalaBlackColorMat = [0.2, 0.2, 0.2, 1.0];
+    const g_yellow = [1.0, 1.0, 0.0, 1.0];
+    const g_green = [0.0, 1.0, 0.0, 1.0];
+
+    // Scales n stuff
+    let g_koalaScaleX = 1.5;
+    let g_koalaScaleY = 3.0;
+    let g_koalaScaleZ = 3.0;
+    let g_koalaPosX = 20.0;
+    let g_koalaPosY = -5.0;
+    let g_koalaPosZ = 2.0;
+    let g_animalXAngle = 0.0;
+    let g_animalYAngle = 0.0;
+    let g_animalZAngle = 0.0;
 
 // Global booleans for finger movement
 const LEFT = 1;
@@ -34,7 +37,7 @@ function makeKoala() {
     mainTorso.render();
     
     // makeKoalaTorso(mainTorsoMat);
-    // makeKoalaHead(mainTorsoMat);
-    makeKoalaArms(mainTorsoMat);
-    makeKoalaLegs(mainTorsoMat);
+    makeKoalaHead(mainTorsoMat);
+    // makeKoalaArms(mainTorsoMat);
+    // makeKoalaLegs(mainTorsoMat);
 }

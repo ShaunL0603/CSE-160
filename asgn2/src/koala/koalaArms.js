@@ -111,7 +111,7 @@ function makeKoalaArms(rootCubeMat) {
     rightWristJoint.matrix = new Matrix4(rightElbowJointMat);
     rightWristJoint.matrix.translate(0.0, -8.7, 0.0);
     rightWristJoint.matrix.rotate(g_rotateRightWristX, 1, 0, 0);
-    rightWristJoint.matrix.rotate(g_rotateRightWristY, 0, 1, 0);
+    rightWristJoint.matrix.rotate(g_rotateRightWristY + 180, 0, 1, 0);
     rightWristJoint.matrix.rotate(g_rotateRightWristZ, 0, 0, 1);
     var rightWristJointMat = new Matrix4(rightWristJoint.matrix);
     rightWristJoint.matrix.scale(g_koalaScaleX * 1.2, g_koalaScaleY * 0.8, g_koalaScaleZ * 0.8);

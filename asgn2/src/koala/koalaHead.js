@@ -48,6 +48,7 @@ function makeKoalaHead(rootCubeMat) {
     head1.color = g_koalaGreyColorMat;
     head1.matrix = new Matrix4(neck3Mat);
     head1.matrix.translate(-5.5, 1.5, -3.9);
+    var head1Mat = new Matrix4(head1.matrix);
     head1.matrix.scale(g_koalaScaleX * 3.0, g_koalaScaleY * 1.0, g_koalaScaleZ * 2.6);
     head1.render()
 
@@ -114,4 +115,6 @@ function makeKoalaHead(rootCubeMat) {
     lowerJawBase.matrix.scale(g_koalaScaleX * 6.5, g_koalaScaleY * 0.5, g_koalaScaleZ * 2.4);
     lowerJawBase.matrix.translate(-0.5, -0.5, -0.5);
     lowerJawBase.render()
+
+    makeKoalaFace(head1Mat);
 }

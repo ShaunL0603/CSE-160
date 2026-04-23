@@ -45,6 +45,14 @@
           Upper: <input id="rotateUpperLeftLeg" type="range" min="10" max="55" value="10" step="1">
           Lower: <input id="rotateLowerLeftLeg" type="range" min="30" max="100" value="30" step="1">
         </p>
+        <p>Right toes:</p>
+        <p>
+          First toe: <input id="rotateRightFirstToe" type="range" min="0" max="45" value="0" step="1">
+          Second toe: <input id="rotateRightSecondToe" type="range" min="0" max="45" value="0" step="1">
+          Third toe: <input id="rotateRightThirdToe" type="range" min="0" max="45" value="0" step="1">
+          Fourth toe: <input id="rotateRightFourthToe" type="range" min="0" max="45" value="0" step="1">
+          Fifth toe: <input id="rotateRightFifthToe" type="range" min="0" max="45" value="0" step="1">
+        </p>
 
         <h4 style="padding-top: 30px">Rotations for Arms</h4>
         <p>Left Arm:</p>
@@ -72,6 +80,15 @@
           Wrist (y): <input id="rotateRightWristY" type="number" min="-85" max="85" value="0" step="1">
           Wrist (z): <input id="rotateRightWristZ" type="number" min="-85" max="85" value="0" step="1">
         </p>
+        <p>Right fingers:</p>
+        <p>
+          First thumb: <input id="rotateRightFirstThumb" type="range" min="0" max="45" value="0" step="1">
+          Second thumb: <input id="rotateRightSecondThumb" type="range" min="0" max="45" value="0" step="1">
+          Index: <input id="rotateRightIndexFinger" type="range" min="0" max="45" value="0" step="1">
+          Middle: <input id="rotateRightMiddleFinger" type="range" min="0" max="45" value="0" step="1">
+          Pinky: <input id="rotateRightPinkyFinger" type="range" min="0" max="45" value="0" step="1">
+        </p>
+        
       </div>
     
     <script src="../lib/cuon-matrix-cse160.js"></script>
@@ -85,10 +102,12 @@
     <script src="./shapes/cube.js"></script>
     <script src="./koala/koala.js"></script>
     <script src="./koala/koalaHead.js"></script>
+    <script src="./koala/koalaFace.js"></script>
     <script src="./koala/koalaTorso.js"></script>
     <script src="./koala/koalaArms.js"></script>
-    <script src="./koala/koalaLegs.js"></script>
     <script src="./koala/koalaFingys.js"></script>
+    <script src="./koala/koalaLegs.js"></script>
+    <script src="./koala/koalaToes.js"></script>
     <script src="asgn2.js"></script>
     <script src="htmlActions.js"></script>
   </body>

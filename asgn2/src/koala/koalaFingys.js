@@ -12,22 +12,16 @@ let g_rotateRightPinkyFinger = 0;
 
 function makeKoalaFingys(rootCubeMat, LEFT) {
     // Get correct rotation
-    var rotateThumb1 = LEFT ? g_rotateLeftThumb1 : g_rotateRightThumb1;
-    var rotateThumb2 = LEFT ? g_rotateLeftThumb2 : g_rotateRightThumb2;
-    var rotateIndexFinger = LEFT ? g_rotateLeftIndexFinger : g_rotateRightIndexFinger;
-    var rotateMiddleFinger = LEFT ? g_rotateLeftMiddleFinger : g_rotateRightMiddleFinger;
-    var rotatePinkyFinger = LEFT ? g_rotateLeftPinkyFinger : g_rotateRightPinkyFinger;
+    var rotateThumb1 = LEFT ? g_rotateLeftThumb1 : -g_rotateRightThumb1;
+    var rotateThumb2 = LEFT ? g_rotateLeftThumb2 : -g_rotateRightThumb2;
+    var rotateIndexFinger = LEFT ? g_rotateLeftIndexFinger : -g_rotateRightIndexFinger;
+    var rotateMiddleFinger = LEFT ? g_rotateLeftMiddleFinger : -g_rotateRightMiddleFinger;
+    var rotatePinkyFinger = LEFT ? g_rotateLeftPinkyFinger : -g_rotateRightPinkyFinger;
     // FIRST THUMB
     var fingyJoint1 = new Cube();
     fingyJoint1.color = g_green;
     fingyJoint1.matrix = new Matrix4(rootCubeMat);
-    if (LEFT) {
-        fingyJoint1.matrix.translate(0.1875, -1.5, 1.6);
-    } else {
-        fingyJoint1.matrix.translate(0.1875, -1.125, -1.6);
-        fingyJoint1.matrix.rotate(180, 0, 0, 1);
-        fingyJoint1.matrix.rotate(180, 0, 1, 0);
-    }
+    fingyJoint1.matrix.translate(0.1875, -1.5, 1.6);
     fingyJoint1.matrix.rotate(rotateThumb1, 0, 1, 0);
     var fingyJoint1Mat = new Matrix4(fingyJoint1.matrix);
     fingyJoint1.matrix.scale(g_koalaScaleX * 0.25, g_koalaScaleY * 0.125, g_koalaScaleZ * 0.125);
@@ -62,13 +56,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     var fingyJoint2 = new Cube();
     fingyJoint2.color = g_green;
     fingyJoint2.matrix = new Matrix4(rootCubeMat);
-    if (LEFT) {
-        fingyJoint2.matrix.translate(0.1875, -2.875, 1.6);
-    } else {
-        fingyJoint2.matrix.translate(0.1875, -2.5, -1.6);
-        fingyJoint2.matrix.rotate(180, 0, 0, 1);
-        fingyJoint2.matrix.rotate(180, 0, 1, 0);
-    }
+    fingyJoint2.matrix.translate(0.1875, -2.875, 1.6);
     fingyJoint2.matrix.rotate(rotateThumb2, 0, 1, 0);
     var fingyJoint2Mat = new Matrix4(fingyJoint2.matrix);
     fingyJoint2.matrix.scale(g_koalaScaleX * 0.25, g_koalaScaleY * 0.125, g_koalaScaleZ * 0.125);
@@ -95,7 +83,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     var secondThumbBone2 = new Cube();
     secondThumbBone2.color = g_yellow;
     secondThumbBone2.matrix = new Matrix4(thumbJoint2Mat);
-    secondThumbBone2.matrix.translate(-0.1, 0.01, 0.19);
+    secondThumbBone2.matrix.translate(-0.1, 0.09, 0.19);
     secondThumbBone2.matrix.scale(g_koalaScaleX * 0.125, g_koalaScaleY * 0.0625, g_koalaScaleZ * 0.4);
     secondThumbBone2.render();
 
