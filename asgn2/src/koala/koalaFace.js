@@ -1,5 +1,19 @@
 function makeKoalaFace(rootCubeMat) {
     makeEars(rootCubeMat);
+
+    var leftEye = new Sphere();
+    leftEye.color = g_koalaBlackColorMat;
+    leftEye.matrix = new Matrix4(rootCubeMat);
+    leftEye.matrix.translate(-6.0, 0.0, 1.0);
+    leftEye.matrix.scale(1.0, 1.0, 1.0);
+    leftEye.render();
+
+    var rightEye = new Sphere();
+    rightEye.color = g_koalaBlackColorMat;
+    rightEye.matrix = new Matrix4(rootCubeMat);
+    rightEye.matrix.translate(-6.0, 0.0, 6.8);
+    rightEye.matrix.scale(1.0, 1.0, 1.0);
+    rightEye.render();
 }
 
 function makeEars(rootCubeMat) {
@@ -112,8 +126,8 @@ function makeEars(rootCubeMat) {
     var rightEar1 = new Cube();
     rightEar1.color = g_koalaGreyColorMat;
     rightEar1.matrix = new Matrix4(rootCubeMat);
-    rightEar1.matrix.translate(0.0, 4.5, -5.5);
-    rightEar1.matrix.rotate()
+    rightEar1.matrix.translate(0.0, 4.5, 13.5);
+    rightEar1.matrix.rotate(180, 0, 1, 0);
     var rightEar1Mat = new Matrix4(rightEar1.matrix);
     rightEar1.matrix.scale(1.0, 1.0, 5.5);
     rightEar1.render();
@@ -121,42 +135,42 @@ function makeEars(rootCubeMat) {
     var rightEar2 = new Cube();
     rightEar2.color = g_koalaGreyColorMat;
     rightEar2.matrix = new Matrix4(rightEar1Mat);
-    rightEar2.matrix.translate(0.5, -1.0, -1.0);
+    rightEar2.matrix.translate(-0.5, -1.0, -1.0);
     rightEar2.matrix.scale(1.0, 1.0, 7.0);
     rightEar2.render();
 
     var rightEar3 = new Cube();
     rightEar3.color = g_koalaGreyColorMat;
     rightEar3.matrix = new Matrix4(rightEar1Mat);
-    rightEar3.matrix.translate(1.0, -2.0, -1.5);
+    rightEar3.matrix.translate(-1.0, -2.0, -1.5);
     rightEar3.matrix.scale(1.0, 1.0, 7.5);
     rightEar3.render();
 
     var rightEar4 = new Cube();
     rightEar4.color = g_koalaGreyColorMat;
     rightEar4.matrix = new Matrix4(rightEar1Mat);
-    rightEar4.matrix.translate(1.0, -4.0, -2.0);
+    rightEar4.matrix.translate(-1.0, -4.0, -2.0);
     rightEar4.matrix.scale(1.0, 2.0, 8.5);
     rightEar4.render();
 
     var rightEar5 = new Cube();
     rightEar5.color = g_koalaGreyColorMat;
     rightEar5.matrix = new Matrix4(rightEar1Mat);
-    rightEar5.matrix.translate(1.0, -5.0, -2.0);
+    rightEar5.matrix.translate(-1.0, -5.0, -2.0);
     rightEar5.matrix.scale(1.0, 1.0, 8.0);
     rightEar5.render();
 
     var rightEar6 = new Cube();
     rightEar6.color = g_koalaGreyColorMat;
     rightEar6.matrix = new Matrix4(rightEar1Mat);
-    rightEar6.matrix.translate(1.0, -6.0, -1.5);
+    rightEar6.matrix.translate(-1.0, -6.0, -1.5);
     rightEar6.matrix.scale(1.0, 1.0, 7.5);
     rightEar6.render();
 
     var rightEar7 = new Cube();
     rightEar7.color = g_koalaGreyColorMat;
     rightEar7.matrix = new Matrix4(rightEar1Mat);
-    rightEar7.matrix.translate(0.5, -7.0, -1.0);
+    rightEar7.matrix.translate(-0.5, -7.0, -1.0);
     rightEar7.matrix.scale(1.0, 1.0, 7.0);
     rightEar7.render();
 

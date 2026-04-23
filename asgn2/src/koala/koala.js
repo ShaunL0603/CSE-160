@@ -10,9 +10,9 @@
     let g_koalaScaleX = 1.5;
     let g_koalaScaleY = 3.0;
     let g_koalaScaleZ = 3.0;
-    let g_koalaPosX = 20.0;
-    let g_koalaPosY = -5.0;
-    let g_koalaPosZ = 2.0;
+    let g_koalaPosX = 0.0;
+    let g_koalaPosY = 0.0;
+    let g_koalaPosZ = 0.0;
     let g_animalXAngle = 0.0;
     let g_animalYAngle = 0.0;
     let g_animalZAngle = 0.0;
