@@ -8,9 +8,10 @@ var VSHADER_SOURCE =
   varying vec4 v_Color;
   uniform mat4 u_ModelMatrix;
   uniform mat4 u_GlobalRotateMatrix;
+  uniform mat4 u_ProjectionMatrix;
   void main()
   {
-    gl_Position = u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
+    gl_Position = u_ProjectionMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
     v_Color = a_Color;
   }
   `;
@@ -40,7 +41,7 @@ var v_Color;
 
 // Global variables for interacting
 let g_globalXAngle = 0;
-let g_globalYAngle = -90;
+let g_globalYAngle = 0;
 let g_globalZAngle = 0;
 let g_redraw = false;
 let g_globalZoom = 0.1;
@@ -72,7 +73,7 @@ function main() {
       g_globalZoom *= 1.1;
     }
 
-    g_globalZoom = Math.max(0.01, Math.min(5.0, g_globalZoom));
+    g_globalZoom = Math.max(0.1, Math.min(5.0, g_globalZoom));
 
     g_redraw = true;
     renderAllShapes();
@@ -132,6 +133,12 @@ function connectVariablesToGLSL() {
     return;
   }
 
+  u_ProjectionMatrix = gl.getUniformLocation(gl.program, 'u_ProjectionMatrix');
+  if (!u_ProjectionMatrix) {
+    console.log('Failed to get the storage location of u_ProjectionMatrix');
+    return;
+  }
+
   a_Color = gl.getAttribLocation(gl.program, 'a_Color');
   if (a_Color < 0) {
     console.log('Failed to get stoage location of a_Color')
@@ -171,6 +178,10 @@ function rotateAnimal(axis, rotateValue) {
 
 function renderAllShapes() {
   var startTime = performance.now();
+
+  var projectionMat = new Matrix4();
+  projectionMat.setOrtho(1.0, -1.0, -1.0, 1.0, -100.0, 100.0);
+  gl.uniformMatrix4fv(u_ProjectionMatrix, false, projectionMat.elements);
 
   var globalRotMat = new Matrix4()
     .scale(g_globalZoom, g_globalZoom, g_globalZoom)

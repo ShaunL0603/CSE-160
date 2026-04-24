@@ -1,6 +1,8 @@
 // Global variables
     // Colors
     const g_koalaGreyColorMat = [0.57, 0.56, 0.54, 1.0];
+    const g_koalaLighterGreyColorMat = [0.67, 0.66, 0.64, 1.0];
+    const g_koalaDarkerGreyColorMat = [0.47, 0.46, 0.44, 1.0];
     const g_koalaWhiteColorMat = [1.0, 0.98, 0.93, 1.0];
     const g_koalaBlackColorMat = [0.1, 0.1, 0.1, 1.0];
     const g_yellow = [1.0, 1.0, 0.0, 1.0];
