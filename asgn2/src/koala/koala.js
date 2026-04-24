@@ -40,7 +40,7 @@ function makeKoala() {
     
     makeKoalaTorso(mainTorsoMat);
     makeKoalaHead(mainTorsoMat);
-    makeKoalaArmBones(mainTorsoMat);
+    // makeKoalaArmBones(mainTorsoMat);
     makeKoalaLegs(mainTorsoMat);
 }
 
