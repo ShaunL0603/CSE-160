@@ -27,7 +27,7 @@ function makeKoala() {
     // torso cube of koala, root of animal
     var mainTorso = new Cube();
     mainTorso.color = g_koalaGreyColorMat;
-    mainTorso.matrix.setTranslate(g_koalaPosX - 0.5, g_koalaPosY - 0.5, g_koalaPosZ - 0.5);
+    mainTorso.matrix.setTranslate(g_koalaPosX + 0.5, g_koalaPosY + 0.5, g_koalaPosZ + 0.5);
     mainTorso.matrix.rotate(g_animalXAngle, 1.0, 0.0, 0.0);
     mainTorso.matrix.rotate(g_animalYAngle, 0.0, 1.0, 0.0);
     mainTorso.matrix.rotate(g_animalZAngle, 0.0, 0.0, 1.0);
@@ -36,7 +36,7 @@ function makeKoala() {
     mainTorso.matrix.translate(-0.5, -0.5, -0.5);
     mainTorso.render();
     
-    // makeKoalaTorso(mainTorsoMat);
+    makeKoalaTorso(mainTorsoMat);
     makeKoalaHead(mainTorsoMat);
     // makeKoalaArms(mainTorsoMat);
     // makeKoalaLegs(mainTorsoMat);
