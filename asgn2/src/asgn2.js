@@ -43,10 +43,76 @@ var v_Color;
 let g_globalXAngle = 0;
 let g_globalYAngle = 0;
 let g_globalZAngle = 0;
-let g_redraw = false;
-let g_globalZoom = 0.1;
+let g_globalZoom = 0.5;
 let g_rotateSensitivity = 0.2;
 let g_movementSensitivity = 0.01;
+let g_animation = false;
+// let g_redraw = false;
+
+// Global rotation variables for animal
+  // Left Arm rotation
+  let g_rotateUpperLeftArm = 10;
+  let g_rotateLowerLeftArm = -30;
+  let g_rotateLeftWristX = 0;
+  let g_rotateLeftWristY = 0;
+  let g_rotateLeftWristZ = 0;
+
+  // Left fingys rotation
+  let g_rotateLeftThumb1 = 0;
+  let g_rotateLeftThumb2 = 0;
+  let g_rotateLeftIndexFinger = 0;
+  let g_rotateLeftMiddleFinger = 0;
+  let g_rotateLeftPinkyFinger = 0;
+
+  // Right Arm rotations
+  let g_rotateUpperRightArm = 10;
+  let g_rotateLowerRightArm = -30;
+  let g_rotateRightWristX = 0;
+  let g_rotateRightWristY = 0;
+  let g_rotateRightWristZ = 0;
+
+  // Right fingys rotation
+  let g_rotateRightThumb1 = 0;
+  let g_rotateRightThumb2 = 0;
+  let g_rotateRightIndexFinger = 0;
+  let g_rotateRightMiddleFinger = 0;
+  let g_rotateRightPinkyFinger = 0;
+
+  // Head rotations
+  let g_rotateHeadX = 0;
+  let g_rotateHeadY = 0;
+  let g_rotateHeadZ = 0;
+
+  // Jaw rotations
+  let g_rotateLowerJawY = 0;
+
+  // Left Leg rotations
+  let g_rotateUpperLeftLeg = 10;
+  let g_rotateLowerLeftLeg = -30;
+  let g_rotateLeftAnkleX = 0;
+  let g_rotateLeftAnkleY = 0;
+  let g_rotateLeftAnkleZ = 0;
+
+  // Left toes rotations
+  let g_rotateLeftToe1 = 0;
+  let g_rotateLeftToe2 = 0;
+  let g_rotateLeftToe3 = 0;
+  let g_rotateLeftToe4 = 0;
+  let g_rotateLeftToe5 = 0;
+
+  // Right Leg rotations
+  let g_rotateUpperRightLeg = 10;
+  let g_rotateLowerRightLeg = -30;
+  let g_rotateRightAnkleX = 0;
+  let g_rotateRightAnkleY = 0;
+  let g_rotateRightAnkleZ = 0;
+
+  // Right toes rotations
+  let g_rotateRightToe1 = 0;
+  let g_rotateRightToe2 = 0;
+  let g_rotateRightToe3 = 0;
+  let g_rotateRightToe4 = 0;
+  let g_rotateRightToe5 = 0;
 
 function main() {
   // sets up canvas and gl variables
@@ -73,15 +139,15 @@ function main() {
       g_globalZoom *= 1.1;
     }
 
-    g_globalZoom = Math.max(0.1, Math.min(5.0, g_globalZoom));
+    g_globalZoom = Math.max(0.2, Math.min(5.0, g_globalZoom));
 
-    g_redraw = true;
-    renderAllShapes();
+    // g_redraw = true;
+    // renderAllShapes();
   }, { passive: false });
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   
-  renderAllShapes();
+  // renderAllShapes();
   requestAnimationFrame(tick);
 }
 
@@ -148,17 +214,34 @@ function connectVariablesToGLSL() {
 
 function click(ev) {
   if (ev.shiftKey) {
+    
+    let modMoveSens = (g_globalZoom > 1.0 ) ? 
+      g_movementSensitivity / g_globalZoom : 
+      g_movementSensitivity;
+    
     // console.log("moving animal");
-    g_koalaPosX += ev.movementX * g_movementSensitivity;
-    g_koalaPosY -= ev.movementY * g_movementSensitivity;
-    g_koalaPosZ -= ev.movementX * g_movementSensitivity;
+    g_koalaPosX += ev.movementX * modMoveSens;
+    g_koalaPosY -= ev.movementY * modMoveSens;
+    g_koalaPosZ -= ev.movementX * modMoveSens;
+
+    // g_koalaPosX += ev.movementX * g_movementSensitivity;
+    // g_koalaPosY -= ev.movementY * g_movementSensitivity;
+    // g_koalaPosZ -= ev.movementX * g_movementSensitivity;
   } else {
-    g_globalXAngle += g_rotateSensitivity * ev.movementY;
-    g_globalYAngle -= g_rotateSensitivity * ev.movementX;
+    
+    let modRotSens = (g_globalZoom > 1.0 ) ? 
+      g_rotateSensitivity / g_globalZoom : 
+      g_rotateSensitivity;
+    
+    g_globalXAngle += modRotSens * ev.movementY;
+    g_globalYAngle -= modRotSens * ev.movementX;
+
+    // g_globalXAngle += g_rotateSensitivity * ev.movementY;
+    // g_globalYAngle -= g_rotateSensitivity * ev.movementX;
   }
 
-  g_redraw = true;
-  renderAllShapes();
+  // g_redraw = true;
+  // renderAllShapes();
 }
 
 function rotateAnimal(axis, rotateValue) {
@@ -171,15 +254,15 @@ function rotateAnimal(axis, rotateValue) {
   else if (axis === "z") {
     g_animalZAngle = (!(Number.isNaN(rotateValue))) ? rotateValue : 0;
   }
-  g_redraw = true;
-  renderAllShapes();
+  // g_redraw = true;
+  // renderAllShapes();
 }
 
 function renderAllShapes() {
   var startTime = performance.now();
 
   var projectionMat = new Matrix4();
-  projectionMat.setOrtho(1.0, -1.0, -1.0, 1.0, -100.0, 100.0);
+  projectionMat.setOrtho(1.0, -1.0, -1.0, 1.0, -5.0, 100.0);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projectionMat.elements);
 
   var globalRotMat = new Matrix4()
@@ -216,13 +299,28 @@ function sendTextToHTML(text, htmlID) {
   htmlElm.innerHTML = text;
 }
 
-// Redraw the canvas if g_redraw is true, loop to continuously check
+// Redraw the canvas if g_redraw (not used no more) is true, loop to continuously check
 // if g_redraw is true.
+var g_startTime = performance.now() / 1000.0;
+var g_seconds = performance.now() / 1000.0 - g_startTime;
 function tick() {
-  //console.log(performance.now())
-  if (g_redraw) {
-    renderAllShapes();
-    g_redraw = false;
-  }
+  // console.log(performance.now())
+  g_seconds = performance.now() / 1000.0 - g_startTime;
+
+  updateAnimationAngle();
+  
+  renderAllShapes();
+  
   requestAnimationFrame(tick);
+}
+
+function updateAnimationAngle() {
+  if (g_animation) {
+    // Left arm rotations
+    g_rotateUpperLeftArm = 75 * Math.max(0.1, Math.sin(g_seconds));
+
+    // Head rotations
+    g_rotateHeadY = 55 * Math.max(Math.sin(g_seconds)) * 0.3;
+    g_rotateLowerJawY = 20 * Math.max(0, Math.sin(g_seconds * 2));
+  }
 }

@@ -1,18 +1,3 @@
-// Global rotation variables for legs
-    // Left Leg rotations
-    let g_rotateUpperLeftLeg = 10;
-    let g_rotateLowerLeftLeg = -30;
-    let g_rotateLeftAnkleX = 0;
-    let g_rotateLeftAnkleY = 0;
-    let g_rotateLeftAnkleZ = 0;
-
-    // Right Leg rotations
-    let g_rotateUpperRightLeg = 10;
-    let g_rotateLowerRightLeg = -30;
-    let g_rotateRightAnkleX = 0;
-    let g_rotateRightAnkleY = 0;
-    let g_rotateRightAnkleZ = 0;
-
 function makeKoalaLegs(rootCubeMat) {
     // LEFT LEG CUBES
     var leftHipJoint = new Cube();
@@ -65,10 +50,56 @@ function makeKoalaLegs(rootCubeMat) {
     leftFoot.color = g_koalaGreyColorMat;
     leftFoot.matrix = new Matrix4(leftAnkleJointMat);
     leftFoot.matrix.translate(-0.5 * g_koalaScaleX, -1.33 * g_koalaScaleY, -0.55 * g_koalaScaleZ);
+    var leftFootMat = new Matrix4(leftFoot.matrix);
     leftFoot.matrix.scale(g_koalaScaleX * 1.0, g_koalaScaleY * 1.2, g_koalaScaleZ * 1.1);
     leftFoot.render();
 
-    makeKoalaToes(leftAnkleJointMat, LEFT);
+    //* LEFT LEG CUBES
+    var leftUpperLeg1 = new Cube();
+    leftUpperLeg1.color = g_koalaGreyColorMat;
+    leftUpperLeg1.matrix = new Matrix4(leftHipJointMat);
+    leftUpperLeg1.matrix.translate(-2.0 * g_koalaScaleX, -0.5 * g_koalaScaleY, -0.75 * g_koalaScaleZ);
+    var leftUpperLeg1Mat = new Matrix4(leftUpperLeg1.matrix);
+    leftUpperLeg1.matrix.scale(4.0 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
+    leftUpperLeg1.render();
+
+    var leftUpperLeg2 = new Cube();
+    leftUpperLeg2.color = g_koalaGreyColorMat;
+    leftUpperLeg2.matrix = new Matrix4(leftUpperLeg1Mat);
+    leftUpperLeg2.matrix.translate(0.25 * g_koalaScaleX, -1.2 * g_koalaScaleY, 0.13 * g_koalaScaleZ);
+    leftUpperLeg2.matrix.scale(3.5 * g_koalaScaleX, 1.7 * g_koalaScaleY, 1.25 * g_koalaScaleZ);
+    leftUpperLeg2.render();
+
+    var rightKnee = new Cube();
+    rightKnee.color = g_koalaDarkerGreyColorMat;
+    rightKnee.matrix = new Matrix4(leftKneeJointMat);
+    rightKnee.matrix.translate(-1.0 * g_koalaScaleX, 0.0 * g_koalaScaleY, -0.5 * g_koalaScaleZ);
+    rightKnee.matrix.scale(2.0 * g_koalaScaleX, 0.6 * g_koalaScaleY, 1. * g_koalaScaleZ);
+    rightKnee.render();
+
+    var LeftLowerLeg1 = new Cube();
+    LeftLowerLeg1.color = g_koalaGreyColorMat;
+    LeftLowerLeg1.matrix = new Matrix4(leftKneeJointMat);
+    LeftLowerLeg1.matrix.translate(-1.0 * g_koalaScaleX, -1.5 * g_koalaScaleY, -0.5 * g_koalaScaleZ);
+    var LeftLowerLeg1Mat = new Matrix4(LeftLowerLeg1.matrix);
+    LeftLowerLeg1.matrix.scale(2.0 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    LeftLowerLeg1.render();
+
+    var LeftLowerLeg2 = new Cube();
+    LeftLowerLeg2.color = g_koalaGreyColorMat;
+    LeftLowerLeg2.matrix = new Matrix4(LeftLowerLeg1Mat);
+    LeftLowerLeg2.matrix.translate(0.1 * g_koalaScaleX, -1.6 * g_koalaScaleY, 0.1 * g_koalaScaleZ);
+    LeftLowerLeg2.matrix.scale(1.8 * g_koalaScaleX, 1.6 * g_koalaScaleY, 0.8 * g_koalaScaleZ);
+    LeftLowerLeg2.render();
+
+    var leftAnkle = new Cube();
+    leftAnkle.color = g_koalaDarkerGreyColorMat;
+    leftAnkle.matrix = new Matrix4(leftAnkleJointMat);
+    leftAnkle.matrix.translate(-0.5 * g_koalaScaleX, -0.4 * g_koalaScaleY, -0.35 * g_koalaScaleZ);
+    leftAnkle.matrix.scale(1.0 * g_koalaScaleX, 0.7 * g_koalaScaleY, 0.7 * g_koalaScaleZ);
+    leftAnkle.render();
+
+    makeKoalaToes(leftFootMat, LEFT);
 
     // RIGHT LEG CUBES
     // reflecting left leg

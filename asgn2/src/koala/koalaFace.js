@@ -24,7 +24,6 @@ function makeKoalaFace(rootCubeMat) {
     leftEyelid1.matrix.translate(-0.5 * g_koalaScaleX, 0.25 * g_koalaScaleY, -0.15 * g_koalaScaleZ);
     var leftEyelid1Mat = new Matrix4(leftEyelid1.matrix);
     leftEyelid1.matrix.scale(0.8 * g_koalaScaleX, 0.12 * g_koalaScaleY, 0.4 * g_koalaScaleZ);
-    // leftEyelid1.matrix.translate(-0.5, -0.5, -0.5);
     leftEyelid1.render();
 
     var leftEyelid2 = new Cube();

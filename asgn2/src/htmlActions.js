@@ -4,6 +4,10 @@ function addActionsForHtmlUI() {
     g_rotateSensitivity = parseFloat(ev.target.value);
   });
 
+    // Action to start or stop animation
+    document.getElementById("animationOn").onclick = function() {g_animation = true;};
+    document.getElementById("animationOff").onclick = function() {g_animation = false;};
+
   // Add event listener for resetting animal position
   document.getElementById("resetAnimalPos").addEventListener("click", function(ev) {
     g_koalaPosX = 0;

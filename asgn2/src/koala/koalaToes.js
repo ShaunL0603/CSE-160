@@ -1,15 +1,3 @@
-let g_rotateLeftToe1 = 0;
-let g_rotateLeftToe2 = 0;
-let g_rotateLeftToe3 = 0;
-let g_rotateLeftToe4 = 0;
-let g_rotateLeftToe5 = 0;
-
-let g_rotateRightToe1 = 0;
-let g_rotateRightToe2 = 0;
-let g_rotateRightToe3 = 0;
-let g_rotateRightToe4 = 0;
-let g_rotateRightToe5 = 0;
-
 function makeKoalaToes(rootCubeMat, LEFT) {
     // Get correct rotation
     var rotateToe1 = LEFT ? g_rotateLeftToe1 : -g_rotateRightToe1;
@@ -21,7 +9,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint1 = new Cube();
     fingyJoint1.color = g_green;
     fingyJoint1.matrix = new Matrix4(rootCubeMat);
-    fingyJoint1.matrix.translate(0.0 * g_koalaScaleX, -0.5 * g_koalaScaleY, 0.53 * g_koalaScaleZ);
+    fingyJoint1.matrix.translate(0.5 * g_koalaScaleX, 1.0 * g_koalaScaleY, 1.1 * g_koalaScaleZ);
     fingyJoint1.matrix.rotate(rotateToe1, 0, 1, 0);
     var fingyJoint1Mat = new Matrix4(fingyJoint1.matrix);
     fingyJoint1.matrix.scale(g_koalaScaleX * 0.25, g_koalaScaleY * 0.125, g_koalaScaleZ * 0.125);
@@ -56,7 +44,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint2 = new Cube();
     fingyJoint2.color = g_green;
     fingyJoint2.matrix = new Matrix4(rootCubeMat);
-    fingyJoint2.matrix.translate(0.0 * g_koalaScaleX, -0.96 * g_koalaScaleY, 0.53 * g_koalaScaleZ);
+    fingyJoint2.matrix.translate(0.5 * g_koalaScaleX, -0.96 * g_koalaScaleY, 0.53 * g_koalaScaleZ);
     fingyJoint2.matrix.rotate(90, 1, 0, 0);
     fingyJoint2.matrix.rotate(rotateToe2, 0, 1, 0);
     var fingyJoint2Mat = new Matrix4(fingyJoint2.matrix);
@@ -92,7 +80,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint3 = new Cube();
     fingyJoint3.color = g_green;
     fingyJoint3.matrix = new Matrix4(rootCubeMat);
-    fingyJoint3.matrix.translate(0.0 * g_koalaScaleX, -1.3 * g_koalaScaleY, 0.43 * g_koalaScaleZ);
+    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX, 0.0 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
     // fingyJoint3.matrix.rotate(-10, 0, 1, 0);
     fingyJoint3.matrix.rotate(rotateToe3, 0, 0, 1);
     var fingyJoint3Mat = new Matrix4(fingyJoint3.matrix);
@@ -145,7 +133,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint4 = new Cube();
     fingyJoint4.color = g_green;
     fingyJoint4.matrix = new Matrix4(rootCubeMat);
-    fingyJoint4.matrix.translate(0.0 * g_koalaScaleX, -1.3 * g_koalaScaleY, -0.07 * g_koalaScaleZ);
+    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX, 0.0 * g_koalaScaleY, 0.47 * g_koalaScaleZ);
     // fingyJoint4.matrix.rotate(-10, 0, 1, 0);
     fingyJoint4.matrix.rotate(rotateToe4, 0, 0, 1);
     var fingyJoint4Mat = new Matrix4(fingyJoint4.matrix);
@@ -198,7 +186,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint5 = new Cube();
     fingyJoint5.color = g_green;
     fingyJoint5.matrix = new Matrix4(rootCubeMat);
-    fingyJoint5.matrix.translate(0.0, -1.3 * g_koalaScaleY, -0.56 * g_koalaScaleZ);
+    fingyJoint5.matrix.translate(0.5 * g_koalaScaleX, 0.0 * g_koalaScaleY, -0.05 * g_koalaScaleZ);
     // fingyJoint5.matrix.rotate(-10, 0, 1, 0);
     fingyJoint5.matrix.rotate(rotateToe5, 0, 0, 1);
     var fingyJoint5Mat = new Matrix4(fingyJoint5.matrix);
