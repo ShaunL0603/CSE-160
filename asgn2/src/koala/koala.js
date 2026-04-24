@@ -7,9 +7,9 @@
     const g_green = [0.0, 1.0, 0.0, 1.0];
 
     // Scales n stuff
-    let g_koalaScaleX = 1.5;
-    let g_koalaScaleY = 3.0;
-    let g_koalaScaleZ = 3.0;
+    let g_koalaScaleX = 0.375;
+    let g_koalaScaleY = 0.75;
+    let g_koalaScaleZ = 0.75;
     let g_koalaPosX = 0.0;
     let g_koalaPosY = 0.0;
     let g_koalaPosZ = 0.0;
