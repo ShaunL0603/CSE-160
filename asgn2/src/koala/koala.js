@@ -2,7 +2,7 @@
     // Colors
     const g_koalaGreyColorMat = [0.57, 0.56, 0.54, 1.0];
     const g_koalaWhiteColorMat = [1.0, 0.98, 0.93, 1.0];
-    const g_koalaBlackColorMat = [0.2, 0.2, 0.2, 1.0];
+    const g_koalaBlackColorMat = [0.1, 0.1, 0.1, 1.0];
     const g_yellow = [1.0, 1.0, 0.0, 1.0];
     const g_green = [0.0, 1.0, 0.0, 1.0];
 

@@ -5,7 +5,9 @@ class Cube {
       this.matrix = new Matrix4();
 
       this.buffer = null;
+      this.colorBuffer = null;
       this.vertices = null;
+      this.colorShades = null;
   }
 
   generateVertices() {
@@ -25,11 +27,30 @@ class Cube {
     ]);
   }
 
-  render() {
-    var rgba = this.color;
+    // Fake lighting
+    generateColorShades() {
+        let [r, g, b, a] = this.color;
+    
+        let shades = [1.0, 0.83, 0.66, 0.49, 0.32, 0.15];
+        let colorData = [];
+    
+        for (let i = 0; i < 6; ++i) {
+            let shade = shades[i];
+            let faceColor = [r * shade, g * shade, b * shade, a];
+    
+            for (let j = 0; j < 6; ++j) {
+                colorData.push(...faceColor);
+            }
+        }
+    
+        this.colorShades = new Float32Array(colorData);
+    }
 
-    // Pass the color of a circle to u_FragColor variable
-    gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+  render() {
+    // var rgba = this.color;
+
+    // // Pass the color of a circle to u_FragColor variable
+    // gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
 
     // Pass the matrix to u_ModelMatrix attribute
     gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
@@ -103,6 +124,23 @@ function drawTriangle3D(shape) {
     
     // Enable the assignment to a_Position variable
     gl.enableVertexAttribArray(a_Position);
+
+    if (shape.colorShades === null) {
+        shape.generateColorShades();
+    }
+
+    if (shape.colorBuffer === null) {
+        shape.colorBuffer = gl.createBuffer();
+        if (!shape.colorBuffer) {
+            console.log("Failed to create the color buffer object");
+            return -1;
+        }
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, shape.colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, shape.colorShades, gl.DYNAMIC_DRAW);
+    gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_Color);
     
     gl.drawArrays(gl.TRIANGLES, 0, shape.vertices.length / 3);
 }

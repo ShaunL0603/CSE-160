@@ -6,7 +6,9 @@ class Sphere {
         this.segments = 8;
 
         this.buffer = null;
+        this.colorBuffer = null;
         this.vertices = null;
+        this.colorShades = null;
     }
 
     generateVertices() {
@@ -41,10 +43,25 @@ class Sphere {
         this.vertices = new Float32Array(v1);
     }
 
+    generateColorShades() {
+        let [r, g, b, a] = this.color;
+        // console.log(r, g, b, a);
+    
+        // let shades = [1.0, 0.83, 0.66, 0.49, 0.32, 0.15];
+        let colorData = [];
+        
+        let vertexCount = this.vertices.length / 3;
+        for (let i = 0; i < vertexCount; ++i) {
+            colorData.push(r, g, b, a);
+        }
+    
+        this.colorShades = new Float32Array(colorData);
+    }
+
     render() {
-        var rgba = this.color;
-        // Pass the color of a circle to u_FragColor variable
-        gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+        // var rgba = this.color;
+        // // Pass the color of a circle to u_FragColor variable
+        // gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
 
         // Pass the matrix to u_ModelMatrix attribute
         gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);

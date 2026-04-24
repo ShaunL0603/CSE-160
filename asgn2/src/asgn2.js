@@ -114,11 +114,11 @@ function connectVariablesToGLSL() {
   }
   
   // Get the storage location of u_FragColor
-  u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
-  if (!u_FragColor) {
-    console.log('Failed to get the storage location of u_FragColor');
-    return;
-  }
+  // u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+  // if (!u_FragColor) {
+  //   console.log('Failed to get the storage location of u_FragColor');
+  //   return;
+  // }
 
   u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
   if (!u_ModelMatrix) {
@@ -129,6 +129,12 @@ function connectVariablesToGLSL() {
   u_GlobalRotateMatrix = gl.getUniformLocation(gl.program, 'u_GlobalRotateMatrix');
   if (!u_GlobalRotateMatrix) {
     console.log('Failed to get the storage location of u_GlobalRotateMatrix');
+    return;
+  }
+
+  a_Color = gl.getAttribLocation(gl.program, 'a_Color');
+  if (a_Color < 0) {
+    console.log('Failed to get stoage location of a_Color')
     return;
   }
 }
