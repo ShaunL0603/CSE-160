@@ -248,6 +248,7 @@ function rotateAnimalHelper(axis, rotateValue) {
 function renderAllShapes() {
   var startTime = performance.now();
 
+  // fix zooming in and shapes clipping through
   var projectionMat = new Matrix4();
   projectionMat.setOrtho(1.0, -1.0, -1.0, 1.0, -5.0, 100.0);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projectionMat.elements);
