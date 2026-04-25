@@ -314,24 +314,28 @@ function updateAnimationAngle() {
     // LEFT ARM ROTATION
     g_rotateUpperLeftArm = 10 + 65 * Math.sin(t);
     g_rotateLowerLeftArm = Math.max(-108, Math.min(5, lowerLeft));
-    g_rotateLeftWristZ = 5 - 75 * Math.max(0, Math.cos(t));
+
+    g_rotateLeftWristZ = -70 * Math.max(0, Math.cos(t)) - 40 * Math.min(0, Math.cos(t));
 
     // RIGHT ARM ROTATION
     g_rotateUpperRightArm = 10 + 65 * Math.sin(tRight);
     g_rotateLowerRightArm = Math.max(-108, Math.min(5, lowerRight));
-    g_rotateRightWristZ = 5 + 75 * Math.max(0, Math.cos(tRight));
+
+    g_rotateRightWristZ = 70 * Math.max(0, Math.cos(tRight)) + 40 * Math.min(0, Math.cos(tRight));
 
     // LEFT LEG ROTATION
     // Using tRight so leg and arm movement is opposite
     g_rotateUpperLeftLeg = 10 + 65 * Math.sin(tRight);
     g_rotateLowerLeftLeg = Math.max(-108, Math.min(5, lowerRight));
-    g_rotateLeftAnkleZ = 5 - 75 * Math.max(0, Math.cos(tRight));
+
+    g_rotateLeftAnkleZ = -70 * Math.max(0, Math.cos(tRight)) - 40 * Math.min(0, Math.cos(tRight));
 
     // RIGHT LEG ROTATION
     // Use t for opposite mmovements
     g_rotateUpperRightLeg = 10 + 65 * Math.sin(t);
     g_rotateLowerRightLeg = Math.max(-108, Math.min(5, lowerLeft));
-    g_rotateRightAnkleZ = 5 + 75 * Math.max(0, Math.cos(t));
+
+    g_rotateRightAnkleZ = 70 * Math.max(0, Math.cos(t)) + 40 * Math.min(0, Math.cos(t));
 
     // Head rotations
     g_rotateHeadY = 11.25 * Math.max(Math.sin(g_seconds)) * 0.3;
