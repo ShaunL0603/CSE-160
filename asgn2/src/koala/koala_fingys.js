@@ -1,4 +1,5 @@
-let scaler = 0.7;
+
+let fingerScaler = 0.7;
 function makeKoalaFingys(rootCubeMat, LEFT) {
     // Get correct rotation
     var rotateThumb1 = LEFT ? g_rotateLeftThumb1 : -g_rotateRightThumb1;
@@ -13,334 +14,334 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     fingyJoint1.matrix.translate(0.5 * g_koalaScaleX, 1.0 * g_koalaScaleY, 1.1 * g_koalaScaleZ);
     fingyJoint1.matrix.rotate(rotateThumb1, 0, 1, 0);
     var fingyJoint1Mat = new Matrix4(fingyJoint1.matrix);
-    fingyJoint1.matrix.scale(g_koalaScaleX * (0.25 * scaler), g_koalaScaleY * (0.125 * scaler), g_koalaScaleZ * (0.125 * scaler));
+    fingyJoint1.matrix.scale(g_koalaScaleX * (0.25 * fingerScaler), g_koalaScaleY * (0.125 * fingerScaler), g_koalaScaleZ * (0.125 * fingerScaler));
     fingyJoint1.matrix.translate(-0.5, 0.0, -0.5);
     fingyJoint1.render();
 
     var thumbBone1 = new Cube();
     thumbBone1.color = g_yellow;
     thumbBone1.matrix = new Matrix4(fingyJoint1Mat);
-    thumbBone1.matrix.translate(-0.07 * g_koalaScaleX * scaler, 0.03 * g_koalaScaleY * scaler, 0.06 * g_koalaScaleZ * scaler);
+    thumbBone1.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, 0.03 * g_koalaScaleY * fingerScaler, 0.06 * g_koalaScaleZ * fingerScaler);
     var thumbBone1Mat = new Matrix4(thumbBone1.matrix);
-    thumbBone1.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.0625 * scaler, g_koalaScaleZ * 0.4 * scaler);
+    thumbBone1.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.0625 * fingerScaler, g_koalaScaleZ * 0.4 * fingerScaler);
     thumbBone1.render();
 
     var thumbJoint1 = new Cube();
     thumbJoint1.color = g_koalaDarkerGreyColorMat;
     thumbJoint1.matrix = new Matrix4(fingyJoint1Mat);
-    thumbJoint1.matrix.translate(0.0, 0.0, 0.5 * g_koalaScaleZ * scaler);
+    thumbJoint1.matrix.translate(0.0, 0.0, 0.5 * g_koalaScaleZ * fingerScaler);
     thumbJoint1.matrix.rotate(rotateThumb1 * 1.5, 0, 1, 0);
     var thumbJoint1Mat = new Matrix4(thumbJoint1.matrix);
-    thumbJoint1.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    thumbJoint1.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     thumbJoint1.matrix.translate(-0.5, 0.0, -0.5);
     thumbJoint1.render();
 
     var thumbBone2 = new Cube();
     thumbBone2.color = g_yellow;
     thumbBone2.matrix = new Matrix4(thumbJoint1Mat);
-    thumbBone2.matrix.translate(-0.07 * g_koalaScaleX * scaler, 0.03 * g_koalaScaleY * scaler, 0.06 * g_koalaScaleZ * scaler);
+    thumbBone2.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, 0.03 * g_koalaScaleY * fingerScaler, 0.06 * g_koalaScaleZ * fingerScaler);
     var thumbBone2Mat = new Matrix4(thumbBone2.matrix);
-    thumbBone2.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.0625 * scaler, g_koalaScaleZ * 0.4 * scaler);
+    thumbBone2.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.0625 * fingerScaler, g_koalaScaleZ * 0.4 * fingerScaler);
     thumbBone2.render();
 
     var leftUpperFirstJoint = new Cube();
     leftUpperFirstJoint.color = g_koalaDarkerGreyColorMat;
     leftUpperFirstJoint.matrix = new Matrix4(thumbBone1Mat);
-    leftUpperFirstJoint.matrix.translate(-0.07 * g_koalaScaleX * scaler, -0.035 * g_koalaScaleY * scaler, -0.08 * g_koalaScaleZ * scaler);
-    leftUpperFirstJoint.matrix.scale(0.3 * g_koalaScaleX  * scaler, 0.145 * g_koalaScaleY  * scaler, 0.135 * g_koalaScaleZ  * scaler);
+    leftUpperFirstJoint.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, -0.035 * g_koalaScaleY * fingerScaler, -0.08 * g_koalaScaleZ * fingerScaler);
+    leftUpperFirstJoint.matrix.scale(0.3 * g_koalaScaleX  * fingerScaler, 0.145 * g_koalaScaleY  * fingerScaler, 0.135 * g_koalaScaleZ  * fingerScaler);
     leftUpperFirstJoint.render();
 
     var firstThumb = new Cube();
     firstThumb.color = g_koalaGreyColorMat;
     firstThumb.matrix = new Matrix4(thumbBone1Mat);
-    firstThumb.matrix.translate(-0.2 * g_koalaScaleX * scaler, -0.05 * g_koalaScaleY * scaler, -0.01 * g_koalaScaleZ * scaler);
-    firstThumb.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.2 * g_koalaScaleY * scaler, 0.45 * g_koalaScaleZ * scaler);
+    firstThumb.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, -0.05 * g_koalaScaleY * fingerScaler, -0.01 * g_koalaScaleZ * fingerScaler);
+    firstThumb.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.2 * g_koalaScaleY * fingerScaler, 0.45 * g_koalaScaleZ * fingerScaler);
     firstThumb.render();
 
     var firstThumb2 = new Cube();
     firstThumb2.color = g_koalaGreyColorMat;
     firstThumb2.matrix = new Matrix4(thumbBone2Mat);
-    firstThumb2.matrix.translate(-0.2 * g_koalaScaleX * scaler, -0.05 * g_koalaScaleY * scaler, 0.0 * g_koalaScaleZ * scaler);
-    firstThumb2.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.2 * g_koalaScaleY * scaler, 0.45 * g_koalaScaleZ * scaler);
+    firstThumb2.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, -0.05 * g_koalaScaleY * fingerScaler, 0.0 * g_koalaScaleZ * fingerScaler);
+    firstThumb2.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.2 * g_koalaScaleY * fingerScaler, 0.45 * g_koalaScaleZ * fingerScaler);
     firstThumb2.render();
 
     // SECOND THUMB OR ANOTHER FINGER
     var fingyJoint2 = new Cube();
     fingyJoint2.color = g_koalaDarkerGreyColorMat;
     fingyJoint2.matrix = new Matrix4(rootCubeMat);
-    fingyJoint2.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.5 * g_koalaScaleY * scaler, 1.6 * g_koalaScaleZ * scaler);
+    fingyJoint2.matrix.translate(0.5 * g_koalaScaleX * fingerScaler, 0.5 * g_koalaScaleY * fingerScaler, 1.6 * g_koalaScaleZ * fingerScaler);
     fingyJoint2.matrix.rotate(20, 1, 0, 0);
     fingyJoint2.matrix.rotate(rotateThumb2, 0, 1, 0);
     var fingyJoint2Mat = new Matrix4(fingyJoint2.matrix);
-    fingyJoint2.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    fingyJoint2.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     fingyJoint2.matrix.translate(-0.5, 0.0, -0.5);
     fingyJoint2.render();
 
     var secondThumbBone1 = new Cube();
     secondThumbBone1.color = g_yellow;
     secondThumbBone1.matrix = new Matrix4(fingyJoint2Mat);
-    secondThumbBone1.matrix.translate(-0.07 * g_koalaScaleX * scaler, 0.03 * g_koalaScaleY * scaler, 0.06 * g_koalaScaleZ * scaler);
+    secondThumbBone1.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, 0.03 * g_koalaScaleY * fingerScaler, 0.06 * g_koalaScaleZ * fingerScaler);
     var secondThumbBone1Mat = new Matrix4(secondThumbBone1.matrix);
-    secondThumbBone1.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.0625 * scaler, 0.5 * g_koalaScaleZ * scaler);
+    secondThumbBone1.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.0625 * fingerScaler, 0.5 * g_koalaScaleZ * fingerScaler);
     secondThumbBone1.render();
 
     var thumbJoint2 = new Cube();
     thumbJoint2.color = g_koalaDarkerGreyColorMat;
     thumbJoint2.matrix = new Matrix4(fingyJoint2Mat);
-    thumbJoint2.matrix.translate(0.0, 0.0, 0.6 * g_koalaScaleZ * scaler);
+    thumbJoint2.matrix.translate(0.0, 0.0, 0.6 * g_koalaScaleZ * fingerScaler);
     thumbJoint2.matrix.rotate(rotateThumb2 * 1.5, 0, 1, 0);
     var thumbJoint2Mat = new Matrix4(thumbJoint2.matrix);
-    thumbJoint2.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    thumbJoint2.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     thumbJoint2.matrix.translate(-0.5, 0.0, -0.5);
     thumbJoint2.render();
 
     var secondThumbBone2 = new Cube();
     secondThumbBone2.color = g_yellow;
     secondThumbBone2.matrix = new Matrix4(thumbJoint2Mat);
-    secondThumbBone2.matrix.translate(-0.07 * g_koalaScaleX * scaler, 0.03 * g_koalaScaleY * scaler, 0.06 * g_koalaScaleZ * scaler);
+    secondThumbBone2.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, 0.03 * g_koalaScaleY * fingerScaler, 0.06 * g_koalaScaleZ * fingerScaler);
     var secondThumbBone2Mat = new Matrix4(secondThumbBone2.matrix);
-    secondThumbBone2.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.0625 * scaler, g_koalaScaleZ * 0.5 * scaler);
+    secondThumbBone2.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.0625 * fingerScaler, g_koalaScaleZ * 0.5 * fingerScaler);
     secondThumbBone2.render();
 
     var secondThumb = new Cube();
     secondThumb.color = g_koalaGreyColorMat;
     secondThumb.matrix = new Matrix4(secondThumbBone1Mat);
-    secondThumb.matrix.translate(-0.2 * g_koalaScaleX * scaler, -0.05 * g_koalaScaleY * scaler, -0.01 * g_koalaScaleZ * scaler);
-    secondThumb.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.2 * g_koalaScaleY * scaler, 0.5 * g_koalaScaleZ * scaler);
+    secondThumb.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, -0.05 * g_koalaScaleY * fingerScaler, -0.01 * g_koalaScaleZ * fingerScaler);
+    secondThumb.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.2 * g_koalaScaleY * fingerScaler, 0.5 * g_koalaScaleZ * fingerScaler);
     secondThumb.render();
 
     var secondThumb2 = new Cube();
     secondThumb2.color = g_koalaGreyColorMat;
     secondThumb2.matrix = new Matrix4(secondThumbBone2Mat);
-    secondThumb2.matrix.translate(-0.2 * g_koalaScaleX * scaler, -0.05 * g_koalaScaleY * scaler, 0.01 * g_koalaScaleZ * scaler);
-    secondThumb2.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.2 * g_koalaScaleY * scaler, 0.5 * g_koalaScaleZ * scaler);
+    secondThumb2.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, -0.05 * g_koalaScaleY * fingerScaler, 0.01 * g_koalaScaleZ * fingerScaler);
+    secondThumb2.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.2 * g_koalaScaleY * fingerScaler, 0.5 * g_koalaScaleZ * fingerScaler);
     secondThumb2.render();
 
     // INDEX? FINGER
     var fingyJoint3 = new Cube();
     fingyJoint3.color = g_koalaDarkerGreyColorMat;
     fingyJoint3.matrix = new Matrix4(rootCubeMat);
-    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.1 * g_koalaScaleY * scaler, 1.5 * g_koalaScaleZ * scaler);
+    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX * fingerScaler, 0.1 * g_koalaScaleY * fingerScaler, 1.5 * g_koalaScaleZ * fingerScaler);
     fingyJoint3.matrix.rotate(rotateIndexFinger, 0, 0, 1);
     var fingyJoint3Mat = new Matrix4(fingyJoint3.matrix);
-    fingyJoint3.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    fingyJoint3.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     fingyJoint3.matrix.translate(-0.5, -0.5, 0.0);
     fingyJoint3.render();
 
     var indexBone1 = new Cube();
     indexBone1.color = g_yellow;
     indexBone1.matrix = new Matrix4(fingyJoint3Mat);
-    indexBone1.matrix.translate(-0.06 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    indexBone1.matrix.translate(-0.06 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var indexBone1Mat = new Matrix4(indexBone1.matrix);
-    indexBone1.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    indexBone1.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     indexBone1.render();
 
     var indexJoint1 = new Cube();
     indexJoint1.color = g_koalaDarkerGreyColorMat;
     indexJoint1.matrix = new Matrix4(fingyJoint3Mat);
-    indexJoint1.matrix.translate(0.0, -0.47 * g_koalaScaleY * scaler, 0.0);
+    indexJoint1.matrix.translate(0.0, -0.47 * g_koalaScaleY * fingerScaler, 0.0);
     indexJoint1.matrix.rotate(rotateIndexFinger * 1.3, 0, 0, 1);
     var indexJoint1Mat = new Matrix4(indexJoint1.matrix);
-    indexJoint1.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    indexJoint1.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     indexJoint1.matrix.translate(-0.5, -0.5, 0.0);
     indexJoint1.render();
 
     var indexBone2 = new Cube();
     indexBone2.color = g_yellow;
     indexBone2.matrix = new Matrix4(indexJoint1Mat);
-    indexBone2.matrix.translate(-0.07 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    indexBone2.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var indexBone2Mat = new Matrix4(indexBone2.matrix);
-    indexBone2.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    indexBone2.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     indexBone2.render();
 
     var indexJoint2 = new Cube();
     indexJoint2.color = g_koalaDarkerGreyColorMat;
     indexJoint2.matrix = new Matrix4(indexJoint1Mat);
-    indexJoint2.matrix.translate(0.0, -0.47 * g_koalaScaleY * scaler, 0.0);
+    indexJoint2.matrix.translate(0.0, -0.47 * g_koalaScaleY * fingerScaler, 0.0);
     indexJoint2.matrix.rotate(rotateIndexFinger * 1.3, 0, 0, 1);
     var indexJoint2Mat = new Matrix4(indexJoint2.matrix);
-    indexJoint2.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    indexJoint2.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     indexJoint2.matrix.translate(-0.5, -0.5, 0.0);
     indexJoint2.render();
 
     var indexBone3 = new Cube();
     indexBone3.color = g_yellow;
     indexBone3.matrix = new Matrix4(indexJoint2Mat);
-    indexBone3.matrix.translate(-0.07 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    indexBone3.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var indexBone3Mat = new Matrix4(indexBone3.matrix);
-    indexBone3.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    indexBone3.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     indexBone3.render();
 
     var index = new Cube();
     index.color = g_koalaGreyColorMat;
     index.matrix = new Matrix4(indexBone1Mat);
-    index.matrix.translate(-0.2 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    index.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    index.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, 0.0 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    index.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     index.render();
 
     var index2 = new Cube();
     index2.color = g_koalaGreyColorMat;
     index2.matrix = new Matrix4(indexBone2Mat);
-    index2.matrix.translate(-0.2 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    index2.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    index2.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, 0.0 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    index2.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     index2.render();
 
     var index3 = new Cube();
     index3.color = g_koalaGreyColorMat;
     index3.matrix = new Matrix4(indexBone3Mat);
-    index3.matrix.translate(-0.2 * g_koalaScaleX * scaler, -0.01 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    index3.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    index3.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, -0.01 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    index3.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     index3.render();
 
     // MIDDLE? FINGER
     var fingyJoint4 = new Cube();
     fingyJoint4.color = g_koalaDarkerGreyColorMat;
     fingyJoint4.matrix = new Matrix4(rootCubeMat);
-    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, 0.74 * g_koalaScaleZ * scaler);
+    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX * fingerScaler, 0.0 * g_koalaScaleY * fingerScaler, 0.74 * g_koalaScaleZ * fingerScaler);
     fingyJoint4.matrix.rotate(rotateMiddleFinger, 0, 0, 1);
     var fingyJoint4Mat = new Matrix4(fingyJoint4.matrix);
-    fingyJoint4.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    fingyJoint4.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     fingyJoint4.matrix.translate(-0.5, -0.5, 0.0);
     fingyJoint4.render();
 
     var middleBone1 = new Cube();
     middleBone1.color = g_yellow;
     middleBone1.matrix = new Matrix4(fingyJoint4Mat);
-    middleBone1.matrix.translate(-0.06 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    middleBone1.matrix.translate(-0.06 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var middleBone1Mat = new Matrix4(middleBone1.matrix);
-    middleBone1.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    middleBone1.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     middleBone1.render();
 
     var middleJoint1 = new Cube();
     middleJoint1.color = g_koalaDarkerGreyColorMat;
     middleJoint1.matrix = new Matrix4(fingyJoint4Mat);
-    middleJoint1.matrix.translate(0.0, -0.47 * g_koalaScaleY * scaler, 0.0);
+    middleJoint1.matrix.translate(0.0, -0.47 * g_koalaScaleY * fingerScaler, 0.0);
     middleJoint1.matrix.rotate(rotateMiddleFinger * 1.3, 0, 0, 1);
     var middleJoint1Mat = new Matrix4(middleJoint1.matrix);
-    middleJoint1.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    middleJoint1.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     middleJoint1.matrix.translate(-0.5, -0.5, 0.0);
     middleJoint1.render();
 
     var middleBone2 = new Cube();
     middleBone2.color = g_yellow;
     middleBone2.matrix = new Matrix4(middleJoint1Mat);
-    middleBone2.matrix.translate(-0.07 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    middleBone2.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var middleBone2Mat = new Matrix4(middleBone2.matrix);
-    middleBone2.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    middleBone2.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     middleBone2.render();
 
     var middleJoint2 = new Cube();
     middleJoint2.color = g_koalaDarkerGreyColorMat;
     middleJoint2.matrix = new Matrix4(middleJoint1Mat);
-    middleJoint2.matrix.translate(0.0, -0.47 * g_koalaScaleY * scaler, 0.0);
+    middleJoint2.matrix.translate(0.0, -0.47 * g_koalaScaleY * fingerScaler, 0.0);
     middleJoint2.matrix.rotate(rotateMiddleFinger * 1.3, 0, 0, 1);
     var middleJoint2Mat = new Matrix4(middleJoint2.matrix);
-    middleJoint2.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    middleJoint2.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     middleJoint2.matrix.translate(-0.5, -0.5, 0.0);
     middleJoint2.render();
 
     var middleBone3 = new Cube();
     middleBone3.color = g_yellow;
     middleBone3.matrix = new Matrix4(middleJoint2Mat);
-    middleBone3.matrix.translate(-0.07 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    middleBone3.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var middleBone3Mat = new Matrix4(middleBone3.matrix);
-    middleBone3.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    middleBone3.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     middleBone3.render();
 
     var middleFinger = new Cube();
     middleFinger.color = g_koalaGreyColorMat;
     middleFinger.matrix = new Matrix4(middleBone1Mat);
-    middleFinger.matrix.translate(-0.2 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    middleFinger.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    middleFinger.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, 0.0 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    middleFinger.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     middleFinger.render();
 
     var middleFinger2 = new Cube();
     middleFinger2.color = g_koalaGreyColorMat;
     middleFinger2.matrix = new Matrix4(middleBone2Mat);
-    middleFinger2.matrix.translate(-0.2 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    middleFinger2.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    middleFinger2.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, 0.0 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    middleFinger2.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     middleFinger2.render();
 
     var middleFinger3 = new Cube();
     middleFinger3.color = g_koalaGreyColorMat;
     middleFinger3.matrix = new Matrix4(middleBone3Mat);
-    middleFinger3.matrix.translate(-0.2 * g_koalaScaleX * scaler, -0.01 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    middleFinger3.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    middleFinger3.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, -0.01 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    middleFinger3.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     middleFinger3.render();
 
     // PINKY? FINGER
     var fingyJoint5 = new Cube();
     fingyJoint5.color = g_koalaDarkerGreyColorMat;
     fingyJoint5.matrix = new Matrix4(rootCubeMat);
-    fingyJoint5.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.2 * g_koalaScaleY * scaler, -0.01 * g_koalaScaleZ * scaler);
+    fingyJoint5.matrix.translate(0.5 * g_koalaScaleX * fingerScaler, 0.2 * g_koalaScaleY * fingerScaler, -0.01 * g_koalaScaleZ * fingerScaler);
     fingyJoint5.matrix.rotate(rotatePinkyFinger, 0, 0, 1);
     var fingyJoint5Mat = new Matrix4(fingyJoint5.matrix);
-    fingyJoint5.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    fingyJoint5.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     fingyJoint5.matrix.translate(-0.5, -0.5, 0.0);
     fingyJoint5.render();
 
     var pinkyBone1 = new Cube();
     pinkyBone1.color = g_yellow;
     pinkyBone1.matrix = new Matrix4(fingyJoint5Mat);
-    pinkyBone1.matrix.translate(-0.06 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    pinkyBone1.matrix.translate(-0.06 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var pinkyBone1Mat = new Matrix4(pinkyBone1.matrix);
-    pinkyBone1.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    pinkyBone1.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     pinkyBone1.render();
 
     var pinkyJoint1 = new Cube();
     pinkyJoint1.color = g_koalaDarkerGreyColorMat;
     pinkyJoint1.matrix = new Matrix4(fingyJoint5Mat);
-    pinkyJoint1.matrix.translate(0.0, -0.47 * g_koalaScaleY * scaler, 0.0);
+    pinkyJoint1.matrix.translate(0.0, -0.47 * g_koalaScaleY * fingerScaler, 0.0);
     pinkyJoint1.matrix.rotate(rotatePinkyFinger * 1.3, 0, 0, 1);
     var pinkyJoint1Mat = new Matrix4(pinkyJoint1.matrix);
-    pinkyJoint1.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    pinkyJoint1.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     pinkyJoint1.matrix.translate(-0.5, -0.5, 0.0);
     pinkyJoint1.render();
 
     var pinkyBone2 = new Cube();
     pinkyBone2.color = g_yellow;
     pinkyBone2.matrix = new Matrix4(pinkyJoint1Mat);
-    pinkyBone2.matrix.translate(-0.07 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    pinkyBone2.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var pinkyBone2Mat = new Matrix4(pinkyBone2.matrix);
-    pinkyBone2.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    pinkyBone2.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     pinkyBone2.render();
 
     var pinkyJoint2 = new Cube();
     pinkyJoint2.color = g_koalaDarkerGreyColorMat;
     pinkyJoint2.matrix = new Matrix4(pinkyJoint1Mat);
-    pinkyJoint2.matrix.translate(0.0, -0.47 * g_koalaScaleY * scaler, 0.0);
+    pinkyJoint2.matrix.translate(0.0, -0.47 * g_koalaScaleY * fingerScaler, 0.0);
     pinkyJoint2.matrix.rotate(rotatePinkyFinger * 1.3, 0, 0, 1);
     var pinkyJoint2Mat = new Matrix4(pinkyJoint2.matrix);
-    pinkyJoint2.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
+    pinkyJoint2.matrix.scale(g_koalaScaleX * 0.25 * fingerScaler, g_koalaScaleY * 0.125 * fingerScaler, g_koalaScaleZ * 0.125 * fingerScaler);
     pinkyJoint2.matrix.translate(-0.5, -0.5, 0.0);
     pinkyJoint2.render();
 
     var pinkyBone3 = new Cube();
     pinkyBone3.color = g_yellow;
     pinkyBone3.matrix = new Matrix4(pinkyJoint2Mat);
-    pinkyBone3.matrix.translate(-0.07 * g_koalaScaleX * scaler, -0.46 * g_koalaScaleY * scaler, 0.03 * g_koalaScaleZ * scaler);
+    pinkyBone3.matrix.translate(-0.07 * g_koalaScaleX * fingerScaler, -0.46 * g_koalaScaleY * fingerScaler, 0.03 * g_koalaScaleZ * fingerScaler);
     var pinkyBone3Mat = new Matrix4(pinkyBone3.matrix);
-    pinkyBone3.matrix.scale(g_koalaScaleX * 0.125 * scaler, g_koalaScaleY * 0.4 * scaler, g_koalaScaleZ * 0.0625 * scaler);
+    pinkyBone3.matrix.scale(g_koalaScaleX * 0.125 * fingerScaler, g_koalaScaleY * 0.4 * fingerScaler, g_koalaScaleZ * 0.0625 * fingerScaler);
     pinkyBone3.render();
 
     var pinkyFinger = new Cube();
     pinkyFinger.color = g_koalaGreyColorMat;
     pinkyFinger.matrix = new Matrix4(pinkyBone1Mat);
-    pinkyFinger.matrix.translate(-0.2 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    pinkyFinger.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    pinkyFinger.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, 0.0 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    pinkyFinger.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     pinkyFinger.render();
 
     var pinkyFinger2 = new Cube();
     pinkyFinger2.color = g_koalaGreyColorMat;
     pinkyFinger2.matrix = new Matrix4(pinkyBone2Mat);
-    pinkyFinger2.matrix.translate(-0.2 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    pinkyFinger2.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    pinkyFinger2.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, 0.0 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    pinkyFinger2.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     pinkyFinger2.render();
 
     var pinkyFinger3 = new Cube();
     pinkyFinger3.color = g_koalaGreyColorMat;
     pinkyFinger3.matrix = new Matrix4(pinkyBone3Mat);
-    pinkyFinger3.matrix.translate(-0.2 * g_koalaScaleX * scaler, -0.01 * g_koalaScaleY * scaler, -0.065 * g_koalaScaleZ * scaler);
-    pinkyFinger3.matrix.scale(0.5 * g_koalaScaleX * scaler, 0.45 * g_koalaScaleY * scaler, 0.2 * g_koalaScaleZ * scaler);
+    pinkyFinger3.matrix.translate(-0.2 * g_koalaScaleX * fingerScaler, -0.01 * g_koalaScaleY * fingerScaler, -0.065 * g_koalaScaleZ * fingerScaler);
+    pinkyFinger3.matrix.scale(0.5 * g_koalaScaleX * fingerScaler, 0.45 * g_koalaScaleY * fingerScaler, 0.2 * g_koalaScaleZ * fingerScaler);
     pinkyFinger3.render();
 }
