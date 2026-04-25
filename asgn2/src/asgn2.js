@@ -140,8 +140,7 @@ function main() {
 
     g_globalZoom = Math.max(0.15, Math.min(5.0, g_globalZoom));
 
-    // g_redraw = true;
-    // renderAllShapes();
+
   }, { passive: false });
 
   document.addEventListener('keydown', function(ev) {
@@ -186,13 +185,6 @@ function connectVariablesToGLSL() {
     console.log('Failed to get the storage location of a_Position');
     return;
   }
-  
-  // Get the storage location of u_FragColor
-  // u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
-  // if (!u_FragColor) {
-  //   console.log('Failed to get the storage location of u_FragColor');
-  //   return;
-  // }
 
   u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
   if (!u_ModelMatrix) {
@@ -221,7 +213,7 @@ function connectVariablesToGLSL() {
 
 function click(ev) {
   if (ev.shiftKey) {
-    
+    // change the sensitivity of movement based on how zoomed in you are
     let modMoveSens = (g_globalZoom > 1.0 ) ? 
       g_movementSensitivity / g_globalZoom : 
       g_movementSensitivity;
@@ -230,28 +222,18 @@ function click(ev) {
     g_koalaPosX += ev.movementX * modMoveSens;
     g_koalaPosY -= ev.movementY * modMoveSens;
     g_koalaPosZ -= ev.movementX * modMoveSens;
-
-    // g_koalaPosX += ev.movementX * g_movementSensitivity;
-    // g_koalaPosY -= ev.movementY * g_movementSensitivity;
-    // g_koalaPosZ -= ev.movementX * g_movementSensitivity;
   } else {
-    
+    // change the sensitivity of rotation based on how zoomed in you are
     let modRotSens = (g_globalZoom > 1.0 ) ? 
       g_rotateSensitivity / g_globalZoom : 
       g_rotateSensitivity;
     
     g_globalXAngle += modRotSens * ev.movementY;
     g_globalYAngle -= modRotSens * ev.movementX;
-
-    // g_globalXAngle += g_rotateSensitivity * ev.movementY;
-    // g_globalYAngle -= g_rotateSensitivity * ev.movementX;
   }
-
-  // g_redraw = true;
-  // renderAllShapes();
 }
 
-function rotateAnimal(axis, rotateValue) {
+function rotateAnimalHelper(axis, rotateValue) {
   if (axis === "x") {
     g_animalXAngle = (!(Number.isNaN(rotateValue))) ? rotateValue : 0;
   }
@@ -261,8 +243,6 @@ function rotateAnimal(axis, rotateValue) {
   else if (axis === "z") {
     g_animalZAngle = (!(Number.isNaN(rotateValue))) ? rotateValue : 0;
   }
-  // g_redraw = true;
-  // renderAllShapes();
 }
 
 function renderAllShapes() {
@@ -324,31 +304,30 @@ function tick() {
 let g_walkAnimation = false;
 function updateAnimationAngle() {
   if (g_walkAnimation) {
-    // Left arm rotations
     let speed = 3.0;
     let t = g_seconds * speed;
     let tRight = t + Math.PI;
+    let lowerLeft = -47.5 -52.5 * Math.sin(t) + 17.5 * Math.cos(t);
+    let lowerRight = -47.5 -52.5 * Math.sin(tRight) + 17.5 * Math.cos(tRight);
 
     // LEFT ARM ROTATION
     g_rotateUpperLeftArm = 10 + 65 * Math.sin(t);
-
-    let lowerLeft = -47.5 -52.5 * Math.sin(t) + 17.5 * Math.cos(t);
     g_rotateLowerLeftArm = Math.max(-100, Math.min(5, lowerLeft));
-
     g_rotateLeftWristZ = 5 - 75 * Math.max(0, Math.cos(t));
 
     // RIGHT ARM ROTATION
     g_rotateUpperRightArm = 10 + 65 * Math.sin(tRight);
-    
-    let lowerRight = -47.5 -52.5 * Math.sin(tRight) + 17.5 * Math.cos(tRight);
     g_rotateLowerRightArm = Math.max(-100, Math.min(5, lowerRight));
-
     g_rotateRightWristZ = 5 - 75 * Math.max(0, Math.cos(tRight));
 
+    // LEFT LEG ROTATION
+    // Using tRight so leg and arm movement is opposite
     g_rotateUpperLeftLeg = 10 + 65 * Math.sin(tRight);
     g_rotateLowerLeftLeg = Math.max(-100, Math.min(5, lowerLeft));
     g_rotateLeftAnkleZ = 5 - 75 * Math.max(0, Math.cos(tRight));
 
+    // RIGHT LEG ROTATION
+    // Use t for opposite mmovements
     g_rotateUpperRightLeg = 10 + 65 * Math.sin(t);
     g_rotateLowerRightLeg = Math.max(-100, Math.min(5, lowerRight));
     g_rotateRightAnkleZ = 5 - 75 * Math.max(0, Math.cos(t));
