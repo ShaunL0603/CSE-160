@@ -60,7 +60,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint2 = new Cube();
     fingyJoint2.color = g_koalaDarkerGreyColorMat;
     fingyJoint2.matrix = new Matrix4(rootCubeMat);
-    fingyJoint2.matrix.translate(0.5 * g_koalaScaleX, 0.15 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
+    fingyJoint2.matrix.translate(0.5 * g_koalaScaleX, 0.15 * g_koalaScaleY, 1.1 * g_koalaScaleZ);
     fingyJoint2.matrix.rotate(rotateToe2, 0, 0, 1);
     var fingyJoint2Mat = new Matrix4(fingyJoint2.matrix);
     fingyJoint2.matrix.scale(g_koalaScaleX * 0.25, g_koalaScaleY * 0.125, g_koalaScaleZ * 0.125);
@@ -136,7 +136,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint3 = new Cube();
     fingyJoint3.color = g_koalaDarkerGreyColorMat;
     fingyJoint3.matrix = new Matrix4(rootCubeMat);
-    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX, 0.1 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX, 0.1 * g_koalaScaleY, 0.8 * g_koalaScaleZ);
     fingyJoint3.matrix.rotate(rotateToe3, 0, 0, 1);
     var fingyJoint3Mat = new Matrix4(fingyJoint3.matrix);
     fingyJoint3.matrix.scale(g_koalaScaleX * 0.25, g_koalaScaleY * 0.125, g_koalaScaleZ * 0.125);
@@ -212,7 +212,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint4 = new Cube();
     fingyJoint4.color = g_koalaDarkerGreyColorMat;
     fingyJoint4.matrix = new Matrix4(rootCubeMat);
-    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX, 0.01 * g_koalaScaleY, 0.47 * g_koalaScaleZ);
+    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX, 0.01 * g_koalaScaleY, 0.4 * g_koalaScaleZ);
     fingyJoint4.matrix.rotate(90, 1, 0, 0);
     fingyJoint4.matrix.rotate(rotateToe4, 0, 1, 0);
     var fingyJoint4Mat = new Matrix4(fingyJoint4.matrix);
@@ -282,7 +282,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     fourthToe3.color = g_koalaGreyColorMat;
     fourthToe3.matrix = new Matrix4(middleBone3Mat);
     fourthToe3.matrix.translate(-0.2 * g_koalaScaleX, -0.065 * g_koalaScaleY, 0.02 * g_koalaScaleZ);
-    fourthToe3.matrix.scale(0.5 * g_koalaScaleX, 0.2 * g_koalaScaleY, 0.5 * g_koalaScaleZ);
+    fourthToe3.matrix.scale(0.5 * g_koalaScaleX, 0.2 * g_koalaScaleY, 0.4 * g_koalaScaleZ);
     fourthToe3.render();
     
     // FIFTH TOE

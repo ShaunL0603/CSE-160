@@ -55,7 +55,7 @@ let g_animation = false;
   let g_rotateLowerLeftArm = -30;
   let g_rotateLeftWristX = 0;
   let g_rotateLeftWristY = 0;
-  let g_rotateLeftWristZ = 0;
+  let g_rotateLeftWristZ = -70;
 
   // Left fingys rotation
   let g_rotateLeftThumb1 = 0;
@@ -69,7 +69,7 @@ let g_animation = false;
   let g_rotateLowerRightArm = -30;
   let g_rotateRightWristX = 0;
   let g_rotateRightWristY = 0;
-  let g_rotateRightWristZ = 0;
+  let g_rotateRightWristZ = 70;
 
   // Right fingys rotation
   let g_rotateRightThumb1 = 0;
@@ -91,7 +91,7 @@ let g_animation = false;
   let g_rotateLowerLeftLeg = -30;
   let g_rotateLeftAnkleX = 0;
   let g_rotateLeftAnkleY = 0;
-  let g_rotateLeftAnkleZ = 0;
+  let g_rotateLeftAnkleZ = -70;
 
   // Left toes rotations
   let g_rotateLeftToe1 = 0;
@@ -105,7 +105,7 @@ let g_animation = false;
   let g_rotateLowerRightLeg = -30;
   let g_rotateRightAnkleX = 0;
   let g_rotateRightAnkleY = 0;
-  let g_rotateRightAnkleZ = 0;
+  let g_rotateRightAnkleZ = 70;
 
   // Right toes rotations
   let g_rotateRightToe1 = 0;

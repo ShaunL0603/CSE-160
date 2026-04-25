@@ -12,8 +12,8 @@
     let g_koalaScaleX = 0.375;
     let g_koalaScaleY = 0.75;
     let g_koalaScaleZ = 0.75;
-    let g_koalaPosX = -0.5;
-    let g_koalaPosY = 5.0;
+    let g_koalaPosX = 0.0;
+    let g_koalaPosY = 0.0;
     let g_koalaPosZ = 0.0;
     let g_animalXAngle = 0.0;
     let g_animalYAngle = 90.0;
@@ -40,7 +40,7 @@ function makeKoala() {
     
     makeKoalaTorso(mainTorsoMat);
     makeKoalaHead(mainTorsoMat);
-    // makeKoalaArmBones(mainTorsoMat);
+    makeKoalaArmBones(mainTorsoMat);
     makeKoalaLegs(mainTorsoMat);
 }
 
