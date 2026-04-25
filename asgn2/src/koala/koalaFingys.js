@@ -119,7 +119,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     var fingyJoint3 = new Cube();
     fingyJoint3.color = g_koalaDarkerGreyColorMat;
     fingyJoint3.matrix = new Matrix4(rootCubeMat);
-    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX, 0.0 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX, 0.1 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
     fingyJoint3.matrix.rotate(rotateIndexFinger, 0, 0, 1);
     var fingyJoint3Mat = new Matrix4(fingyJoint3.matrix);
     fingyJoint3.matrix.scale(g_koalaScaleX * 0.25, g_koalaScaleY * 0.125, g_koalaScaleZ * 0.125);
@@ -272,7 +272,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     var fingyJoint5 = new Cube();
     fingyJoint5.color = g_koalaDarkerGreyColorMat;
     fingyJoint5.matrix = new Matrix4(rootCubeMat);
-    fingyJoint5.matrix.translate(0.5 * g_koalaScaleX, 0.0 * g_koalaScaleY, -0.05 * g_koalaScaleZ);
+    fingyJoint5.matrix.translate(0.5 * g_koalaScaleX, 0.2 * g_koalaScaleY, -0.05 * g_koalaScaleZ);
     fingyJoint5.matrix.rotate(rotatePinkyFinger, 0, 0, 1);
     var fingyJoint5Mat = new Matrix4(fingyJoint5.matrix);
     fingyJoint5.matrix.scale(g_koalaScaleX * 0.25, g_koalaScaleY * 0.125, g_koalaScaleZ * 0.125);

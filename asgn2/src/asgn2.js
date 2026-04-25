@@ -43,10 +43,9 @@ var v_Color;
 let g_globalXAngle = 0;
 let g_globalYAngle = 0;
 let g_globalZAngle = 0;
-let g_globalZoom = 0.5;
+let g_globalZoom = 0.15;
 let g_rotateSensitivity = 0.2;
 let g_movementSensitivity = 0.01;
-let g_animation = false;
 // let g_redraw = false;
 
 // Global rotation variables for animal
@@ -139,11 +138,19 @@ function main() {
       g_globalZoom *= 1.1;
     }
 
-    g_globalZoom = Math.max(0.2, Math.min(5.0, g_globalZoom));
+    g_globalZoom = Math.max(0.15, Math.min(5.0, g_globalZoom));
 
     // g_redraw = true;
     // renderAllShapes();
   }, { passive: false });
+
+  document.addEventListener('keydown', function(ev) {
+      if (ev.code === 'Space') {
+          ev.preventDefault();
+          console.log('bruh');
+          g_walkAnimation = !g_walkAnimation;
+      }
+  });
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   
@@ -314,13 +321,40 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
+let g_walkAnimation = false;
 function updateAnimationAngle() {
-  if (g_animation) {
+  if (g_walkAnimation) {
     // Left arm rotations
-    g_rotateUpperLeftArm = 75 * Math.max(0.1, Math.sin(g_seconds));
+    let speed = 3.0;
+    let t = g_seconds * speed;
+    let tRight = t + Math.PI;
+
+    // LEFT ARM ROTATION
+    g_rotateUpperLeftArm = 10 + 65 * Math.sin(t);
+
+    let lowerLeft = -47.5 -52.5 * Math.sin(t) + 17.5 * Math.cos(t);
+    g_rotateLowerLeftArm = Math.max(-100, Math.min(5, lowerLeft));
+
+    g_rotateLeftWristZ = 5 - 75 * Math.max(0, Math.cos(t));
+
+    // RIGHT ARM ROTATION
+    g_rotateUpperRightArm = 10 + 65 * Math.sin(tRight);
+    
+    let lowerRight = -47.5 -52.5 * Math.sin(tRight) + 17.5 * Math.cos(tRight);
+    g_rotateLowerRightArm = Math.max(-100, Math.min(5, lowerRight));
+
+    g_rotateRightWristZ = 5 - 75 * Math.max(0, Math.cos(tRight));
+
+    g_rotateUpperLeftLeg = 10 + 65 * Math.sin(tRight);
+    g_rotateLowerLeftLeg = Math.max(-100, Math.min(5, lowerLeft));
+    g_rotateLeftAnkleZ = 5 - 75 * Math.max(0, Math.cos(tRight));
+
+    g_rotateUpperRightLeg = 10 + 65 * Math.sin(t);
+    g_rotateLowerRightLeg = Math.max(-100, Math.min(5, lowerRight));
+    g_rotateRightAnkleZ = 5 - 75 * Math.max(0, Math.cos(t));
 
     // Head rotations
-    g_rotateHeadY = 55 * Math.max(Math.sin(g_seconds)) * 0.3;
-    g_rotateLowerJawY = 20 * Math.max(0, Math.sin(g_seconds * 2));
+    g_rotateHeadY = 11.25 * Math.max(Math.sin(g_seconds)) * 0.3;
+    g_rotateLowerJawY = 5 * Math.max(0, Math.sin(g_seconds * 2));
   }
 }

@@ -16,7 +16,7 @@
     let g_koalaPosY = 0.0;
     let g_koalaPosZ = 0.0;
     let g_animalXAngle = 0.0;
-    let g_animalYAngle = 90.0;
+    let g_animalYAngle = 180.0;
     let g_animalZAngle = 0.0;
 
 // Global booleans for finger movement

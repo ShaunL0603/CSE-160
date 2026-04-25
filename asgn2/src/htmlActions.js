@@ -5,8 +5,8 @@ function addActionsForHtmlUI() {
   });
 
     // Action to start or stop animation
-    document.getElementById("animationOn").onclick = function() {g_animation = true;};
-    document.getElementById("animationOff").onclick = function() {g_animation = false;};
+    document.getElementById("animationOn").onclick = function() {g_walkAnimation = true;};
+    document.getElementById("animationOff").onclick = function() {g_walkAnimation = false;};
 
   // Add event listener for resetting animal position
   document.getElementById("resetAnimalPos").addEventListener("click", function(ev) {
