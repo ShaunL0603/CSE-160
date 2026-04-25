@@ -237,45 +237,45 @@ function actionsForLegs() {
     });
 
     // Left toes rotation
-    document.getElementById("rotateLeftFirstToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateLeftToe1").addEventListener("input", function(ev) {
         g_rotateLeftToe1 = parseFloat(ev.target.value);
         renderAllShapes();
     });
-    document.getElementById("rotateLeftSecondToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateLeftToe2").addEventListener("input", function(ev) {
         g_rotateLeftToe2 = parseFloat(ev.target.value);
         renderAllShapes();
     });
-    document.getElementById("rotateLeftThirdToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateLeftToe3").addEventListener("input", function(ev) {
         g_rotateLeftToe3 = parseFloat(ev.target.value);
         renderAllShapes();
     });
-    document.getElementById("rotateLeftFourthToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateLeftToe4").addEventListener("input", function(ev) {
         g_rotateLeftToe4 = parseFloat(ev.target.value);
         renderAllShapes();
     });
-    document.getElementById("rotateLeftFifthToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateLeftToe5").addEventListener("input", function(ev) {
         g_rotateLeftToe5 = parseFloat(ev.target.value);
         renderAllShapes();
     });
 
     // Right toes rotation
-    document.getElementById("rotateRightFirstToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateRightToe1").addEventListener("input", function(ev) {
         g_rotateRightToe1 = parseFloat(ev.target.value);
         renderAllShapes();
     });
-    document.getElementById("rotateRightSecondToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateRightToe2").addEventListener("input", function(ev) {
         g_rotateRightToe2 = parseFloat(ev.target.value);
         renderAllShapes();
     });
-    document.getElementById("rotateRightThirdToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateRightToe3").addEventListener("input", function(ev) {
         g_rotateRightToe3 = parseFloat(ev.target.value);
         renderAllShapes();
     });
-    document.getElementById("rotateRightFourthToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateRightToe4").addEventListener("input", function(ev) {
         g_rotateRightToe4 = parseFloat(ev.target.value);
         renderAllShapes();
     });
-    document.getElementById("rotateRightFifthToe").addEventListener("input", function(ev) {
+    document.getElementById("rotateRightToe5").addEventListener("input", function(ev) {
         g_rotateRightToe5 = parseFloat(ev.target.value);
         renderAllShapes();
     });
