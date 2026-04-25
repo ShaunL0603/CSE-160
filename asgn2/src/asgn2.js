@@ -335,6 +335,6 @@ function updateAnimationAngle() {
 
     // Head rotations
     g_rotateHeadY = 11.25 * Math.max(Math.sin(g_seconds)) * 0.3;
-    g_rotateLowerJawY = 5 * Math.max(0, Math.sin(g_seconds * 2));
+    g_rotateLowerJawY = 10 * Math.max(0, Math.sin(g_seconds * 2));
   }
 }

@@ -1,3 +1,5 @@
+
+
 function makeKoalaTorso(rootCubeMat) {
     var upperTorso1 = new Cube();
     upperTorso1.color = g_koalaGreyColorMat;
@@ -48,12 +50,5 @@ function makeKoalaTorso(rootCubeMat) {
     backNeck2.matrix.translate(-0.5, -0.5, -0.5);
     backNeck2.render();
 
-    // var backNeck3 = new Cube();
-    // backNeck3.color = g_koalaGreyColorMat;
-    // backNeck3.matrix = new Matrix4(rootCubeMat);
-    // backNeck3.matrix.translate(-8.8, 7.1, 0.0);
-    // backNeck3.matrix.rotate(90, 0, 0, 1);
-    // backNeck3.matrix.scale(g_koalaScaleX * 2.5, g_koalaScaleY * 0.61, g_koalaScaleZ * 2.7);
-    // backNeck3.matrix.translate(-0.5, -0.5, -0.5);
-    // backNeck3.render();
+    var shoulder = new Cube();
 }

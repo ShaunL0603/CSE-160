@@ -1,4 +1,4 @@
-// Global variables
+//* Global variables
     // Colors
     const g_koalaGreyColorMat = [0.57, 0.56, 0.54, 1.0];
     const g_koalaLighterGreyColorMat = [0.67, 0.66, 0.64, 1.0];
@@ -16,14 +16,12 @@
     let g_koalaPosY = 0.0;
     let g_koalaPosZ = 0.0;
     let g_animalXAngle = 0.0;
-    let g_animalYAngle = 180.0;
+    let g_animalYAngle = 0.0;
     let g_animalZAngle = 0.0;
 
-// Global booleans for finger movement
+//* Global booleans for finger and toes movement
 const LEFT = 1;
 const RIGHT = 0;
-const ARM = 1;
-const LEG = 0;
 
 function makeKoala() {
     // torso cube of koala, root of animal
@@ -40,7 +38,7 @@ function makeKoala() {
     
     makeKoalaTorso(mainTorsoMat);
     makeKoalaHead(mainTorsoMat);
-    makeKoalaArmBones(mainTorsoMat);
+    makeKoalaArm(mainTorsoMat);
     makeKoalaLegs(mainTorsoMat);
 }
 
