@@ -120,7 +120,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     var fingyJoint3 = new Cube();
     fingyJoint3.color = g_koalaDarkerGreyColorMat;
     fingyJoint3.matrix = new Matrix4(rootCubeMat);
-    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.1 * g_koalaScaleY * scaler, 1.0 * g_koalaScaleZ * scaler);
+    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.1 * g_koalaScaleY * scaler, 1.5 * g_koalaScaleZ * scaler);
     fingyJoint3.matrix.rotate(rotateIndexFinger, 0, 0, 1);
     var fingyJoint3Mat = new Matrix4(fingyJoint3.matrix);
     fingyJoint3.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
@@ -196,7 +196,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     var fingyJoint4 = new Cube();
     fingyJoint4.color = g_koalaDarkerGreyColorMat;
     fingyJoint4.matrix = new Matrix4(rootCubeMat);
-    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, 0.47 * g_koalaScaleZ * scaler);
+    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.0 * g_koalaScaleY * scaler, 0.74 * g_koalaScaleZ * scaler);
     fingyJoint4.matrix.rotate(rotateMiddleFinger, 0, 0, 1);
     var fingyJoint4Mat = new Matrix4(fingyJoint4.matrix);
     fingyJoint4.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
@@ -272,7 +272,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     var fingyJoint5 = new Cube();
     fingyJoint5.color = g_koalaDarkerGreyColorMat;
     fingyJoint5.matrix = new Matrix4(rootCubeMat);
-    fingyJoint5.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.2 * g_koalaScaleY * scaler, -0.05 * g_koalaScaleZ * scaler);
+    fingyJoint5.matrix.translate(0.5 * g_koalaScaleX * scaler, 0.2 * g_koalaScaleY * scaler, -0.01 * g_koalaScaleZ * scaler);
     fingyJoint5.matrix.rotate(rotatePinkyFinger, 0, 0, 1);
     var fingyJoint5Mat = new Matrix4(fingyJoint5.matrix);
     fingyJoint5.matrix.scale(g_koalaScaleX * 0.25 * scaler, g_koalaScaleY * 0.125 * scaler, g_koalaScaleZ * 0.125 * scaler);
