@@ -1,4 +1,5 @@
 let toeScaler = 0.7;
+
 function makeKoalaToes(rootCubeMat, LEFT) {
     // Get correct rotation
     var rotateToe1 = LEFT ? g_rotateLeftToe1 : -g_rotateRightToe1;
@@ -61,7 +62,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint2 = new Cube();
     fingyJoint2.color = g_koalaDarkerGreyColorMat;
     fingyJoint2.matrix = new Matrix4(rootCubeMat);
-    fingyJoint2.matrix.translate(0.5 * g_koalaScaleX * toeScaler, 0.15 * g_koalaScaleY * toeScaler, 1.1 * g_koalaScaleZ * toeScaler);
+    fingyJoint2.matrix.translate(0.5 * g_koalaScaleX * toeScaler, 0.15 * g_koalaScaleY * toeScaler, 1.5 * g_koalaScaleZ * toeScaler);
     fingyJoint2.matrix.rotate(rotateToe2, 0, 0, 1);
     var fingyJoint2Mat = new Matrix4(fingyJoint2.matrix);
     fingyJoint2.matrix.scale(g_koalaScaleX * 0.25 * toeScaler, g_koalaScaleY * 0.125 * toeScaler, g_koalaScaleZ * 0.125 * toeScaler);
@@ -137,7 +138,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint3 = new Cube();
     fingyJoint3.color = g_koalaDarkerGreyColorMat;
     fingyJoint3.matrix = new Matrix4(rootCubeMat);
-    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX * toeScaler, 0.1 * g_koalaScaleY * toeScaler, 0.8 * g_koalaScaleZ * toeScaler);
+    fingyJoint3.matrix.translate(0.5 * g_koalaScaleX * toeScaler, 0.1 * g_koalaScaleY * toeScaler, 1.0 * g_koalaScaleZ * toeScaler);
     fingyJoint3.matrix.rotate(rotateToe3, 0, 0, 1);
     var fingyJoint3Mat = new Matrix4(fingyJoint3.matrix);
     fingyJoint3.matrix.scale(g_koalaScaleX * 0.25 * toeScaler, g_koalaScaleY * 0.125 * toeScaler, g_koalaScaleZ * 0.125 * toeScaler);
@@ -213,7 +214,7 @@ function makeKoalaToes(rootCubeMat, LEFT) {
     var fingyJoint4 = new Cube();
     fingyJoint4.color = g_koalaDarkerGreyColorMat;
     fingyJoint4.matrix = new Matrix4(rootCubeMat);
-    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX * toeScaler, 0.01 * g_koalaScaleY * toeScaler, 0.4 * g_koalaScaleZ * toeScaler);
+    fingyJoint4.matrix.translate(0.5 * g_koalaScaleX * toeScaler, 0.01 * g_koalaScaleY * toeScaler, 0.5 * g_koalaScaleZ * toeScaler);
     fingyJoint4.matrix.rotate(90, 1, 0, 0);
     fingyJoint4.matrix.rotate(rotateToe4, 0, 1, 0);
     var fingyJoint4Mat = new Matrix4(fingyJoint4.matrix);

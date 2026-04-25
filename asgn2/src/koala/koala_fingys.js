@@ -1,5 +1,6 @@
 
 let fingerScaler = 0.7;
+
 function makeKoalaFingys(rootCubeMat, LEFT) {
     // Get correct rotation
     var rotateThumb1 = LEFT ? g_rotateLeftThumb1 : -g_rotateRightThumb1;
@@ -69,7 +70,7 @@ function makeKoalaFingys(rootCubeMat, LEFT) {
     var fingyJoint2 = new Cube();
     fingyJoint2.color = g_koalaDarkerGreyColorMat;
     fingyJoint2.matrix = new Matrix4(rootCubeMat);
-    fingyJoint2.matrix.translate(0.5 * g_koalaScaleX * fingerScaler, 0.5 * g_koalaScaleY * fingerScaler, 1.6 * g_koalaScaleZ * fingerScaler);
+    fingyJoint2.matrix.translate(0.7 * g_koalaScaleX * fingerScaler, 0.8 * g_koalaScaleY * fingerScaler, 1.6 * g_koalaScaleZ * fingerScaler);
     fingyJoint2.matrix.rotate(20, 1, 0, 0);
     fingyJoint2.matrix.rotate(rotateThumb2, 0, 1, 0);
     var fingyJoint2Mat = new Matrix4(fingyJoint2.matrix);
