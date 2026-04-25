@@ -51,80 +51,171 @@ function makeKoalaTorso(rootCubeMat) {
     backNeck2.matrix.translate(-0.5, -0.5, -0.5);
     backNeck2.render();
 
-    var leftSide = new Cube();
-    leftSide.color = g_koalaGreyColorMat;
-    leftSide.matrix = new Matrix4(upperTorso2Mat);
-    leftSide.matrix.translate(0.1 * g_koalaScaleX, 0.72 * g_koalaScaleY, -1.3 * g_koalaScaleZ);
-    leftSide.matrix.rotate(10, 1, 0, 0);
-    leftSide.matrix.scale(2.0 * g_koalaScaleX, 2.8 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
-    leftSide.render();
+    var back = new Cube();
+    back.color = g_koalaGreyColorMat;
+    back.matrix = new Matrix4(lowerTorso2Mat);
+    back.matrix.translate(0.0 * g_koalaScaleX, 3.1 * g_koalaScaleY, -0.45 * g_koalaScaleZ);
+    back.matrix.scale(4.5 * g_koalaScaleX, 1.0 * g_koalaScaleY, 3.8 * g_koalaScaleZ);
+    back.render();
 
-    var leftSide2 = new Cube();
-    leftSide2.color = g_koalaGreyColorMat;
-    leftSide2.matrix = new Matrix4(upperTorso1Mat);
-    leftSide2.matrix.translate(-0.99 * g_koalaScaleX, 0.67 * g_koalaScaleY, -1.23 * g_koalaScaleZ);
-    leftSide2.matrix.rotate(10, 1, 0, 0);
-    leftSide2.matrix.rotate(-10, 0, 0, 1);
-    leftSide2.matrix.scale(3.5 * g_koalaScaleX, 3.0 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
-    leftSide2.render();
+    var back2 = new Cube();
+    back2.color = g_koalaGreyColorMat;
+    back2.matrix = new Matrix4(lowerTorso1Mat);
+    back2.matrix.translate(0.0 * g_koalaScaleX, 3.1 * g_koalaScaleY, -0.45 * g_koalaScaleZ);
+    back2.matrix.scale(5.0 * g_koalaScaleX, 0.92 * g_koalaScaleY, 3.8 * g_koalaScaleZ);
+    back2.render();
 
-    var leftSide3 = new Cube();
-    leftSide3.color = g_koalaGreyColorMat;
-    leftSide3.matrix = new Matrix4(rootCubeMat);
-    leftSide3.matrix.translate(-4.0 * g_koalaScaleX, 0.1 * g_koalaScaleY, -2.23 * g_koalaScaleZ);
-    leftSide3.matrix.rotate(5, 1, 0, 0);
-    var leftSide3Mat = new Matrix4(leftSide3.matrix);
-    leftSide3.matrix.scale(7.0 * g_koalaScaleX, 1.75 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
-    leftSide3.render();
+    var back3 = new Cube();
+    back3.color = g_koalaGreyColorMat;
+    back3.matrix = new Matrix4(rootCubeMat);
+    back3.matrix.translate(-3.1 * g_koalaScaleX, 0.9 * g_koalaScaleY, -2.1 * g_koalaScaleZ);
+    back3.matrix.rotate(15, 0, 0, 1);
+    back3.matrix.scale(7.0 * g_koalaScaleX, 0.92 * g_koalaScaleY, 3.8 * g_koalaScaleZ);
+    back3.render();
+    
+    var belly = new Cube();
+    belly.color = g_koalaWhiteColorMat;
+    belly.matrix = new Matrix4(rootCubeMat);
+    belly.matrix.translate(-5.0 * g_koalaScaleX, -2.0 * g_koalaScaleY, -2.0 * g_koalaScaleZ);
+    belly.matrix.scale(8.0 * g_koalaScaleX, 0.5 * g_koalaScaleY, 3.2 * g_koalaScaleZ);
+    belly.render();
 
-    var leftSide4 = new Cube();
-    leftSide4.color = g_koalaGreyColorMat;
-    leftSide4.matrix = new Matrix4(leftSide3Mat);
-    leftSide4.matrix.translate(0.0 * g_koalaScaleX, -1.9 * g_koalaScaleY, 0.32 * g_koalaScaleZ);
-    leftSide4.matrix.rotate(-10, 1, 0, 0);
-    leftSide4.matrix.scale(7.0 * g_koalaScaleX, 1.95 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
-    leftSide4.render();
+    makeKoalaSide(rootCubeMat, upperTorso1Mat, 
+                  upperTorso2Mat, lowerTorso1Mat, 
+                  lowerTorso2Mat);
+    makeKoalaBehind(rootCubeMat);
+}
 
-    var leftSide5 = new Cube();
-    leftSide5.color = g_koalaGreyColorMat;
-    leftSide5.matrix = new Matrix4(lowerTorso1Mat);
-    leftSide5.matrix.translate(0.0 * g_koalaScaleX, 1.5 * g_koalaScaleY, -0.8 * g_koalaScaleZ);
-    leftSide5.matrix.rotate(10, 1, 0, 0);
-    leftSide5.matrix.rotate(5, 0, 1, 0);
-    leftSide5.matrix.rotate(2, 0, 0, 1);
-    var leftSide5Mat = new Matrix4(leftSide5.matrix);
-    leftSide5.matrix.scale(2.6 * g_koalaScaleX, 1.95 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
-    leftSide5.render();
+function makeKoalaSide(rootCubeMat, 
+                       upperTorso1Mat, 
+                       upperTorso2Mat, 
+                       lowerTorso1Mat, 
+                       lowerTorso2Mat) 
+{
+    var side = new Cube();
+    side.color = g_koalaGreyColorMat;
+    side.matrix = new Matrix4(upperTorso2Mat);
+    side.matrix.translate(0.1 * g_koalaScaleX, 0.72 * g_koalaScaleY, -1.3 * g_koalaScaleZ);
+    side.matrix.rotate(10, 1, 0, 0);
+    side.matrix.scale(2.0 * g_koalaScaleX, 2.8 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
+    side.render();
 
-    var leftSide6 = new Cube();
-    leftSide6.color = g_koalaGreyColorMat;
-    leftSide6.matrix = new Matrix4(lowerTorso1Mat);
-    leftSide6.matrix.translate(-0.15 * g_koalaScaleX, -0.55 * g_koalaScaleY, -0.4 * g_koalaScaleZ);
-    leftSide6.matrix.rotate(-10, 1, 0, 0);
-    leftSide6.matrix.rotate(5, 0, 1, 0);
-    leftSide6.matrix.rotate(-2, 0, 0, 1);
-    var leftSide6Mat = new Matrix4(leftSide6.matrix);
-    leftSide6.matrix.scale(2.6 * g_koalaScaleX, 2.2 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
-    leftSide6.render();
+    var side2 = new Cube();
+    side2.color = g_koalaGreyColorMat;
+    side2.matrix = new Matrix4(upperTorso1Mat);
+    side2.matrix.translate(-0.99 * g_koalaScaleX, 0.67 * g_koalaScaleY, -1.23 * g_koalaScaleZ);
+    side2.matrix.rotate(10, 1, 0, 0);
+    side2.matrix.rotate(-10, 0, 0, 1);
+    side2.matrix.scale(3.5 * g_koalaScaleX, 3.0 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
+    side2.render();
 
-    var leftSide7 = new Cube();
-    leftSide7.color = g_koalaGreyColorMat;
-    leftSide7.matrix = new Matrix4(leftSide5Mat);
-    leftSide7.matrix.translate(2.2 * g_koalaScaleX, 0.0 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
-    leftSide7.matrix.rotate(-5, 0, 1, 0);
-    leftSide7.matrix.rotate(-2, 0, 0, 1);
-    leftSide7.matrix.scale(2.8 * g_koalaScaleX, 1.95 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
-    leftSide7.render();
+    var side3 = new Cube();
+    side3.color = g_koalaGreyColorMat;
+    side3.matrix = new Matrix4(rootCubeMat);
+    side3.matrix.translate(-4.0 * g_koalaScaleX, 0.1 * g_koalaScaleY, -2.23 * g_koalaScaleZ);
+    side3.matrix.rotate(5, 1, 0, 0);
+    var side3Mat = new Matrix4(side3.matrix);
+    side3.matrix.scale(7.0 * g_koalaScaleX, 1.75 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
+    side3.render();
 
-    var leftSide8 = new Cube();
-    leftSide8.color = g_koalaGreyColorMat;
-    leftSide8.matrix = new Matrix4(leftSide6Mat);
-    leftSide8.matrix.translate(2.6 * g_koalaScaleX, 0.0 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
-    leftSide8.matrix.rotate(-5, 0, 1, 0);
-    leftSide8.matrix.rotate(2, 0, 0, 1);
-    leftSide8.matrix.scale(2.6 * g_koalaScaleX, 2.2 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
-    leftSide8.render();
+    var side4 = new Cube();
+    side4.color = g_koalaGreyColorMat;
+    side4.matrix = new Matrix4(side3Mat);
+    side4.matrix.translate(0.0 * g_koalaScaleX, -1.9 * g_koalaScaleY, 0.32 * g_koalaScaleZ);
+    side4.matrix.rotate(-10, 1, 0, 0);
+    side4.matrix.scale(7.0 * g_koalaScaleX, 1.95 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
+    side4.render();
 
+    var side5 = new Cube();
+    side5.color = g_koalaGreyColorMat;
+    side5.matrix = new Matrix4(lowerTorso1Mat);
+    side5.matrix.translate(0.0 * g_koalaScaleX, 1.5 * g_koalaScaleY, -0.8 * g_koalaScaleZ);
+    side5.matrix.rotate(10, 1, 0, 0);
+    side5.matrix.rotate(5, 0, 1, 0);
+    side5.matrix.rotate(2, 0, 0, 1);
+    var side5Mat = new Matrix4(side5.matrix);
+    side5.matrix.scale(2.6 * g_koalaScaleX, 1.95 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    side5.render();
+
+    var side6 = new Cube();
+    side6.color = g_koalaGreyColorMat;
+    side6.matrix = new Matrix4(lowerTorso1Mat);
+    side6.matrix.translate(-0.15 * g_koalaScaleX, -0.55 * g_koalaScaleY, -0.4 * g_koalaScaleZ);
+    side6.matrix.rotate(-10, 1, 0, 0);
+    side6.matrix.rotate(5, 0, 1, 0);
+    side6.matrix.rotate(-2, 0, 0, 1);
+    var side6Mat = new Matrix4(side6.matrix);
+    side6.matrix.scale(2.6 * g_koalaScaleX, 2.2 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    side6.render();
+
+    var side7 = new Cube();
+    side7.color = g_koalaGreyColorMat;
+    side7.matrix = new Matrix4(side5Mat);
+    side7.matrix.translate(2.2 * g_koalaScaleX, 0.0 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
+    side7.matrix.rotate(-5, 0, 1, 0);
+    side7.matrix.rotate(-2, 0, 0, 1);
+    side7.matrix.scale(2.8 * g_koalaScaleX, 1.95 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    side7.render();
+
+    var side8 = new Cube();
+    side8.color = g_koalaGreyColorMat;
+    side8.matrix = new Matrix4(side6Mat);
+    side8.matrix.translate(2.6 * g_koalaScaleX, 0.0 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
+    side8.matrix.rotate(-5, 0, 1, 0);
+    side8.matrix.rotate(2, 0, 0, 1);
+    side8.matrix.scale(2.6 * g_koalaScaleX, 2.2 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    side8.render();
+
+    var side9 = new Cube();
+    side9.color = g_koalaGreyColorMat;
+    side9.matrix = new Matrix4(lowerTorso2Mat);
+    side9.matrix.translate(0.01 * g_koalaScaleX, 1.94 * g_koalaScaleY, -0.82 * g_koalaScaleZ);
+    side9.matrix.rotate(10, 1, 0, 0);
+    var side9Mat = new Matrix4(side9.matrix);
+    side9.matrix.scale(4.1 * g_koalaScaleX, 1.65 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    side9.render();
+
+    var side10 = new Cube();
+    side10.color = g_koalaGreyColorMat;
+    side10.matrix = new Matrix4(lowerTorso2Mat);
+    side10.matrix.translate(0.01 * g_koalaScaleX, -0.55 * g_koalaScaleY, -0.5 * g_koalaScaleZ);
+    side10.matrix.rotate(-10, 1, 0, 0);
+    side10.matrix.scale(4.1 * g_koalaScaleX, 2.2 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    side10.render();
+
+    var side11 = new Cube();
+    side11.color = g_koalaGreyColorMat;
+    side11.matrix = new Matrix4(side9Mat);
+    side11.matrix.translate(0.0 * g_koalaScaleX, -0.35 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
+    side11.matrix.scale(4.1 * g_koalaScaleX, 0.4 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    side11.render();
+    
+    var rightside9 = new Cube();
+    rightside9.color = g_koalaGreyColorMat;
+    rightside9.matrix = new Matrix4(lowerTorso2Mat);
+    rightside9.matrix.translate(0.01 * g_koalaScaleX, 1.74 * g_koalaScaleY, 2.72 * g_koalaScaleZ);
+    rightside9.matrix.rotate(-10, 1, 0, 0);
+    var rightside9Mat = new Matrix4(rightside9.matrix);
+    rightside9.matrix.scale(4.1 * g_koalaScaleX, 1.65 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    rightside9.render();
+
+    var rightside10 = new Cube();
+    rightside10.color = g_koalaGreyColorMat;
+    rightside10.matrix = new Matrix4(lowerTorso2Mat);
+    rightside10.matrix.translate(0.01 * g_koalaScaleX, -0.49 * g_koalaScaleY, 2.4 * g_koalaScaleZ);
+    rightside10.matrix.rotate(10, 1, 0, 0);
+    rightside10.matrix.scale(4.1 * g_koalaScaleX, 2.2 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    rightside10.render();
+
+    var rightside11 = new Cube();
+    rightside11.color = g_koalaGreyColorMat;
+    rightside11.matrix = new Matrix4(rightside9Mat);
+    rightside11.matrix.translate(0.0 * g_koalaScaleX, -0.4 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
+    rightside11.matrix.scale(4.1 * g_koalaScaleX, 0.4 * g_koalaScaleY, 1.0 * g_koalaScaleZ);
+    rightside11.render();
+}
+
+function makeKoalaBehind(rootCubeMat) {
     var leftBehind = new Cube();
     leftBehind.color = g_green;
     leftBehind.matrix = new Matrix4(rootCubeMat);
@@ -136,39 +227,85 @@ function makeKoalaTorso(rootCubeMat) {
     var leftBehind2 = new Cube();
     leftBehind2.color = g_koalaGreyColorMat;
     leftBehind2.matrix = new Matrix4(leftBehindMat);
-    leftBehind2.matrix.translate(-5.1 * g_koalaScaleX, 0.7 * g_koalaScaleY, -1.0 * g_koalaScaleZ);
-    leftBehind2.matrix.rotate(10, 1, 0, 0);
+    leftBehind2.matrix.translate(-1.0 * g_koalaScaleX, 1.5 * g_koalaScaleY, -0.8 * g_koalaScaleZ);
     var leftBehind2Mat = new Matrix4(leftBehind2.matrix);
-    leftBehind2.matrix.scale(4.1 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
+    leftBehind2.matrix.scale(2.5 * g_koalaScaleX, 0.6 * g_koalaScaleY, 2.0 * g_koalaScaleZ);
     leftBehind2.render();
 
     var leftBehind3 = new Cube();
     leftBehind3.color = g_koalaGreyColorMat;
     leftBehind3.matrix = new Matrix4(leftBehind2Mat);
-    leftBehind3.matrix.translate(-0.01 * g_koalaScaleX, -0.69 * g_koalaScaleY, 0.11 * g_koalaScaleZ);
-    leftBehind3.matrix.rotate(-10, 1, 0, 0);
-    leftBehind3.matrix.scale(4.1 * g_koalaScaleX, 0.7 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
+    leftBehind3.matrix.translate(0.0 * g_koalaScaleX, -0.6 * g_koalaScaleY, -0.2 * g_koalaScaleZ);
+    var leftBehind3Mat = new Matrix4(leftBehind3.matrix);
+    leftBehind3.matrix.scale(3.8 * g_koalaScaleX, 0.6 * g_koalaScaleY, 2.2 * g_koalaScaleZ);
     leftBehind3.render();
 
     var leftBehind4 = new Cube();
     leftBehind4.color = g_koalaGreyColorMat;
-    leftBehind4.matrix = new Matrix4(leftBehindMat);
-    leftBehind4.matrix.translate(-5.1 * g_koalaScaleX, -1.9 * g_koalaScaleY, -0.67 * g_koalaScaleZ);
-    leftBehind4.matrix.rotate(-10, 1, 0, 0);
-    leftBehind4.matrix.scale(4.1 * g_koalaScaleX, 2.0 * g_koalaScaleY, 1.3 * g_koalaScaleZ);
+    leftBehind4.matrix = new Matrix4(leftBehind3Mat);
+    leftBehind4.matrix.translate(0.0 * g_koalaScaleX, -1.5 * g_koalaScaleY, -0.2 * g_koalaScaleZ);
+    var leftBehind4Mat = new Matrix4(leftBehind4.matrix);
+    leftBehind4.matrix.scale(4.3 * g_koalaScaleX, 1.5 * g_koalaScaleY, 2.4 * g_koalaScaleZ);
     leftBehind4.render();
 
-    var belly = new Cube();
-    belly.color = g_koalaWhiteColorMat;
-    belly.matrix = new Matrix4(rootCubeMat);
-    belly.matrix.translate(-5.0 * g_koalaScaleX, -2.0 * g_koalaScaleY, -2.0 * g_koalaScaleZ);
-    belly.matrix.scale(8.0 * g_koalaScaleX, 0.5 * g_koalaScaleY, 3.2 * g_koalaScaleZ);
-    belly.render();
+    var leftBehind5 = new Cube();
+    leftBehind5.color = g_koalaGreyColorMat;
+    leftBehind5.matrix = new Matrix4(leftBehind4Mat);
+    leftBehind5.matrix.translate(0.0 * g_koalaScaleX, -0.6 * g_koalaScaleY, 0.2 * g_koalaScaleZ);
+    var leftBehind5Mat = new Matrix4(leftBehind5.matrix);
+    leftBehind5.matrix.scale(3.8 * g_koalaScaleX, 0.6 * g_koalaScaleY, 2.2 * g_koalaScaleZ);
+    leftBehind5.render();
 
-    // var rightBehind2 = new Cube();
-    // rightBehind2.color = g_green;
-    // rightBehind2.matrix = new Matrix4(rootCubeMat);
-    // rightBehind2.matrix.translate(13.0 * g_koalaScaleX, 0.0 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
-    // rightBehind2.matrix.scale(1.0 * g_koalaScaleX, 0.5 * g_koalaScaleY, 0.5 * g_koalaScaleZ);
-    // rightBehind2.render();
+    var leftBehind6 = new Cube();
+    leftBehind6.color = g_koalaGreyColorMat;
+    leftBehind6.matrix = new Matrix4(leftBehind5Mat);
+    leftBehind6.matrix.translate(0.0 * g_koalaScaleX, -0.6 * g_koalaScaleY, 0.2 * g_koalaScaleZ);
+    leftBehind6.matrix.scale(3.6 * g_koalaScaleX, 0.6 * g_koalaScaleY, 2.0 * g_koalaScaleZ);
+    leftBehind6.render();
+
+    var rightBehind = new Cube();
+    rightBehind.color = g_green;
+    rightBehind.matrix = new Matrix4(rootCubeMat);
+    rightBehind.matrix.translate(13.0 * g_koalaScaleX, 0.0 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
+    rightBehind.matrix.scale(1.0 * g_koalaScaleX, 0.5 * g_koalaScaleY, 0.5 * g_koalaScaleZ);
+    rightBehind.render();
+
+    var rightBehind2 = new Cube();
+    rightBehind2.color = g_koalaGreyColorMat;
+    rightBehind2.matrix = new Matrix4(leftBehindMat);
+    rightBehind2.matrix.translate(-1.0 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.2 * g_koalaScaleZ);
+    var rightBehind2Mat = new Matrix4(rightBehind2.matrix);
+    rightBehind2.matrix.scale(2.5 * g_koalaScaleX, 0.6 * g_koalaScaleY, 2.0 * g_koalaScaleZ);
+    rightBehind2.render();
+
+    var rightBehind3 = new Cube();
+    rightBehind3.color = g_koalaGreyColorMat;
+    rightBehind3.matrix = new Matrix4(rightBehind2Mat);
+    rightBehind3.matrix.translate(0.0 * g_koalaScaleX, -0.6 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
+    var rightBehind3Mat = new Matrix4(rightBehind3.matrix);
+    rightBehind3.matrix.scale(3.8 * g_koalaScaleX, 0.6 * g_koalaScaleY, 2.2 * g_koalaScaleZ);
+    rightBehind3.render();
+
+    var rightBehind4 = new Cube();
+    rightBehind4.color = g_koalaGreyColorMat;
+    rightBehind4.matrix = new Matrix4(rightBehind3Mat);
+    rightBehind4.matrix.translate(0.0 * g_koalaScaleX, -1.5 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
+    var rightBehind4Mat = new Matrix4(rightBehind4.matrix);
+    rightBehind4.matrix.scale(4.3 * g_koalaScaleX, 1.5 * g_koalaScaleY, 2.4 * g_koalaScaleZ);
+    rightBehind4.render();
+
+    var rightBehind5 = new Cube();
+    rightBehind5.color = g_koalaGreyColorMat;
+    rightBehind5.matrix = new Matrix4(rightBehind4Mat);
+    rightBehind5.matrix.translate(0.0 * g_koalaScaleX, -0.6 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
+    var rightBehind5Mat = new Matrix4(rightBehind5.matrix);
+    rightBehind5.matrix.scale(3.8 * g_koalaScaleX, 0.6 * g_koalaScaleY, 2.2 * g_koalaScaleZ);
+    rightBehind5.render();
+
+    var rightBehind6 = new Cube();
+    rightBehind6.color = g_koalaGreyColorMat;
+    rightBehind6.matrix = new Matrix4(rightBehind5Mat);
+    rightBehind6.matrix.translate(0.0 * g_koalaScaleX, -0.6 * g_koalaScaleY, 0.0 * g_koalaScaleZ);
+    rightBehind6.matrix.scale(3.6 * g_koalaScaleX, 0.6 * g_koalaScaleY, 2.0 * g_koalaScaleZ);
+    rightBehind6.render();
 }
