@@ -52,8 +52,41 @@ function makeKoalaArm(rootCubeMat) {
     leftUpperArm1.matrix = new Matrix4(leftShoulderJointMat);
     leftUpperArm1.matrix.translate(-2.0 * g_koalaScaleX, -0.5 * g_koalaScaleY, -0.75 * g_koalaScaleZ);
     var leftUpperArm1Mat = new Matrix4(leftUpperArm1.matrix);
-    leftUpperArm1.matrix.scale(4.0 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
+    leftUpperArm1.matrix.scale(4.0   * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
     leftUpperArm1.render();
+
+    // var leftUpperArm1n2 = new Cube();
+    // leftUpperArm1n2.color = g_green;
+    // leftUpperArm1n2.matrix = new Matrix4(leftShoulderJointMat);
+    // leftUpperArm1n2.matrix.translate(-1.2 * g_koalaScaleX, -0.5 * g_koalaScaleY, -0.75 * g_koalaScaleZ);
+    // var leftUpperArm1n2Mat = new Matrix4(leftUpperArm1n2.matrix);
+    // leftUpperArm1n2.matrix.scale(0.8 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
+    // leftUpperArm1n2.render();
+
+    // var leftUpperArm1n3 = new Cube();
+    // leftUpperArm1n3.color = g_yellow;
+    // leftUpperArm1n3.matrix = new Matrix4(leftShoulderJointMat);
+    // leftUpperArm1n3.matrix.translate(-0.4 * g_koalaScaleX, -0.5 * g_koalaScaleY, -0.75 * g_koalaScaleZ);
+    // var leftUpperArm1n3Mat = new Matrix4(leftUpperArm1n3.matrix);
+    // leftUpperArm1n3.matrix.scale(0.8 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
+    // leftUpperArm1n3.render();
+
+
+    // var leftUpperArm1n4 = new Cube();
+    // leftUpperArm1n4.color = g_yellow;
+    // leftUpperArm1n4.matrix = new Matrix4(leftShoulderJointMat);
+    // leftUpperArm1n4.matrix.translate(0.4 * g_koalaScaleX, -0.5 * g_koalaScaleY, -0.75 * g_koalaScaleZ);
+    // var leftUpperArm1n4Mat = new Matrix4(leftUpperArm1n4.matrix);
+    // leftUpperArm1n4.matrix.scale(0.8 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
+    // leftUpperArm1n4.render();
+
+    // var leftUpperArm1n5 = new Cube();
+    // leftUpperArm1n5.color = g_yellow;
+    // leftUpperArm1n5.matrix = new Matrix4(leftShoulderJointMat);
+    // leftUpperArm1n5.matrix.translate(1.2 * g_koalaScaleX, -0.5 * g_koalaScaleY, -0.75 * g_koalaScaleZ);
+    // var leftUpperArm1n5Mat = new Matrix4(leftUpperArm1n5.matrix);
+    // leftUpperArm1n5.matrix.scale(0.8 * g_koalaScaleX, 1.5 * g_koalaScaleY, 1.5 * g_koalaScaleZ);
+    // leftUpperArm1n5.render();
 
     var leftUpperArm2 = new Cube();
     leftUpperArm2.color = g_koalaGreyColorMat;
