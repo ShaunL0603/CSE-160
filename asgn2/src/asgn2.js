@@ -38,6 +38,8 @@ var u_GlobalRotateMatrix;
 var u_ProjectionMatrix;
 var a_Color;
 var v_Color;
+let g_walkAnimation = false;
+let g_eatingAnimation = false;
 
 // Global variables for interacting
 let g_globalXAngle = 0;
@@ -144,10 +146,14 @@ function main() {
   }, { passive: false });
 
   document.addEventListener('keydown', function(ev) {
-      if (ev.code === 'Space') {
-          ev.preventDefault();
-          console.log('bruh');
-          g_walkAnimation = !g_walkAnimation;
+      if (ev.code === 'Space' && !ev.shiftKey) {
+        ev.preventDefault();
+        g_walkAnimation = !g_walkAnimation;
+      }
+
+      if (ev.code === 'Space' && ev.shiftKey) {
+        ev.preventDefault();
+        g_eatingAnimation = !g_eatingAnimation;
       }
   });
 
@@ -296,48 +302,63 @@ function tick() {
   g_seconds = performance.now() / 1000.0 - g_startTime;
 
   updateAnimationAngle();
+
+  updateEatingAnimation();
   
   renderAllShapes();
   
   requestAnimationFrame(tick);
 }
 
-let g_walkAnimation = false;
-function updateAnimationAngle() {
-  if (g_walkAnimation) {
-    let speed = 2.0;
-    let t = g_seconds * speed;
-    let tRight = t + Math.PI;
-    let lowerLeft = -51.5 - 56.5 * Math.sin(t) + 21.5 * Math.cos(t);
-    let lowerRight = -51.5 - 56.5 * Math.sin(tRight) + 21.5 * Math.cos(tRight);
-
-    // LEFT ARM ROTATION
-    g_rotateUpperLeftArm = 10 + 65 * Math.sin(t);
-    g_rotateLowerLeftArm = Math.max(-108, Math.min(5, lowerLeft));
-    g_rotateLeftWristZ = -70 * Math.max(0, Math.cos(t)) - 40 * Math.min(0, Math.cos(t));
-
-    // RIGHT ARM ROTATION
-    g_rotateUpperRightArm = 10 + 65 * Math.sin(tRight);
-    g_rotateLowerRightArm = Math.max(-108, Math.min(5, lowerRight));
-    g_rotateRightWristZ = 70 * Math.max(0, Math.cos(tRight)) + 40 * Math.min(0, Math.cos(tRight));
-
-    // LEFT LEG ROTATION
-    // Using tRight so leg and arm movement is opposite
-    g_rotateUpperLeftLeg = 10 + 65 * Math.sin(tRight);
-    g_rotateLowerLeftLeg = Math.max(-108, Math.min(5, lowerRight));
-    g_rotateLeftAnkleZ = -70 * Math.max(0, Math.cos(tRight)) - 40 * Math.min(0, Math.cos(tRight));
-
-    // RIGHT LEG ROTATION
-    // Use t for opposite mmovements
-    g_rotateUpperRightLeg = 10 + 65 * Math.sin(t);
-    g_rotateLowerRightLeg = Math.max(-108, Math.min(5, lowerLeft));
-    g_rotateRightAnkleZ = 70 * Math.max(0, Math.cos(t)) + 40 * Math.min(0, Math.cos(t));
-
-    // Rotate butt
-    rotateBehind = 2 * Math.sin(g_seconds);
-
-    // Head rotations
-    g_rotateHeadY = 11.25 * Math.max(Math.sin(g_seconds)) * 0.3;
-    g_rotateLowerJawY = 10 * Math.max(0, Math.sin(g_seconds * 2));
-  }
+function resetKoala() {
+    g_walkAnimation = false;
+    g_koalaPosX = 0;
+    g_koalaPosY = 0;
+    g_koalaPosZ = 0;
+    g_animalXAngle = 0.0;
+    g_animalYAngle = 0.0;
+    g_animalZAngle = 0.0;
+    g_rotateUpperLeftArm = 10;
+    g_rotateLowerLeftArm = -30;
+    g_rotateLeftWristX = 0;
+    g_rotateLeftWristY = 0;
+    g_rotateLeftWristZ = -70;
+    g_rotateLeftThumb2 = 0;
+    g_rotateLeftIndexFinger = 0;
+    g_rotateLeftMiddleFinger = 0;
+    g_rotateLeftPinkyFinger = 0;
+    g_rotateUpperRightArm = 10;
+    g_rotateLowerRightArm = -30;
+    g_rotateRightWristX = 0;
+    g_rotateRightWristY = 0;
+    g_rotateRightWristZ = 70;
+    g_rotateRightThumb1 = 0;
+    g_rotateRightThumb2 = 0;
+    g_rotateRightIndexFinger = 0;
+    g_rotateRightMiddleFinger = 0;
+    g_rotateRightPinkyFinger = 0;
+    g_rotateHeadX = 0;
+    g_rotateHeadY = 0;
+    g_rotateHeadZ = 0;
+    g_rotateLowerJawY = 0;
+    g_rotateUpperLeftLeg = 10;
+    g_rotateLowerLeftLeg = -30;
+    g_rotateLeftAnkleX = 0;
+    g_rotateLeftAnkleY = 0;
+    g_rotateLeftAnkleZ = -70;
+    g_rotateLeftToe1 = 0;
+    g_rotateLeftToe2 = 0;
+    g_rotateLeftToe3 = 0;
+    g_rotateLeftToe4 = 0;
+    g_rotateLeftToe5 = 0;
+    g_rotateUpperRightLeg = 10;
+    g_rotateLowerRightLeg = -30;
+    g_rotateRightAnkleX = 0;
+    g_rotateRightAnkleY = 0;
+    g_rotateRightAnkleZ = 70;
+    g_rotateRightToe1 = 0;
+    g_rotateRightToe2 = 0;
+    g_rotateRightToe3 = 0;
+    g_rotateRightToe4 = 0;
+    g_rotateRightToe5 = 0;
 }

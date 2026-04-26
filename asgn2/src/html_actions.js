@@ -28,54 +28,8 @@ function addActionsForHtmlUI() {
 function resetAnimal() {
     // Add event listener for resetting animal position
     document.getElementById("resetAnimal").addEventListener("click", function(ev) {
-    g_walkAnimation = false;
-    g_koalaPosX = 0;
-    g_koalaPosY = 0;
-    g_koalaPosZ = 0;
-    g_rotateUpperLeftArm = 10;
-    g_rotateLowerLeftArm = -30;
-    g_rotateLeftWristX = 0;
-    g_rotateLeftWristY = 0;
-    g_rotateLeftWristZ = -70;
-    g_rotateLeftThumb2 = 0;
-    g_rotateLeftIndexFinger = 0;
-    g_rotateLeftMiddleFinger = 0;
-    g_rotateLeftPinkyFinger = 0;
-    g_rotateUpperRightArm = 10;
-    g_rotateLowerRightArm = -30;
-    g_rotateRightWristX = 0;
-    g_rotateRightWristY = 0;
-    g_rotateRightWristZ = 70;
-    g_rotateRightThumb1 = 0;
-    g_rotateRightThumb2 = 0;
-    g_rotateRightIndexFinger = 0;
-    g_rotateRightMiddleFinger = 0;
-    g_rotateRightPinkyFinger = 0;
-    g_rotateHeadX = 0;
-    g_rotateHeadY = 0;
-    g_rotateHeadZ = 0;
-    g_rotateLowerJawY = 0;
-    g_rotateUpperLeftLeg = 10;
-    g_rotateLowerLeftLeg = -30;
-    g_rotateLeftAnkleX = 0;
-    g_rotateLeftAnkleY = 0;
-    g_rotateLeftAnkleZ = -70;
-    g_rotateLeftToe1 = 0;
-    g_rotateLeftToe2 = 0;
-    g_rotateLeftToe3 = 0;
-    g_rotateLeftToe4 = 0;
-    g_rotateLeftToe5 = 0;
-    g_rotateUpperRightLeg = 10;
-    g_rotateLowerRightLeg = -30;
-    g_rotateRightAnkleX = 0;
-    g_rotateRightAnkleY = 0;
-    g_rotateRightAnkleZ = 70;
-    g_rotateRightToe1 = 0;
-    g_rotateRightToe2 = 0;
-    g_rotateRightToe3 = 0;
-    g_rotateRightToe4 = 0;
-    g_rotateRightToe5 = 0;
-    renderAllShapes();
+        resetKoala();
+        renderAllShapes();
     });
 }
 
