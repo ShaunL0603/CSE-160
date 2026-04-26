@@ -1,5 +1,6 @@
 function updateAnimationAngle() {
   if (!g_walkAnimation) return;
+  lastAnimation = WALK;
 
   let speed = 2.0;
   let t = g_seconds * speed;
@@ -39,6 +40,7 @@ function updateAnimationAngle() {
 
 function updateEatingAnimation() {
   if (!g_eatingAnimation) return;
+  lastAnimation = EAT;
 
   let totalCycleTime = 8.5;
   

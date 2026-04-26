@@ -28,6 +28,10 @@ var FSHADER_SOURCE =
   }
   `;
 
+// Global constants
+const WALK = "walk"; // used for lastAnimation variable
+const EAT = "eat"; // used for lastAnimtion variable
+
 // Global variables
 var canvas;
 var gl;
@@ -38,6 +42,7 @@ var u_GlobalRotateMatrix;
 var u_ProjectionMatrix;
 var a_Color;
 var v_Color;
+var lastAnimation; // rememer what the last animation that was played before stop
 let g_walkAnimation = false;
 let g_eatingAnimation = false;
 
@@ -303,65 +308,7 @@ function tick() {
   g_seconds = performance.now() / 1000.0 - g_startTime;
 
   updateAnimationAngle();
-
   updateEatingAnimation();
-  
   renderAllShapes();
-  
   requestAnimationFrame(tick);
-}
-
-// Default values to reset the koala 
-// TODO: Get default values from html
-function resetKoala() {
-    g_koalaPosX = 0;
-    g_koalaPosY = 0;
-    g_koalaPosZ = 0;
-    g_animalXAngle = 0.0;
-    g_animalYAngle = 0.0;
-    g_animalZAngle = 0.0;
-    g_rotateUpperLeftArm = 10;
-    g_rotateLowerLeftArm = -30;
-    g_rotateLeftWristX = 0;
-    g_rotateLeftWristY = 0;
-    g_rotateLeftWristZ = -70;
-    g_rotateLeftThumb1 = 5;
-    g_rotateLeftThumb2 = 5;
-    g_rotateLeftIndexFinger = 5;
-    g_rotateLeftMiddleFinger = 5;
-    g_rotateLeftPinkyFinger = 5;
-    g_rotateUpperRightArm = 10;
-    g_rotateLowerRightArm = -30;
-    g_rotateRightWristX = 0;
-    g_rotateRightWristY = 0;
-    g_rotateRightWristZ = 70;
-    g_rotateRightThumb1 = 5;
-    g_rotateRightThumb2 = 5;
-    g_rotateRightIndexFinger = 5;
-    g_rotateRightMiddleFinger = 5;
-    g_rotateRightPinkyFinger = 5;
-    g_rotateHeadX = 0;
-    g_rotateHeadY = 0;
-    g_rotateHeadZ = 0;
-    g_rotateLowerJawY = 0;
-    g_rotateUpperLeftLeg = 10;
-    g_rotateLowerLeftLeg = -30;
-    g_rotateLeftAnkleX = 0;
-    g_rotateLeftAnkleY = 0;
-    g_rotateLeftAnkleZ = -70;
-    g_rotateLeftToe1 = 5;
-    g_rotateLeftToe2 = 5;
-    g_rotateLeftToe3 = 5;
-    g_rotateLeftToe4 = 5;
-    g_rotateLeftToe5 = 5;
-    g_rotateUpperRightLeg = 10;
-    g_rotateLowerRightLeg = -30;
-    g_rotateRightAnkleX = 0;
-    g_rotateRightAnkleY = 0;
-    g_rotateRightAnkleZ = 70;
-    g_rotateRightToe1 = 5;
-    g_rotateRightToe2 = 5;
-    g_rotateRightToe3 = 5;
-    g_rotateRightToe4 = 5;
-    g_rotateRightToe5 = 5;
 }
