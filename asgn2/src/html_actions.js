@@ -33,13 +33,13 @@ function addActionsForHtmlUI() {
 
     // Add event listeners for inputs to rtoate the whole aniaml
     document.getElementById("rotateAnimalX").addEventListener("input", function(ev) {
-    rotateAnimalHelper("x", parseFloat(ev.target.value));
+        g_animalXAngle = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
     });
     document.getElementById("rotateAnimalY").addEventListener("input", function(ev) {
-    rotateAnimalHelper("y", parseFloat(ev.target.value));
+        g_animalYAngle = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
     });
     document.getElementById("rotateAnimalZ").addEventListener("input", function(ev) {
-    rotateAnimalHelper("z", parseFloat(ev.target.value));
+        g_animalZAngle = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
     });
 
     actionsforHead();
@@ -50,16 +50,13 @@ function addActionsForHtmlUI() {
 function actionsforHead() {
     //* Head rotation
     document.getElementById("rotateHeadX").addEventListener("input", function(ev) {
-        g_rotateHeadX = parseFloat(ev.target.value);
-        renderAllShapes();
+        g_rotateHeadX = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
     });
         document.getElementById("rotateHeadY").addEventListener("input", function(ev) {
-        g_rotateHeadY = parseFloat(ev.target.value);
-        renderAllShapes();
+        g_rotateHeadY = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
     });
         document.getElementById("rotateHeadZ").addEventListener("input", function(ev) {
-        g_rotateHeadZ = parseFloat(ev.target.value);
-        renderAllShapes();
+        g_rotateHeadZ = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
     });
 
     //* Lower jaw rotation
@@ -80,15 +77,15 @@ function actionsforArms() {
         renderAllShapes();
     });
     document.getElementById("rotateLeftWristX").addEventListener("input", function(ev) {
-        g_rotateLeftWristX = parseFloat(ev.target.value);
+        g_rotateLeftWristX = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
     document.getElementById("rotateLeftWristY").addEventListener("input", function(ev) {
-        g_rotateLeftWristY = parseFloat(ev.target.value);
+        g_rotateLeftWristY = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
     document.getElementById("rotateLeftWristZ").addEventListener("input", function(ev) {
-        g_rotateLeftWristZ = -parseFloat(ev.target.value);
+        g_rotateLeftWristZ = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
 
@@ -124,15 +121,15 @@ function actionsforArms() {
         renderAllShapes();
     });
     document.getElementById("rotateRightWristX").addEventListener("input", function(ev) {
-        g_rotateRightWristX = parseFloat(ev.target.value);
+        g_rotateRightWristX = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
     document.getElementById("rotateRightWristY").addEventListener("input", function(ev) {
-        g_rotateRightWristY = parseFloat(ev.target.value);
+        g_rotateRightWristY = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
     document.getElementById("rotateRightWristZ").addEventListener("input", function(ev) {
-        g_rotateRightWristZ = parseFloat(ev.target.value);
+        g_rotateRightWristZ = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
 
@@ -170,15 +167,15 @@ function actionsForLegs() {
     renderAllShapes();
     });
     document.getElementById("rotateLeftAnkleX").addEventListener("input", function(ev) {
-        g_rotateLeftAnkleX = parseFloat(ev.target.value);
+        g_rotateLeftAnkleX = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
     document.getElementById("rotateLeftAnkleY").addEventListener("input", function(ev) {
-        g_rotateLeftAnkleY = parseFloat(ev.target.value);
+        g_rotateLeftAnkleY = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
     document.getElementById("rotateLeftAnkleZ").addEventListener("input", function(ev) {
-        g_rotateLeftAnkleZ = -parseFloat(ev.target.value);
+        g_rotateLeftAnkleZ = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
 
@@ -192,15 +189,15 @@ function actionsForLegs() {
     renderAllShapes();
     });
     document.getElementById("rotateRightAnkleX").addEventListener("input", function(ev) {
-        g_rotateRightAnkleX = parseFloat(ev.target.value);
+        g_rotateRightAnkleX = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
     document.getElementById("rotateRightAnkleY").addEventListener("input", function(ev) {
-        g_rotateRightAnkleY = parseFloat(ev.target.value);
+        g_rotateRightAnkleY = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
     document.getElementById("rotateRightAnkleZ").addEventListener("input", function(ev) {
-        g_rotateRightAnkleZ = -parseFloat(ev.target.value);
+        g_rotateRightAnkleZ = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
         renderAllShapes();
     });
 
@@ -321,4 +318,8 @@ function resetKoala() {
   g_rotateRightToe3 = Number(document.getElementById("rotateRightToe3").defaultValue);
   g_rotateRightToe4 = Number(document.getElementById("rotateRightToe4").defaultValue);
   g_rotateRightToe5 = Number(document.getElementById("rotateRightToe5").defaultValue);
+}
+
+function numberInputHelper(defaultVal, rotateValue) {
+  return (!(Number.isNaN(rotateValue))) ? rotateValue : defaultVal;
 }

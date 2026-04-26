@@ -1,3 +1,68 @@
+// Global rotation variables for animal rotation
+  // Left Arm rotation
+  let g_rotateUpperLeftArm = Number(document.getElementById("rotateUpperLeftArm").defaultValue);
+  let g_rotateLowerLeftArm = Number(document.getElementById("rotateLowerLeftArm").defaultValue);
+  let g_rotateLeftWristX = Number(document.getElementById("rotateLeftWristX").defaultValue);
+  let g_rotateLeftWristY = Number(document.getElementById("rotateLeftWristY").defaultValue);
+  let g_rotateLeftWristZ = Number(document.getElementById("rotateLeftWristZ").defaultValue);
+
+  // Left fingys rotation
+  let g_rotateLeftThumb1 = Number(document.getElementById("rotateLeftFirstThumb").defaultValue);
+  let g_rotateLeftThumb2 = Number(document.getElementById("rotateLeftSecondThumb").defaultValue);
+  let g_rotateLeftIndexFinger = Number(document.getElementById("rotateLeftIndexFinger").defaultValue);
+  let g_rotateLeftMiddleFinger = Number(document.getElementById("rotateLeftMiddleFinger").defaultValue);
+  let g_rotateLeftPinkyFinger = Number(document.getElementById("rotateLeftPinkyFinger").defaultValue);
+
+  // Right Arm rotations
+  let g_rotateUpperRightArm = Number(document.getElementById("rotateUpperRightArm").defaultValue);
+  let g_rotateLowerRightArm = Number(document.getElementById("rotateLowerRightArm").defaultValue);
+  let g_rotateRightWristX = Number(document.getElementById("rotateRightWristX").defaultValue);
+  let g_rotateRightWristY = Number(document.getElementById("rotateRightWristY").defaultValue);
+  let g_rotateRightWristZ = Number(document.getElementById("rotateRightWristZ").defaultValue);
+
+  // Right fingys rotation
+  let g_rotateRightThumb1 = Number(document.getElementById("rotateRightFirstThumb").defaultValue);
+  let g_rotateRightThumb2 = Number(document.getElementById("rotateRightSecondThumb").defaultValue);
+  let g_rotateRightIndexFinger = Number(document.getElementById("rotateRightIndexFinger").defaultValue);
+  let g_rotateRightMiddleFinger = Number(document.getElementById("rotateRightMiddleFinger").defaultValue);
+  let g_rotateRightPinkyFinger = Number(document.getElementById("rotateRightPinkyFinger").defaultValue);
+
+  // Head rotations
+  let g_rotateHeadX = Number(document.getElementById("rotateHeadX").defaultValue);
+  let g_rotateHeadY = Number(document.getElementById("rotateHeadY").defaultValue);
+  let g_rotateHeadZ = Number(document.getElementById("rotateHeadZ").defaultValue);
+
+  // Jaw rotations
+  let g_rotateLowerJawY = Number(document.getElementById("rotateLowerJaw").defaultValue);
+
+  // Left Leg rotations
+  let g_rotateUpperLeftLeg = Number(document.getElementById("rotateUpperLeftLeg").defaultValue);
+  let g_rotateLowerLeftLeg = Number(document.getElementById("rotateLowerLeftLeg").defaultValue);
+  let g_rotateLeftAnkleX = Number(document.getElementById("rotateLeftAnkleX").defaultValue);
+  let g_rotateLeftAnkleY = Number(document.getElementById("rotateLeftAnkleY").defaultValue);
+  let g_rotateLeftAnkleZ = Number(document.getElementById("rotateLeftAnkleZ").defaultValue);
+
+  // Left toes rotations
+  let g_rotateLeftToe1 = Number(document.getElementById("rotateLeftToe1").defaultValue);
+  let g_rotateLeftToe2 = Number(document.getElementById("rotateLeftToe2").defaultValue);
+  let g_rotateLeftToe3 = Number(document.getElementById("rotateLeftToe3").defaultValue);
+  let g_rotateLeftToe4 = Number(document.getElementById("rotateLeftToe4").defaultValue);
+  let g_rotateLeftToe5 = Number(document.getElementById("rotateLeftToe5").defaultValue);
+
+  // Right Leg rotations
+  let g_rotateUpperRightLeg = Number(document.getElementById("rotateUpperRightLeg").defaultValue);
+  let g_rotateLowerRightLeg = Number(document.getElementById("rotateLowerRightLeg").defaultValue);
+  let g_rotateRightAnkleX = Number(document.getElementById("rotateRightAnkleX").defaultValue);
+  let g_rotateRightAnkleY = Number(document.getElementById("rotateRightAnkleY").defaultValue);
+  let g_rotateRightAnkleZ = Number(document.getElementById("rotateRightAnkleZ").defaultValue);
+
+  // Right toes rotations
+  let g_rotateRightToe1 = Number(document.getElementById("rotateRightToe1").defaultValue);
+  let g_rotateRightToe2 = Number(document.getElementById("rotateRightToe2").defaultValue);
+  let g_rotateRightToe3 = Number(document.getElementById("rotateRightToe3").defaultValue);
+  let g_rotateRightToe4 = Number(document.getElementById("rotateRightToe4").defaultValue);
+  let g_rotateRightToe5 = Number(document.getElementById("rotateRightToe5").defaultValue);
+
 function updateAnimationAngle() {
   if (!g_walkAnimation) return;
   lastAnimation = WALK;
@@ -19,13 +84,13 @@ function updateAnimationAngle() {
   g_rotateRightWristZ = 70 * Math.max(0, Math.cos(tRight)) + 40 * Math.min(0, Math.cos(tRight));
 
   // LEFT LEG ROTATION
-  // Using tRight so leg and arm movement is opposite
+  // Using tRight and lowerRight so leg and arm movement is opposite
   g_rotateUpperLeftLeg = 10 + 65 * Math.sin(tRight);
   g_rotateLowerLeftLeg = Math.max(-108, Math.min(5, lowerRight));
   g_rotateLeftAnkleZ = -70 * Math.max(0, Math.cos(tRight)) - 40 * Math.min(0, Math.cos(tRight));
 
   // RIGHT LEG ROTATION
-  // Use t for opposite mmovements
+  // Use t and lowerLeft for opposite mmovements
   g_rotateUpperRightLeg = 10 + 65 * Math.sin(t);
   g_rotateLowerRightLeg = Math.max(-108, Math.min(5, lowerLeft));
   g_rotateRightAnkleZ = 70 * Math.max(0, Math.cos(t)) + 40 * Math.min(0, Math.cos(t));
@@ -149,6 +214,5 @@ function updateEatingAnimation() {
 // Helper function to smoothly transition between two angles
 // a = start angle, b = end angle, t = progress from 0.0 to 1.0
 function lerp(a, b, t) {
-    //t = Math.max(0.0, Math.min(1.0, t));
   return a + (b - a) * t;
 }
