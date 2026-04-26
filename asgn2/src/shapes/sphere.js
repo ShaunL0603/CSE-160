@@ -6,7 +6,9 @@ class Sphere {
         this.segments = 8;
 
         this.buffer = null;
+        this.colorBuffer = null;
         this.vertices = null;
+        this.colorShades = null;
     }
 
     generateVertices() {
@@ -40,7 +42,6 @@ class Sphere {
 
     generateColorShades() {
         let [r, g, b, a] = this.color;
-
         let colorData = [];
         
         let vertexCount = this.vertices.length / 3;
