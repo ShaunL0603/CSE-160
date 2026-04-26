@@ -31,6 +31,18 @@ function addActionsForHtmlUI() {
         renderAllShapes();
     });
 
+    document.getElementById("resetAnimalToDefaultPos").addEventListener("click", () => {
+        g_koalaPosX = 0;
+        g_koalaPosY = 0;
+        g_koalaPosZ = 0;
+    })
+
+    document.getElementById("resetAnimalToDefaultRotation").addEventListener("click", () => {
+        g_animalXAngle = 0.0;
+        g_animalYAngle = 0.0;
+        g_animalZAngle = 0.0;
+    })
+
     // Add event listeners for inputs to rtoate the whole aniaml
     document.getElementById("rotateAnimalX").addEventListener("input", function(ev) {
         g_animalXAngle = numberInputHelper(ev.target.defaultValue, parseFloat(ev.target.value));
@@ -248,13 +260,6 @@ function actionsForLegs() {
 
 // Default values to reset the koala 
 function resetKoala() {
-  g_koalaPosX = 0;
-  g_koalaPosY = 0;
-  g_koalaPosZ = 0;
-  g_animalXAngle = 0.0;
-  g_animalYAngle = 0.0;
-  g_animalZAngle = 0.0;
-
  // Left Arm rotation
   g_rotateUpperLeftArm = Number(document.getElementById("rotateUpperLeftArm").defaultValue);
   g_rotateLowerLeftArm = Number(document.getElementById("rotateLowerLeftArm").defaultValue);
