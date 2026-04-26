@@ -87,21 +87,12 @@ function main() {
       if (ev.code === 'Space') {
         ev.preventDefault();
         
-        if (ev.shiftKey) {
-          g_eatingAnimation = !g_eatingAnimation;
-
-          if (g_eatingAnimation) {
-            g_walkAnimation = false;
-            resetKoala();
-          }
-        } else {
           g_walkAnimation = !g_walkAnimation;
 
           if (g_walkAnimation) {
             g_eatingAnimation = false;
             resetKoala();
           }
-        }
       }
   });
 
@@ -164,7 +155,7 @@ function connectVariablesToGLSL() {
 }
 
 function click(ev) {
-  if (ev.shiftKey) {
+  if (ev.ctrlKey) {
     // change the sensitivity of movement based on how zoomed in you are
     let modMoveSens = (g_globalZoom > 1.0 ) ? 
       g_movementSensitivity / g_globalZoom : 
@@ -181,6 +172,15 @@ function click(ev) {
     
     g_globalXAngle += modRotSens * ev.movementY;
     g_globalYAngle -= modRotSens * ev.movementX;
+  }
+
+  if (ev.shiftKey) {
+      g_eatingAnimation = !g_eatingAnimation;
+
+      if (g_eatingAnimation) {
+        g_walkAnimation = false;
+        resetKoala();
+      }
   }
 }
 

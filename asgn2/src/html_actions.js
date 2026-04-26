@@ -23,7 +23,7 @@ function addActionsForHtmlUI() {
         g_walkAnimation = false; 
     };
 
-    // Add event listener for resetting animal position
+    // Add event listener for resetting animal to default
     document.getElementById("resetAnimal").addEventListener("click", function(ev) {
         g_walkAnimation = false;
         g_eatingAnimation = false;
