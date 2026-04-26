@@ -155,15 +155,15 @@ function connectVariablesToGLSL() {
 }
 
 function click(ev) {
+  ev.preventDefault();
   if (ev.ctrlKey) {
     // change the sensitivity of movement based on how zoomed in you are
     let modMoveSens = (g_globalZoom > 1.0 ) ? 
       g_movementSensitivity / g_globalZoom : 
       g_movementSensitivity;
     
-    g_koalaPosX += ev.movementX * modMoveSens;
-    g_koalaPosY -= ev.movementY * modMoveSens;
-    g_koalaPosZ -= ev.movementX * modMoveSens;
+    g_koalaPosX += ev.movementX * modMoveSens * 0.2;
+    g_koalaPosY -= ev.movementY * modMoveSens * 0.2;
   } else {
     // change the sensitivity of rotation based on how zoomed in you are
     let modRotSens = (g_globalZoom > 1.0 ) ? 
@@ -193,6 +193,7 @@ function renderAllShapes() {
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projectionMat.elements);
 
   var globalRotMat = new Matrix4()
+    .translate(g_koalaPosX, g_koalaPosY, g_koalaPosZ)
     .scale(g_globalZoom, g_globalZoom, g_globalZoom)
     .rotate(g_globalXAngle, 1, 0, 0)
     .rotate(g_globalYAngle, 0, 1, 0)
