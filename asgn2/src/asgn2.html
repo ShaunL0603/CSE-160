@@ -9,27 +9,37 @@
   <body onload="main()">
       <div>
         <h1>Blocky Animal</h1>
+
         <canvas id="webgl" width="800" height="800">
           Please use a browser that supports "canvas"
         </canvas>
-        <p id="numdot">NN</p>
-        <p>Press Shift + Left Click for something special</p>
-      </div>
 
-      <div id="controls-container">
-        <p>"Camera" Rotation speed: <input id="rotateSensitivity" type="range" min="0.1" max="1" value="0.2" step="0.1"></p>
-        <button id="resetAnimal">Reset</button>
-        <span>(Resets animals joints and stops animations)</span>
-        <div style="margin-top: 10px">
-          <button id="resetAnimalToDefaultPos">Reset Position</button>
-          <button id="resetAnimalToDefaultRotation">Reset animal's rotation</button>
-        </div>
+        <p id="numdot">NN</p>
+
+        <p>Press Shift + Left Click for something special</p>
 
         <p>
           Animation:
           <button id="animationOn">On</button>
           <button id="animationOff">Off</button>
         </p>
+
+        <p>"Camera" Rotation speed: <input id="rotateSensitivity" type="range" min="0.1" max="1" value="0.2" step="0.1"></p>
+      </div>
+
+      <div id="controls-container">
+        <h2>Reset Options</h2>
+
+        <h3>These buttons resets animal to its default state</h3>
+        
+        <button id="resetAnimal">Reset</button>
+        <span>(Resets animals joints and stops animations)</span>
+        
+        <div style="margin-top: 10px">
+          <button id="resetAnimalToDefaultPos">Reset Position</button>
+        <div style="margin-top: 10px">
+          <button id="resetAnimalToDefaultRotation">Reset animal's rotation</button>
+        </div>
         
         <h2>Transform Options</h2>
 
