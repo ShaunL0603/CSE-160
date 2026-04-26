@@ -7,6 +7,8 @@ function addActionsForHtmlUI() {
     // Action to start or stop animation
     document.getElementById("animationOn").onclick = function() { g_walkAnimation = true; };
     document.getElementById("animationOff").onclick = function() { g_walkAnimation = false; };
+    document.getElementById("animationOn").onclick = function() { g_eatingAnimation = true; };
+    document.getElementById("animationOff").onclick = function() { g_eatingAnimation = false; };
 
     // Add event listeners for inputs to rtoate the whole aniaml
     document.getElementById("rotateAnimalX").addEventListener("input", function(ev) {
@@ -28,6 +30,8 @@ function addActionsForHtmlUI() {
 function resetAnimal() {
     // Add event listener for resetting animal position
     document.getElementById("resetAnimal").addEventListener("click", function(ev) {
+        g_walkAnimation = false;
+        g_eatingAnimation = false;
         resetKoala();
         renderAllShapes();
     });

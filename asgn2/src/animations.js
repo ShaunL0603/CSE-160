@@ -1,11 +1,6 @@
 function updateAnimationAngle() {
   if (!g_walkAnimation) return;
 
-  if (g_eatingAnimation) {
-    g_eatingAnimation = false;
-    resetKoala();
-  }
-
   let speed = 2.0;
   let t = g_seconds * speed;
   let tRight = t + Math.PI;
@@ -45,11 +40,6 @@ function updateAnimationAngle() {
 function updateEatingAnimation() {
   if (!g_eatingAnimation) return;
 
-  if (g_walkAnimation) {
-    g_walkAnimation = false;
-    resetKoala();
-  }
-
   let totalCycleTime = 8.5;
   
   // localTime loops constantly between 0.0 and 8.999...
@@ -82,7 +72,7 @@ function updateEatingAnimation() {
     
     g_rotateRightWristX = 0; 
     g_rotateRightWristY = 0;
-    g_rotateRightWristZ = lerp(-90, 0, p);
+    g_rotateRightWristZ = lerp(90, 0, p);
 
     let fingerAngle = lerp(5, 45, p);
     g_rotateRightThumb1 = fingerAngle;

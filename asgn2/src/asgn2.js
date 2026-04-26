@@ -142,18 +142,27 @@ function main() {
 
     g_globalZoom = Math.max(0.15, Math.min(5.0, g_globalZoom));
 
-
   }, { passive: false });
 
   document.addEventListener('keydown', function(ev) {
-      if (ev.code === 'Space' && !ev.shiftKey) {
+      if (ev.code === 'Space') {
         ev.preventDefault();
-        g_walkAnimation = !g_walkAnimation;
-      }
+        
+        if (ev.shiftKey) {
+          g_eatingAnimation = !g_eatingAnimation;
 
-      if (ev.code === 'Space' && ev.shiftKey) {
-        ev.preventDefault();
-        g_eatingAnimation = !g_eatingAnimation;
+          if (g_eatingAnimation) {
+            g_walkAnimation = false;
+            resetKoala();
+          }
+        } else {
+          g_walkAnimation = !g_walkAnimation;
+
+          if (g_walkAnimation) {
+            g_eatingAnimation = false;
+            resetKoala();
+          }
+        }
       }
   });
 
@@ -268,14 +277,6 @@ function renderAllShapes() {
     
   // clear canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-  // var base = new Cube();
-  // base.color = [0.0, 0.3, 0.03, 1.0];
-  // base.matrix.setTranslate(0.0, 0.0, 0.0);
-  // base.matrix.rotate(0.0, 1.0, 0.0, 0.0);
-  // base.matrix.translate(-3.0 ,-0.5 , -3.0);
-  // base.matrix.scale(6.0, 0.4, 6.0);
-  // base.render();
   
   makeKoala();
 
@@ -310,8 +311,9 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
+// Default values to reset the koala 
+// TODO: Get default values from html
 function resetKoala() {
-    g_walkAnimation = false;
     g_koalaPosX = 0;
     g_koalaPosY = 0;
     g_koalaPosZ = 0;
@@ -323,20 +325,21 @@ function resetKoala() {
     g_rotateLeftWristX = 0;
     g_rotateLeftWristY = 0;
     g_rotateLeftWristZ = -70;
-    g_rotateLeftThumb2 = 0;
-    g_rotateLeftIndexFinger = 0;
-    g_rotateLeftMiddleFinger = 0;
-    g_rotateLeftPinkyFinger = 0;
+    g_rotateLeftThumb1 = 5;
+    g_rotateLeftThumb2 = 5;
+    g_rotateLeftIndexFinger = 5;
+    g_rotateLeftMiddleFinger = 5;
+    g_rotateLeftPinkyFinger = 5;
     g_rotateUpperRightArm = 10;
     g_rotateLowerRightArm = -30;
     g_rotateRightWristX = 0;
     g_rotateRightWristY = 0;
     g_rotateRightWristZ = 70;
-    g_rotateRightThumb1 = 0;
-    g_rotateRightThumb2 = 0;
-    g_rotateRightIndexFinger = 0;
-    g_rotateRightMiddleFinger = 0;
-    g_rotateRightPinkyFinger = 0;
+    g_rotateRightThumb1 = 5;
+    g_rotateRightThumb2 = 5;
+    g_rotateRightIndexFinger = 5;
+    g_rotateRightMiddleFinger = 5;
+    g_rotateRightPinkyFinger = 5;
     g_rotateHeadX = 0;
     g_rotateHeadY = 0;
     g_rotateHeadZ = 0;
@@ -346,19 +349,19 @@ function resetKoala() {
     g_rotateLeftAnkleX = 0;
     g_rotateLeftAnkleY = 0;
     g_rotateLeftAnkleZ = -70;
-    g_rotateLeftToe1 = 0;
-    g_rotateLeftToe2 = 0;
-    g_rotateLeftToe3 = 0;
-    g_rotateLeftToe4 = 0;
-    g_rotateLeftToe5 = 0;
+    g_rotateLeftToe1 = 5;
+    g_rotateLeftToe2 = 5;
+    g_rotateLeftToe3 = 5;
+    g_rotateLeftToe4 = 5;
+    g_rotateLeftToe5 = 5;
     g_rotateUpperRightLeg = 10;
     g_rotateLowerRightLeg = -30;
     g_rotateRightAnkleX = 0;
     g_rotateRightAnkleY = 0;
     g_rotateRightAnkleZ = 70;
-    g_rotateRightToe1 = 0;
-    g_rotateRightToe2 = 0;
-    g_rotateRightToe3 = 0;
-    g_rotateRightToe4 = 0;
-    g_rotateRightToe5 = 0;
+    g_rotateRightToe1 = 5;
+    g_rotateRightToe2 = 5;
+    g_rotateRightToe3 = 5;
+    g_rotateRightToe4 = 5;
+    g_rotateRightToe5 = 5;
 }
