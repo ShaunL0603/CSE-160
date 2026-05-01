@@ -147,24 +147,39 @@ function print(vec) {
 }
 
 function keyInput(ev) {
-  // Directional vector
-  let vec3_d = new Vector3();
-  if (event.key === "w" || event.key === "W") {
-    // console.log("w key pressed");
-    vec3_d = g_at.sub(g_eye);
-    vec3_d.normalize().mul(0.01);
-    g_eye = g_eye.add(d);
-    g_at = g_at.add(d);
-  } else if (event.key === "s" || event.key === "S") {
-    vec3_d = g_at.add(g_eye);
-    vec3_d.normalize().mul(0.01);
-    g_eye = g_eye.add(d);
-    g_at = g_at.add(d);
-  } else if (event.key === "a" || event.key === "A") {
-  } else if (event.key === "d" || event.key === "D") {
-  } else {
-    console.log("not a WASD key");
+  // copy of g_at
+  let vec3_at = new Vector3();
+  vec3_at.set(g_at);
+  vec3_at.sub(g_eye);
+  vec3_at.normalize();
+
+  let speed = 0.01; // speed of camera movement
+  let vec3_d = new Vector3(); // Directional vector
+  
+  if (ev.key === "w" || ev.key === "W") {
+    // Moving Forward
+    vec3_d.set(vec3_at);
+    vec3_d.mul(speed);
+    
+  } else if (ev.key === "s" || ev.key === "S") {
+    // Moving Backward
+    vec3_d.set(vec3_at);
+    vec3_d.mul(-speed);
+    
+  } else if (ev.key === "a" || ev.key === "A") {
+    // Moving Left
+    vec3_d = Vector3.cross(g_up, vec3_at);
+    vec3_d.normalize();
+    vec3_d.mul(speed);
+    
+  } else if (ev.key === "d" || ev.key === "D") {
+    // Moving Right
+    vec3_d = Vector3.cross(g_up, vec3_at);
+    vec3_d.normalize();
+    vec3_d.mul(-speed);
   }
+  g_eye = g_eye.add(vec3_d);
+  g_at = g_at.add(vec3_d);
 }
 
 let g_eye = new Vector3([0.0, 0.0, 3.0]);
