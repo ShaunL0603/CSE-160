@@ -61,6 +61,8 @@ function main() {
   canvas.onmousedown = click;
   canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); } };
 
+  document.addEventListener("keydown", (ev) => { keyInput(ev); } );
+
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   requestAnimationFrame(tick);
 }
@@ -136,9 +138,38 @@ function click(ev) {
   g_globalYAngle -= ev.movementX;
 }
 
-let g_eye = [0.0, 0.0, 3.0];
-let g_at = [0.0, 0.0, -100.0];
-let g_up = [0.0, 1.0, 0.0];
+function print(vec) {
+  var string = "";
+  for (let i = 0; i < 3; ++i) {
+    string += vec.elements[i] + ",";
+  }
+  console.log("elements: " + string);
+}
+
+function keyInput(ev) {
+  // Directional vector
+  let vec3_d = new Vector3();
+  if (event.key === "w" || event.key === "W") {
+    // console.log("w key pressed");
+    vec3_d = g_at.sub(g_eye);
+    vec3_d.normalize().mul(0.01);
+    g_eye = g_eye.add(d);
+    g_at = g_at.add(d);
+  } else if (event.key === "s" || event.key === "S") {
+    vec3_d = g_at.add(g_eye);
+    vec3_d.normalize().mul(0.01);
+    g_eye = g_eye.add(d);
+    g_at = g_at.add(d);
+  } else if (event.key === "a" || event.key === "A") {
+  } else if (event.key === "d" || event.key === "D") {
+  } else {
+    console.log("not a WASD key");
+  }
+}
+
+let g_eye = new Vector3([0.0, 0.0, 3.0]);
+let g_at = new Vector3([0.0, 0.0, -100.0]);
+let g_up = new Vector3([0.0, 1.0, 0.0]);
 
 function renderAllShapes() {
   var startTime = performance.now();
@@ -149,9 +180,11 @@ function renderAllShapes() {
   var projMat = new Matrix4();
   projMat.setPerspective(90, canvas.width / canvas.height, 0.1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
-
+  
   var viewMat = new Matrix4();
-  viewMat.setLookAt(g_eye[0],g_eye[1],g_eye[2], g_at[0],g_at[1],g_at[2], g_up[0],g_up[1],g_up[2]);
+  viewMat.setLookAt(g_eye.elements[0],g_eye.elements[1],g_eye.elements[2], 
+                    g_at.elements[0],g_at.elements[1],g_at.elements[2], 
+                    g_up.elements[0],g_up.elements[1],g_up.elements[2]);
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
 
   var globalRotMat = new Matrix4()
