@@ -59,7 +59,7 @@ function main() {
   connectVariablesToGLSL();
 
   canvas.onmousedown = click;
-  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); } };
+  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); mouseMove(ev); } };
 
   document.addEventListener("keydown", (ev) => { keyInput(ev); } );
 
@@ -134,18 +134,48 @@ function connectVariablesToGLSL() {
 }
 
 function click(ev) {
-  g_globalXAngle += ev.movementY;
-  g_globalYAngle -= ev.movementX;
-}
-
-function print(vec) {
-  var string = "";
-  for (let i = 0; i < 3; ++i) {
-    string += vec.elements[i] + ",";
+  if (ev.ctrlKey) {
+    // Rotate object
+    g_globalXAngle += ev.movementY;
+    g_globalYAngle -= ev.movementX;
   }
-  console.log("elements: " + string);
 }
 
+let g_camRotSpeed = 0.25;
+let g_camYaw = 270.0;
+let g_camPitch = 0.0;
+function mouseMove(ev) {
+    // Rotate camera
+    let vec3_at = new Vector3();
+    vec3_at.set(g_at);
+    vec3_at.sub(g_eye);
+    vec3_at.normalize();
+    
+    g_camYaw -= ev.movementX * g_camRotSpeed;
+    g_camPitch -= ev.movementY * g_camRotSpeed;
+    
+    // avoid parallel with up vector
+    if (g_camPitch > 89.0) g_camPitch = 89.0;
+    if (g_camPitch < -89.0) g_camPitch = -89.0;
+    
+    // degrees to radians
+    let yawRadians =  g_camYaw * Math.PI / 180;
+    let pitchRadians =  g_camPitch * Math.PI / 180;
+    
+    let vec3_d = new Vector3();
+    let rho = vec3_at.magnitude();
+    // Polar coordinates to cartesian
+    vec3_d.elements[0] = rho * Math.cos(pitchRadians) * Math.cos(yawRadians); // new x
+    vec3_d.elements[1] = rho * Math.sin(pitchRadians);                        // new y
+    vec3_d.elements[2] = rho * Math.cos(pitchRadians) * Math.sin(yawRadians); // new z
+    
+    let vec3_eye = new Vector3();
+    vec3_eye.set(g_eye);
+    vec3_eye.add(vec3_d);
+    g_at = vec3_eye;
+}
+
+let g_camPosSpeed = 0.01;
 function keyInput(ev) {
   // copy of g_at
   let vec3_at = new Vector3();
@@ -153,39 +183,38 @@ function keyInput(ev) {
   vec3_at.sub(g_eye);
   vec3_at.normalize();
 
-  let speed = 0.01; // speed of camera movement
   let vec3_d = new Vector3(); // Directional vector
-  
+  // Moving Forward
   if (ev.key === "w" || ev.key === "W") {
-    // Moving Forward
     vec3_d.set(vec3_at);
-    vec3_d.mul(speed);
-    
-  } else if (ev.key === "s" || ev.key === "S") {
-    // Moving Backward
-    vec3_d.set(vec3_at);
-    vec3_d.mul(-speed);
-    
-  } else if (ev.key === "a" || ev.key === "A") {
-    // Moving Left
-    vec3_d = Vector3.cross(g_up, vec3_at);
-    vec3_d.normalize();
-    vec3_d.mul(speed);
-    
-  } else if (ev.key === "d" || ev.key === "D") {
-    // Moving Right
-    vec3_d = Vector3.cross(g_up, vec3_at);
-    vec3_d.normalize();
-    vec3_d.mul(-speed);
+    vec3_d.mul(g_camPosSpeed);
   }
-  g_eye = g_eye.add(vec3_d);
-  g_at = g_at.add(vec3_d);
+  // Moving Backward
+  if (ev.key === "s" || ev.key === "S") {
+    vec3_d.set(vec3_at);
+    vec3_d.mul(-g_camPosSpeed);
+  }
+  // Moving Left
+  if (ev.key === "a" || ev.key === "A") {
+    vec3_d = Vector3.cross(g_up, vec3_at);
+    vec3_d.normalize();
+    vec3_d.mul(g_camPosSpeed); 
+  }
+  // Moving Right
+  if (ev.key === "d" || ev.key === "D") {
+    vec3_d = Vector3.cross(g_up, vec3_at);
+    vec3_d.normalize();
+    vec3_d.mul(-g_camPosSpeed);
+  }
+
+  // update global eye and at vec3s
+  g_eye.add(vec3_d);
+  g_at.add(vec3_d);
 }
 
 let g_eye = new Vector3([0.0, 0.0, 3.0]);
 let g_at = new Vector3([0.0, 0.0, -100.0]);
 let g_up = new Vector3([0.0, 1.0, 0.0]);
-
 function renderAllShapes() {
   var startTime = performance.now();
 
@@ -236,4 +265,12 @@ function tick() {
 
   renderAllShapes();
   requestAnimationFrame(tick);
+}
+
+function printVec(vec) {
+  var string = "";
+  for (let i = 0; i < 3; ++i) {
+    string += vec.elements[i] + ",";
+  }
+  console.log("elements: " + string);
 }
