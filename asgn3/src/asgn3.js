@@ -45,7 +45,7 @@ var u_FragColor;
 var u_ModelMatrix;
 var u_ProjectionMatrix;
 var u_ViewMatrix;
-var u_GlobalRotationMatix;
+var u_GlobalRotationMatrix;
 var u_FragColor;
 
 let g_globalXAngle = 0.0;
@@ -143,6 +143,9 @@ let g_up = [0.0, 1.0, 0.0];
 function renderAllShapes() {
   var startTime = performance.now();
 
+  // clear canvas
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
   var projMat = new Matrix4();
   projMat.setPerspective(90, canvas.width / canvas.height, 0.1, 100);
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
@@ -159,11 +162,9 @@ function renderAllShapes() {
   var cube = new Cube();
   cube.color = [0.0, 0.0, 1.0, 1.0];
   cube.matrix.translate(0.0, 0.0, 0.0);
-  cube.matrix.scale(1.1, 1.1, 1.1);
+  cube.matrix.scale(1.0, 1.0, 1.0);
   cube.render();
   
-  // clear canvas
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   var duration = performance.now() - startTime;
   sendTextToHTML("ms:" + Math.floor(duration) + " fps:" + Math.floor(10000/duration), "numdot");
