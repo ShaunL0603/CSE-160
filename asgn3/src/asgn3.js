@@ -48,6 +48,8 @@ var u_ViewMatrix;
 var u_GlobalRotationMatrix;
 var u_FragColor;
 
+let g_startTime = performance.now() / 1000.0;
+let g_seconds = performance.now() / 1000.0 - g_startTime;
 let g_globalXAngle = 0.0;
 let g_globalYAngle = 0.0;
 let g_globalZAngle = 0.0;
@@ -55,11 +57,15 @@ let g_globalZAngle = 0.0;
 function main() {
   // sets up canvas and gl variables
   setupWebGL();
+  // Set up global camera
+  g_camera.cameraWidth = canvas.width;
+  g_camera.cameraHeight = canvas.height;
+  g_camera.updateMatrices();
   // set up GLSL shader programs and connect GLSL variables
   connectVariablesToGLSL();
 
   canvas.onmousedown = click;
-  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); mouseMove(ev); } };
+  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); g_camera.panCamera(ev.movementX, ev.movementY)} };
 
   document.addEventListener("keydown", (ev) => { updateInputOnKeyDown(ev); });
   document.addEventListener("keyup", (ev) => { updateInputOnKeyUp(ev); });
@@ -134,24 +140,15 @@ function connectVariablesToGLSL() {
   }
 }
 
-let g_eye = new Vector3([0.0, 0.0, 3.0]);
-let g_at = new Vector3([0.0, 0.0, -100.0]);
-let g_up = new Vector3([0.0, 1.0, 0.0]);
+var g_camera = new Camera();
 function renderAllShapes() {
   var startTime = performance.now();
 
   // clear canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  var projMat = new Matrix4();
-  projMat.setPerspective(90, canvas.width / canvas.height, 0.1, 100);
-  gl.uniformMatrix4fv(u_ProjectionMatrix, false, projMat.elements);
-  
-  var viewMat = new Matrix4();
-  viewMat.setLookAt(g_eye.elements[0],g_eye.elements[1],g_eye.elements[2], 
-                    g_at.elements[0],g_at.elements[1],g_at.elements[2], 
-                    g_up.elements[0],g_up.elements[1],g_up.elements[2]);
-  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMat.elements);
+  gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
+  gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
 
   var globalRotMat = new Matrix4()
     .rotate(g_globalXAngle, 1, 0, 0)
@@ -160,10 +157,9 @@ function renderAllShapes() {
 
   var cube = new Cube();
   cube.color = [0.0, 0.0, 1.0, 1.0];
-  cube.matrix.translate(0.0, 0.0, 0.0);
+  cube.matrix.translate(-0.5, -0.5, -3.0);
   cube.matrix.scale(1.0, 1.0, 1.0);
   cube.render();
-  
 
   var duration = performance.now() - startTime;
   sendTextToHTML("ms:" + Math.floor(duration) + " fps:" + Math.floor(10000/duration), "numdot");
@@ -180,12 +176,10 @@ function sendTextToHTML(text, htmlID) {
 }
 
 // Redraw the canvas
-var g_startTime = performance.now() / 1000.0;
-var g_seconds = performance.now() / 1000.0 - g_startTime;
 function tick() {
   g_seconds = performance.now() / 1000.0 - g_startTime;
 
-  keyInput();
+  g_camera.moveCamera(g_keys);
   renderAllShapes();
   requestAnimationFrame(tick);
 }
