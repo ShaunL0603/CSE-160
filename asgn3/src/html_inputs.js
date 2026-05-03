@@ -6,8 +6,12 @@ function click(ev) {
   }
 }
 
+function manageKeyInput() {
+    
+}
+
 let g_keys = {"w": false, "a": false, "s": false, "d": false};
-function updateInputOnKeyDown(ev) {
+function updateMoveKeyDown(ev) {
     let key = ev.key.toLowerCase();
     switch (key) {
         case "w":
@@ -25,7 +29,7 @@ function updateInputOnKeyDown(ev) {
     }
 }
 
-function updateInputOnKeyUp(ev) {
+function updateMoveKeyUp(ev) {
     let key = ev.key.toLowerCase();
     switch (key) {
         case "w":

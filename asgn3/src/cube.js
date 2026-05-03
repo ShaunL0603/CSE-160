@@ -94,7 +94,7 @@ class Cube {
   }
 }
 
-function drawTriangle3DUV(obj, uv) {    
+function drawTriangle3DUV(obj, uv) { 
     // Bind the buffer object to target
     gl.bindBuffer(gl.ARRAY_BUFFER, obj.buffer);
     // Write date into the buffer object
@@ -117,39 +117,39 @@ function drawTriangle3DUV(obj, uv) {
     gl.drawArrays(gl.TRIANGLES, 0, obj.vertices.length / 3);
 }
 
-function drawTriangle3D(shape) {
-    if (shape === null) {
-        console.log('Failed to create the vertices of the triangle');
-        return -1;
-    }
+// function drawTriangle3D(shape) {
+//     if (shape === null) {
+//         console.log('Failed to create the vertices of the triangle');
+//         return -1;
+//     }
     
-    // Bind the buffer object to target
-    gl.bindBuffer(gl.ARRAY_BUFFER, shape.buffer);
-    // Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, shape.vertices, gl.DYNAMIC_DRAW);
+//     // Bind the buffer object to target
+//     gl.bindBuffer(gl.ARRAY_BUFFER, shape.buffer);
+//     // Write date into the buffer object
+//     gl.bufferData(gl.ARRAY_BUFFER, shape.vertices, gl.DYNAMIC_DRAW);
     
-    // Assign the buffer object to a_Position variable
-    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+//     // Assign the buffer object to a_Position variable
+//     gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
     
-    // Enable the assignment to a_Position variable
-    gl.enableVertexAttribArray(a_Position);
+//     // Enable the assignment to a_Position variable
+//     gl.enableVertexAttribArray(a_Position);
 
-    // if (shape.colorShades === null) {
-    //     shape.generateColorShades();
-    // }
+//     // if (shape.colorShades === null) {
+//     //     shape.generateColorShades();
+//     // }
 
-    // if (shape.colorBuffer === null) {
-    //     shape.colorBuffer = gl.createBuffer();
-    //     if (!shape.colorBuffer) {
-    //         console.log("Failed to create the color buffer object");
-    //         return -1;
-    //     }
-    // }
+//     // if (shape.colorBuffer === null) {
+//     //     shape.colorBuffer = gl.createBuffer();
+//     //     if (!shape.colorBuffer) {
+//     //         console.log("Failed to create the color buffer object");
+//     //         return -1;
+//     //     }
+//     // }
 
-    // gl.bindBuffer(gl.ARRAY_BUFFER, shape.colorBuffer);
-    // gl.bufferData(gl.ARRAY_BUFFER, shape.colorShades, gl.DYNAMIC_DRAW);
-    // gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 0, 0);
-    // gl.enableVertexAttribArray(a_Color);
+//     // gl.bindBuffer(gl.ARRAY_BUFFER, shape.colorBuffer);
+//     // gl.bufferData(gl.ARRAY_BUFFER, shape.colorShades, gl.DYNAMIC_DRAW);
+//     // gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 0, 0);
+//     // gl.enableVertexAttribArray(a_Color);
     
-    gl.drawArrays(gl.TRIANGLES, 0, shape.vertices.length / 3);
-}
+//     gl.drawArrays(gl.TRIANGLES, 0, shape.vertices.length / 3);
+// }

@@ -65,10 +65,14 @@ function main() {
   connectVariablesToGLSL();
 
   canvas.onmousedown = click;
-  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); g_camera.panCamera(ev.movementX, ev.movementY)} };
+  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { 
+    click(ev); 
+    g_camera.panCamera(-ev.movementX, -ev.movementY); 
+  }};
 
-  document.addEventListener("keydown", (ev) => { updateInputOnKeyDown(ev); });
-  document.addEventListener("keyup", (ev) => { updateInputOnKeyUp(ev); });
+  // document.onmousemove = (ev) => {g_camera.panCamera(-ev.movementX, -ev.movementY);};
+  document.addEventListener("keydown", (ev) => { updateMoveKeyDown(ev); });
+  document.addEventListener("keyup", (ev) => { updateMoveKeyUp(ev); });
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   requestAnimationFrame(tick);
@@ -86,7 +90,22 @@ function setupWebGL()
     return;
   }
 
+  resizeCanvas(canvas);
+
   gl.enable(gl.DEPTH_TEST);
+}
+
+// Resize the canvas to users display size
+function resizeCanvas(canvas) {
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
 }
 
 function connectVariablesToGLSL() {
