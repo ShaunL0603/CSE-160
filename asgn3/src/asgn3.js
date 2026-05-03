@@ -65,12 +65,14 @@ function main() {
   connectVariablesToGLSL();
 
   canvas.onmousedown = click;
-  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { 
-    click(ev); 
-    g_camera.panCamera(-ev.movementX, -ev.movementY); 
-  }};
+  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); }};
+  canvas.addEventListener("click", () => { canvas.requestPointerLock(); });
 
-  // document.onmousemove = (ev) => {g_camera.panCamera(-ev.movementX, -ev.movementY);};
+  document.onmousemove = (ev) => { 
+    if (document.pointerLockElement) {
+      g_camera.panCamera(-ev.movementX, -ev.movementY);
+    }
+  };
   document.addEventListener("keydown", (ev) => { updateMoveKeyDown(ev); });
   document.addEventListener("keyup", (ev) => { updateMoveKeyUp(ev); });
 

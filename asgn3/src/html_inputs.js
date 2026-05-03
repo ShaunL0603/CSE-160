@@ -6,10 +6,6 @@ function click(ev) {
   }
 }
 
-function manageKeyInput() {
-    
-}
-
 let g_keys = {"w": false, "a": false, "s": false, "d": false};
 function updateMoveKeyDown(ev) {
     let key = ev.key.toLowerCase();
