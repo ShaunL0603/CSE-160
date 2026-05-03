@@ -7,7 +7,7 @@ class Camera {
         this.viewMatrix = new Matrix4();
         this.projectionMatrix = new Matrix4();
         this.speed = 0.01;
-        this.rotSpeed = 0.125;
+        this.rotSpeed = 0.05;
         this.yaw = 270.0;
         this.pitch = 0.0;
         this.canvasWidth = 400.0;

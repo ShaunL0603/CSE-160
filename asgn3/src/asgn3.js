@@ -57,20 +57,17 @@ let g_globalZAngle = 0.0;
 function main() {
   // sets up canvas and gl variables
   setupWebGL();
-  // Set up global camera
-  g_camera.cameraWidth = canvas.width;
-  g_camera.cameraHeight = canvas.height;
-  g_camera.updateMatrices();
   // set up GLSL shader programs and connect GLSL variables
   connectVariablesToGLSL();
 
-  canvas.onmousedown = click;
-  canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); }};
+  // canvas.onmousedown = click;
+  // canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); g_camera.panCamera(-ev.movementX, -ev.movementY); }};
   canvas.addEventListener("click", () => { canvas.requestPointerLock(); });
 
   document.onmousemove = (ev) => { 
-    if (document.pointerLockElement) {
-      g_camera.panCamera(-ev.movementX, -ev.movementY);
+    if (document.pointerLockElement === canvas) {
+      if (Math.abs(ev.movementX) > 300 || Math.abs(ev.movementY) > 300) return;
+      g_camera.panCamera(-ev.movementX, ev.movementY);
     }
   };
   document.addEventListener("keydown", (ev) => { updateMoveKeyDown(ev); });
@@ -107,6 +104,12 @@ function resizeCanvas(canvas) {
     canvas.height = height;
 
     gl.viewport(0, 0, canvas.width, canvas.height);
+
+    if (typeof g_camera !== null) {
+      g_camera.canvasWidth = canvas.width;
+      g_camera.canvasHeight = canvas.height;
+      g_camera.updateMatrices();
+    }
   }
 }
 
