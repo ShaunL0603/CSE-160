@@ -1,44 +1,40 @@
-function click(ev) {
-  if (ev.ctrlKey) {
-    // Rotate object
-    g_globalXAngle += ev.movementY;
-    g_globalYAngle -= ev.movementX;
-  }
-}
-
-let g_keys = {"w": false, "a": false, "s": false, "d": false};
-function updateMoveKeyDown(ev) {
+let g_keys = {"w": false, "a": false, "s": false, "d": false, "shift" : false};
+function updateKeyDown(ev) {
     let key = ev.key.toLowerCase();
     switch (key) {
         case "w":
-        g_keys["w"] = true;
-        break;
+            g_keys["w"] = true;
+            break;
         case "a":
-        g_keys["a"] = true;
-        break;
+            g_keys["a"] = true;
+            break;
         case "s":
-        g_keys["s"] = true;
-        break;
+            g_keys["s"] = true;
+            break;
         case "d":
-        g_keys["d"] = true;
-        break;
+            g_keys["d"] = true;
+            break;
+        case "shift":
+            g_keys["shift"] = true;
     }
 }
 
-function updateMoveKeyUp(ev) {
+function updateKeyUp(ev) {
     let key = ev.key.toLowerCase();
     switch (key) {
         case "w":
-        g_keys["w"] = false;
-        break;
+            g_keys["w"] = false;
+            break;
         case "a":
-        g_keys["a"] = false;
-        break;
+            g_keys["a"] = false;
+            break;
         case "s":
-        g_keys["s"] = false;
-        break;
+            g_keys["s"] = false;
+            break;
         case "d":
-        g_keys["d"] = false;
-        break;
+            g_keys["d"] = false;
+            break;
+        case "shift":
+            g_keys["shift"] = false;
     }
 }

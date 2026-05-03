@@ -29,10 +29,12 @@ var FSHADER_SOURCE =
   varying vec2 v_UV;
 
   uniform vec4 u_FragColor;
+  uniform sampler2D u_Sampler0;
 
   void main() {
     gl_FragColor = u_FragColor;
     gl_FragColor = vec4(v_UV, 1.0, 1.0);
+    // gl_FragColor = texture2D(u_Sampler0, v_UV);
   }
   `;
 
@@ -54,24 +56,25 @@ let g_globalXAngle = 0.0;
 let g_globalYAngle = 0.0;
 let g_globalZAngle = 0.0;
 
+const g_defaultCamSpeed = 0.01;
+const g_defaultCamRotSpeed = 0.05;
+
 function main() {
   // sets up canvas and gl variables
   setupWebGL();
   // set up GLSL shader programs and connect GLSL variables
   connectVariablesToGLSL();
-
-  // canvas.onmousedown = click;
-  // canvas.onmousemove = function(ev) { if(ev.buttons == 1) { click(ev); g_camera.panCamera(-ev.movementX, -ev.movementY); }};
+  
   canvas.addEventListener("click", () => { canvas.requestPointerLock(); });
-
   document.onmousemove = (ev) => { 
     if (document.pointerLockElement === canvas) {
       if (Math.abs(ev.movementX) > 300 || Math.abs(ev.movementY) > 300) return;
       g_camera.panCamera(-ev.movementX, ev.movementY);
     }
   };
-  document.addEventListener("keydown", (ev) => { updateMoveKeyDown(ev); });
-  document.addEventListener("keyup", (ev) => { updateMoveKeyUp(ev); });
+
+  document.addEventListener("keydown", (ev) => { updateKeyDown(ev); });
+  document.addEventListener("keyup", (ev) => { updateKeyUp(ev); });
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   requestAnimationFrame(tick);
@@ -202,7 +205,8 @@ function sendTextToHTML(text, htmlID) {
 // Redraw the canvas
 function tick() {
   g_seconds = performance.now() / 1000.0 - g_startTime;
-
+  
+  g_camera.speed = (g_keys["shift"]) ? g_defaultCamSpeed * 5 : g_defaultCamSpeed;
   g_camera.moveCamera(g_keys);
   renderAllShapes();
   requestAnimationFrame(tick);
