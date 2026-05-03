@@ -30,11 +30,18 @@ var FSHADER_SOURCE =
 
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler0;
+  uniform int u_whichTexture;
 
   void main() {
-    gl_FragColor = u_FragColor;
-    gl_FragColor = vec4(v_UV, 1.0, 1.0);
-    gl_FragColor = texture2D(u_Sampler0, v_UV);
+    if (u_whichTexture == -2) {
+      gl_FragColor = u_FragColor; // use color
+    } else if (u_whichTexture == -1) {
+      gl_FragColor = vec4(v_UV, 1.0, 1.0); //use UV debug color
+    } else if (u_whichTexture == 0) {
+      gl_FragColor = texture2D(u_Sampler0, v_UV); // use texture0
+    } else {
+      gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red
+    }
   }
   `;
 
@@ -49,6 +56,8 @@ var u_ProjectionMatrix;
 var u_ViewMatrix;
 var u_GlobalRotationMatrix;
 var u_FragColor;
+var u_Sampler0;
+var u_whichTexture;
 var u_Sampler0;
 
 let g_startTime = performance.now() / 1000.0;
@@ -77,7 +86,7 @@ function main() {
   document.addEventListener("keydown", (ev) => { updateKeyDown(ev); });
   document.addEventListener("keyup", (ev) => { updateKeyUp(ev); });
 
-  initTextures(0);
+  initTextures();
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   requestAnimationFrame(tick);
@@ -170,28 +179,34 @@ function connectVariablesToGLSL() {
   }
 
   // Get the storage location of u_Sampler
-  var u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
+  u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
   if (!u_Sampler0) {
     console.log('Failed to get the storage location of u_Sampler0');
     return false;
   }
+
+  u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
+  if (!u_whichTexture) {
+    console.log('Failed to get the storage location of u_whichTexture');
+    return false;
+  }
 }
 
-function initTextures(n) {
+function initTextures() {
   var image = new Image();  // Create the image object
   if (!image) {
     console.log('Failed to create the image object');
     return false;
   }
   // Register the event handler to be called on loading an image
-  image.onload = function() { loadTexture(n, u_Sampler0, image); };
+  image.onload = function() { loadTexture(image); };
   // Tell the browser to load an image
   image.src = 'assets/sky.jpg';
 
   return true;
 }
 
-function loadTexture(n, u_Sampler, image) {
+function loadTexture(image) {
   var texture = gl.createTexture();   // Create a texture object
   if (!texture) {
     console.log('Failed to create the texture object');
@@ -210,11 +225,9 @@ function loadTexture(n, u_Sampler, image) {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
   
   // Set the texture unit 0 to the sampler
-  gl.uniform1i(u_Sampler, 0);
-  
-  gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
+  gl.uniform1i(u_Sampler0, 0);
 
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, n); // Draw the rectangle
+  console.log("Finished lodaing texture");
 }
 
 var g_camera = new Camera();

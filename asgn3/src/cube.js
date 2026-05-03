@@ -7,6 +7,7 @@ class Cube {
       this.uvVertices = null;
       this.uvBuffer = null;
       this.buffer = null;
+      this.textureNum = 0;
   }
 
 generateVertices() {
@@ -58,6 +59,8 @@ generateUVVertices() {
   render() {
     var rgba = this.color;
 
+    // Pass texture number
+    gl.uniform1i(u_whichTexture, this.textureNum);
     // Pass the color of a triangle to u_FragColor variable
     gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
     // Pass the matrix to u_ModelMatrix attribute
