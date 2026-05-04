@@ -30,15 +30,18 @@ var FSHADER_SOURCE =
 
   uniform vec4 u_FragColor;
   uniform sampler2D u_Sampler0;
+  uniform sampler2D u_Sampler1;
   uniform int u_whichTexture;
 
   void main() {
     if (u_whichTexture == -2) {
       gl_FragColor = u_FragColor; // use color
     } else if (u_whichTexture == -1) {
-      gl_FragColor = vec4(v_UV, 1.0, 1.0); //use UV debug color
+      gl_FragColor = vec4(v_UV, 1.0, 1.0); // use UV debug color
     } else if (u_whichTexture == 0) {
-      gl_FragColor = texture2D(u_Sampler0, v_UV); // use texture0
+      gl_FragColor = texture2D(u_Sampler0, v_UV); // use sky texture
+    } else if (u_whichTexture == 1) {
+      gl_FragColor = texture2D(u_Sampler1, v_UV); // use ground texture
     } else {
       gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red
     }
@@ -59,6 +62,7 @@ var u_FragColor;
 var u_Sampler0;
 var u_whichTexture;
 var u_Sampler0;
+var u_Sampler1;
 
 let g_startTime = performance.now() / 1000.0;
 let g_seconds = performance.now() / 1000.0 - g_startTime;
@@ -138,7 +142,7 @@ function connectVariablesToGLSL() {
     return -1;
   }
   
-  // Get the storage locations
+  // Get attribute storage locations
   a_Position = gl.getAttribLocation(gl.program, "a_Position");
   if (a_Position < 0) {
     console.log("Failed to get the storage location of a_Position");
@@ -151,6 +155,7 @@ function connectVariablesToGLSL() {
     return -1;
   }
 
+  // Get uniform storage locations
   u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor");
   if (!u_FragColor) {
     console.log('Failed to get the storage location of u_FragColor');
@@ -180,11 +185,16 @@ function connectVariablesToGLSL() {
     console.log("Failed to get the storage location of u_ViewMatrix");
     return -1;
   }
-
-  // Get the storage location of u_Sampler
+  
   u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
   if (!u_Sampler0) {
     console.log('Failed to get the storage location of u_Sampler0');
+    return false;
+  }
+
+  u_Sampler1 = gl.getUniformLocation(gl.program, 'u_Sampler1');
+  if (!u_Sampler1) {
+    console.log('Failed to get the storage location of u_Sampler1');
     return false;
   }
 
@@ -202,23 +212,24 @@ function initTextures() {
     return false;
   }
   // Register the event handler to be called on loading an image
-  skyImage.onload = function() { loadTexture(skyImage); };
+  skyImage.onload = function() { loadTexture(skyImage, u_Sampler0, 0, gl.TEXTURE0); };
   // Tell the browser to load the sky image
   skyImage.src = "assets/sky_cloud.jpg";
 
   var groundImage = new Image();
   if (!groundImage) {
-    console.log('Failed to create the image object');
+    console.log("Failed to create the image object");
     return false;
   }
 
-  skyImage.onload = function() { loadTexture(skyImage); };
+  groundImage.onload = function() { loadTexture(groundImage, u_Sampler1, 1, gl.TEXTURE1); };
   groundImage.src = "assets/uv_grid_opengl.jpg";
 
   return true;
 }
 
-function loadTexture(image) {
+function loadTexture(image, sampler, texUnit, which) {
+  
   var texture = gl.createTexture();   // Create a texture object
   if (!texture) {
     console.log('Failed to create the texture object');
@@ -227,7 +238,7 @@ function loadTexture(image) {
   
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
   // Enable texture unit0
-  gl.activeTexture(gl.TEXTURE0);
+  gl.activeTexture(which);
   // Bind the texture object to the target
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -237,9 +248,7 @@ function loadTexture(image) {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
   
   // Set the texture unit 0 to the sampler
-  gl.uniform1i(u_Sampler0, 0);
-
-  console.log("Finished lodaing texture");
+  gl.uniform1i(sampler, texUnit);
 }
 
 var g_camera = new Camera();
@@ -259,13 +268,14 @@ function renderAllShapes() {
 
   var skybox = new Cube();
   skybox.color = [0.0, 0.0, 1.0, 1.0];
+  skybox.textureNum = 0;
   skybox.matrix.translate(-5.0, -5.0, -5.0);
   skybox.matrix.scale(10.0, 10.0, 10.0);
   skybox .render();
 
   var ground = new Cube();
   ground.color = [0.2, 0.5, 0.2, 1.0];
-  ground.textureNum = 0;
+  ground.textureNum = 1;
   ground.matrix.translate(-5.1, -1.0, -5.1);
   ground.matrix.scale(10.2, 0.2, 10.2);
   ground.render();
