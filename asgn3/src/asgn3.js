@@ -86,6 +86,9 @@ function main() {
   document.addEventListener("keydown", (ev) => { updateKeyDown(ev); });
   document.addEventListener("keyup", (ev) => { updateKeyUp(ev); });
 
+  // Create global verts and buffers for cube, do once
+  createCubeVertices();
+  createCubeBuffers();
   initTextures();
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -193,15 +196,24 @@ function connectVariablesToGLSL() {
 }
 
 function initTextures() {
-  var image = new Image();  // Create the image object
-  if (!image) {
+  var skyImage = new Image();  // Create the image object
+  if (!skyImage) {
     console.log('Failed to create the image object');
     return false;
   }
   // Register the event handler to be called on loading an image
-  image.onload = function() { loadTexture(image); };
-  // Tell the browser to load an image
-  image.src = 'assets/sky.jpg';
+  skyImage.onload = function() { loadTexture(skyImage); };
+  // Tell the browser to load the sky image
+  skyImage.src = "assets/sky_cloud.jpg";
+
+  var groundImage = new Image();
+  if (!groundImage) {
+    console.log('Failed to create the image object');
+    return false;
+  }
+
+  skyImage.onload = function() { loadTexture(skyImage); };
+  groundImage.src = "assets/uv_grid_opengl.jpg";
 
   return true;
 }
@@ -245,11 +257,18 @@ function renderAllShapes() {
     .rotate(g_globalYAngle, 0, 1, 0)
   gl.uniformMatrix4fv(u_GlobalRotationMatrix, false, globalRotMat.elements);
 
-  var cube = new Cube();
-  cube.color = [0.0, 0.0, 1.0, 1.0];
-  cube.matrix.translate(-0.5, -0.5, -3.0);
-  cube.matrix.scale(1.0, 1.0, 1.0);
-  cube.render();
+  var skybox = new Cube();
+  skybox.color = [0.0, 0.0, 1.0, 1.0];
+  skybox.matrix.translate(-5.0, -5.0, -5.0);
+  skybox.matrix.scale(10.0, 10.0, 10.0);
+  skybox .render();
+
+  var ground = new Cube();
+  ground.color = [0.2, 0.5, 0.2, 1.0];
+  ground.textureNum = 0;
+  ground.matrix.translate(-5.1, -1.0, -5.1);
+  ground.matrix.scale(10.2, 0.2, 10.2);
+  ground.render();
 
   var duration = performance.now() - startTime;
   sendTextToHTML("ms:" + Math.floor(duration) + " fps:" + Math.floor(10000/duration), "numdot");
@@ -273,12 +292,4 @@ function tick() {
   g_camera.moveCamera(g_keys);
   renderAllShapes();
   requestAnimationFrame(tick);
-}
-
-function printVec(vec) {
-  var string = "";
-  for (let i = 0; i < 3; ++i) {
-    string += vec.elements[i] + ",";
-  }
-  console.log("elements: " + string);
 }
