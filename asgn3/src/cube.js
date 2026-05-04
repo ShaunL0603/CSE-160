@@ -1,9 +1,10 @@
 class Cube {
   constructor() {
-      this.type = "cube";
+      this.type = "debug"; // give type name to put right texture on cube
       this.color = [1.0, 0.0, 0.0, 1.0];
       this.matrix = new Matrix4();
       this.textureNum = 0;
+      this.UVScale = 1.0;
   }
 
     render() {
@@ -28,6 +29,8 @@ class Cube {
         gl.vertexAttribPointer(a_UV, 2, gl.FLOAT, false, 0, 0);
         // Enable the assignment to a_UV variable
         gl.enableVertexAttribArray(a_UV);
+        // Scale texture
+        gl.uniform1f(u_UVScale, this.UVScale);
         
         gl.drawArrays(gl.TRIANGLES, 0, g_cubeVertices.length / 3);
     }

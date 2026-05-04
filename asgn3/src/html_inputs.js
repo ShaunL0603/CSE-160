@@ -1,3 +1,21 @@
+function htmlActions() {
+  const settingsPanel = document.getElementById('settingsPanel');
+  const camSpeedInput = document.getElementById('cam-sensitivity');
+  const speedVal = document.getElementById('sens-value');
+    
+  settingsPanel.addEventListener('mousedown', (ev) => {
+    ev.stopPropagation(); 
+  });
+  
+  settingsPanel.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+  });
+    
+  camSpeedInput.addEventListener('input', (ev) => {    
+    g_camSpeedMult = parseFloat(ev.target.value);
+  });
+}
+
 let g_keys = {"w": false, "a": false, "s": false, "d": false, "shift" : false};
 function updateKeyDown(ev) {
     let key = ev.key.toLowerCase();

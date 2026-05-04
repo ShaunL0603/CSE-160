@@ -7,13 +7,21 @@
   </head>
 
   <body onload="main()">
-      <div>
-        <canvas id="webgl">
-          Please use a browser that supports "canvas"
-        </canvas>
+    <div id="container">
+      <canvas id="webgl">
+        Please use a browser that supports "canvas"
+      </canvas>
+      
+      <div id="settingsPanel">
+        <h3>Settings</h3>
 
+        <div id="settingRow">
+          <label for="camSpeed">Camera Speed:</label>
+          <input id="camSpeed" type="number" value="5">
+        </div>
         <p id="numdot">NN</p>
       </div>
+    </div>
     
     <script src="../lib/cuon-matrix-cse160.js"></script>
     <script src="../lib/cuon-utils.js"></script>

@@ -13,11 +13,12 @@ var VSHADER_SOURCE =
   uniform mat4 u_GlobalRotationMatrix;
   uniform mat4 u_ViewMatrix;
   uniform mat4 u_ProjectionMatrix;
+  uniform float u_UVScale;
 
   void main()
   {
     gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotationMatrix *  u_ModelMatrix * a_Position;
-    v_UV = a_UV;
+    v_UV = a_UV * u_UVScale;
   }
   `;
 
@@ -29,19 +30,17 @@ var FSHADER_SOURCE =
   varying vec2 v_UV;
 
   uniform vec4 u_FragColor;
-  uniform sampler2D u_Sampler0;
-  uniform sampler2D u_Sampler1;
+  uniform sampler2D u_Sampler0; // Sky texture
+  uniform sampler2D u_Sampler1; // Debug texture
   uniform int u_whichTexture;
 
   void main() {
     if (u_whichTexture == -2) {
       gl_FragColor = u_FragColor; // use color
     } else if (u_whichTexture == -1) {
-      gl_FragColor = vec4(v_UV, 1.0, 1.0); // use UV debug color
+      gl_FragColor = texture2D(u_Sampler1, v_UV); // use debug texture
     } else if (u_whichTexture == 0) {
       gl_FragColor = texture2D(u_Sampler0, v_UV); // use sky texture
-    } else if (u_whichTexture == 1) {
-      gl_FragColor = texture2D(u_Sampler1, v_UV); // use ground texture
     } else {
       gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red
     }
@@ -63,6 +62,7 @@ var u_Sampler0;
 var u_whichTexture;
 var u_Sampler0;
 var u_Sampler1;
+let u_UVScale = 1.0;
 
 let g_startTime = performance.now() / 1000.0;
 let g_seconds = performance.now() / 1000.0 - g_startTime;
@@ -189,19 +189,25 @@ function connectVariablesToGLSL() {
   u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
   if (!u_Sampler0) {
     console.log('Failed to get the storage location of u_Sampler0');
-    return false;
+    return -1;
   }
 
   u_Sampler1 = gl.getUniformLocation(gl.program, 'u_Sampler1');
   if (!u_Sampler1) {
     console.log('Failed to get the storage location of u_Sampler1');
-    return false;
+    return -1;
   }
 
   u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
   if (!u_whichTexture) {
     console.log('Failed to get the storage location of u_whichTexture');
-    return false;
+    return -1;
+  }
+
+  u_UVScale = gl.getUniformLocation(gl.program, 'u_UVScale');
+  if (!u_UVScale) {
+    console.log('Failed to get the storage location of u_UVScale');
+    return -1;
   }
 }
 
@@ -209,7 +215,7 @@ function initTextures() {
   var skyImage = new Image();  // Create the image object
   if (!skyImage) {
     console.log('Failed to create the image object');
-    return false;
+    return -1;
   }
   // Register the event handler to be called on loading an image
   skyImage.onload = function() { loadTexture(skyImage, u_Sampler0, 0, gl.TEXTURE0); };
@@ -219,16 +225,14 @@ function initTextures() {
   var groundImage = new Image();
   if (!groundImage) {
     console.log("Failed to create the image object");
-    return false;
+    return -1;
   }
 
   groundImage.onload = function() { loadTexture(groundImage, u_Sampler1, 1, gl.TEXTURE1); };
   groundImage.src = "assets/uv_grid_opengl.jpg";
-
-  return true;
 }
 
-function loadTexture(image, sampler, texUnit, which) {
+function loadTexture(image, sampler, texUnit, glTex) {
   
   var texture = gl.createTexture();   // Create a texture object
   if (!texture) {
@@ -238,14 +242,16 @@ function loadTexture(image, sampler, texUnit, which) {
   
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
   // Enable texture unit0
-  gl.activeTexture(which);
+  gl.activeTexture(glTex);
   // Bind the texture object to the target
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
   // Set the texture parameters
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
   // Set the texture image
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+
+  gl.generateMipmap(gl.TEXTURE_2D);
   
   // Set the texture unit 0 to the sampler
   gl.uniform1i(sampler, texUnit);
@@ -269,15 +275,16 @@ function renderAllShapes() {
   var skybox = new Cube();
   skybox.color = [0.0, 0.0, 1.0, 1.0];
   skybox.textureNum = 0;
-  skybox.matrix.translate(-5.0, -5.0, -5.0);
-  skybox.matrix.scale(10.0, 10.0, 10.0);
+  skybox.matrix.translate(-500.0, -500.0, -500.0);
+  skybox.matrix.scale(1000.0, 1000.0, 1000.0);
   skybox .render();
 
   var ground = new Cube();
   ground.color = [0.2, 0.5, 0.2, 1.0];
-  ground.textureNum = 1;
-  ground.matrix.translate(-5.1, -1.0, -5.1);
-  ground.matrix.scale(10.2, 0.2, 10.2);
+  ground.textureNum = -1;
+  ground.UVScale = 50.0;
+  ground.matrix.translate(-250.0, -1.0, -250.0);
+  ground.matrix.scale(500, 0.2, 500);
   ground.render();
 
   var duration = performance.now() - startTime;
@@ -294,11 +301,12 @@ function sendTextToHTML(text, htmlID) {
   htmlElm.innerHTML = text;
 }
 
+var g_camSpeedMult = 5.0;
 // Redraw the canvas
 function tick() {
   g_seconds = performance.now() / 1000.0 - g_startTime;
   
-  g_camera.speed = (g_keys["shift"]) ? g_defaultCamSpeed * 5 : g_defaultCamSpeed;
+  g_camera.speed = (g_keys["shift"]) ? g_defaultCamSpeed * g_camSpeedMult : g_defaultCamSpeed;
   g_camera.moveCamera(g_keys);
   renderAllShapes();
   requestAnimationFrame(tick);
