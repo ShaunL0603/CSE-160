@@ -10,14 +10,14 @@ var VSHADER_SOURCE =
   varying vec2 v_UV;
 
   uniform mat4 u_ModelMatrix;
-  uniform mat4 u_GlobalRotationMatrix;
+  // uniform mat4 u_GlobalRotationMatrix;
   uniform mat4 u_ViewMatrix;
   uniform mat4 u_ProjectionMatrix;
   uniform float u_UVScale;
 
   void main()
   {
-    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotationMatrix *  u_ModelMatrix * a_Position;
+    gl_Position = u_ProjectionMatrix * u_ViewMatrix *  u_ModelMatrix * a_Position;
     v_UV = a_UV * u_UVScale;
   }
   `;
@@ -56,7 +56,7 @@ var u_FragColor;
 var u_ModelMatrix;
 var u_ProjectionMatrix;
 var u_ViewMatrix;
-var u_GlobalRotationMatrix;
+// var u_GlobalRotationMatrix;
 var u_FragColor;
 var u_Sampler0;
 var u_whichTexture;
@@ -69,6 +69,7 @@ let g_seconds = performance.now() / 1000.0 - g_startTime;
 let g_globalXAngle = 0.0;
 let g_globalYAngle = 0.0;
 let g_globalZAngle = 0.0;
+let g_pointerLocked = false;
 
 const g_defaultCamSpeed = 0.01;
 const g_defaultCamRotSpeed = 0.05;
@@ -78,11 +79,25 @@ function main() {
   setupWebGL();
   // set up GLSL shader programs and connect GLSL variables
   connectVariablesToGLSL();
+  // Sets up html actions
+  htmlActions();
   
   canvas.addEventListener("click", () => { canvas.requestPointerLock(); });
-  document.onmousemove = (ev) => { 
+  document.addEventListener("pointerlockchange", () => {
     if (document.pointerLockElement === canvas) {
-      if (Math.abs(ev.movementX) > 300 || Math.abs(ev.movementY) > 300) return;
+      g_pointerLocked = true;
+    } else {
+      g_pointerLocked = false;
+      // clear movement
+      g_keys["w"] = false;
+      g_keys["a"] = false;
+      g_keys["s"] = false;
+      g_keys["d"] = false;
+    }
+  });
+  document.onmousemove = (ev) => { 
+    if (g_pointerLocked) {
+      if (Math.abs(ev.movementX) > 250 || Math.abs(ev.movementY) > 250) return;
       g_camera.panCamera(-ev.movementX, ev.movementY);
     }
   };
@@ -174,11 +189,11 @@ function connectVariablesToGLSL() {
     return -1;
   }
 
-  u_GlobalRotationMatrix = gl.getUniformLocation(gl.program, "u_GlobalRotationMatrix");
-  if (!u_GlobalRotationMatrix) {
-    console.log("Failed to get the storage location of u_GlobalRotationMatrix");
-    return -1;
-  }
+  // u_GlobalRotationMatrix = gl.getUniformLocation(gl.program, "u_GlobalRotationMatrix");
+  // if (!u_GlobalRotationMatrix) {
+  //   console.log("Failed to get the storage location of u_GlobalRotationMatrix");
+  //   return -1;
+  // }
 
   u_ViewMatrix = gl.getUniformLocation(gl.program, "u_ViewMatrix");
   if (!u_ViewMatrix) {
@@ -267,10 +282,10 @@ function renderAllShapes() {
   gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
   gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
 
-  var globalRotMat = new Matrix4()
-    .rotate(g_globalXAngle, 1, 0, 0)
-    .rotate(g_globalYAngle, 0, 1, 0)
-  gl.uniformMatrix4fv(u_GlobalRotationMatrix, false, globalRotMat.elements);
+  // var globalRotMat = new Matrix4()
+  //   .rotate(g_globalXAngle, 1, 0, 0)
+  //   .rotate(g_globalYAngle, 0, 1, 0)
+  // gl.uniformMatrix4fv(u_GlobalRotationMatrix, false, globalRotMat.elements);
 
   var skybox = new Cube();
   skybox.color = [0.0, 0.0, 1.0, 1.0];

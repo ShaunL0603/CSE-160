@@ -1,7 +1,6 @@
 function htmlActions() {
   const settingsPanel = document.getElementById('settingsPanel');
-  const camSpeedInput = document.getElementById('cam-sensitivity');
-  const speedVal = document.getElementById('sens-value');
+  const camSpeedInput = document.getElementById('camSpeed');
     
   settingsPanel.addEventListener('mousedown', (ev) => {
     ev.stopPropagation(); 
@@ -11,8 +10,8 @@ function htmlActions() {
     ev.stopPropagation();
   });
     
-  camSpeedInput.addEventListener('input', (ev) => {    
-    g_camSpeedMult = parseFloat(ev.target.value);
+  camSpeedInput.addEventListener('input', (ev) => {
+      g_camSpeedMult = parseFloat(ev.target.value);
   });
 }
 
