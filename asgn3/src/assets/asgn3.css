@@ -44,3 +44,20 @@
 .settingRow input {
   cursor: pointer;
 }
+
+#crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+  border-radius: 50%; /* Makes the square a perfect circle */
+  
+  /* Shifts it back by half its width/height so it is perfectly centered */
+  transform: translate(-50%, -50%); 
+  
+  /* CRITICAL: This makes sure you can't accidentally click the crosshair */
+  pointer-events: none; 
+  z-index: 5;
+}
