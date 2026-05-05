@@ -1,8 +1,8 @@
 class Camera {
     constructor() {
         this.fov = 60;
-        this.eye = new Vector3([0.0, 0.0, 0.0]);
-        this.at = new Vector3([0.0, 0.0, -1.0]);
+        this.eye = new Vector3([0.0, 0.5, 0.0]);
+        this.at = new Vector3([0.0, 0.5, -1.0]);
         this.up = new Vector3([0.0, 1.0, 0.0]);
         this.viewMatrix = new Matrix4();
         this.projectionMatrix = new Matrix4();
@@ -30,6 +30,10 @@ class Camera {
         let f = new Vector3();
         f.set(this.at);
         f.sub(this.eye);
+        
+        if (!g_noclip) {
+            f.elements[1] = 0.0;
+        }
         f.normalize();
 
         let m = new Vector3();
@@ -85,6 +89,13 @@ class Camera {
         newAt.set(this.eye);
         newAt.add(d);
         this.at = newAt;
+        this.updateMatrices();
+    }
+
+    resetHeight(height) {
+        let heightDiff = height - this.eye.elements[1];
+        this.eye.elements[1] = height;
+        this.at.elements[1] += heightDiff;
         this.updateMatrices();
     }
 }

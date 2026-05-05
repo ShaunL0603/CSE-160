@@ -1,21 +1,31 @@
+let g_noclip = false;
 function htmlActions() {
-  const settingsPanel = document.getElementById('settingsPanel');
-  const camSpeedInput = document.getElementById('camSpeed');
+    const settingsPanel = document.getElementById("settingsPanel");
+    const camSpeedInput = document.getElementById("camSpeed");
+    const resetHeightButton = document.getElementById("resetHeightButton");
     
-  settingsPanel.addEventListener('mousedown', (ev) => {
-    ev.stopPropagation(); 
-  });
-  
-  settingsPanel.addEventListener('click', (ev) => {
-    ev.stopPropagation();
-  });
+    settingsPanel.addEventListener("mousedown", (ev) => {
+        ev.stopPropagation(); 
+    });
+    settingsPanel.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+    });
     
-  camSpeedInput.addEventListener('input', (ev) => {
-      g_camSpeedMult = parseFloat(ev.target.value);
-  });
+    camSpeedInput.addEventListener("input", (ev) => {
+        g_camSpeedMult = parseFloat(ev.target.value);
+    });
+
+    if (resetHeightButton) {
+        resetHeightButton.addEventListener("click", () => {
+           if (typeof g_camera !== null) {
+               g_camera.resetHeight(0.5);
+           } 
+        });
+    }
 }
 
-let g_keys = {"w": false, "a": false, "s": false, "d": false, "shift" : false};
+let g_keys = {"w": false, "a": false, "s": false, 
+              "d": false, "shift" : false, "v": false};
 function updateKeyDown(ev) {
     let key = ev.key.toLowerCase();
     switch (key) {
@@ -32,6 +42,13 @@ function updateKeyDown(ev) {
             g_keys["d"] = true;
             break;
         case "shift":
+            g_keys["shift"] = true;
+            break;
+        case "v":
+            if (!g_keys["v"]) {
+                g_noclip = !g_noclip;
+                console.log(`Noclip: ${(g_noclip) ? "on" : "off"}`);
+            }
             g_keys["shift"] = true;
     }
 }
@@ -53,5 +70,8 @@ function updateKeyUp(ev) {
             break;
         case "shift":
             g_keys["shift"] = false;
+            break;
+        case "v":
+            g_keys["v"] = false;
     }
 }

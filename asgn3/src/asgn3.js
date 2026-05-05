@@ -298,7 +298,7 @@ function renderAllShapes() {
   ground.color = [0.2, 0.5, 0.2, 1.0];
   ground.textureNum = -1;
   ground.UVScale = 50.0;
-  ground.matrix.translate(-250.0, -1.0, -250.0);
+  ground.matrix.translate(-250.0, -0.2, -250.0);
   ground.matrix.scale(500, 0.2, 500);
   ground.render();
 
