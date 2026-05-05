@@ -1,4 +1,34 @@
-let g_noclip = false;
+function handleEvents() {
+    canvas.addEventListener("click", (ev) => { 
+        canvas.requestPointerLock(); 
+        if (g_pointerLocked) {
+            rayCast(ev);
+        }
+    });
+    document.addEventListener("pointerlockchange", () => {
+        if (document.pointerLockElement === canvas) {
+            g_pointerLocked = true;
+        } else {
+            g_pointerLocked = false;
+            // clear movement
+            g_keys["w"] = false;
+            g_keys["a"] = false;
+            g_keys["s"] = false;
+            g_keys["d"] = false;
+            g_keys["shift"] = false;
+        }
+    });
+    document.onmousemove = (ev) => { 
+        if (g_pointerLocked) {
+            if (Math.abs(ev.movementX) > 300 || Math.abs(ev.movementY) > 300) return;
+            g_camera.panCamera(-ev.movementX, ev.movementY);
+        }
+    };
+
+    document.addEventListener("keydown", (ev) => { updateKeyDown(ev); });
+    document.addEventListener("keyup", (ev) => { updateKeyUp(ev); });
+}
+
 function htmlActions() {
     const settingsPanel = document.getElementById("settingsPanel");
     const camSpeedInput = document.getElementById("camSpeed");
@@ -24,8 +54,6 @@ function htmlActions() {
     }
 }
 
-let g_keys = {"w": false, "a": false, "s": false, 
-              "d": false, "shift" : false, "v": false};
 function updateKeyDown(ev) {
     let key = ev.key.toLowerCase();
     switch (key) {
@@ -74,4 +102,14 @@ function updateKeyUp(ev) {
         case "v":
             g_keys["v"] = false;
     }
+}
+
+function sendTextToHTML(text, htmlID) {
+    var htmlElm = document.getElementById(htmlID);
+    if (!htmlElm) {
+        console.log("Failed to get " + htmlID + " from HTML");
+        return;
+    }
+
+    htmlElm.innerHTML = text;
 }

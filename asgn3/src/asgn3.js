@@ -52,28 +52,39 @@ var canvas;
 var gl;
 var a_Position;
 var a_UV;
-var u_FragColor;
 var u_ModelMatrix;
 var u_ProjectionMatrix;
 var u_ViewMatrix;
-// var u_GlobalRotationMatrix;
 var u_FragColor;
-var u_Sampler0;
 var u_whichTexture;
 var u_Sampler0;
 var u_Sampler1;
 let u_UVScale = 1.0;
+// var u_GlobalRotationMatrix;
 
-let g_startTime = performance.now() / 1000.0;
-let g_seconds = performance.now() / 1000.0 - g_startTime;
+// Global variables
+    /* FOR CAMERA */
+    var g_camera;
+    let g_camSpeedMult = Number(document.getElementById("camSpeed").defaultValue);
+    let g_pointerLocked = false;
+    const g_defaultCamSpeed = 0.05;
+    const g_defaultCamRotSpeed = 0.05;
+    
+    /* FOR PERFORMANCE */
+    let g_startTime = performance.now() / 1000.0;
+    let g_seconds = performance.now() / 1000.0 - g_startTime;
+    let g_lastFrameTime = performance.now();
+    let g_fpsCap = 165;
+
+    let g_noclip = false;
+    let g_keys = {
+        "w": false, "a": false, "s": false, 
+        "d": false, "shift" : false, "v": false
+    };
+
 // let g_globalXAngle = 0.0;
 // let g_globalYAngle = 0.0;
 // let g_globalZAngle = 0.0;
-let g_pointerLocked = false;
-let g_camSpeedMult = 5.0;
-
-const g_defaultCamSpeed = 0.01;
-const g_defaultCamRotSpeed = 0.05;
 
 function main() {
     // sets up canvas and gl variables
@@ -82,35 +93,8 @@ function main() {
     connectVariablesToGLSL();
     // Sets up html actions
     htmlActions();
-    
-    canvas.addEventListener("click", (ev) => { 
-        canvas.requestPointerLock(); 
-        if (g_pointerLocked) {
-            rayCast(ev);
-        }
-    });
-    document.addEventListener("pointerlockchange", () => {
-        if (document.pointerLockElement === canvas) {
-            g_pointerLocked = true;
-        } else {
-            g_pointerLocked = false;
-            // clear movement
-            g_keys["w"] = false;
-            g_keys["a"] = false;
-            g_keys["s"] = false;
-            g_keys["d"] = false;
-            g_keys["shift"] = false;
-        }
-    });
-    document.onmousemove = (ev) => { 
-        if (g_pointerLocked) {
-            if (Math.abs(ev.movementX) > 250 || Math.abs(ev.movementY) > 250) return;
-            g_camera.panCamera(-ev.movementX, ev.movementY);
-        }
-    };
-
-    document.addEventListener("keydown", (ev) => { updateKeyDown(ev); });
-    document.addEventListener("keyup", (ev) => { updateKeyUp(ev); });
+    // document and canvas event listeners
+    handleEvents();
 
     // Create global verts and buffers for cube, do once
     createCubeVertices();
@@ -118,6 +102,7 @@ function main() {
     initTextures();
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    createWorld();
     requestAnimationFrame(tick);
 }
 
@@ -132,6 +117,7 @@ function setupWebGL() {
         return;
     }
 
+    g_camera = new Camera();
     resizeCanvas(canvas);
 
     gl.enable(gl.DEPTH_TEST);
@@ -277,10 +263,9 @@ function loadTexture(image, sampler, texUnit, glTex) {
     gl.uniform1i(sampler, texUnit);
 }
 
-var g_camera = new Camera();
+var g_skybox;
+var g_ground;
 function renderAllShapes() {
-    var startTime = performance.now();
-
     // clear canvas
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -292,44 +277,31 @@ function renderAllShapes() {
     //   .rotate(g_globalYAngle, 0, 1, 0)
     // gl.uniformMatrix4fv(u_GlobalRotationMatrix, false, globalRotMat.elements);
 
-    var skybox = new Cube();
-    skybox.color = [0.0, 0.0, 1.0, 1.0];
-    skybox.textureNum = 0;
-    skybox.matrix.translate(-500.0, -500.0, -500.0);
-    skybox.matrix.scale(1000.0, 1000.0, 1000.0);
-    skybox .render();
-
-    var ground = new Cube();
-    ground.color = [0.2, 0.5, 0.2, 1.0];
-    ground.textureNum = -1;
-    ground.UVScale = 50.0;
-    ground.matrix.translate(-250.0, -0.2, -250.0);
-    ground.matrix.scale(500, 0.2, 500);
-    ground.render();
+    g_skybox .render();
+    g_ground.render();
 
     drawMap();
-
-    var duration = performance.now() - startTime;
-    sendTextToHTML("ms:" + Math.floor(duration) + " fps:" + Math.floor(10000/duration), "numdot");
-}
-
-function sendTextToHTML(text, htmlID) {
-    var htmlElm = document.getElementById(htmlID);
-    if (!htmlElm) {
-        console.log("Failed to get " + htmlID + " from HTML");
-        return;
-    }
-
-    htmlElm.innerHTML = text;
 }
 
 // Redraw the canvas
 function tick() {
-    g_seconds = performance.now() / 1000.0 - g_startTime;
-    
-    g_camera.speed = (g_keys["shift"]) ? g_defaultCamSpeed * g_camSpeedMult : g_defaultCamSpeed;
-    g_camera.moveCamera(g_keys);
-    renderAllShapes();
+    let now = performance.now();
+    let elapsed = now - g_lastFrameTime;
+    let frameInterval = 1000.0 / g_fpsCap;
+
+    if (elapsed > frameInterval) {
+        g_lastFrameTime = now - (elapsed % frameInterval);
+        
+        g_seconds = now / 1000.0 - g_startTime;
+        
+        g_camera.speed = (g_keys["shift"]) ? g_defaultCamSpeed * g_camSpeedMult : g_defaultCamSpeed;
+        g_camera.moveCamera(g_keys);
+        renderAllShapes();
+
+        let fps = Math.round(1000.0 / elapsed);
+        let msPerFrame = Math.round(elapsed);
+        sendTextToHTML("ms: " + msPerFrame + " fps: " + fps + " / " + g_fpsCap, "numdot");
+    };
     requestAnimationFrame(tick);
 }
 
@@ -346,65 +318,28 @@ var g_map = [
 function drawMap() {
     for (let x = 0; x < g_map.length; ++x) {
         for (let y = 0; y < g_map.length; ++y) {
-        if (g_map[x][y] == 1) {
-            var wall = new Cube();
-            wall.color = [0.5, 0.5, 0.5, 1.0];
-            wall.textureNum = -2;
-            wall.matrix.translate(x, -0.001, y);
-            // wall.matrix.scale(1.0, 1.0, 1.0);
-            wall.render();
-        }
+            if (g_map[x][y] == 1) {
+                var wall = new Cube();
+                wall.color = [0.5, 0.5, 0.5, 1.0];
+                wall.textureNum = -2;
+                wall.matrix.translate(x, -0.001, y);
+                wall.render();
+            }
         }
     }
 }
 
-function rayCast(ev) {
-    const rect = canvas.getBoundingClientRect();
-    const x = ev.clientX - rect.left;
-    const y = ev.clientY - rect.top;
+function createWorld() {
+    g_skybox = new Cube();
+    g_skybox.color = [0.0, 0.0, 1.0, 1.0];
+    g_skybox.textureNum = 0;
+    g_skybox.matrix.translate(-500.0, -500.0, -500.0);
+    g_skybox.matrix.scale(1000.0, 1000.0, 1000.0);
 
-    // const xNDC = (x / canvas.width) * 2.0 - 1.0;
-    // const yNDC = 1.0 - (y / canvas.height) * 2.0;
-    const xNDC = 0.0;
-    const yNDC = 0.0;
-    // console.log("xNDC value: ", xNDC, " yNDC value: ", yNDC);
-
-    const { origin, direction } = calculateRay(xNDC, yNDC);
-    console.log("Ray origin: ", origin, " Ray direction: ", direction);
-}
-
-function calculateRay(xNDC, yNDC) {
-    const projMat = g_camera.projectionMatrix;
-    const viewMat = g_camera.viewMatrix;
-    const origin = getCamPos(viewMat);
-
-    const vpMat = new Matrix4().set(projMat).multiply(viewMat);
-    const invVP = new Matrix4().setInverseOf(vpMat);
-
-    const nearPoint = invVP.multiplyVector4(new Vector4([xNDC, yNDC, -1, 1]));
-    const farPoint = invVP.multiplyVector4(new Vector4([xNDC, yNDC, 1, 1]));
-
-    // Calculate the world-space coordinates by dividing x, y, and z by w
-    const nearWorld = new Vector3([
-      nearPoint.elements[0] / nearPoint.elements[3],
-      nearPoint.elements[1] / nearPoint.elements[3],
-      nearPoint.elements[2] / nearPoint.elements[3]
-    ]);
-    
-    const farWorld = new Vector3([
-      farPoint.elements[0] / farPoint.elements[3],
-      farPoint.elements[1] / farPoint.elements[3],
-      farPoint.elements[2] / farPoint.elements[3]
-    ]);
-    
-    const direction = new Vector3(farWorld.elements).sub(nearWorld);
-    direction.normalize();
-    return { origin, direction };
-}
-
-function getCamPos(viewMat) {
-    const invView = new Matrix4().setInverseOf(viewMat);
-    const pos = invView.multiplyVector4(new Vector4([0, 0, 0, 1]));
-    console.log(pos);
-    return [pos.elements[0], pos.elements[1], pos.elements[2]];
+    g_ground = new Cube();
+    g_ground.color = [0.2, 0.5, 0.2, 1.0];
+    g_ground.textureNum = -1;
+    g_ground.UVScale = 50.0;
+    g_ground.matrix.translate(-250.0, -0.2, -250.0);
+    g_ground.matrix.scale(500, 0.2, 500);
 }

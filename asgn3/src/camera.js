@@ -99,3 +99,55 @@ class Camera {
         this.updateMatrices();
     }
 }
+
+function rayCast(ev) {
+    const rect = canvas.getBoundingClientRect();
+    const x = ev.clientX - rect.left;
+    const y = ev.clientY - rect.top;
+
+    // const xNDC = (x / canvas.width) * 2.0 - 1.0;
+    // const yNDC = 1.0 - (y / canvas.height) * 2.0;
+    const xNDC = 0.0;
+    const yNDC = 0.0;
+    // console.log("xNDC value: ", xNDC, " yNDC value: ", yNDC);
+
+    const { origin, direction } = calculateRay(xNDC, yNDC);
+    console.log("Ray origin: ", origin, " Ray direction: ", direction);
+}
+
+function calculateRay(xNDC, yNDC) {
+    const projMat = g_camera.projectionMatrix;
+    const viewMat = g_camera.viewMatrix;
+
+    const vpMat = new Matrix4().set(projMat).multiply(viewMat);
+    const invVP = new Matrix4().setInverseOf(vpMat);
+
+    const nearPoint = invVP.multiplyVector4(new Vector4([xNDC, yNDC, -1, 1]));
+    const farPoint = invVP.multiplyVector4(new Vector4([xNDC, yNDC, 1, 1]));
+
+    // Calculate the world-space coordinates by dividing x, y, and z by w
+    const nearWorld = new Vector3([
+      nearPoint.elements[0] / nearPoint.elements[3],
+      nearPoint.elements[1] / nearPoint.elements[3],
+      nearPoint.elements[2] / nearPoint.elements[3]
+    ]);
+    
+    const farWorld = new Vector3([
+      farPoint.elements[0] / farPoint.elements[3],
+      farPoint.elements[1] / farPoint.elements[3],
+      farPoint.elements[2] / farPoint.elements[3]
+    ]);
+    
+    const direction = new Vector3(farWorld.elements).sub(nearWorld);
+    direction.normalize();
+    const origin = getOrigin(viewMat);
+    return { origin, direction };
+}
+
+// helper function to get camera origin
+function getOrigin(viewMat) {
+    const invView = new Matrix4().setInverseOf(viewMat);
+    const pos = invView.multiplyVector4(new Vector4([0, 0, 0, 1]));
+    console.log(pos);
+    return [pos.elements[0], pos.elements[1], pos.elements[2]];
+}
