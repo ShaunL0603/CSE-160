@@ -93,6 +93,7 @@ let u_UVScale = 1.0;
 
     var g_skybox;
     var g_ground;
+    var g_worldObjs = [];
 
 // let g_globalXAngle = 0.0;
 // let g_globalYAngle = 0.0;
@@ -111,6 +112,10 @@ function main() {
     // Create global verts and buffers for cube, do once
     createCubeVertices();
     createCubeBuffers();
+    // Create global spheer verts n buffers
+    createSphereVertices(10);
+    createSphereBuffers();
+
     initTextures();
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -266,6 +271,8 @@ function loadTexture(image, sampler, texUnit, glTex) {
 
     // Set the texture parameters
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
     // Set the texture image
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
@@ -326,7 +333,6 @@ var g_map = [
     [1, 0, 0, 1, 0, 0, 0, 1], 
     [1, 0, 1, 1, 0, 1, 1, 1]
 ];
-var g_worldObjs = [];
 function drawWalls() {
     for (let x = 0; x < g_map.length; ++x) {
         for (let y = 0; y < g_map.length; ++y) {
@@ -339,6 +345,15 @@ function drawWalls() {
             }
         }
     }
+}
+
+function drawTargets() {
+    var target = new Sphere();
+    target.color = [1.0, 0.0, 0.0, 1.0];
+    target.textureNum = -2;
+    target.matrix.translate(0.0, 0.5, -3.0);
+    target.matrix.scale(0.1, 0.1, 0.1);
+    g_worldObjs.push(target);
 }
 
 function createWorld() {
@@ -360,4 +375,5 @@ function createWorld() {
     g_worldObjs.push(g_ground);
 
     drawWalls();
+    drawTargets();
 }
