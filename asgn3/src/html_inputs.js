@@ -70,6 +70,7 @@ function htmlActions() {
             let t = g_targets[i];
             t.matrix = new Matrix4(t.baseMatrix);
             t.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
+            updateHitBox(t);
         };
     });
 }

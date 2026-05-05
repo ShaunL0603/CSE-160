@@ -353,9 +353,7 @@ function drawWalls() {
 }
 
 let g_targetSize = document.getElementById("targetSize").defaultValue;
-let g_hitBoxPos = g_targetSize * 0.5;
 let g_hitboxVisible = false;
-
 let g_targets = [];
 function drawTargets() {
     let spawnPos = [-1.0, 0.0, 2.0];
@@ -386,10 +384,13 @@ function drawTargets() {
 
 function updateHitBox(target) {
     if (!target.hitbox || !target.baseMatrix) return;
+
+    let hitBoxSize = g_targetSize * 1.5
+    let offset = (hitBoxSize) * 0.5;
     
     target.hitbox.matrix = new Matrix4(target.baseMatrix);
-    target.hitbox.matrix.translate(-g_hitBoxPos, -g_hitBoxPos, -g_hitBoxPos);
-    target.hitbox.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
+    target.hitbox.matrix.translate(-offset, -offset, -offset);
+    target.hitbox.matrix.scale(hitBoxSize, hitBoxSize, hitBoxSize);
 }
 
 function createWorld() {
