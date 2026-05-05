@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+input[type="number"] {
+  width: 50px;
+}
+
 #container {
   position: relative;
   width: 100vw;

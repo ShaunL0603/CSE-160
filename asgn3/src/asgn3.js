@@ -138,6 +138,10 @@ function setupWebGL() {
     resizeCanvas(canvas);
 
     gl.enable(gl.DEPTH_TEST);
+    // Enable alpha blending
+    gl.enable(gl.BLEND);
+    // Tell WebGL how to mix the transparent color with the background
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 }
 
 // Resize the canvas to users display size
@@ -338,6 +342,7 @@ function drawWalls() {
         for (let y = 0; y < g_map.length; ++y) {
             if (g_map[x][y] == 1) {
                 var wall = new Cube();
+                wall.type = "wall";
                 wall.color = [0.5, 0.5, 0.5, 1.0];
                 wall.textureNum = -2;
                 wall.matrix.translate(x, -0.001, y);
@@ -347,13 +352,44 @@ function drawWalls() {
     }
 }
 
+let g_targetSize = document.getElementById("targetSize").defaultValue;
+let g_hitBoxPos = g_targetSize * 0.5;
+let g_hitboxVisible = false;
+
+let g_targets = [];
 function drawTargets() {
-    var target = new Sphere();
-    target.color = [1.0, 0.0, 0.0, 1.0];
-    target.textureNum = -2;
-    target.matrix.translate(0.0, 0.5, -3.0);
-    target.matrix.scale(0.1, 0.1, 0.1);
-    g_worldObjs.push(target);
+    let spawnPos = [-1.0, 0.0, 2.0];
+
+    for (let i = 0; i < spawnPos.length; ++i) {
+        var target = new Sphere();
+        target.type = "target";
+        target.color = [1.0, 0.0, 0.0, 1.0];
+        target.textureNum = -2;
+        target.baseMatrix = new Matrix4();
+        target.baseMatrix.translate(spawnPos[i], 0.5, -3.0);
+
+        target.matrix = new Matrix4(target.baseMatrix);
+        target.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
+        
+        var targetHitBox = new Cube();
+        targetHitBox.type = "hit box";
+        targetHitBox.color = [1.0, 1.0, 0.0, (g_hitboxVisible) ? 1.0 : 0.0];
+        targetHitBox.textureNum = -2;
+        target.hitbox = targetHitBox;
+        updateHitBox(target);
+
+        g_targets.push(target);
+        g_worldObjs.push(target);
+        g_worldObjs.push(targetHitBox);
+    }
+}
+
+function updateHitBox(target) {
+    if (!target.hitbox || !target.baseMatrix) return;
+    
+    target.hitbox.matrix = new Matrix4(target.baseMatrix);
+    target.hitbox.matrix.translate(-g_hitBoxPos, -g_hitBoxPos, -g_hitBoxPos);
+    target.hitbox.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
 }
 
 function createWorld() {

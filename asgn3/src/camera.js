@@ -165,7 +165,7 @@ function rayCast() {
     }
 
     if (closestObj) {
-        console.log("Hit", closestDistance);
+        console.log("Objct Hit: ", closestObj.type, " distance: ", closestDistance);
     } else {
         console.log("No hit");
     }

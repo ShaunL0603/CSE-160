@@ -52,6 +52,26 @@ function htmlActions() {
            } 
         });
     }
+
+    const makeHitBoxVisible = document.getElementById("makeHitBoxVisible").addEventListener("click", () => {
+        g_hitboxVisible = !g_hitboxVisible;
+
+        for (let i = 0; i < g_targets.length; ++i) {
+            let t = g_targets[i];
+            if (t.hitbox) {
+                t.hitbox.color[3] = g_hitboxVisible ? 1.0 : 0.0;
+            }
+        }
+    });
+    const targetSize = document.getElementById("targetSize").addEventListener("input", (ev) => {
+        g_targetSize = parseFloat(ev.target.value);
+
+        for (let i = 0; i < g_targets.length; ++i) {
+            let t = g_targets[i];
+            t.matrix = new Matrix4(t.baseMatrix);
+            t.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
+        };
+    });
 }
 
 function updateKeyDown(ev) {
