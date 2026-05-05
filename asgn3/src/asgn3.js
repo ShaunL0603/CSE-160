@@ -287,10 +287,11 @@ function renderAllShapes() {
     //   .rotate(g_globalYAngle, 0, 1, 0)
     // gl.uniformMatrix4fv(u_GlobalRotationMatrix, false, globalRotMat.elements);
 
-    g_skybox .render();
-    g_ground.render();
-
-    drawMap();
+    // Start rendering all objects in global world obj list
+    for (let i = 0; i < g_worldObjs.length; ++i) {
+        let obj = g_worldObjs[i];
+        obj.render();
+    }
 }
 
 // Redraw the canvas
@@ -325,7 +326,8 @@ var g_map = [
     [1, 0, 0, 1, 0, 0, 0, 1], 
     [1, 0, 1, 1, 0, 1, 1, 1]
 ];
-function drawMap() {
+var g_worldObjs = [];
+function drawWalls() {
     for (let x = 0; x < g_map.length; ++x) {
         for (let y = 0; y < g_map.length; ++y) {
             if (g_map[x][y] == 1) {
@@ -333,7 +335,7 @@ function drawMap() {
                 wall.color = [0.5, 0.5, 0.5, 1.0];
                 wall.textureNum = -2;
                 wall.matrix.translate(x, -0.001, y);
-                wall.render();
+                g_worldObjs.push(wall);
             }
         }
     }
@@ -341,15 +343,21 @@ function drawMap() {
 
 function createWorld() {
     g_skybox = new Cube();
+    g_skybox.type = "sky";
     g_skybox.color = [0.0, 0.0, 1.0, 1.0];
     g_skybox.textureNum = 0;
     g_skybox.matrix.translate(-500.0, -500.0, -500.0);
     g_skybox.matrix.scale(1000.0, 1000.0, 1000.0);
+    g_worldObjs.push(g_skybox);
 
     g_ground = new Cube();
+    g_ground.type = "ground";
     g_ground.color = [0.2, 0.5, 0.2, 1.0];
     g_ground.textureNum = -1;
     g_ground.UVScale = 50.0;
     g_ground.matrix.translate(-250.0, -0.2, -250.0);
     g_ground.matrix.scale(500, 0.2, 500);
+    g_worldObjs.push(g_ground);
+
+    drawWalls();
 }

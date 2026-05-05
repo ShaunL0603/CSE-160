@@ -2,7 +2,7 @@ function handleEvents() {
     canvas.addEventListener("click", (ev) => { 
         canvas.requestPointerLock(); 
         if (g_pointerLocked) {
-            rayCast(ev);
+            rayCast();
         }
     });
     document.addEventListener("pointerlockchange", () => {

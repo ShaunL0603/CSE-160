@@ -101,55 +101,104 @@ class Camera {
     }
 }
 
-function rayCast(ev) {
-    const rect = canvas.getBoundingClientRect();
-    const x = ev.clientX - rect.left;
-    const y = ev.clientY - rect.top;
+function rayCast() {
+    const origin = [
+        g_camera.eye.elements[0],
+        g_camera.eye.elements[1],
+        g_camera.eye.elements[2]
+    ];
 
-    // Coudld be used if mouse isn't locked
-    // const xNDC = (x / canvas.width) * 2.0 - 1.0;
-    // const yNDC = 1.0 - (y / canvas.height) * 2.0;
-    // x and y fixed b/c of locking mouse
-    const xNDC = 0.0;
-    const yNDC = 0.0;
+    let forwardVec = new Vector3();
+    forwardVec.set(g_camera.at);
+    forwardVec.sub(g_camera.eye);
+    forwardVec.normalize();
 
-    const { origin, direction } = calculateRay(xNDC, yNDC);
-    console.log("Ray origin: ", origin, " Ray direction: ", direction);
+    const direction = [
+        forwardVec.elements[0],
+        forwardVec.elements[1],
+        forwardVec.elements[2]
+    ]
+
+    const localMinBounds = [0.0, 0.0, 0.0];
+    const localMaxbounds = [1.0, 1.0, 1.0];
+    
+    let closestObj = null;
+    let closestDistance = Infinity;
+
+    for (let i = 0; i < g_worldObjs.length; ++i) {
+        let obj = g_worldObjs[i];
+        // console.log("Object type:", obj.type, " Object: ", obj);
+
+        // Calculate inverse model matrix of a cube
+        let invMat = new Matrix4().setInverseOf(obj.matrix);
+        
+        // transform ray origin into local space
+        let localOrigin4 = invMat.multiplyVector4(new Vector4([
+            origin[0], origin[1], origin[2], 1.0
+        ]));
+        let localOrigin = [
+            localOrigin4.elements[0], 
+            localOrigin4.elements[1], 
+            localOrigin4.elements[2]
+        ];
+        // console.log("local origin:", localOrigin);
+
+        // transform ray direction into local space
+        let localDir4 = invMat.multiplyVector4(new Vector4([
+            direction[0], direction[1], direction[2], 0.0
+        ]));
+        let localDir = [
+            localDir4.elements[0], 
+            localDir4.elements[1], 
+            localDir4.elements[2]
+        ];
+        // console.log("local direction:", localDir);
+
+        // Check intersection
+        let hitDistance = intersectRayAABB(localOrigin, localDir, localMinBounds, localMaxbounds);
+        // console.log("calculate hit distance:", hitDistance);
+
+        if (hitDistance !== null && hitDistance < closestDistance) {
+            closestDistance = hitDistance;
+            closestObj = obj;
+        }
+    }
+
+    if (closestObj) {
+        console.log("Hit", closestDistance);
+    } else {
+        console.log("No hit");
+    }
 }
 
-function calculateRay(xNDC, yNDC) {
-    const projMat = g_camera.projectionMatrix;
-    const viewMat = g_camera.viewMatrix;
+/** 
+ * Using slab method
+ * Check if a ray intersects an Axis-Aligned Bounding Box (AABB)
+ */
+function intersectRayAABB(origin, direction, boxMin, boxMax) {
+    const invD = [
+        1.0 / direction[0],
+        1.0 / direction[1],
+        1.0 / direction[2]
+    ];
 
-    const vpMat = new Matrix4().set(projMat).multiply(viewMat);
-    const invVP = new Matrix4().setInverseOf(vpMat);
+    let t0 = (boxMin[0] - origin[0]) * invD[0];
+    let t1 = (boxMax[0] - origin[0]) * invD[0];
+    let tmin = Math.min(t0, t1);
+    let tmax = Math.max(t0, t1);
 
-    const nearPoint = invVP.multiplyVector4(new Vector4([xNDC, yNDC, -1, 1]));
-    const farPoint = invVP.multiplyVector4(new Vector4([xNDC, yNDC, 1, 1]));
+    t0 = (boxMin[1] - origin[1]) * invD[1];
+    t1 = (boxMax[1] - origin[1]) * invD[1];
+    tmin = Math.max(tmin, Math.min(t0, t1));
+    tmax = Math.min(tmax, Math.max(t0, t1));
 
-    // Calculate the world-space coordinates by dividing x, y, and z by w
-    const nearWorld = new Vector3([
-      nearPoint.elements[0] / nearPoint.elements[3],
-      nearPoint.elements[1] / nearPoint.elements[3],
-      nearPoint.elements[2] / nearPoint.elements[3]
-    ]);
-    
-    const farWorld = new Vector3([
-      farPoint.elements[0] / farPoint.elements[3],
-      farPoint.elements[1] / farPoint.elements[3],
-      farPoint.elements[2] / farPoint.elements[3]
-    ]);
-    
-    const direction = new Vector3(farWorld.elements).sub(nearWorld);
-    direction.normalize();
-    const origin = getOrigin(viewMat);
-    return { origin, direction };
-}
+    t0 = (boxMin[2] - origin[2]) * invD[2];
+    t1 = (boxMax[2] - origin[2]) * invD[2];
+    tmin = Math.max(tmin, Math.min(t0, t1));
+    tmax = Math.min(tmax, Math.max(t0, t1));
 
-// helper function to get camera origin
-function getOrigin(viewMat) {
-    const invView = new Matrix4().setInverseOf(viewMat);
-    const pos = invView.multiplyVector4(new Vector4([0, 0, 0, 1]));
-    console.log(pos);
-    return [pos.elements[0], pos.elements[1], pos.elements[2]];
+    // If tmax < 0, box behind us. If tmin > tmax we'vr missed.
+    if (tmax < 0 || tmin > tmax) return null;
+
+    return tmin > 0 ? tmin : tmax;
 }
