@@ -42,7 +42,7 @@ class Camera {
         } 
         if (g_keys["a"]) {
             let left = Vector3.cross(this.up, f);
-            left.normalize  ();
+            left.normalize();
             m.add(left);
         } 
         if (g_keys["s"]) {
