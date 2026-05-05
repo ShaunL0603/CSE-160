@@ -66,10 +66,11 @@ let u_UVScale = 1.0;
 
 let g_startTime = performance.now() / 1000.0;
 let g_seconds = performance.now() / 1000.0 - g_startTime;
-let g_globalXAngle = 0.0;
-let g_globalYAngle = 0.0;
-let g_globalZAngle = 0.0;
+// let g_globalXAngle = 0.0;
+// let g_globalYAngle = 0.0;
+// let g_globalZAngle = 0.0;
 let g_pointerLocked = false;
+let g_camSpeedMult = 5.0;
 
 const g_defaultCamSpeed = 0.01;
 const g_defaultCamRotSpeed = 0.05;
@@ -93,6 +94,7 @@ function main() {
       g_keys["a"] = false;
       g_keys["s"] = false;
       g_keys["d"] = false;
+      g_keys["shift"] = false;
     }
   });
   document.onmousemove = (ev) => { 
@@ -302,6 +304,8 @@ function renderAllShapes() {
   ground.matrix.scale(500, 0.2, 500);
   ground.render();
 
+  drawMap();
+
   var duration = performance.now() - startTime;
   sendTextToHTML("ms:" + Math.floor(duration) + " fps:" + Math.floor(10000/duration), "numdot");
 }
@@ -316,7 +320,6 @@ function sendTextToHTML(text, htmlID) {
   htmlElm.innerHTML = text;
 }
 
-var g_camSpeedMult = 5.0;
 // Redraw the canvas
 function tick() {
   g_seconds = performance.now() / 1000.0 - g_startTime;
@@ -325,4 +328,29 @@ function tick() {
   g_camera.moveCamera(g_keys);
   renderAllShapes();
   requestAnimationFrame(tick);
+}
+
+var g_map = [
+  [1, 1, 1, 1, 0, 1, 1, 1], 
+  [1, 0, 0, 0, 0, 0, 0, 1], 
+  [1, 0, 1, 1, 1, 1, 0, 1], 
+  [0, 0, 0, 1, 0, 1, 0, 1], 
+  [1, 0, 0, 1, 0, 0, 0, 1], 
+  [1, 0, 0, 0, 0, 1, 0, 1], 
+  [1, 0, 0, 1, 0, 0, 0, 1], 
+  [1, 0, 1, 1, 0, 1, 1, 1]
+];
+function drawMap() {
+  for (let x = 0; x < g_map.length; ++x) {
+    for (let y = 0; y < g_map.length; ++y) {
+      if (g_map[x][y] == 1) {
+        var wall = new Cube();
+        wall.color = [0.5, 0.5, 0.5, 1.0];
+        wall.textureNum = -2;
+        wall.matrix.translate(x, -0.001, y);
+        // wall.matrix.scale(1.0, 1.0, 1.0);
+        wall.render();
+      }
+    }
+  }
 }
