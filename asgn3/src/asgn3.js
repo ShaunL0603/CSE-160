@@ -67,20 +67,32 @@ let u_UVScale = 1.0;
     var g_camera;
     let g_camSpeedMult = Number(document.getElementById("camSpeed").defaultValue);
     let g_pointerLocked = false;
-    const g_defaultCamSpeed = 0.05;
+    const g_defaultCamSpeed = 0.025;
     const g_defaultCamRotSpeed = 0.05;
+    const degToRad = Math.PI / 180;
     
     /* FOR PERFORMANCE */
     let g_startTime = performance.now() / 1000.0;
     let g_seconds = performance.now() / 1000.0 - g_startTime;
     let g_lastFrameTime = performance.now();
     let g_fpsCap = 165;
+    const g_fracFPSCap = 1 / g_fpsCap;
 
+    /* FOR HTML */
     let g_noclip = false;
     let g_keys = {
         "w": false, "a": false, "s": false, 
         "d": false, "shift" : false, "v": false
     };
+
+    /* FOR CUBE */
+    var g_cubeVertices = null;
+    var g_cubeUVVertices = null;
+    var g_cubeVertBuffer = null;
+    var g_cubeUVVertBuffer = null;
+
+    var g_skybox;
+    var g_ground;
 
 // let g_globalXAngle = 0.0;
 // let g_globalYAngle = 0.0;
@@ -263,8 +275,6 @@ function loadTexture(image, sampler, texUnit, glTex) {
     gl.uniform1i(sampler, texUnit);
 }
 
-var g_skybox;
-var g_ground;
 function renderAllShapes() {
     // clear canvas
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -287,12 +297,12 @@ function renderAllShapes() {
 function tick() {
     let now = performance.now();
     let elapsed = now - g_lastFrameTime;
-    let frameInterval = 1000.0 / g_fpsCap;
+    let frameInterval = 1000.0 * g_fracFPSCap;
 
     if (elapsed > frameInterval) {
         g_lastFrameTime = now - (elapsed % frameInterval);
         
-        g_seconds = now / 1000.0 - g_startTime;
+        g_seconds = (now * 0.001) - g_startTime;
         
         g_camera.speed = (g_keys["shift"]) ? g_defaultCamSpeed * g_camSpeedMult : g_defaultCamSpeed;
         g_camera.moveCamera(g_keys);

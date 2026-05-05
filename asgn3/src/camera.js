@@ -12,6 +12,10 @@ class Camera {
         this.pitch = 0.0;
         this.canvasWidth = 400.0;
         this.canvasHeight = 400.0;
+        this.forwardVec = new Vector3();
+        this.movementVec = new Vector3();
+        this.dirVec = new Vector3();
+        this.tempVec = new Vector3(); // used for moveCamera method
     }
 
     updateMatrices() {
@@ -27,42 +31,43 @@ class Camera {
     }
 
     moveCamera(keys) {
-        let f = new Vector3();
-        f.set(this.at);
-        f.sub(this.eye);
+        this.forwardVec.set(this.at);
+        this.forwardVec.sub(this.eye);
         
-        if (!g_noclip) {
-            f.elements[1] = 0.0;
-        }
-        f.normalize();
+        if (!g_noclip) this.forwardVec.elements[1] = 0.0;
+        this.forwardVec.normalize();
 
-        let m = new Vector3();
+        this.movementVec.elements[0] = 0;
+        this.movementVec.elements[1] = 0;
+        this.movementVec.elements[2] = 0;
+
         if (g_keys["w"]) {
-            m.add(f);
+            this.movementVec.add(this.forwardVec);
         } 
         if (g_keys["a"]) {
-            let left = Vector3.cross(this.up, f);
-            left.normalize();
-            m.add(left);
+            // let left = Vector3.cross(this.up, this.forwardVec);
+            this.tempVec.cross(this.up, this.forwardVec);
+            this.tempVec.normalize();
+            this.movementVec.add(this.tempVec);
         } 
         if (g_keys["s"]) {
-            let back = new Vector3();
-            back.set(f);
-            back.mul(-1);
-            m.add(back);
+            this.tempVec.set(this.forwardVec);
+            this.tempVec.mul(-1);
+            this.movementVec.add(this.tempVec);
         } 
         if (g_keys["d"]) {
-            let right = Vector3.cross(this.up, f);
-            right.normalize();
-            right.mul(-1);
-            m.add(right);
+            // let right = Vector3.cross(this.up, this.forwardVec);
+            this.tempVec.cross(this.up, this.forwardVec);
+            this.tempVec.normalize();
+            this.tempVec.mul(-1);
+            this.movementVec.add(this.tempVec);
         }
 
-        m.normalize(); // movement length to 1
-        m.mul(this.speed); // apply cam speed
+        this.movementVec.normalize(); // movement length to 1
+        this.movementVec.mul(this.speed); // apply cam speed
         // update global eye and at vec3s
-        this.eye.add(m);
-        this.at.add(m);
+        this.eye.add(this.movementVec);
+        this.at.add(this.movementVec);
         this.updateMatrices();
     }
 
@@ -75,20 +80,16 @@ class Camera {
         if (this.pitch < -89.0) this.pitch = -89.0;
         
         // degrees to radians
-        let yawRadians =  this.yaw * Math.PI / 180;
-        let pitchRadians =  this.pitch * Math.PI / 180;
+        let yawRadians =  this.yaw * degToRad;
+        let pitchRadians =  this.pitch * degToRad;
         
-        let d = new Vector3();
-        let rho = 1.0;
         // Polar coordinates to cartesian
-        d.elements[0] = rho * Math.cos(pitchRadians) * Math.cos(yawRadians); // new x
-        d.elements[1] = rho * Math.sin(pitchRadians);                        // new y
-        d.elements[2] = rho * Math.cos(pitchRadians) * Math.sin(yawRadians); // new z
+        this.dirVec.elements[0] = Math.cos(pitchRadians) * Math.cos(yawRadians); // new x
+        this.dirVec.elements[1] = Math.sin(pitchRadians);                        // new y
+        this.dirVec.elements[2] = Math.cos(pitchRadians) * Math.sin(yawRadians); // new z
         
-        let newAt = new Vector3();
-        newAt.set(this.eye);
-        newAt.add(d);
-        this.at = newAt;
+        this.at.set(this.eye);
+        this.at.add(this.dirVec);
         this.updateMatrices();
     }
 
@@ -105,11 +106,12 @@ function rayCast(ev) {
     const x = ev.clientX - rect.left;
     const y = ev.clientY - rect.top;
 
+    // Coudld be used if mouse isn't locked
     // const xNDC = (x / canvas.width) * 2.0 - 1.0;
     // const yNDC = 1.0 - (y / canvas.height) * 2.0;
+    // x and y fixed b/c of locking mouse
     const xNDC = 0.0;
     const yNDC = 0.0;
-    // console.log("xNDC value: ", xNDC, " yNDC value: ", yNDC);
 
     const { origin, direction } = calculateRay(xNDC, yNDC);
     console.log("Ray origin: ", origin, " Ray direction: ", direction);

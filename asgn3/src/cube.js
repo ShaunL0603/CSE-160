@@ -36,10 +36,6 @@ class Cube {
     }
 }
 
-var g_cubeVertices = null;
-var g_cubeUVVertices = null;
-var g_cubeVertBuffer = null;
-var g_cubeUVVertBuffer = null;
 function createCubeVertices() {
     g_cubeVertices = new Float32Array([
         // Front Face

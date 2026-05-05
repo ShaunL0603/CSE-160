@@ -153,6 +153,23 @@ class Vector3 {
         return v3;
     }
 
+    cross(other1, other2) {
+        if (!(other1 instanceof Vector3) || !(other2 instanceof Vector3)) { 
+          console.warn("Can't calculate the cross product of non-Vector3s");
+          return new Vector3();
+        };
+
+        let x = other1.elements[1] * other2.elements[2] - other1.elements[2] * other2.elements[1];
+        let y = other1.elements[2] * other2.elements[0] - other1.elements[0] * other2.elements[2];
+        let z =other1.elements[0] * other2.elements[1] - other1.elements[1] * other2.elements[0];
+        
+        this.elements[0] = x;
+        this.elements[1] = y;
+        this.elements[2] = z;
+        
+        return this;
+    }
+
     /**
       * Calculate the magnitude (or length) of this vector.
       * @return scalar
