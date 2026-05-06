@@ -17,7 +17,7 @@ function createWorld() {
     g_worldObjs.push(g_ground);
 
     createRange();
-    createTargets();
+    createTargetsForRange();
 }
 
 function createRange() {
@@ -57,11 +57,11 @@ function createRange() {
 // --- Functions to create targets in shooting range ---
 
 /**
- * Main function to create all and new targets on screen
+ * Main function to create all targets on screen in RANGE map
  * saves target in global targets and worldObjs lists
  * target hit box also saved in global worldObjs list
  */
-function createTargets() {
+function createTargetsForRange() {
     let  safeDistance = g_targetSize * 3.0;
 
     for (let i = 0; i < g_maxTargets; ++i) {
@@ -92,7 +92,38 @@ function createTargets() {
 }
 
 /**
- * Get a random position to spawn a target at
+ * helper function to handle the respawning events for target
+ * after being hit. 
+ */
+function handleRespawning() {
+    for (let i = 0; i < g_targets.length; ++i) {
+        let t = g_targets[i];
+        
+        if (!t.active) {
+            let timeSinceDeath = g_seconds - t.tod;
+            if (timeSinceDeath >= t.respawnDelay) {
+                // Find safe distance to spawn so targets don't collide
+                let safeDistance = g_targetSize * 3.0;
+                let pos = findValidTargetPos(safeDistance);
+
+                t.spawnPos = pos;
+                t.baseMatrix.setIdentity();
+                t.baseMatrix.translate(pos[0], pos[1], pos[2]);
+                t.matrix.set(t.baseMatrix);
+                t.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
+                updateHitBox(t);
+                
+                t.active = true;
+                if (t.hitbox) {
+                    t.hitbox.active = true;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Helper function to get a random position to spawn a target at
  * @param {*} minDistance minimum distance a target can spawn at
  * @returns XYZ position array
  */
@@ -143,49 +174,16 @@ function updateHitBox(target) {
     target.hitbox.matrix.scale(hitBoxSize, hitBoxSize, hitBoxSize);
 }
 
-/**
- * helper function to handle the respawning events for target
- * after being hit
- */
-function handleRespawning() {
-    for (let i = 0; i < g_targets.length; ++i) {
-        let t = g_targets[i];
-        
-        if (!t.active) {
-            let timeSinceDeath = g_seconds - t.tod;
-            if (timeSinceDeath >= t.respawnDelay) {
-                // Find safe distance to spawn so targets don't collide
-                let safeDistance = g_targetSize * 3.0;
-                let pos = findValidTargetPos(safeDistance);
-
-                t.spawnPos = pos;
-                t.baseMatrix.setIdentity();
-                t.baseMatrix.translate(pos[0], pos[1], pos[2]);
-                t.matrix.set(t.baseMatrix);
-                t.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
-                updateHitBox(t);
-                
-                t.active = true;
-                if (t.hitbox) {
-                    t.hitbox.active = true;
-                }
-            }
-        }
-    }
-}
-
 // when user changes maximum number of targets 
 // rebuild existing targets on screen
 function rebuildTargets() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "target" && obj.type !== "hit box");
     g_targets = [];
-    createTargets();
+    createTargetsForRange();
 }
 
 // --- Functions to create random map --- 
-var g_map = generateRandWalk(64, 17000);
-let g_mapSize = g_map.length;
-function createWalls() {
+function createRandomMap() {
     let wallHeight = 3;
 
     for (let x = 0; x < g_mapSize; ++x) {
@@ -198,6 +196,8 @@ function createWalls() {
                     wall.textureNum = 2;
                     wall.matrix.translate((x * 0.25) - 8.0, (h * 0.25), (y * 0.25) - 8.0);
                     wall.matrix.scale(0.25, 0.25, 0.25);
+
+                    var target = new Sphere();
                     g_worldObjs.push(wall);
                 }
             }
@@ -206,12 +206,13 @@ function createWalls() {
 }
 
 /**
- * Helper function to generate random walls
+ * Henerate random walls by creating a grid filled with 1's (1 indicates wall)
+ * Use a "digger" to go through the grid and replace 1's with 0's
  * @param {*} size size of grid
  * @param {*} pathLen length the digger will walk
  */
 function generateRandWalk(size, pathLen) {
-    // Grid set to 1 where a 1 indicates a wall
+    // Grid set to 1's
     let map = Array(size).fill().map(() => Array(size).fill(1));
 
     // getting center of map
@@ -230,7 +231,7 @@ function generateRandWalk(size, pathLen) {
         }
     }
 
-    // reset digger to center
+    // set digger to center
     let currentX = centerX;
     let currentY = centerY;
 
@@ -252,12 +253,15 @@ function generateRandWalk(size, pathLen) {
 function regenerateMap() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
     g_map = generateRandWalk(64, 17000);
-    createWalls();
+    createRandomMap();
 }
 
 /**
  * Let user switch between two maps
- * @param {*} ev 
+ * User presses alt + 1 or alt + 2 to switch between maps
+ * 1 = RANGE map
+ * 2 = RANDOM, randomly generated map
+ * @param {*} ev to see if aly and specific keys are pressed
  */
 function switchMap(ev) {
     // switch to range
@@ -267,7 +271,7 @@ function switchMap(ev) {
 
         g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
         createRange();
-        createTargets();
+        createTargetsForRange();
         g_currMap = RANGE;
     } 
     // switch to randomly generated map
@@ -276,7 +280,7 @@ function switchMap(ev) {
 
         g_worldObjs = g_worldObjs.filter(obj => obj.type !== "rangeWall" && obj.type !== "target" && obj.type !== "hit box");
         g_targets = [];
-        createWalls();
+        createRandomMap();
         g_currMap = RANDOM;
     }
 }

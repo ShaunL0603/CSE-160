@@ -1,3 +1,5 @@
+// header file for js files in asgn3, blocky world, folder
+
 // Global variables, WebGL
 var canvas;
 var gl;
@@ -58,6 +60,8 @@ let u_UVScale = 1.0;
     let g_hitSound = new Audio("./assets/audio/laser.wav");
     var g_playerMode;
     var g_currMap;
+    var g_map = generateRandWalk(64, 17000);
+    let g_mapSize = g_map.length;
 
 // CONSTANTS
 const g_defaultCamSpeed = 0.025;
@@ -65,8 +69,8 @@ const g_defaultCamRotSpeed = 0.05;
 const degToRad = Math.PI / 180;
 const g_fracFPSCap = 1 / g_fpsCap;
 // --- for player modes ---
-const FPS = 0;
-const MINE = 1;
+const FPS = "FPS";
+const MINE = "MINE";
 // ---- for current map ---
-const RANGE = 0;
-const RANDOM = 1;
+const RANGE = "m_RANGE";
+const RANDOM = "m_RANDOM";

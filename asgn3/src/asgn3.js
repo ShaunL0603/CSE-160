@@ -4,6 +4,7 @@
 function main() {
     // setup start
     g_playerMode = FPS;
+    sendTextToHTML(FPS, "playerMode");
     g_currMap = RANGE;
     // sets up canvas and gl variables
     setupWebGL();
