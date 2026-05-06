@@ -4,6 +4,12 @@
   height: 100%;
 }
 
+.slider-value {
+    display: inline-block;
+    width: 2ch;
+    text-align: right;
+}
+
 input[type="number"] {
   width: 50px;
 }

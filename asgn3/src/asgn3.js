@@ -161,7 +161,7 @@ function initTextures() {
         return -1;
     }
     debugImg.onload = function() { loadTexture(debugImg, u_Sampler0, 0, gl.TEXTURE0); };
-    debugImg.src = "assets/uv_grid_opengl.jpg";
+    debugImg.src = "assets/textures/uv_grid_opengl.jpg";
 
     var skyImage = new Image();  // Create the image object
     if (!skyImage) {
@@ -171,7 +171,7 @@ function initTextures() {
     // Register the event handler to be called on loading an image
     skyImage.onload = function() { loadTexture(skyImage, u_Sampler1, 1, gl.TEXTURE1); };
     // Tell the browser to load the sky image
-    skyImage.src = "assets/sky_cloud.jpg";
+    skyImage.src = "assets/textures/sky_cloud.jpg";
 
     var groundImage = new Image();
     if (!groundImage) {
@@ -180,7 +180,7 @@ function initTextures() {
     }
 
     groundImage.onload = function() { loadTexture(groundImage, u_Sampler2, 2, gl.TEXTURE2); };
-    groundImage.src = "assets/asphalt_02_diff_4k.jpg";
+    groundImage.src = "assets/textures/asphalt_02_diff_4k.jpg";
 
     var wallImg = new Image();
     if (!wallImg) {
@@ -189,7 +189,7 @@ function initTextures() {
     }
 
     wallImg.onload = function() { loadTexture(wallImg, u_Sampler3, 3, gl.TEXTURE3); };
-    wallImg.src = "assets/concrete_slab_wall_02_diff_4k.jpg";
+    wallImg.src = "assets/textures/concrete_slab_wall_02_diff_4k.jpg";
 
     var wallImg2 = new Image();
     if (!wallImg2) {
@@ -198,7 +198,7 @@ function initTextures() {
     }
 
     wallImg2.onload = function() { loadTexture(wallImg2, u_Sampler4, 4, gl.TEXTURE4); };
-    wallImg2.src = "assets/concrete_tile_facade_disp_4k.png";
+    wallImg2.src = "assets/textures/concrete_tile_facade_disp_4k.png";
 }
 
 function loadTexture(image, sampler, texUnit, glTex) {

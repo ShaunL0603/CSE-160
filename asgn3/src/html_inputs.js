@@ -34,6 +34,10 @@ function htmlActions() {
     const settingsPanel = document.getElementById("settingsPanel");
     const camSpeedInput = document.getElementById("camSpeed");
     const resetHeightButton = document.getElementById("resetHeightButton");
+    const volumeSlider = document.getElementById("volumeSlider");
+    const maxTargets = document.getElementById("maxTargets");
+    const makeHitBoxVisible = document.getElementById("makeHitBoxVisible");
+    const targetSize = document.getElementById("targetSize");
     
     settingsPanel.addEventListener("mousedown", (ev) => {
         ev.stopPropagation(); 
@@ -54,7 +58,7 @@ function htmlActions() {
         });
     }
     // Action to make the hit box visible
-    document.getElementById("makeHitBoxVisible").addEventListener("click", () => {
+    makeHitBoxVisible.addEventListener("click", () => {
         g_hitboxVisible = !g_hitboxVisible;
 
         for (let i = 0; i < g_targets.length; ++i) {
@@ -65,7 +69,7 @@ function htmlActions() {
         }
     });
     // Action to change target size
-    document.getElementById("targetSize").addEventListener("input", (ev) => {
+    targetSize.addEventListener("input", (ev) => {
         g_targetSize = parseFloat(ev.target.value);
 
         for (let i = 0; i < g_targets.length; ++i) {
@@ -76,12 +80,17 @@ function htmlActions() {
         };
     });
     // Action to change the maximum number of target on screen
-    document.getElementById("maxTargets").addEventListener("input", (ev) => {
+    maxTargets.addEventListener("input", (ev) => {
         let newMax = parseInt(ev.target.value);
         if (0 < newMax && newMax <= 100) {
             g_maxTargets = newMax;
             rebuildTargets();
         }
+    });
+    volumeSlider.addEventListener("input", (ev) => {
+        let newVolume = parseFloat(ev.target.value);
+        g_hitSound.volume = newVolume;
+        sendTextToHTML(parseInt(newVolume * 100), "volumeValue");
     });
 }
 

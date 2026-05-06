@@ -54,6 +54,7 @@ let u_UVScale = 1.0;
     let g_hitboxVisible = false;
     let g_maxTargets = 15;
     var g_playerMode;
+    let g_hitSound = new Audio("./assets/audio/laser.wav");
 
 // CONSTANTS
 const g_defaultCamSpeed = 0.025;

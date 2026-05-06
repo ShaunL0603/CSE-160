@@ -224,14 +224,13 @@ function handleModes(obj, mouseBtn, closestDistance) {
             placeBlock(closestDistance);
         };
     } else if (g_playerMode === FPS) {
-        let hitSound = new Audio("./assets/laser.wav");
         if (mouseBtn === 0) {
             obj.active = false;
             obj.tod = g_seconds;
             if (obj.hitbox) {
                 obj.hitbox.active = false;
             }
-            hitSound.play();
+            g_hitSound.play();
         }
     } else {
         console.warn("Error: unrecognized mode", g_playerMode);
