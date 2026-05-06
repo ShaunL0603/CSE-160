@@ -184,12 +184,12 @@ function rebuildTargets() {
 
 // --- Functions to create random map --- 
 var g_map = generateRandWalk(64, 17000);
+let g_mapSize = g_map.length;
 function createWalls() {
-    let mapSize = g_map.length;
     let wallHeight = 3;
 
-    for (let x = 0; x < mapSize; ++x) {
-        for (let y = 0; y < mapSize; ++y) {
+    for (let x = 0; x < g_mapSize; ++x) {
+        for (let y = 0; y < g_mapSize; ++y) {
             if (g_map[x][y] == 1) {
                 for (let h = 0; h < wallHeight; ++ h) {
                     var wall = new Cube();
@@ -253,6 +253,7 @@ function regenerateMap() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
     g_map = generateRandWalk(64, 17000);
     createWalls();
+    recenterCamera();
 }
 
 /**
@@ -260,7 +261,7 @@ function regenerateMap() {
  * @param {*} ev 
  */
 function switchMap(ev) {
-    // Switch to range
+    // switch to range
     if (ev.altKey && ev.key === "1") {
         // Don't execute rest of if statement if same map is trying to be loaded
         if (g_currMap === RANGE) return;
@@ -269,12 +270,15 @@ function switchMap(ev) {
         createRange();
         createTargets();
         g_currMap = RANGE;
-    } else if (ev.altKey && ev.key === "2") {
+    } 
+    // switch to randomly generated map
+    else if (ev.altKey && ev.key === "2") {
         if (g_currMap === RANDOM) return;
 
         g_worldObjs = g_worldObjs.filter(obj => obj.type !== "rangeWall" && obj.type !== "target" && obj.type !== "hit box");
         g_targets = [];
         createWalls();
+        recenterCamera();
         g_currMap = RANDOM;
     }
 }

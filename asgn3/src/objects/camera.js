@@ -100,3 +100,15 @@ class Camera {
         this.updateMatrices();
     }
 }
+
+function recenterCamera() {
+    // set back to world origin as default
+    g_camera.eye.elements[0] = 0.0;
+    g_camera.eye.elements[1] = 0.5;
+    g_camera.eye.elements[2] = 0.0;
+
+    g_camera.at.elements[0] = 0.0;
+    g_camera.at.elements[1] = 0.5;
+    g_camera.at.elements[2] = -1.0;
+    g_camera.updateMatrices();
+}
