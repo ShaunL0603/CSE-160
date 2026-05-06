@@ -16,7 +16,6 @@ function createWorld() {
     g_ground.matrix.scale(40, 0.2, 40);
     g_worldObjs.push(g_ground);
 
-    createWalls();
     createRange();
     createTargets();
 }
@@ -53,28 +52,6 @@ function createRange() {
     rangeWall3.matrix.rotate(-90, 0, 1, 0);
     rangeWall3.matrix.scale(9.8, 5.0, 0.2);
     g_worldObjs.push(rangeWall3);
-}
-
-var g_map = generateRandWalk(64, 17000);
-function createWalls() {
-    let mapSize = g_map.length;
-    let wallHeight = 3;
-    for (let x = 0; x < mapSize; ++x) {
-        for (let y = 0; y < mapSize; ++y) {
-            if (g_map[x][y] == 1) {
-                for (let h = 0; h < wallHeight; ++ h) {
-                    var wall = new Cube();
-                    wall.type = "wall";
-                    wall.color = [0.5, 0.5, 0.5, 1.0];
-                    wall.textureNum = 2;
-                    wall.matrix.translate((x * 0.25) - 8.0, (h * 0.25), (y * 0.25) - 8.0);
-                    wall.matrix.scale(0.25, 0.25, 0.25);
-                    g_worldObjs.push(wall);
-                }
-            }
-        }
-    }
-    console.log("Walls created");
 }
 
 // --- Functions to create targets in shooting range ---
@@ -205,6 +182,29 @@ function rebuildTargets() {
     createTargets();
 }
 
+// --- Functions to create random map --- 
+var g_map = generateRandWalk(64, 17000);
+function createWalls() {
+    let mapSize = g_map.length;
+    let wallHeight = 3;
+
+    for (let x = 0; x < mapSize; ++x) {
+        for (let y = 0; y < mapSize; ++y) {
+            if (g_map[x][y] == 1) {
+                for (let h = 0; h < wallHeight; ++ h) {
+                    var wall = new Cube();
+                    wall.type = "wall";
+                    wall.color = [0.5, 0.5, 0.5, 1.0];
+                    wall.textureNum = 2;
+                    wall.matrix.translate((x * 0.25) - 8.0, (h * 0.25), (y * 0.25) - 8.0);
+                    wall.matrix.scale(0.25, 0.25, 0.25);
+                    g_worldObjs.push(wall);
+                }
+            }
+        }
+    }
+}
+
 /**
  * Helper function to generate random walls
  * @param {*} size size of grid
@@ -214,8 +214,25 @@ function generateRandWalk(size, pathLen) {
     // Grid set to 1 where a 1 indicates a wall
     let map = Array(size).fill().map(() => Array(size).fill(1));
 
-    let currentX = Math.floor(size * 0.5);
-    let currentY = Math.floor(size * 0.5);
+    // getting center of map
+    let centerX = Math.floor(size * 0.5);
+    let centerY = Math.floor(size * 0.5);
+
+    // Digger digs a 3x3 spawn room
+    for (let offsetX = -1; offsetX <= 1; ++offsetX) {
+        for (let offsetY = -1; offsetY <=1; ++offsetY) {
+            let x = centerX + offsetX;
+            let y = centerY + offsetY;
+            // make sure we're clearing cubes inside grid
+            if (x >= 0 && x < size && y >= 0 && y < size) {
+                map[x][y] = 0;
+            }
+        }
+    }
+
+    // reset digger to center
+    let currentX = centerX;
+    let currentY = centerY;
 
     // Digger walking loop
     for (let i = 0; i < pathLen; ++i) {
@@ -230,4 +247,34 @@ function generateRandWalk(size, pathLen) {
     }
 
     return map;
+}
+
+function regenerateMap() {
+    g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
+    g_map = generateRandWalk(64, 17000);
+    createWalls();
+}
+
+/**
+ * Let user switch between two maps
+ * @param {*} ev 
+ */
+function switchMap(ev) {
+    // Switch to range
+    if (ev.altKey && ev.key === "1") {
+        // Don't execute rest of if statement if same map is trying to be loaded
+        if (g_currMap === RANGE) return;
+
+        g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
+        createRange();
+        createTargets();
+        g_currMap = RANGE;
+    } else if (ev.altKey && ev.key === "2") {
+        if (g_currMap === RANDOM) return;
+
+        g_worldObjs = g_worldObjs.filter(obj => obj.type !== "rangeWall" && obj.type !== "target" && obj.type !== "hit box");
+        g_targets = [];
+        createWalls();
+        g_currMap = RANDOM;
+    }
 }

@@ -25,8 +25,14 @@ function handleEvents() {
             g_camera.panCamera(-ev.movementX, ev.movementY);
         }
     };
+    document.addEventListener("keydown", (ev) => {
+        if (ev.key.toLowerCase() === "z") {
+            if (g_currMap === RANGE) return;
+            
+        }
+    })
 
-    document.addEventListener("keydown", (ev) => { updateKeyDown(ev); });
+    document.addEventListener("keydown", (ev) => { updateKeyDown(ev); switchMap(ev); });
     document.addEventListener("keyup", (ev) => { updateKeyUp(ev); });
 }
 
@@ -127,6 +133,12 @@ function updateKeyDown(ev) {
         case "2":
             if (!g_keys["1"]) g_playerMode = FPS;
             break;
+        case "z":
+            if (!g_keys["z"]) {
+                if (g_currMap !== RANDOM) return;
+                regenerateMap();
+            }
+            break;
         default:
             // console.log(`${key} pressed`);
     }
@@ -161,6 +173,9 @@ function updateKeyUp(ev) {
             break;
         case "2": 
             g_keys["2"] = false;
+            break;
+        case "z":
+            g_keys["z"] = false;
             break;
         default:
             // console.log(`${key} pressed`);

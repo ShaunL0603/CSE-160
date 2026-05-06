@@ -54,8 +54,9 @@ let u_UVScale = 1.0;
     let g_targetSize = document.getElementById("targetSize").defaultValue;
     let g_hitboxVisible = false;
     let g_maxTargets = 15;
-    var g_playerMode;
     let g_hitSound = new Audio("./assets/audio/laser.wav");
+    var g_playerMode;
+    var g_currMap;
 
 // CONSTANTS
 const g_defaultCamSpeed = 0.025;
@@ -65,3 +66,6 @@ const g_fracFPSCap = 1 / g_fpsCap;
 // --- for player modes ---
 const FPS = 0;
 const MINE = 1;
+// ---- for current map ---
+const RANGE = 0;
+const RANDOM = 1;

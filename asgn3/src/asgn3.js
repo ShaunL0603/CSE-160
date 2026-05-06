@@ -2,11 +2,13 @@
 
 
 function main() {
+    // setup start
+    g_playerMode = FPS;
+    g_currMap = RANGE;
     // sets up canvas and gl variables
     setupWebGL();
     // set up GLSL shader programs and connect GLSL variables
     connectVariablesToGLSL();
-    g_playerMode = FPS;
     // Sets up html actions
     htmlActions();
     // document and canvas event listeners
