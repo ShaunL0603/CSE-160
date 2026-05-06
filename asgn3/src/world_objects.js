@@ -16,12 +16,12 @@ function createWorld() {
     g_ground.matrix.scale(40, 0.2, 40);
     g_worldObjs.push(g_ground);
 
-    // drawWalls();
-    drawRange();
-    drawTargets();
+    // createWalls();
+    createRange();
+    createTargets();
 }
 
-function drawRange() {
+function createRange() {
     var rangeWall = new Cube();
     rangeWall.type = "rangeWall"
     rangeWall.color = [0.2, 0.0, 0.2, 1.0];
@@ -65,7 +65,7 @@ var g_map = [
     [1, 0, 0, 1, 0, 0, 0, 1], 
     [1, 0, 1, 1, 0, 1, 1, 1]
 ];
-function drawWalls() {
+function createWalls() {
     for (let x = 0; x < g_map.length; ++x) {
         for (let y = 0; y < g_map.length; ++y) {
             if (g_map[x][y] == 1) {
@@ -80,17 +80,28 @@ function drawWalls() {
     }
 }
 
-function drawTargets() {
-    let spawnPos = [-1.0, 0.0, 2.0];
+// --- Functions to create targets in shooting range ---
 
-    for (let i = 0; i < spawnPos.length; ++i) {
+/**
+ * Main function to create all and new targets on screen
+ * saves target in global targets and worldObjs lists
+ * target hit box also saved in global worldObjs list
+ */
+function createTargets() {
+    let maxTargets = 7;
+    let  safeDistance = g_targetSize * 3.0;
+
+    for (let i = 0; i < maxTargets; ++i) {
         var target = new Sphere();
         target.type = "target";
         target.color = [1.0, 0.0, 0.0, 1.0];
         target.textureNum = -2;
-        target.baseMatrix = new Matrix4();
-        target.baseMatrix.translate(spawnPos[i], 0.5, -8.0);
+        // find a position to spawn the target
+        let pos = findValidTargetPos(safeDistance);
+        target.spawnPos = pos;
 
+        target.baseMatrix = new Matrix4();
+        target.baseMatrix.translate(pos[0], pos[1], pos[2]);
         target.matrix = new Matrix4(target.baseMatrix);
         target.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
         
@@ -107,6 +118,47 @@ function drawTargets() {
     }
 }
 
+/**
+ * Get a random position to spawn a target at
+ * @param {*} minDistance minimum distance a target can spawn at
+ * @returns XYZ position array
+ */
+function findValidTargetPos(minDistance) {
+    let maxAttempts = 27;
+
+    for (let a = 0; a < maxAttempts; ++a) {
+        let x = (Math.random() * 9.0) - 4.5;
+        let y = (Math.random() * 4.0) + 0.5;
+        let z = (Math.random() * 4.0) - 9.0;
+
+        let isValid = true;
+        for (let i = 0; i < g_targets.length; ++i) {
+            var t = g_targets[i];
+            if (!t.active || !t.spawnPos) continue;
+
+            let dx = x - t.spawnPos[0];
+            let dy = y - t.spawnPos[1];
+            let dz = z - t.spawnPos[2];
+            let distance = Math.sqrt(dx**2 + dy**2 + dz**2);
+
+            if (distance < minDistance) {
+                isValid = false;
+                break;
+            }
+        }
+
+        if (isValid) return [x, y, z];
+    }
+
+    // just give a random point if too many attempts were made
+    return [(Math.random() * 9.0) - 4.5, (Math.random() * 4.0) + 0.5, (Math.random() * 4.0) - 9.0];
+}
+
+/**
+ * helper function to update the hitbox matrix of a target
+ * @param {*} target sphere object that hitbox is tied to
+ * @returns nothing, updates target hitbox
+ */
 function updateHitBox(target) {
     if (!target.hitbox || !target.baseMatrix) return;
 
@@ -118,28 +170,33 @@ function updateHitBox(target) {
     target.hitbox.matrix.scale(hitBoxSize, hitBoxSize, hitBoxSize);
 }
 
-function placeBlock(closestDistance) {
-    let origin = new Vector3(g_camera.eye.elements);
-    let direction = new Vector3();
-    direction.set(g_camera.at);
-    direction.sub(origin);
-    direction.normalize();
+/**
+ * helper function to handle the respawning events for target
+ * after being hit
+ */
+function handleRespawning() {
+    for (let i = 0; i < g_targets.length; ++i) {
+        let t = g_targets[i];
+        
+        if (!t.active) {
+            let timeSinceDeath = g_seconds - t.tod;
+            if (timeSinceDeath >= t.respawnDelay) {
+                // Find safe distance to spawn so targets don't collide
+                let safeDistance = g_targetSize * 3.0;
+                let pos = findValidTargetPos(safeDistance);
 
-    let spawnDistance = closestDistance;
-    direction.mul(spawnDistance);
-
-    let hitPoint = new Vector3(origin.elements);
-    hitPoint.add(direction);
-
-    let newCube = new Cube();
-    newCube.type = "block";
-    newCube.color = [0.0, 0.0, 0.0, 1.0];
-    newCube.textureNum = -2;
-    newCube.matrix.translate(
-        hitPoint.elements[0] - 0.25,
-        hitPoint.elements[1],
-        hitPoint.elements[2] - 0.25
-    );
-    newCube.matrix.scale(0.5, 0.5, 0.5);
-    g_worldObjs.push(newCube);
+                t.spawnPos = pos;
+                t.baseMatrix.setIdentity();
+                t.baseMatrix.translate(pos[0], pos[1], pos[2]);
+                t.matrix.set(t.baseMatrix);
+                t.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
+                updateHitBox(t);
+                
+                t.active = true;
+                if (t.hitbox) {
+                    t.hitbox.active = true;
+                }
+            }
+        }
+    }
 }

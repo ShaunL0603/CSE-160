@@ -268,18 +268,28 @@ function tick() {
     requestAnimationFrame(tick);
 }
 
-function handleRespawning() {
-    for (let i = 0; i < g_targets.length; ++i) {
-        let t = g_targets[i];
-        
-        if (!t.active) {
-            let timeSinceDeath = g_seconds - t.tod;
-            if (timeSinceDeath >= t.respawnDelay) {
-                t.active = true;
-                if (t.hitbox) {
-                    t.hitbox.active = true;
-                }
-            }
-        }
-    }
+function placeBlock(closestDistance) {
+    let origin = new Vector3(g_camera.eye.elements);
+    let direction = new Vector3();
+    direction.set(g_camera.at);
+    direction.sub(origin);
+    direction.normalize();
+
+    let spawnDistance = closestDistance;
+    direction.mul(spawnDistance);
+
+    let hitPoint = new Vector3(origin.elements);
+    hitPoint.add(direction);
+
+    let newCube = new Cube();
+    newCube.type = "block";
+    newCube.color = [0.0, 0.0, 0.0, 1.0];
+    newCube.textureNum = -2;
+    newCube.matrix.translate(
+        hitPoint.elements[0] - 0.25,
+        hitPoint.elements[1],
+        hitPoint.elements[2] - 0.25
+    );
+    newCube.matrix.scale(0.5, 0.5, 0.5);
+    g_worldObjs.push(newCube);
 }
