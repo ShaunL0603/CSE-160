@@ -167,8 +167,9 @@ function rayCast() {
     }
 
     if (closestObj) {
-        console.log("Objct Hit: ", closestObj.type, " distance: ", closestDistance);
+        // console.log("Objct Hit: ", closestObj.type, " distance: ", closestDistance);
         closestObj.active = false;
+        closestObj.tod = g_seconds;
         if (closestObj.hitbox) {
             closestObj.hitbox.active = false;
         }

@@ -8,7 +8,9 @@ class Sphere {
         
         this.baseMatrix = new Matrix4();
         this.hitbox = new Cube();
-        this.active = true;
+        this.active = true; // render objectsif they're active, not hit
+        this.tod = 0.0; // save sphere's time of death
+        this.respawnDelay = 3.0; // time until respawn
     }
 
     render() {

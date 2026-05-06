@@ -241,6 +241,8 @@ function tick() {
         
         g_camera.speed = (g_keys["shift"]) ? g_defaultCamSpeed * g_camSpeedMult : g_defaultCamSpeed;
         g_camera.moveCamera(g_keys);
+
+        handleRespawning();
         renderAllShapes();
 
         let fps = Math.round(1000.0 / elapsed);
@@ -248,4 +250,20 @@ function tick() {
         sendTextToHTML("ms: " + msPerFrame + " fps: " + fps + " / " + g_fpsCap, "numdot");
     };
     requestAnimationFrame(tick);
+}
+
+function handleRespawning() {
+    for (let i = 0; i < g_targets.length; ++i) {
+        let t = g_targets[i];
+        
+        if (!t.active) {
+            let timeSinceDeath = g_seconds - t.tod;
+            if (timeSinceDeath >= t.respawnDelay) {
+                t.active = true;
+                if (t.hitbox) {
+                    t.hitbox.active = true;
+                }
+            }
+        }
+    }
 }
