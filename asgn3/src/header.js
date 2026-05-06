@@ -48,20 +48,25 @@ let u_UVScale = 1.0;
     let g_sphereVertBuffer = null;
     let g_sphereUVVertBuffer = null;
 
-    // --- OTHERS ---
+    // --- World objects ---
     let g_worldObjs = [];
     var g_skybox;
     var g_ground;
     let g_targets = [];
-    let g_blockScale = 0.25;
+    var g_currMap;
+    // let g_changeMapSize = document.getElementById().defaultValue;
+    // let g_changeFloorTileCount = document.getElementById().defaultValue;
+    let g_map = generateRandWalk(64, 2048);
+    let g_mapSize = g_map.length;
+    
+    // --- OTHERS ---
     let g_targetSize = document.getElementById("targetSize").defaultValue;
     let g_hitboxVisible = false;
-    let g_maxTargets = 15;
-    let g_hitSound = new Audio("./assets/audio/laser.wav");
+    let g_maxTargets = document.getElementById("maxTargets").defaultValue;
+    let g_blockScale = 0.25;
     var g_playerMode;
-    var g_currMap;
-    var g_map = generateRandWalk(64, 17000);
-    let g_mapSize = g_map.length;
+    let g_hitSound = new Audio("./assets/audio/laser.wav");
+
 
 // CONSTANTS
 const g_defaultCamSpeed = 0.025;
