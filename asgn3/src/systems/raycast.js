@@ -135,27 +135,29 @@ function handleModes(obj, mouseBtn, closestDistance) {
 }
 
 function placeBlock(closestDistance) {
+    let scaler = 0.25;
     let origin = new Vector3(g_camera.eye.elements);
     let direction = new Vector3();
     direction.set(g_camera.at);
     direction.sub(origin);
     direction.normalize();
 
-    let spawnDistance = closestDistance;
+    let spawnDistance = closestDistance - 0.125;
     direction.mul(spawnDistance);
 
     let hitPoint = new Vector3(origin.elements);
     hitPoint.add(direction);
 
+    let gridSize = scaler;
+    let snapToX = Math.floor(hitPoint.elements[0] / gridSize) * gridSize;
+    let snapToY = Math.floor(hitPoint.elements[1] / gridSize) * gridSize;
+    let snapToZ = Math.floor(hitPoint.elements[2] / gridSize) * gridSize;
+
     let newCube = new Cube();
     newCube.type = "block";
-    newCube.color = [0.0, 0.0, 0.0, 1.0];
+    newCube.color = [0.8, 0.8, 0.0, 1.0];
     newCube.textureNum = -2;
-    newCube.matrix.translate(
-        hitPoint.elements[0] - 0.25,
-        hitPoint.elements[1],
-        hitPoint.elements[2] - 0.25
-    );
-    newCube.matrix.scale(0.5, 0.5, 0.5);
+    newCube.matrix.translate(snapToX, snapToY, snapToZ);
+    newCube.matrix.scale(scaler, scaler, scaler);
     g_worldObjs.push(newCube);
 }
