@@ -7,7 +7,8 @@ class Sphere {
         this.UVScale = 1.0; 
         
         this.baseMatrix = new Matrix4();
-        this.hitbox = new Matrix4();
+        this.hitbox = new Cube();
+        this.active = true;
     }
 
     render() {

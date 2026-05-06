@@ -1,10 +1,11 @@
 class Cube {
   constructor() {
-      this.type = "debug"; // give type name to put right texture on cube
+      this.type = "cube"; // give type name to put right texture on cube
       this.color = [1.0, 0.0, 0.0, 1.0];
       this.matrix = new Matrix4();
       this.textureNum = 0;
       this.UVScale = 1.0;
+      this.active = true;
   }
 
     render() {

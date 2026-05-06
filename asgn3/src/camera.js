@@ -101,6 +101,9 @@ class Camera {
     }
 }
 
+/**
+ * cast ray to see if a target (sphere) is hit
+ */
 function rayCast() {
     const origin = [
         g_camera.eye.elements[0],
@@ -123,14 +126,16 @@ function rayCast() {
     const localMaxbounds = [1.0, 1.0, 1.0];
     
     let closestObj = null;
-    let closestDistance = Infinity;
+    let maxDistance = 15.0;
+    let closestDistance = maxDistance;
 
-    for (let i = 0; i < g_worldObjs.length; ++i) {
-        let obj = g_worldObjs[i];
-        // console.log("Object type:", obj.type, " Object: ", obj);
+    for (let i = 0; i < g_targets.length; ++i) {
+        let obj = g_targets[i];
 
-        // Calculate inverse model matrix of a cube
-        let invMat = new Matrix4().setInverseOf(obj.matrix);
+        if (!obj.active) continue;
+
+        // Calculate inverse model matrix of an object
+        let invMat = new Matrix4().setInverseOf(obj.hitbox.matrix);
         
         // transform ray origin into local space
         let localOrigin4 = invMat.multiplyVector4(new Vector4([
@@ -141,7 +146,6 @@ function rayCast() {
             localOrigin4.elements[1], 
             localOrigin4.elements[2]
         ];
-        // console.log("local origin:", localOrigin);
 
         // transform ray direction into local space
         let localDir4 = invMat.multiplyVector4(new Vector4([
@@ -152,11 +156,9 @@ function rayCast() {
             localDir4.elements[1], 
             localDir4.elements[2]
         ];
-        // console.log("local direction:", localDir);
 
         // Check intersection
         let hitDistance = intersectRayAABB(localOrigin, localDir, localMinBounds, localMaxbounds);
-        // console.log("calculate hit distance:", hitDistance);
 
         if (hitDistance !== null && hitDistance < closestDistance) {
             closestDistance = hitDistance;
@@ -166,6 +168,10 @@ function rayCast() {
 
     if (closestObj) {
         console.log("Objct Hit: ", closestObj.type, " distance: ", closestDistance);
+        closestObj.active = false;
+        if (closestObj.hitbox) {
+            closestObj.hitbox.active = false;
+        }
     } else {
         console.log("No hit");
     }

@@ -12,7 +12,7 @@ function main() {
     // Create global verts and buffers for cube, do once
     createCubeVertices();
     createCubeBuffers();
-    // Create global spheer verts n buffers
+    // Create global sphere verts n buffers
     createSphereVertices(10);
     createSphereBuffers();
 
@@ -221,7 +221,10 @@ function renderAllShapes() {
     // Start rendering all objects in global world obj list
     for (let i = 0; i < g_worldObjs.length; ++i) {
         let obj = g_worldObjs[i];
-        obj.render();
+        // Only render objects that are active
+        if (obj.active) {
+            obj.render();
+        }
     }
 }
 

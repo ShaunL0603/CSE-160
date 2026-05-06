@@ -75,7 +75,7 @@ function drawTargets() {
 function updateHitBox(target) {
     if (!target.hitbox || !target.baseMatrix) return;
 
-    let hitBoxSize = g_targetSize * 1.5
+    let hitBoxSize = g_targetSize * 1.4;
     let offset = (hitBoxSize) * 0.5;
     
     target.hitbox.matrix = new Matrix4(target.baseMatrix);
