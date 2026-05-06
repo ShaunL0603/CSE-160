@@ -1,4 +1,6 @@
 // ColoredPoint.js (c) 2012 matsuda Modified by Shaun Lagon, CSE 160
+
+
 function main() {
     // sets up canvas and gl variables
     setupWebGL();

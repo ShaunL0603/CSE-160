@@ -154,7 +154,7 @@ function findValidTargetPos(minDistance) {
 }
 
 /**
- * helper function to update the hitbox matrix of a target
+ * helper function to update the hitbox matrix of a rescaled target
  * @param {*} target sphere object that hitbox is tied to
  * @returns nothing, updates target hitbox
  */

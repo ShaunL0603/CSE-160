@@ -52,7 +52,7 @@ let u_UVScale = 1.0;
     let g_targets = [];
     let g_targetSize = document.getElementById("targetSize").defaultValue;
     let g_hitboxVisible = false;
-    let g_maxTargets = 7;
+    let g_maxTargets = 15;
     var g_playerMode;
 
 // CONSTANTS
