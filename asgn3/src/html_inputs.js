@@ -99,11 +99,15 @@ function updateKeyDown(ev) {
                 console.log(`Noclip: ${(g_noclip) ? "on" : "off"}`);
             }
             break;
+        case "r":
+            if (!g_keys["r"]) g_camera.resetHeight(0.5);
+            break;
         case "1":
             if (!g_keys["1"]) g_playerMode = MINE;
             break;
         case "2":
             if (!g_keys["1"]) g_playerMode = FPS;
+            break;
         default:
             // console.log(`${key} pressed`);
     }
@@ -129,11 +133,16 @@ function updateKeyUp(ev) {
             break;
         case "v":
             g_keys["v"] = false;
+            break;
+        case "r":
+            g_keys["r"] = false;
+            break;
         case "1":
             g_keys["1"] = false;
             break;
         case "2": 
             g_keys["2"] = false;
+            break;
         default:
             // console.log(`${key} pressed`);
     }
