@@ -99,16 +99,20 @@ class Camera {
         this.at.elements[1] += heightDiff;
         this.updateMatrices();
     }
-}
 
-function recenterCamera() {
-    // set back to world origin as default
-    g_camera.eye.elements[0] = 0.0;
-    g_camera.eye.elements[1] = 0.5;
-    g_camera.eye.elements[2] = 0.0;
+    recenterCamera() {
+        // set back to world origin as default
+        this.eye.elements[0] = 0.0;
+        this.eye.elements[1] = 0.5;
+        this.eye.elements[2] = 0.0;
 
-    g_camera.at.elements[0] = 0.0;
-    g_camera.at.elements[1] = 0.5;
-    g_camera.at.elements[2] = -1.0;
-    g_camera.updateMatrices();
+        this.at.elements[0] = 0.0;
+        this.at.elements[1] = 0.5;
+        this.at.elements[2] = -1.0;
+
+        this.yaw = 270.0;
+        this.pitch = 0.0;
+
+        this.updateMatrices();
+    }
 }

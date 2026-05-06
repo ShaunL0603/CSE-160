@@ -145,6 +145,11 @@ function updateKeyDown(ev) {
                 regenerateMap();
             }
             break;
+        case "x":
+            if (!g_keys["x"]) {
+                if (typeof g_camera !== null) g_camera.recenterCamera();
+            }
+            break;
         default:
             // console.log(`${key} pressed`);
     }
@@ -182,6 +187,9 @@ function updateKeyUp(ev) {
             break;
         case "z":
             g_keys["z"] = false;
+            break;
+        case "x":
+            g_keys["x"] = false;
             break;
         default:
             // console.log(`${key} pressed`);

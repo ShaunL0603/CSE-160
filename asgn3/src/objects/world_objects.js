@@ -253,7 +253,6 @@ function regenerateMap() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
     g_map = generateRandWalk(64, 17000);
     createWalls();
-    recenterCamera();
 }
 
 /**
@@ -278,7 +277,6 @@ function switchMap(ev) {
         g_worldObjs = g_worldObjs.filter(obj => obj.type !== "rangeWall" && obj.type !== "target" && obj.type !== "hit box");
         g_targets = [];
         createWalls();
-        recenterCamera();
         g_currMap = RANDOM;
     }
 }

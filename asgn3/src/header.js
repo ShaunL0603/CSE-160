@@ -31,7 +31,8 @@ let u_UVScale = 1.0;
     let g_keys = {
         "w": false, "a": false, "s": false, 
         "d": false, "shift" : false, "v": false,
-        "1": false, "2": false
+        "1": false, "2": false, "z": false,
+        "x": false
     };
 
     // --- FOR CUBE ---
