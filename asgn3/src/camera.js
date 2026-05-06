@@ -104,7 +104,7 @@ class Camera {
 /**
  * cast ray to see if a target (sphere) is hit
  */
-function rayCast() {
+function rayCast(mouseBtn) {
     
     let forwardVec = new Vector3();
     forwardVec.set(g_camera.at);
@@ -127,7 +127,7 @@ function rayCast() {
     const localMaxbounds = [1.0, 1.0, 1.0];
     
     let closestObj = null;
-    
+
     let maxFPSDistance = 10.0;
     let maxMineDistance = 1.5;
     let closestDistance = (g_playerMode === MINE) ? maxMineDistance : maxFPSDistance;
@@ -138,7 +138,7 @@ function rayCast() {
 
         if (!obj.active) continue;
         else if (g_playerMode === MINE && (obj.type === "target" || obj.type === "hit box")) continue;
-        else if (obj.type === "ground" || obj.type === "sky") continue;
+        else if (obj.type === "sky") continue;
 
         // Calculate inverse model matrix of an object
         let invMat = new Matrix4().setInverseOf(
@@ -176,9 +176,9 @@ function rayCast() {
 
     if (closestObj) {
         // console.log("Objct Hit: ", closestObj.type, " distance: ", closestDistance);
-        handleModes(closestObj);
+        handleModes(closestObj, mouseBtn, closestDistance);
     } else {
-        console.log("No hit");
+        // console.log("No hit");
     }
 }
 
@@ -214,9 +214,37 @@ function intersectRayAABB(origin, direction, boxMin, boxMax) {
     return tmin > 0 ? tmin : tmax;
 }
 
-function handleModes(obj) {
+function handleModes(obj, mouseBtn, closestDistance) {
     if (g_playerMode === MINE) {
-        obj.active = false;
+        if (mouseBtn === 0) {
+            if (obj.type === "ground") return;
+            obj.active = false;
+        }
+        else if (mouseBtn === 2) {
+            let origin = new Vector3(g_camera.eye.elements);
+            let direction = new Vector3();
+            direction.set(g_camera.at);
+            direction.sub(g_camera.eye);
+            direction.normalize();
+
+            let spawnDistance = closestDistance - 0.5;
+
+            direction.mul(spawnDistance);
+
+            let hitPoint = new Vector3(origin.elements);
+            hitPoint.add(direction);
+
+            let newCube = new Cube();
+            newCube.type = "block";
+            newCube.textureNum = -1;
+            newCube.matrix.translate(
+                hitPoint.elements[0],
+                hitPoint.elements[1],
+                hitPoint.elements[2]
+            );
+            newCube.matrix.scale(0.5, 0.5, 0.5);
+            g_worldObjs.push(newCube);
+        };
     } else if (g_playerMode === FPS) {
         obj.active = false;
         obj.tod = g_seconds;
