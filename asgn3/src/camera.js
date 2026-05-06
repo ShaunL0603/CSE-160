@@ -105,37 +105,45 @@ class Camera {
  * cast ray to see if a target (sphere) is hit
  */
 function rayCast() {
-    const origin = [
-        g_camera.eye.elements[0],
-        g_camera.eye.elements[1],
-        g_camera.eye.elements[2]
-    ];
-
+    
     let forwardVec = new Vector3();
     forwardVec.set(g_camera.at);
     forwardVec.sub(g_camera.eye);
     forwardVec.normalize();
-
+    
     const direction = [
         forwardVec.elements[0],
         forwardVec.elements[1],
         forwardVec.elements[2]
     ]
 
+    const origin = [
+        g_camera.eye.elements[0],
+        g_camera.eye.elements[1],
+        g_camera.eye.elements[2]
+    ];
+    
     const localMinBounds = [0.0, 0.0, 0.0];
     const localMaxbounds = [1.0, 1.0, 1.0];
     
     let closestObj = null;
-    let maxDistance = 15.0;
-    let closestDistance = maxDistance;
+    
+    let maxFPSDistance = 10.0;
+    let maxMineDistance = 1.5;
+    let closestDistance = (g_playerMode === MINE) ? maxMineDistance : maxFPSDistance;
+    let objList = (g_playerMode === MINE) ? g_worldObjs : g_targets;
 
-    for (let i = 0; i < g_targets.length; ++i) {
-        let obj = g_targets[i];
+    for (let i = 0; i < objList.length; ++i) {
+        let obj = objList[i];
 
         if (!obj.active) continue;
+        else if (g_playerMode === MINE && (obj.type === "target" || obj.type === "hit box")) continue;
+        else if (obj.type === "ground" || obj.type === "sky") continue;
 
         // Calculate inverse model matrix of an object
-        let invMat = new Matrix4().setInverseOf(obj.hitbox.matrix);
+        let invMat = new Matrix4().setInverseOf(
+            (g_playerMode === MINE) ? obj.matrix : obj.hitbox.matrix
+        );
         
         // transform ray origin into local space
         let localOrigin4 = invMat.multiplyVector4(new Vector4([
@@ -168,11 +176,7 @@ function rayCast() {
 
     if (closestObj) {
         // console.log("Objct Hit: ", closestObj.type, " distance: ", closestDistance);
-        closestObj.active = false;
-        closestObj.tod = g_seconds;
-        if (closestObj.hitbox) {
-            closestObj.hitbox.active = false;
-        }
+        handleModes(closestObj);
     } else {
         console.log("No hit");
     }
@@ -208,4 +212,18 @@ function intersectRayAABB(origin, direction, boxMin, boxMax) {
     if (tmax < 0 || tmin > tmax) return null;
 
     return tmin > 0 ? tmin : tmax;
+}
+
+function handleModes(obj) {
+    if (g_playerMode === MINE) {
+        obj.active = false;
+    } else if (g_playerMode === FPS) {
+        obj.active = false;
+        obj.tod = g_seconds;
+        if (obj.hitbox) {
+            obj.hitbox.active = false;
+        }
+    } else {
+        console.warn("Error: unrecognized mode", g_playerMode);
+    };
 }

@@ -4,6 +4,7 @@ function main() {
     setupWebGL();
     // set up GLSL shader programs and connect GLSL variables
     connectVariablesToGLSL();
+    g_playerMode = FPS;
     // Sets up html actions
     htmlActions();
     // document and canvas event listeners

@@ -30,7 +30,8 @@ let u_UVScale = 1.0;
     let g_noclip = false;
     let g_keys = {
         "w": false, "a": false, "s": false, 
-        "d": false, "shift" : false, "v": false
+        "d": false, "shift" : false, "v": false,
+        "1": false, "2": false
     };
 
     // --- FOR CUBE ---
@@ -51,9 +52,13 @@ let u_UVScale = 1.0;
     let g_targets = [];
     let g_targetSize = document.getElementById("targetSize").defaultValue;
     let g_hitboxVisible = false;
+    var g_playerMode;
 
 // CONSTANTS
 const g_defaultCamSpeed = 0.025;
 const g_defaultCamRotSpeed = 0.05;
 const degToRad = Math.PI / 180;
 const g_fracFPSCap = 1 / g_fpsCap;
+// --- for player modes ---
+const FPS = 0;
+const MINE = 1;
