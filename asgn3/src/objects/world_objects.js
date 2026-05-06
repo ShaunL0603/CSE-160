@@ -16,7 +16,7 @@ function createWorld() {
     g_ground.matrix.scale(40, 0.2, 40);
     g_worldObjs.push(g_ground);
 
-    // createWalls();
+    createWalls();
     createRange();
     createTargets();
 }
@@ -55,29 +55,26 @@ function createRange() {
     g_worldObjs.push(rangeWall3);
 }
 
-var g_map = [
-    [1, 1, 1, 1, 0, 1, 1, 1], 
-    [1, 0, 0, 0, 0, 0, 0, 1], 
-    [1, 0, 1, 1, 1, 1, 0, 1], 
-    [0, 0, 0, 1, 0, 1, 0, 1], 
-    [1, 0, 0, 1, 0, 0, 0, 1], 
-    [1, 0, 0, 0, 0, 1, 0, 1], 
-    [1, 0, 0, 1, 0, 0, 0, 1], 
-    [1, 0, 1, 1, 0, 1, 1, 1]
-];
+var g_map = generateRandWalk(64, 17000);
 function createWalls() {
-    for (let x = 0; x < g_map.length; ++x) {
-        for (let y = 0; y < g_map.length; ++y) {
+    let mapSize = g_map.length;
+    let wallHeight = 3;
+    for (let x = 0; x < mapSize; ++x) {
+        for (let y = 0; y < mapSize; ++y) {
             if (g_map[x][y] == 1) {
-                var wall = new Cube();
-                wall.type = "wall";
-                wall.color = [0.5, 0.5, 0.5, 1.0];
-                wall.textureNum = 2;
-                wall.matrix.translate(x, -0.001, y);
-                g_worldObjs.push(wall);
+                for (let h = 0; h < wallHeight; ++ h) {
+                    var wall = new Cube();
+                    wall.type = "wall";
+                    wall.color = [0.5, 0.5, 0.5, 1.0];
+                    wall.textureNum = 2;
+                    wall.matrix.translate((x * 0.25) - 8.0, (h * 0.25), (y * 0.25) - 8.0);
+                    wall.matrix.scale(0.25, 0.25, 0.25);
+                    g_worldObjs.push(wall);
+                }
             }
         }
     }
+    console.log("Walls created");
 }
 
 // --- Functions to create targets in shooting range ---
@@ -206,4 +203,31 @@ function rebuildTargets() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "target" && obj.type !== "hit box");
     g_targets = [];
     createTargets();
+}
+
+/**
+ * Helper function to generate random walls
+ * @param {*} size size of grid
+ * @param {*} pathLen length the digger will walk
+ */
+function generateRandWalk(size, pathLen) {
+    // Grid set to 1 where a 1 indicates a wall
+    let map = Array(size).fill().map(() => Array(size).fill(1));
+
+    let currentX = Math.floor(size * 0.5);
+    let currentY = Math.floor(size * 0.5);
+
+    // Digger walking loop
+    for (let i = 0; i < pathLen; ++i) {
+        map[currentX][currentY] = 0;
+
+        let dir = Math.floor(Math.random() * 4)
+
+        if (dir === 0 && currentX > 1) --currentX;
+        if (dir === 1 && currentY < size - 2) ++currentY;
+        if (dir === 2 && currentX < size - 2) ++currentX;
+        if (dir === 3 && currentY > 1) --currentY;
+    }
+
+    return map;
 }

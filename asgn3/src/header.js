@@ -50,6 +50,7 @@ let u_UVScale = 1.0;
     var g_skybox;
     var g_ground;
     let g_targets = [];
+    let g_blockScale = 0.25;
     let g_targetSize = document.getElementById("targetSize").defaultValue;
     let g_hitboxVisible = false;
     let g_maxTargets = 15;

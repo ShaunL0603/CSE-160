@@ -135,7 +135,6 @@ function handleModes(obj, mouseBtn, closestDistance) {
 }
 
 function placeBlock(closestDistance) {
-    let scaler = 0.25;
     let origin = new Vector3(g_camera.eye.elements);
     let direction = new Vector3();
     direction.set(g_camera.at);
@@ -148,7 +147,7 @@ function placeBlock(closestDistance) {
     let hitPoint = new Vector3(origin.elements);
     hitPoint.add(direction);
 
-    let gridSize = scaler;
+    let gridSize = g_blockScale;
     let snapToX = Math.floor(hitPoint.elements[0] / gridSize) * gridSize;
     let snapToY = Math.floor(hitPoint.elements[1] / gridSize) * gridSize;
     let snapToZ = Math.floor(hitPoint.elements[2] / gridSize) * gridSize;
@@ -158,6 +157,6 @@ function placeBlock(closestDistance) {
     newCube.color = [0.8, 0.8, 0.0, 1.0];
     newCube.textureNum = -2;
     newCube.matrix.translate(snapToX, snapToY, snapToZ);
-    newCube.matrix.scale(scaler, scaler, scaler);
+    newCube.matrix.scale(g_blockScale, g_blockScale, g_blockScale);
     g_worldObjs.push(newCube);
 }
