@@ -128,10 +128,16 @@ function updateKeyDown(ev) {
             if (!g_keys["r"]) g_camera.resetHeight(0.5);
             break;
         case "1":
-            if (!g_keys["1"]) g_playerMode = MINE;
+            if (!g_keys["1"]) { 
+                g_playerMode = MINE;
+                sendTextToHTML("Mine", "playerMode");
+            }
             break;
         case "2":
-            if (!g_keys["1"]) g_playerMode = FPS;
+            if (!g_keys["1"]) {
+                g_playerMode = FPS;
+                sendTextToHTML("FPS", "playerMode");
+            }
             break;
         case "z":
             if (!g_keys["z"]) {
