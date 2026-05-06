@@ -133,6 +133,12 @@ function connectVariablesToGLSL() {
         return -1;
     }
 
+    u_Sampler4 = gl.getUniformLocation(gl.program, 'u_Sampler4');
+    if (!u_Sampler4) {
+        console.log('Failed to get the storage location of u_Sampler4');
+        return -1;
+    }
+
     u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
     if (!u_whichTexture) {
         console.log('Failed to get the storage location of u_whichTexture');
@@ -182,6 +188,15 @@ function initTextures() {
 
     wallImg.onload = function() { loadTexture(wallImg, u_Sampler3, 3, gl.TEXTURE3); };
     wallImg.src = "assets/concrete_slab_wall_02_diff_4k.jpg";
+
+    var wallImg2 = new Image();
+    if (!wallImg2) {
+        console.log("Failed to create the image object");
+        return -1;
+    }
+
+    wallImg2.onload = function() { loadTexture(wallImg2, u_Sampler4, 4, gl.TEXTURE4); };
+    wallImg2.src = "assets/concrete_tile_facade_disp_4k.png";
 }
 
 function loadTexture(image, sampler, texUnit, glTex) {
