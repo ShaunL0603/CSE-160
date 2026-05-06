@@ -238,9 +238,7 @@ function renderAllShapes() {
     for (let i = 0; i < g_worldObjs.length; ++i) {
         let obj = g_worldObjs[i];
         // Only render objects that are active
-        if (obj.active) {
-            obj.render();
-        }
+        if (obj.active) obj.render();
     }
 }
 

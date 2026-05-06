@@ -53,8 +53,8 @@ function htmlActions() {
            } 
         });
     }
-
-    const makeHitBoxVisible = document.getElementById("makeHitBoxVisible").addEventListener("click", () => {
+    // Action to make the hit box visible
+    document.getElementById("makeHitBoxVisible").addEventListener("click", () => {
         g_hitboxVisible = !g_hitboxVisible;
 
         for (let i = 0; i < g_targets.length; ++i) {
@@ -64,7 +64,8 @@ function htmlActions() {
             }
         }
     });
-    const targetSize = document.getElementById("targetSize").addEventListener("input", (ev) => {
+    // Action to change target size
+    document.getElementById("targetSize").addEventListener("input", (ev) => {
         g_targetSize = parseFloat(ev.target.value);
 
         for (let i = 0; i < g_targets.length; ++i) {
@@ -73,6 +74,14 @@ function htmlActions() {
             t.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
             updateHitBox(t);
         };
+    });
+    // Action to change the maximum number of target on screen
+    document.getElementById("maxTargets").addEventListener("input", (ev) => {
+        let newMax = parseInt(ev.target.value);
+        if (0 < newMax && newMax <= 100) {
+            g_maxTargets = newMax;
+            rebuildTargets();
+        }
     });
 }
 

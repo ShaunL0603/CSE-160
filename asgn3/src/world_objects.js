@@ -88,10 +88,9 @@ function createWalls() {
  * target hit box also saved in global worldObjs list
  */
 function createTargets() {
-    let maxTargets = 7;
     let  safeDistance = g_targetSize * 3.0;
 
-    for (let i = 0; i < maxTargets; ++i) {
+    for (let i = 0; i < g_maxTargets; ++i) {
         var target = new Sphere();
         target.type = "target";
         target.color = [1.0, 0.0, 0.0, 1.0];
@@ -199,4 +198,12 @@ function handleRespawning() {
             }
         }
     }
+}
+
+// when user changes maximum number of targets 
+// rebuild existing targets on screen
+function rebuildTargets() {
+    g_worldObjs = g_worldObjs.filter(obj => obj.type !== "target" && obj.type !== "hit box");
+    g_targets = [];
+    createTargets();
 }

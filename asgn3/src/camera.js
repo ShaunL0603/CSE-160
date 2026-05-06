@@ -128,7 +128,7 @@ function rayCast(mouseBtn) {
     
     let closestObj = null;
 
-    let maxFPSDistance = 20.0;
+    let maxFPSDistance = 50.0;
     let maxMineDistance = 1.5;
     let closestDistance = (g_playerMode === MINE) ? maxMineDistance : maxFPSDistance;
     let objList = (g_playerMode === MINE) ? g_worldObjs : g_targets;
