@@ -50,14 +50,6 @@ function htmlActions() {
     const playerScore = document.getElementById("playerScore");
     const camRotSpeed = document.getElementById("camRotSpeed");
 
-    changeMapSize.addEventListener("input", (ev) => {
-        if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value);
-    })
-
-    floorTileCount.addEventListener("input", (ev) => {
-        if (ev.target.value > 0) g_floorTileCount = parseInt(ev.target.value);
-    })
-    
     settingsPanel.addEventListener("mousedown", (ev) => {
         ev.stopPropagation(); 
     });
@@ -98,6 +90,13 @@ function htmlActions() {
             updateHitBox(t);
         };
     });
+    changeMapSize.addEventListener("input", (ev) => {
+        if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value); 
+    })
+
+    floorTileCount.addEventListener("input", (ev) => {
+        if (ev.target.value > 0) g_floorTileCount = parseInt(ev.target.value);
+    })
     // Action to change the maximum number of target on screen
     maxTargets.addEventListener("input", (ev) => {
         let newMax = parseInt(ev.target.value);

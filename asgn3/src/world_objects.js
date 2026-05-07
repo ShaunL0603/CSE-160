@@ -195,10 +195,11 @@ function rebuildTargets() {
 function createRandomMap() {
     let wallHeight = 3;
     let cubeSize = 0.25;
-    let recenter = g_mapSize * 0.25 * 0.5; // 0.25 is size of wall
+    let currMapSize = g_map.length;
+    let recenter = currMapSize * 0.25 * 0.5; // 0.25 is size of wall
 
-    for (let x = 0; x < g_mapSize; ++x) {
-        for (let z = 0; z < g_mapSize; ++z) {
+    for (let x = 0; x < currMapSize; ++x) {
+        for (let z = 0; z < currMapSize; ++z) {
             if (g_map[x][z] == 1) {
                 for (let h = 0; h < wallHeight; ++h) {
                     var wall = new Cube();

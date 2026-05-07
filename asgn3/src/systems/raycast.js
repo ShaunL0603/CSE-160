@@ -92,11 +92,14 @@ function rayCast(mouseBtn) {
 /** 
  * Using slab method
  * Check if a ray intersects an Axis-Aligned Bounding Box (AABB)
+ * We must also check if a ray is inside a cube so
+ * returning tmin means our ray is outside a cube, return the entry point
+ * conversely, tmax means the ray is inside it, return exit point
  * @param {*} origin should be camera's origin
  * @param {*} direction direction vector of the ray
  * @param {*} boxMin min corner of unit cube in local space
  * @param {*} boxMax max corner of unit cube in local space
- * @return
+ * @return null or hit distance along the ray 
  */
 function intersectRayAABB(origin, direction, boxMin, boxMax) {
     const invD = [
@@ -122,7 +125,6 @@ function intersectRayAABB(origin, direction, boxMin, boxMax) {
 
     // If tmax < 0, box behind us. If tmin > tmax we've missed.
     if (tmax < 0 || tmin > tmax) return null;
-
     return tmin > 0 ? tmin : tmax;
 }
 

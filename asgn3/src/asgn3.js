@@ -256,15 +256,13 @@ function tick() {
     let now = performance.now();
     let elapsed = now - g_lastFrameTime;
     let frameInterval = 1000.0 * g_invFPSCap;
-
+    
+    g_camera.speed = (g_keys["shift"]) ? g_camSpeed * g_camSpeedMult : g_camSpeed;
+    g_camera.moveCamera(g_keys);
     if (elapsed > frameInterval) {
         g_lastFrameTime = now - (elapsed % frameInterval);
-        
         g_seconds = (now * 0.001) - g_startTime;
-        
-        g_camera.speed = (g_keys["shift"]) ? g_camSpeed * g_camSpeedMult : g_camSpeed;
-        g_camera.moveCamera(g_keys);
-
+        // Main rendering
         handleRespawning();
         renderAllShapes();
 
