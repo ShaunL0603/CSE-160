@@ -130,10 +130,12 @@ function intersectRayAABB(origin, direction, boxMin, boxMax) {
 
 function handleModes(obj, mouseBtn, closestDistance) {
     if (g_playerMode === MINE) {
+        // Left click delete block
         if (mouseBtn === 0) {
             if (obj.type === "ground" || obj.type === "rangeWall") return;
             obj.active = false;
         }
+        // right click place block
         else if (mouseBtn === 2) {
             placeBlock(closestDistance);
         };
@@ -151,6 +153,11 @@ function handleModes(obj, mouseBtn, closestDistance) {
     };
 }
 
+/**
+ * 
+ * @param {*} closestDistance closest distance to player to place block at 
+ *                            in direction they're looking at
+ */
 function placeBlock(closestDistance) {
     g_tempOrigin3v.set(g_camera.eye);
     g_tempDir3v.set(g_camera.at);
