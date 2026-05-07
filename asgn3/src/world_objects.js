@@ -311,7 +311,10 @@ function switchMap(ev) {
         // Don't execute rest of if statement if same map is trying to be loaded
         if (g_currMap === RANGE) return;
         
-        g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
+        g_worldObjs = g_worldObjs.filter(obj => 
+            obj.type !== "wall" &&
+            obj.type !== "block"
+        );
         createRange();
         g_currMap = RANGE;
         rebuildTargets();
@@ -320,7 +323,12 @@ function switchMap(ev) {
     else if (ev.altKey && ev.key === "2") {
         if (g_currMap === RANDOM) return;
 
-        g_worldObjs = g_worldObjs.filter(obj => obj.type !== "rangeWall" && obj.type !== "target" && obj.type !== "hit box");
+        g_worldObjs = g_worldObjs.filter(obj => 
+            obj.type !== "rangeWall" && 
+            obj.type !== "target" && 
+            obj.type !== "hit box" &&
+            obj.type !== "block"
+        );
         g_targets = [];
         createRandomMap();
         g_currMap = RANDOM;
