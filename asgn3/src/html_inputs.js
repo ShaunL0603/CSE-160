@@ -26,12 +26,6 @@ function handleEvents() {
             g_camera.panCamera(-ev.movementX, ev.movementY);
         }
     };
-    document.addEventListener("keydown", (ev) => {
-        if (ev.key.toLowerCase() === "z") {
-            if (g_currMap === RANGE) return;
-            
-        }
-    })
 
     document.addEventListener("keydown", (ev) => { updateKeyDown(ev); switchMap(ev); });
     document.addEventListener("keyup", (ev) => { updateKeyUp(ev); });
@@ -91,7 +85,7 @@ function htmlActions() {
         };
     });
     changeMapSize.addEventListener("input", (ev) => {
-        if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value); 
+        if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value);
     })
 
     floorTileCount.addEventListener("input", (ev) => {

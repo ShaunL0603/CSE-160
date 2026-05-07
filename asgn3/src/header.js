@@ -73,9 +73,11 @@ let u_UVScale = 1.0;                                                            
     let g_tempResult4v = new Vector4();
     
     // --- CREATE RANDOMLY GENERATED MAP ---
-    let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);
+    let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);            // Store new map size that user puts in
     let g_floorTileCount = parseInt(document.getElementById("floorTileCount").defaultValue);    // for digger, number of times it breaks a wall
-    let g_map = generateRandWalk(g_mapSize, g_floorTileCount);
+    let g_currMapSize = g_mapSize;                                                              // Store current map size
+    let g_currFloorTileCount = g_floorTileCount;
+    let g_map = [];
 
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in

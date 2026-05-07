@@ -329,7 +329,8 @@ function switchMap(ev) {
     // switch to randomly generated map
     else if (ev.altKey && ev.key === "2") {
         if (g_currMap === RANDOM) return;
-
+        
+        // filter out objs in range map and remove targets
         g_worldObjs = g_worldObjs.filter(obj => 
             obj.type !== "rangeWall" && 
             obj.type !== "target" && 
@@ -337,6 +338,14 @@ function switchMap(ev) {
             obj.type !== "block"
         );
         g_targets = [];
+
+        if (g_map.length === 0 || g_currMapSize !== g_mapSize || g_currFloorTileCount !== g_floorTileCount) {
+            console.log("Generating map for the first time...");
+            g_map = generateRandWalk(g_mapSize, g_floorTileCount);
+            g_currMapSize = g_mapSize;
+            g_currFloorTileCount = g_floorTileCount;
+        }
+
         createRandomMap();
         g_currMap = RANDOM;
     }
