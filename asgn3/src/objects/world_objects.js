@@ -304,11 +304,11 @@ function switchMap(ev) {
     if (ev.altKey && ev.key === "1") {
         // Don't execute rest of if statement if same map is trying to be loaded
         if (g_currMap === RANGE) return;
-
+        
         g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
         createRange();
-        createTargetsForRange();
         g_currMap = RANGE;
+        rebuildTargets();
     } 
     // switch to randomly generated map
     else if (ev.altKey && ev.key === "2") {
