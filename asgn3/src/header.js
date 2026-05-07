@@ -65,6 +65,7 @@ let u_UVScale = 1.0;
     let g_blockScale = 0.25;
     let g_hitboxVisible = false;
     let g_hitSound = new Audio("./assets/audio/laser.wav");
+    let g_score = 0;
     
 
 // CONSTANTS

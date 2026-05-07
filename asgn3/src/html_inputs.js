@@ -46,6 +46,7 @@ function htmlActions() {
     const targetSize = document.getElementById("targetSize");
     const changeMapSize = document.getElementById("changeMapSize");
     const floorTileCount = document.getElementById("floorTileCount");
+    const playerScore = document.getElementById("playerScore");
 
     changeMapSize.addEventListener("input", (ev) => {
         if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value);

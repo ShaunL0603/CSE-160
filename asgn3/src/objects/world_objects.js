@@ -193,7 +193,7 @@ function rebuildTargets() {
 // --- Functions to create random map --- 
 function createRandomMap() {
     let wallHeight = 3;
-    let recenter = g_mapSize*0.25*0.5;
+    let recenter = g_mapSize * 0.25 * 0.5; // 0.25 is size of wall
 
     for (let x = 0; x < g_mapSize; ++x) {
         for (let z = 0; z < g_mapSize; ++z) {

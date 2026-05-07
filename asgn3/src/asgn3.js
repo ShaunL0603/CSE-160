@@ -270,3 +270,9 @@ function tick() {
     };
     requestAnimationFrame(tick);
 }
+
+function hitEvent() {
+    ++g_score;
+    sendTextToHTML(g_score, "playerScore");
+    g_hitSound.play();
+}

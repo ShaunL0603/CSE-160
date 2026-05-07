@@ -127,7 +127,7 @@ function handleModes(obj, mouseBtn, closestDistance) {
             if (obj.hitbox) {
                 obj.hitbox.active = false;
             }
-            g_hitSound.play();
+            hitEvent();
         }
     } else {
         console.warn("Error: unrecognized mode", g_playerMode);
