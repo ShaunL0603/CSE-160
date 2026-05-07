@@ -1,4 +1,5 @@
 function handleEvents() {
+    // Event to fire when player clicks, ray cast
     canvas.addEventListener("click", (ev) => { 
         canvas.requestPointerLock(); 
         let mouseBtn = ev.button;
@@ -100,7 +101,7 @@ function htmlActions() {
     // Action to change the maximum number of target on screen
     maxTargets.addEventListener("input", (ev) => {
         let newMax = parseInt(ev.target.value);
-        if (0 < newMax && newMax <= 100) {
+        if (0 < newMax && newMax <= 10000) {
             g_maxTargets = newMax;
             rebuildTargets();
         }

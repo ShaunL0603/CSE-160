@@ -1,5 +1,10 @@
 /**
- * cast ray to see if a target (sphere) is hit
+ * Cast ray to see if a target is hit.
+ * We want to transform the ray into an object's local space instead
+ * of the its world space. Test each obj with the same local min and
+ * max bounds, in this case 0.0 (min) and 1.0 (max) due to how we
+ * currently generate the cube's vertices
+ * @param {*} mouseBtn pass which mouse button was pressed to handleModes
  */
 function rayCast(mouseBtn) {
     
@@ -19,17 +24,15 @@ function rayCast(mouseBtn) {
         g_camera.eye.elements[1],
         g_camera.eye.elements[2]
     ];
-    
+    // setup some variables
     const localMinBounds = [0.0, 0.0, 0.0];
     const localMaxbounds = [1.0, 1.0, 1.0];
-    
     let closestObj = null;
-
     let maxFPSDistance = 50.0;
     let maxMineDistance = 1.5;
     let closestDistance = (g_playerMode === MINE) ? maxMineDistance : maxFPSDistance;
     let objList = (g_playerMode === MINE) ? g_worldObjs : g_targets;
-
+    // check objects in list
     for (let i = 0; i < objList.length; ++i) {
         let obj = objList[i];
 
@@ -38,24 +41,31 @@ function rayCast(mouseBtn) {
         else if (obj.type === "sky") continue;
 
         // Calculate inverse model matrix of an object
-        let invMat = new Matrix4().setInverseOf(
+        g_tempInvMat.setInverseOf(
             (g_playerMode === MINE) ? obj.matrix : obj.hitbox.matrix
         );
+
+        g_tempRayOrigin4v.elements[0] = origin[0];
+        g_tempRayOrigin4v.elements[1] = origin[1];
+        g_tempRayOrigin4v.elements[2] = origin[2];
+        g_tempRayOrigin4v.elements[3] = 1.0;
         
         // transform ray origin into local space
-        let localOrigin4 = invMat.multiplyVector4(new Vector4([
-            origin[0], origin[1], origin[2], 1.0
-        ]));
+        let localOrigin4 = g_tempInvMat.multiplyVector4(g_tempRayOrigin4v, g_tempResult4v);
         let localOrigin = [
             localOrigin4.elements[0], 
             localOrigin4.elements[1], 
             localOrigin4.elements[2]
         ];
 
+        g_tempRayDir4v.elements[0] = direction[0];
+        g_tempRayDir4v.elements[1] = direction[1];
+        g_tempRayDir4v.elements[2] = direction[2];
+        g_tempRayDir4v.elements[3] = 0.0;
+
         // transform ray direction into local space
-        let localDir4 = invMat.multiplyVector4(new Vector4([
-            direction[0], direction[1], direction[2], 0.0
-        ]));
+        // important to not translate the direction though, set w to 0
+        let localDir4 = g_tempInvMat.multiplyVector4(g_tempRayDir4v, g_tempResult4v);
         let localDir = [
             localDir4.elements[0], 
             localDir4.elements[1], 
@@ -82,6 +92,11 @@ function rayCast(mouseBtn) {
 /** 
  * Using slab method
  * Check if a ray intersects an Axis-Aligned Bounding Box (AABB)
+ * @param {*} origin should be camera's origin
+ * @param {*} direction direction vector of the ray
+ * @param {*} boxMin min corner of unit cube in local space
+ * @param {*} boxMax max corner of unit cube in local space
+ * @return
  */
 function intersectRayAABB(origin, direction, boxMin, boxMax) {
     const invD = [
@@ -105,7 +120,7 @@ function intersectRayAABB(origin, direction, boxMin, boxMax) {
     tmin = Math.max(tmin, Math.min(t0, t1));
     tmax = Math.min(tmax, Math.max(t0, t1));
 
-    // If tmax < 0, box behind us. If tmin > tmax we'vr missed.
+    // If tmax < 0, box behind us. If tmin > tmax we've missed.
     if (tmax < 0 || tmin > tmax) return null;
 
     return tmin > 0 ? tmin : tmax;
@@ -135,23 +150,22 @@ function handleModes(obj, mouseBtn, closestDistance) {
 }
 
 function placeBlock(closestDistance) {
-    let origin = new Vector3(g_camera.eye.elements);
-    let direction = new Vector3();
-    direction.set(g_camera.at);
-    direction.sub(origin);
-    direction.normalize();
+    g_tempOrigin3v.set(g_camera.eye);
+    g_tempDir3v.set(g_camera.at);
+    g_tempDir3v.sub(g_tempOrigin3v);
+    g_tempDir3v.normalize();
 
     let spawnDistance = closestDistance - 0.125;
-    direction.mul(spawnDistance);
+    g_tempDir3v.mul(spawnDistance);
 
-    let hitPoint = new Vector3(origin.elements);
-    hitPoint.add(direction);
+    g_tempHitPoint3v.set(g_tempOrigin3v);
+    g_tempHitPoint3v.add(g_tempDir3v);
 
     let gridSize = g_blockScale;
     let invGridSize = 1 / gridSize;
-    let snapToX = Math.floor(hitPoint.elements[0] * invGridSize) * gridSize;
-    let snapToY = Math.floor(hitPoint.elements[1] * invGridSize) * gridSize;
-    let snapToZ = Math.floor(hitPoint.elements[2] * invGridSize) * gridSize;
+    let snapToX = Math.floor(g_tempHitPoint3v.elements[0] * invGridSize) * gridSize;
+    let snapToY = Math.floor(g_tempHitPoint3v.elements[1] * invGridSize) * gridSize;
+    let snapToZ = Math.floor(g_tempHitPoint3v.elements[2] * invGridSize) * gridSize;
 
     let newCube = new Cube();
     newCube.type = "block";

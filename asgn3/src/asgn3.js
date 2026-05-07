@@ -283,9 +283,10 @@ function hitEvent() {
 }
 
 /**
- * 
+ * Cone culling, don't render anything behind the camera
+ * along with any obj beyond the 60 degree fov of the camera
  * @param {*} obj object to do culling math on
- * @returns boolean, i
+ * @returns boolean, is obj within camera fov
  */
 function isObjVisible(obj) {
     // avoid objects with empty/no pos array (like ground)
@@ -313,7 +314,7 @@ function isObjVisible(obj) {
     g_tempVec.elements[2] = dz * invDist;
     let dotProduct = Vector3.dot(g_tempVec, g_camera.forwardVec);
 
-    let paddingAngle = 60.0;
+    let paddingAngle = g_camera.fov;
     let threshold = Math.cos(paddingAngle * degToRad);
     return dotProduct >= threshold;
 }

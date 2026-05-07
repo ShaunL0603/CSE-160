@@ -1,5 +1,6 @@
 // header file for js files in asgn3, blocky world, folder
 
+
 // Global variables, WebGL
 var canvas;
 var gl;
@@ -66,6 +67,10 @@ let u_UVScale = 1.0;                                                            
     let g_maxTargets = parseInt(document.getElementById("maxTargets").defaultValue);
     let g_hitboxVisible = false;
     let g_hitSound = new Audio("./assets/audio/laser.wav");                                     // play sound when hit scored, used in handleModes() function
+    let g_tempInvMat = new Matrix4();
+    let g_tempRayOrigin4v = new Vector4();
+    let g_tempRayDir4v = new Vector4();
+    let g_tempResult4v = new Vector4();
     
     // --- CREATE RANDOMLY GENERATED MAP ---
     let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);
@@ -75,7 +80,12 @@ let u_UVScale = 1.0;                                                            
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
-    let g_tempVec = new Vector3();                                                              // temporary, used for frustrum culling in isObjVisible()
+    let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
+    
+    // --- For placing blocks ---
+    let g_tempOrigin3v = new Vector3();
+    let g_tempDir3v = new Vector3();
+    let g_tempHitPoint3v = new Vector3();
     
 
 // CONSTANTS

@@ -329,18 +329,17 @@ class Matrix4 {
      * @param pos  The multiply vector
      * @return The result of multiplication(Float32Array)
      */
-    multiplyVector4(pos) {
+    multiplyVector4(pos, newVec) {
       var e = this.elements;
       var p = pos.elements;
-      var v = new Vector4();
-      var result = v.elements;
+      var result = newVec.elements;
 
       result[0] = p[0] * e[0] + p[1] * e[4] + p[2] * e[ 8] + p[3] * e[12];
       result[1] = p[0] * e[1] + p[1] * e[5] + p[2] * e[ 9] + p[3] * e[13];
       result[2] = p[0] * e[2] + p[1] * e[6] + p[2] * e[10] + p[3] * e[14];
       result[3] = p[0] * e[3] + p[1] * e[7] + p[2] * e[11] + p[3] * e[15];
 
-      return v;
+      return newVec;
     };
 
     /**
