@@ -242,6 +242,8 @@ function renderAllShapes() {
     // Start rendering all objects in global world obj list
     for (let i = 0; i < g_worldObjs.length; ++i) {
         let obj = g_worldObjs[i];
+        // Don't render transparent objects (hitbox)
+        if (obj.color && obj.color[3] == 0.0) continue;
         // Only render objects that are active
         if (obj.active) obj.render();
     }
@@ -271,6 +273,7 @@ function tick() {
     requestAnimationFrame(tick);
 }
 
+// Event player scores a hit on target
 function hitEvent() {
     ++g_score;
     sendTextToHTML(g_score, "playerScore");

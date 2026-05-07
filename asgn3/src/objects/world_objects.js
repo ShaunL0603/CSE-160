@@ -193,6 +193,7 @@ function rebuildTargets() {
 // --- Functions to create random map --- 
 function createRandomMap() {
     let wallHeight = 3;
+    let cubeSize = 0.25;
     let recenter = g_mapSize * 0.25 * 0.5; // 0.25 is size of wall
 
     for (let x = 0; x < g_mapSize; ++x) {
@@ -203,14 +204,18 @@ function createRandomMap() {
                     wall.type = "wall";
                     wall.color = [0.5, 0.5, 0.5, 1.0];
                     wall.textureNum = 2;
-                    wall.matrix.translate((x * 0.25) - recenter, (h * 0.25), (z * 0.25) - recenter);
-                    wall.matrix.scale(0.25, 0.25, 0.25);
+                    wall.matrix.translate(
+                        (x * cubeSize) - recenter, 
+                        (h * cubeSize), 
+                        (z * cubeSize) - recenter
+                    );
+                    wall.matrix.scale(cubeSize, cubeSize, cubeSize);
                     g_worldObjs.push(wall);
                 }
             }
             else if (g_map[x][z] == 2) {
-                let tilex = (x * 0.25) - recenter;
-                let tilez = (z * 0.25) - recenter;
+                let tilex = (x * cubeSize) - recenter;
+                let tilez = (z * cubeSize) - recenter;
                 let targetHeight = 0.5;
                 createTarget([tilex, targetHeight, tilez]);
             }
