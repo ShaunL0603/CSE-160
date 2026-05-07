@@ -14,14 +14,14 @@ var u_Sampler0;
 var u_Sampler1;
 var u_Sampler2;
 var u_Sampler3;
-let u_UVScale = 1.0;
+let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
 
 // Global variables
     // --- FOR CAMERA ---
     var g_camera;
-    let g_camSpeedMult = Number(document.getElementById("camMovSpeed").defaultValue);
-    let g_pointerLocked = false;
-    let g_camSpeed = 0.025;
+    let g_camSpeedMult = Number(document.getElementById("camMovSpeed").defaultValue);           // speed camera moves through world
+    let g_pointerLocked = false;                                                                // boolean for checking if mouse pointer locked to center of screen
+    let g_camSpeed = 0.025;                                                                     // default camera speed (walking)
     
     // --- FOR PERFORMANCE ---
     let g_startTime = performance.now() / 1000.0;
@@ -31,7 +31,8 @@ let u_UVScale = 1.0;
 
     // --- FOR HTML ---
     let g_noclip = false;
-    //
+    // map keys to false until pressed, then true
+    // used in updateKeyDown() and updateKeyUp()
     let g_keys = {
         "w": false, "a": false, "s": false, 
         "d": false, "shift" : false, "v": false,
@@ -70,7 +71,7 @@ let u_UVScale = 1.0;
     let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);
     let g_floorTileCount = parseInt(document.getElementById("floorTileCount").defaultValue);    // for digger, number of times it breaks a wall
     let g_map = generateRandWalk(g_mapSize, g_floorTileCount);
-    
+
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
@@ -79,7 +80,8 @@ let u_UVScale = 1.0;
 
 // CONSTANTS
 const degToRad = Math.PI / 180;
-const g_fracFPSCap = 1 / g_fpsCap;
+const g_invFPSCap = 1 / g_fpsCap;
+const g_invPi = 1 / Math.PI;
 // --- for player modes ---
 const FPS = "FPS";
 const MINE = "MINE";

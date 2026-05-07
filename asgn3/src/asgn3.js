@@ -220,9 +220,6 @@ function loadTexture(image, sampler, texUnit, glTex) {
     // Set the texture parameters
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
-    // gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
-
     // Set the texture image
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
 
@@ -258,7 +255,7 @@ function renderAllShapes() {
 function tick() {
     let now = performance.now();
     let elapsed = now - g_lastFrameTime;
-    let frameInterval = 1000.0 * g_fracFPSCap;
+    let frameInterval = 1000.0 * g_invFPSCap;
 
     if (elapsed > frameInterval) {
         g_lastFrameTime = now - (elapsed % frameInterval);

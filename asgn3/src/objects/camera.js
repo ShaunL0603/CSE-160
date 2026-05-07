@@ -6,7 +6,7 @@ class Camera {
         this.up = new Vector3([0.0, 1.0, 0.0]);
         this.viewMatrix = new Matrix4();
         this.projectionMatrix = new Matrix4();
-        this.speed = 0.05;
+        this.speed = g_camSpeed;
         this.rotSpeed = 0.05;
         this.yaw = 270.0;
         this.pitch = 0.0;

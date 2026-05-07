@@ -57,12 +57,13 @@ function createSphereVertices(segments) {
             var p2 = [Math.sin(t + d) * Math.cos(s), Math.cos(t + d), Math.sin(t + d) * Math.sin(s)];
             var p3 = [Math.sin(t) * Math.cos(s + dd), Math.cos(t), Math.sin(t) * Math.sin(s + dd)];
             var p4 = [Math.sin(t + d) * Math.cos(s + dd), Math.cos(t + d), Math.sin(t + d) * Math.sin(s + dd)];
-
+            
             // Map UVs based on current angles relative to total angles (PI and 2*PI)
-            var uv1 = [s / (Math.PI * 2), t / Math.PI];
-            var uv2 = [s / (Math.PI * 2), (t + d) / Math.PI];
-            var uv3 = [(s + dd) / (Math.PI * 2), t / Math.PI];
-            var uv4 = [(s + dd) / (Math.PI * 2), (t + d) / Math.PI];
+            let invTwoPI = 1 / (Math.PI * 2);
+            var uv1 = [s * invTwoPI, t * g_invPi];
+            var uv2 = [s * invTwoPI, (t + d) * g_invPi];
+            var uv3 = [(s + dd) * invTwoPI, t * g_invPi];
+            var uv4 = [(s + dd) * invTwoPI, (t + d) * g_invPi];
 
             // Triangle 1
             vPositions.push(...p1, ...p2, ...p4);

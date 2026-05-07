@@ -148,9 +148,10 @@ function placeBlock(closestDistance) {
     hitPoint.add(direction);
 
     let gridSize = g_blockScale;
-    let snapToX = Math.floor(hitPoint.elements[0] / gridSize) * gridSize;
-    let snapToY = Math.floor(hitPoint.elements[1] / gridSize) * gridSize;
-    let snapToZ = Math.floor(hitPoint.elements[2] / gridSize) * gridSize;
+    let invGridSize = 1 / gridSize;
+    let snapToX = Math.floor(hitPoint.elements[0] * invGridSize) * gridSize;
+    let snapToY = Math.floor(hitPoint.elements[1] * invGridSize) * gridSize;
+    let snapToZ = Math.floor(hitPoint.elements[2] * invGridSize) * gridSize;
 
     let newCube = new Cube();
     newCube.type = "block";

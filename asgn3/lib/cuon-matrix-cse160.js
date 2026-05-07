@@ -92,9 +92,10 @@ class Vector3 {
           return this;
         }
 
+        let invScalar = 1 / scalar;
         for (let i = 0; i < 3; ++i)
         {
-          this.elements[i] /= scalar;
+          this.elements[i] *= invScalar;
         }
         return this;
     };
