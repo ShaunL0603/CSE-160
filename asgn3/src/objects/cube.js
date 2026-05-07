@@ -92,11 +92,11 @@ function createCubeBuffers() {
     // Bind the buffer object to target
     gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeVertBuffer);
     // Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, g_cubeVertices, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_cubeVertices, gl.STATIC_DRAW);
 
     // --- UV ---
     // Bind the buffer object to target
     gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeUVVertBuffer);
     // Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, g_cubeUVVertices, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_cubeUVVertices, gl.STATIC_DRAW);
 }

@@ -145,13 +145,13 @@ function updateKeyDown(ev) {
             if (!g_keys["r"]) g_camera.resetHeight(0.5);
             break;
         case "1":
-            if (!g_keys["1"] && !ev.altKey) { 
+            if (!g_keys["1"] && !ev.altKey && g_pointerLocked) { 
                 g_playerMode = MINE;
                 sendTextToHTML("Mine", "playerMode");
             }
             break;
         case "2":
-            if (!g_keys["1"] && !ev.altKey) {
+            if (!g_keys["1"] && !ev.altKey && g_pointerLocked) {
                 g_playerMode = FPS;
                 sendTextToHTML("FPS", "playerMode");
             }

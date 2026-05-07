@@ -64,7 +64,7 @@ function createTarget(pos) {
     target.type = "target";
     target.color = [1.0, 0.0, 0.0, 1.0];
     target.textureNum = -2;
-    target.spawnPos = pos;
+    target.pos = pos;
     target.baseMatrix = new Matrix4();
     target.baseMatrix.translate(pos[0], pos[1], pos[2]);
     target.matrix = new Matrix4(target.baseMatrix);
@@ -114,7 +114,7 @@ function handleRespawning() {
                 let safeDistance = g_targetSize * 3.0;
                 let pos = findValidTargetPos(safeDistance);
 
-                t.spawnPos = pos;
+                t.pos = pos;
                 t.baseMatrix.setIdentity();
                 t.baseMatrix.translate(pos[0], pos[1], pos[2]);
                 t.matrix.set(t.baseMatrix);
@@ -146,12 +146,12 @@ function findValidTargetPos(minDistance) {
         let isValid = true;
         for (let i = 0; i < g_targets.length; ++i) {
             var t = g_targets[i];
-            if (!t.active || !t.spawnPos) continue;
+            if (!t.active || !t.pos) continue;
 
-            let dx = x - t.spawnPos[0];
-            let dy = y - t.spawnPos[1];
-            let dz = z - t.spawnPos[2];
-            let distance = Math.sqrt(dx**2 + dy**2 + dz**2);
+            let dx = x - t.pos[0];
+            let dy = y - t.pos[1];
+            let dz = z - t.pos[2];
+            let distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
             if (distance < minDistance) {
                 isValid = false;
@@ -178,6 +178,7 @@ function updateHitBox(target) {
     let offset = (hitBoxSize) * 0.5;
     
     target.hitbox.matrix = new Matrix4(target.baseMatrix);
+    target.hitbox.pos = [-offset, -offset, -offset];
     target.hitbox.matrix.translate(-offset, -offset, -offset);
     target.hitbox.matrix.scale(hitBoxSize, hitBoxSize, hitBoxSize);
 }
@@ -204,6 +205,11 @@ function createRandomMap() {
                     wall.type = "wall";
                     wall.color = [0.5, 0.5, 0.5, 1.0];
                     wall.textureNum = 2;
+                    wall.pos = [
+                        (x * cubeSize) - recenter,
+                        (h * cubeSize),
+                        (z * cubeSize) - recenter
+                    ];
                     wall.matrix.translate(
                         (x * cubeSize) - recenter, 
                         (h * cubeSize), 

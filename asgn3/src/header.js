@@ -31,6 +31,7 @@ let u_UVScale = 1.0;
 
     // --- FOR HTML ---
     let g_noclip = false;
+    //
     let g_keys = {
         "w": false, "a": false, "s": false, 
         "d": false, "shift" : false, "v": false,
@@ -38,6 +39,8 @@ let u_UVScale = 1.0;
         "x": false
     };
 
+    // create necessary vertices and buffers for cubes and spheres once
+    // initialize them here
     // --- FOR CUBE ---
     let g_cubeVertices = null;
     let g_cubeUVVertices = null;
@@ -50,23 +53,28 @@ let u_UVScale = 1.0;
     let g_sphereUVVertBuffer = null;
 
     // --- World objects ---
-    let g_worldObjs = [];
+    let g_worldObjs = [];                                                                       // list of objects to render
     var g_skybox;
     var g_ground;
-    let g_targets = [];
-    var g_currMap;
+    let g_targets = [];                                                                         // list of objects to keep track of and perform calculations on
+    var g_currMap;                                                                              // Keep track of which map is currently loaded
+    let g_blockScale = 0.25;                                                                    // scale for player palced blocks and walls
     
-    // --- OTHERS ---
+    // --- FOR TARGETS ---
     let g_targetSize = Number(document.getElementById("targetSize").defaultValue);
     let g_maxTargets = parseInt(document.getElementById("maxTargets").defaultValue);
-    let g_floorTileCount = parseInt(document.getElementById("floorTileCount").defaultValue);
-    let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);
-    let g_map = generateRandWalk(g_mapSize, g_floorTileCount);
-    var g_playerMode;
-    let g_blockScale = 0.25;
     let g_hitboxVisible = false;
-    let g_hitSound = new Audio("./assets/audio/laser.wav");
-    let g_score = 0;
+    let g_hitSound = new Audio("./assets/audio/laser.wav");                                     // play sound when hit scored, used in handleModes() function
+    
+    // --- CREATE RANDOMLY GENERATED MAP ---
+    let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);
+    let g_floorTileCount = parseInt(document.getElementById("floorTileCount").defaultValue);    // for digger, number of times it breaks a wall
+    let g_map = generateRandWalk(g_mapSize, g_floorTileCount);
+    
+    // --- OTHER ---
+    var g_playerMode;                                                                           // track what mode player is in
+    let g_score = 0;                                                                            // track player score
+    let g_tempVec = new Vector3();                                                              // temporary, used for frustrum culling in isObjVisible()
     
 
 // CONSTANTS

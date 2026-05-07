@@ -11,7 +11,7 @@ class Sphere {
         this.active = true; // render objectsif they're active, not hit
         this.tod = 0.0; // save sphere's time of death
         this.respawnDelay = 2.0; // time until respawn
-        this.spawnPos = [];
+        this.pos = [];
     }
 
     render() {
@@ -88,9 +88,9 @@ function createSphereBuffers() {
 
     // --- Positions ---
     gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereVertBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, g_sphereVertices, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_sphereVertices, gl.STATIC_DRAW);
 
     // --- UVs ---
     gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereUVVertBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, g_sphereUVVertices, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_sphereUVVertices, gl.STATIC_DRAW);
 }
