@@ -260,7 +260,7 @@ function tick() {
         
         g_seconds = (now * 0.001) - g_startTime;
         
-        g_camera.speed = (g_keys["shift"]) ? g_defaultCamSpeed * g_camSpeedMult : g_defaultCamSpeed;
+        g_camera.speed = (g_keys["shift"]) ? g_camSpeed * g_camSpeedMult : g_camSpeed;
         g_camera.moveCamera(g_keys);
 
         handleRespawning();

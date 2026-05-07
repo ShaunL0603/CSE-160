@@ -38,7 +38,7 @@ function handleEvents() {
 
 function htmlActions() {
     const settingsPanel = document.getElementById("settingsPanel");
-    const camSpeedInput = document.getElementById("camSpeed");
+    const camSpeedInput = document.getElementById("camMovSpeed");
     const resetHeightButton = document.getElementById("resetHeightButton");
     const volumeSlider = document.getElementById("volumeSlider");
     const maxTargets = document.getElementById("maxTargets");
@@ -47,6 +47,7 @@ function htmlActions() {
     const changeMapSize = document.getElementById("changeMapSize");
     const floorTileCount = document.getElementById("floorTileCount");
     const playerScore = document.getElementById("playerScore");
+    const camRotSpeed = document.getElementById("camRotSpeed");
 
     changeMapSize.addEventListener("input", (ev) => {
         if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value);
@@ -108,6 +109,11 @@ function htmlActions() {
         let newVolume = parseFloat(ev.target.value);
         g_hitSound.volume = newVolume;
         sendTextToHTML(parseInt(newVolume * 100), "volumeValue");
+    });
+    camRotSpeed.addEventListener("input", (ev) => {
+        if (0 < ev.target.value && ev.target.value <= 100) {
+            g_camera.rotSpeed = parseInt(ev.target.value) * 0.001;
+        }
     });
 }
 

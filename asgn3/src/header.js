@@ -19,8 +19,9 @@ let u_UVScale = 1.0;
 // Global variables
     // --- FOR CAMERA ---
     var g_camera;
-    let g_camSpeedMult = Number(document.getElementById("camSpeed").defaultValue);
+    let g_camSpeedMult = Number(document.getElementById("camMovSpeed").defaultValue);
     let g_pointerLocked = false;
+    let g_camSpeed = 0.025;
     
     // --- FOR PERFORMANCE ---
     let g_startTime = performance.now() / 1000.0;
@@ -69,8 +70,6 @@ let u_UVScale = 1.0;
     
 
 // CONSTANTS
-const g_defaultCamSpeed = 0.025;
-const g_defaultCamRotSpeed = 0.05;
 const degToRad = Math.PI / 180;
 const g_fracFPSCap = 1 / g_fpsCap;
 // --- for player modes ---
