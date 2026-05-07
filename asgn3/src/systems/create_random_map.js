@@ -108,53 +108,6 @@ function generateRandWalk(size, maxFloorCount) {
     return map;
 }
 
-/**
- * Let user switch between two maps
- * User presses alt + 1 or alt + 2 to switch between maps
- * 1 = RANGE map
- * 2 = RANDOM, randomly generated map
- * @param {*} ev to see if aly and specific keys are pressed
- */
-function switchMap(ev) {
-    // switch to range
-    if (ev.altKey && ev.key === "1") {
-        // Don't execute rest of if statement if same map is trying to be loaded
-        if (g_currMap === RANGE) return;
-        
-        g_worldObjs = g_worldObjs.filter(obj => 
-            obj.type !== "wall" &&
-            obj.type !== "block"
-        );
-        createRange();
-        g_currMap = RANGE;
-        rebuildTargets();
-    } 
-    // switch to randomly generated map
-    else if (ev.altKey && ev.key === "2") {
-        if (g_currMap === RANDOM) return;
-        
-        // filter out objs in range map and remove targets
-        g_worldObjs = g_worldObjs.filter(obj => 
-            obj.type !== "rangeWall" && 
-            obj.type !== "target" && 
-            obj.type !== "hit box" &&
-            obj.type !== "block"
-        );
-        g_targets = [];
-
-        if (g_map.length === 0 || g_currMapSize !== g_mapSize || g_currFloorTileCount !== g_floorTileCount) {
-            console.log("Generating map for the first time...");
-            g_map = generateRandWalk(g_mapSize, g_floorTileCount);
-            g_currMapSize = g_mapSize;
-            g_currFloorTileCount = g_floorTileCount;
-        }
-
-        createRandomMap();
-        createTargetsForRandMap();
-        g_currMap = RANDOM;
-    }
-}
-
 function regenerateMap() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
     g_map = generateRandWalk(g_mapSize, g_floorTileCount);
