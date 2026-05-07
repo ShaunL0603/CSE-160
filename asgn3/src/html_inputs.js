@@ -44,6 +44,16 @@ function htmlActions() {
     const maxTargets = document.getElementById("maxTargets");
     const makeHitBoxVisible = document.getElementById("makeHitBoxVisible");
     const targetSize = document.getElementById("targetSize");
+    const changeMapSize = document.getElementById("changeMapSize");
+    const floorTileCount = document.getElementById("floorTileCount");
+
+    changeMapSize.addEventListener("input", (ev) => {
+        if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value);
+    })
+
+    floorTileCount.addEventListener("input", (ev) => {
+        if (ev.target.value > 0) g_floorTileCount = parseInt(ev.target.value);
+    })
     
     settingsPanel.addEventListener("mousedown", (ev) => {
         ev.stopPropagation(); 

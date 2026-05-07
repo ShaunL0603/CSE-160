@@ -103,7 +103,7 @@ function createTargetsForRange() {
  */
 function handleRespawning() {
     if (g_currMap === RANDOM) return; // temporary
-    
+
     for (let i = 0; i < g_targets.length; ++i) {
         let t = g_targets[i];
         
@@ -187,7 +187,7 @@ function updateHitBox(target) {
 function rebuildTargets() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "target" && obj.type !== "hit box");
     g_targets = [];
-    createTargetsForRange();
+    if (g_currMap === RANGE) createTargetsForRange();
 }
 
 // --- Functions to create random map --- 
@@ -224,7 +224,7 @@ function createRandomMap() {
  * @param {*} pathLen length the digger will walk
  */
 function generateRandWalk(size, maxFloorCount) {
-    // if (maxFloorCount > size**2) maxFloorCount = (size - 1)**2;
+    // console.log("current size:", size);
     // Grid set to 1's
     let map = Array(size).fill().map(() => Array(size).fill(1));
 
@@ -249,8 +249,13 @@ function generateRandWalk(size, maxFloorCount) {
     let currentY = centerY;
     let floorTiles = []; // save coordinates that aren't walls
 
+    // keep track of how many steps digger takes
+    let stepsTaken = 0;
+    let maxSteps = maxFloorCount * 10; // avoid infinite loop of digger trying to break outside walls
+
     // Digger walking loop
-    while (floorTiles.length < maxFloorCount) {
+    while (floorTiles.length < maxFloorCount && stepsTaken < maxSteps) {
+        ++stepsTaken;
         if (map[currentX][currentY] === 1) {
             floorTiles.push({x: currentX, y: currentY});
             map[currentX][currentY] = 0; 
@@ -264,19 +269,9 @@ function generateRandWalk(size, maxFloorCount) {
         if (dir === 3 && currentY > 1) --currentY;
     }
 
-    // for (let i = 0; i < pathLen; ++i) {
-    //     if (map[currentX][currentY] === 1) {
-    //         floorTiles.push({x: currentX, y: currentY});
-    //     }
-    //     map[currentX][currentY] = 0;
-
-    //     let dir = Math.floor(Math.random() * 4)
-
-    //     if (dir === 0 && currentX > 1) --currentX;
-    //     if (dir === 1 && currentY < size - 2) ++currentY;
-    //     if (dir === 2 && currentX < size - 2) ++currentX;
-    //     if (dir === 3 && currentY > 1) --currentY;
-    // }
+    if (stepsTaken >= maxSteps) {
+        console.warn("too many floor tiles", " steps take: ", stepsTaken);
+    }
 
     let targetsToSpawn = Math.min(g_maxTargets, floorTiles.length);
     for (let i = 0; i < targetsToSpawn; ++i) {
@@ -292,7 +287,8 @@ function generateRandWalk(size, maxFloorCount) {
 
 function regenerateMap() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
-    g_map = generateRandWalk(64, 1000);
+    g_map = generateRandWalk(g_mapSize, g_floorTileCount);
+    rebuildTargets();
     createRandomMap();
 }
 

@@ -54,19 +54,18 @@ let u_UVScale = 1.0;
     var g_ground;
     let g_targets = [];
     var g_currMap;
-    // let g_changeMapSize = document.getElementById().defaultValue;
-    // let g_changeFloorTileCount = document.getElementById().defaultValue;
-    let g_map = generateRandWalk(64, 2048);
-    let g_mapSize = g_map.length;
     
     // --- OTHERS ---
-    let g_targetSize = document.getElementById("targetSize").defaultValue;
-    let g_hitboxVisible = false;
-    let g_maxTargets = document.getElementById("maxTargets").defaultValue;
-    let g_blockScale = 0.25;
+    let g_targetSize = Number(document.getElementById("targetSize").defaultValue);
+    let g_maxTargets = parseInt(document.getElementById("maxTargets").defaultValue);
+    let g_floorTileCount = parseInt(document.getElementById("floorTileCount").defaultValue);
+    let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);
+    let g_map = generateRandWalk(g_mapSize, g_floorTileCount);
     var g_playerMode;
+    let g_blockScale = 0.25;
+    let g_hitboxVisible = false;
     let g_hitSound = new Audio("./assets/audio/laser.wav");
-
+    
 
 // CONSTANTS
 const g_defaultCamSpeed = 0.025;
