@@ -145,6 +145,10 @@ function findValidTargetPos(minDistance) {
     return [(Math.random() * 9.0) - 4.5, (Math.random() * 4.0) + 0.5, (Math.random() * 4.0) - 9.0];
 }
 
+/**
+ * helper function, 
+ * @returns valid position for a target to spawn in the world, an XYZ array
+ */
 function findRandValidFloorPos() {
     let currMapSize = g_map.length;
     let cubeSize = 0.25;
@@ -157,7 +161,31 @@ function findRandValidFloorPos() {
         
         // randomly picked a floor tile, return its 3D world coordinates
         if (g_map[x][z] === 0 || g_map[x][z] === 2) {
-            return [(x * cubeSize) - recenter, 0.5, (z * cubeSize) - recenter];
+            let testX = (x * cubeSize) - recenter;
+            let testY = 0.5;
+            let testZ = (z * cubeSize) - recenter;
+
+            // next let's find if there's already a target in current game state
+            let isOccupied = false;
+            for (let j = 0; j < g_targets.length; ++j) {
+                let t = g_targets[j];
+
+                if (t.active && t.pos) {
+                    let targetX = testX - t.pos[0];
+                    let targetZ = testZ - t.pos[2];
+
+                    // test squared distance due to grid snap
+                    let distSqr = (targetX*targetX) + (targetZ*targetZ);
+                    // comparing with 0.01 and not == 0.0 due to floating point
+                    // errors, 0.01 is threshold
+                    if (distSqr < 0.01) {
+                        isOccupied = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!isOccupied) return [testX, testY, testZ];
         }
     }
     // Fallback: center spawn room (world origin) guaranteed to be empty

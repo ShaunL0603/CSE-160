@@ -30,12 +30,6 @@ function createRandomMap() {
                     g_worldObjs.push(wall);
                 }
             }
-            // else if (g_map[x][z] == 2) {
-            //     let tilex = (x * cubeSize) - recenter;
-            //     let tilez = (z * cubeSize) - recenter;
-            //     let targetHeight = 0.5;
-            //     createTarget([tilex, targetHeight, tilez]);
-            // }
         }
     }
 }
