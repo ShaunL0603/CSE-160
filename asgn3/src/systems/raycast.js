@@ -114,7 +114,7 @@ function intersectRayAABB(origin, direction, boxMin, boxMax) {
 function handleModes(obj, mouseBtn, closestDistance) {
     if (g_playerMode === MINE) {
         if (mouseBtn === 0) {
-            if (obj.type === "ground") return;
+            if (obj.type === "ground" || obj.type === "rangeWall") return;
             obj.active = false;
         }
         else if (mouseBtn === 2) {
