@@ -259,6 +259,7 @@ function tick() {
     
     g_camera.speed = (g_keys["shift"]) ? g_camSpeed * g_camSpeedMult : g_camSpeed;
     g_camera.moveCamera(g_keys);
+
     if (elapsed > frameInterval) {
         g_lastFrameTime = now - (elapsed % frameInterval);
         g_seconds = (now * 0.001) - g_startTime;
@@ -266,9 +267,12 @@ function tick() {
         handleRespawning();
         renderAllShapes();
 
-        let fps = Math.round(1000.0 / elapsed);
-        let msPerFrame = Math.round(elapsed);
-        sendTextToHTML("ms: " + msPerFrame + " fps: " + fps + " / " + g_fpsCap, "numdot");
+        if (now - g_lastFPSUpdateTime > 500) {
+            let fps = Math.round(1000.0 / elapsed);
+            let msPerFrame = Math.round(elapsed);
+            sendTextToHTML("ms: " + msPerFrame + " fps: " + fps + " / " + g_fpsCap, "numdot");
+            g_lastFPSUpdateTime = now;
+        }
     };
     requestAnimationFrame(tick);
 }

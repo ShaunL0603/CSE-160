@@ -29,6 +29,7 @@ let u_UVScale = 1.0;                                                            
     let g_seconds = performance.now() / 1000.0 - g_startTime;
     let g_lastFrameTime = performance.now();
     let g_fpsCap = 165;
+    let g_lastFPSUpdateTime = 0;
 
     // --- FOR HTML ---
     let g_noclip = false;
