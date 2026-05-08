@@ -21,9 +21,12 @@ input[type="number"] {
 
 #container {
     position: relative;
-    width: 100vw;
-    height: 100vh;
-    display: block;
+    width: 80vw;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10vh auto;
 }
 
 #settingsPanel {
