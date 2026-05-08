@@ -79,7 +79,7 @@ let u_UVScale = 1.0;                                                            
     let g_currFloorTileCount = g_floorTileCount;
     let g_map = [];
     let g_cubeScale = 0.25;                                                                     // scale for player placed blocks and walls
-    var g_recenter;
+    var g_recenter;                                                                             // recenter cubes of rand map so that span room is 0,0,0
 
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in

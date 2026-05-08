@@ -270,7 +270,9 @@ function tick() {
         if (now - g_lastFPSUpdateTime > 500) {
             let fps = Math.round(1000.0 / elapsed);
             let msPerFrame = Math.round(elapsed);
-            sendTextToHTML("ms: " + msPerFrame + " fps: " + fps + " / " + g_fpsCap, "numdot");
+
+            let text = `ms: ${msPerFrame} fps: ${fps} / ${g_fpsCap}`;
+            sendTextToHTML(text, "numdot");
             g_lastFPSUpdateTime = now;
         }
     };
@@ -407,7 +409,7 @@ function switchMap(ev) {
 
         if (g_map.length === 0 || g_currMapSize !== g_mapSize || g_currFloorTileCount !== g_floorTileCount) {
             console.log("Generating map for the first time...");
-            g_recenter = g_mapSize * g_cubeScale * 0.5;
+            g_recenter = g_mapSize * g_cubeScale * 0.5; // first initalize g_recenter
             g_map = generateRandWalk(g_mapSize, g_floorTileCount);
             g_currMapSize = g_mapSize;
             g_currFloorTileCount = g_floorTileCount;

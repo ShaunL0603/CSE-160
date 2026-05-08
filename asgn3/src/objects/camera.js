@@ -113,7 +113,4 @@ class Camera {
 
         this.updateMatrices();
     }
-
-    // collisionCheck() {
-    // }
 }
