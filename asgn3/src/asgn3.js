@@ -407,6 +407,7 @@ function switchMap(ev) {
 
         if (g_map.length === 0 || g_currMapSize !== g_mapSize || g_currFloorTileCount !== g_floorTileCount) {
             console.log("Generating map for the first time...");
+            g_recenter = g_mapSize * g_cubeScale * 0.5;
             g_map = generateRandWalk(g_mapSize, g_floorTileCount);
             g_currMapSize = g_mapSize;
             g_currFloorTileCount = g_floorTileCount;

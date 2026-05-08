@@ -4,12 +4,9 @@
 // --- Functions to create random map --- 
 function createRandomMap() {
     let wallHeight = 3;
-    let cubeSize = 0.25;
-    let currMapSize = g_map.length;
-    let recenter = currMapSize * 0.25 * 0.5; // 0.25 is size of wall
 
-    for (let x = 0; x < currMapSize; ++x) {
-        for (let z = 0; z < currMapSize; ++z) {
+    for (let x = 0; x < g_currMapSize; ++x) {
+        for (let z = 0; z < g_currMapSize; ++z) {
             if (g_map[x][z] == 1) {
                 for (let h = 0; h < wallHeight; ++h) {
                     var wall = new Cube();
@@ -17,16 +14,16 @@ function createRandomMap() {
                     wall.color = [0.5, 0.5, 0.5, 1.0];
                     wall.textureNum = 2;
                     wall.pos = [
-                        (x * cubeSize) - recenter,
-                        (h * cubeSize),
-                        (z * cubeSize) - recenter
+                        (x * g_cubeScale) - g_recenter,
+                        (h * g_cubeScale),
+                        (z * g_cubeScale) - g_recenter
                     ];
                     wall.matrix.translate(
-                        (x * cubeSize) - recenter, 
-                        (h * cubeSize), 
-                        (z * cubeSize) - recenter
+                        (x * g_cubeScale) - g_recenter, 
+                        (h * g_cubeScale), 
+                        (z * g_cubeScale) - g_recenter
                     );
-                    wall.matrix.scale(cubeSize, cubeSize, cubeSize);
+                    wall.matrix.scale(g_cubeScale, g_cubeScale, g_cubeScale);
                     g_worldObjs.push(wall);
                 }
             }
@@ -104,6 +101,13 @@ function generateRandWalk(size, maxFloorCount) {
 
 function regenerateMap() {
     g_worldObjs = g_worldObjs.filter(obj => obj.type !== "wall");
+
+    if (g_currMapSize !== g_mapSize || g_currFloorTileCount !== g_floorTileCount) {
+        g_currMapSize = g_mapSize;
+        g_recenter = g_currMapSize * g_cubeScale * 0.5;
+        g_currFloorTileCount = g_floorTileCount;
+    }
+
     g_map = generateRandWalk(g_mapSize, g_floorTileCount);
     rebuildTargets();
     createRandomMap();

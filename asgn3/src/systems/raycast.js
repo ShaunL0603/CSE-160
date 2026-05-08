@@ -170,7 +170,7 @@ function placeBlock(closestDistance) {
     g_tempHitPoint3v.set(g_tempOrigin3v);
     g_tempHitPoint3v.add(g_tempDir3v);
 
-    let gridSize = g_blockScale;
+    let gridSize = g_cubeScale;
     let invGridSize = 1 / gridSize;
     let snapToX = Math.floor(g_tempHitPoint3v.elements[0] * invGridSize) * gridSize;
     let snapToY = Math.floor(g_tempHitPoint3v.elements[1] * invGridSize) * gridSize;
@@ -181,6 +181,6 @@ function placeBlock(closestDistance) {
     newCube.color = [0.8, 0.8, 0.0, 1.0];
     newCube.textureNum = -2;
     newCube.matrix.translate(snapToX, snapToY, snapToZ);
-    newCube.matrix.scale(g_blockScale, g_blockScale, g_blockScale);
+    newCube.matrix.scale(g_cubeScale, g_cubeScale, g_cubeScale);
     g_worldObjs.push(newCube);
 }

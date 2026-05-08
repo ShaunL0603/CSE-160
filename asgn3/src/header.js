@@ -61,7 +61,6 @@ let u_UVScale = 1.0;                                                            
     var g_ground;
     let g_targets = [];                                                                         // list of objects to keep track of and perform calculations on
     var g_currMap;                                                                              // Keep track of which map is currently loaded
-    let g_blockScale = 0.25;                                                                    // scale for player palced blocks and walls
     
     // --- FOR TARGETS ---
     let g_targetSize = Number(document.getElementById("targetSize").defaultValue);
@@ -79,6 +78,8 @@ let u_UVScale = 1.0;                                                            
     let g_currMapSize = g_mapSize;                                                              // Store current map size
     let g_currFloorTileCount = g_floorTileCount;
     let g_map = [];
+    let g_cubeScale = 0.25;                                                                     // scale for player placed blocks and walls
+    var g_recenter;
 
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in

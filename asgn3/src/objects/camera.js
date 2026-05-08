@@ -43,7 +43,6 @@ class Camera {
             this.movementVec.add(this.forwardVec);
         } 
         if (g_keys["a"]) {
-            // let left = Vector3.cross(this.up, this.forwardVec);
             this.tempVec.cross(this.up, this.forwardVec);
             this.tempVec.normalize();
             this.movementVec.add(this.tempVec);
@@ -54,7 +53,6 @@ class Camera {
             this.movementVec.add(this.tempVec);
         } 
         if (g_keys["d"]) {
-            // let right = Vector3.cross(this.up, this.forwardVec);
             this.tempVec.cross(this.up, this.forwardVec);
             this.tempVec.normalize();
             this.tempVec.mul(-1);
@@ -115,4 +113,7 @@ class Camera {
 
         this.updateMatrices();
     }
+
+    // collisionCheck() {
+    // }
 }

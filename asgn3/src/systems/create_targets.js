@@ -44,14 +44,11 @@ function createTargetsForRange() {
 }
 
 function createTargetsForRandMap() {
-    let currMapSize = g_map.length;
-    let cubeSize = 0.25;
-    let recenter = currMapSize * 0.25 * 0.5;
     let validTiles = [];
 
     // Find all floor tiles
-    for (let x = 0; x < currMapSize; ++x) {
-        for (let z = 0; z < currMapSize; ++z) {
+    for (let x = 0; x < g_currMapSize; ++x) {
+        for (let z = 0; z < g_currMapSize; ++z) {
             if (g_map[x][z] === 0 || g_map[x][z] === 2) {
                 validTiles.push({x: x, z: z});
             }
@@ -67,8 +64,8 @@ function createTargetsForRandMap() {
         // Remove the tile from the list so two targets don't spawn in the exact same spot
         validTiles.splice(randIdx, 1); 
 
-        let tileX = (tile.x * cubeSize) - recenter;
-        let tileZ = (tile.z * cubeSize) - recenter;
+        let tileX = (tile.x * g_cubeScale) - g_recenter;
+        let tileZ = (tile.z * g_cubeScale) - g_recenter;
         createTarget([tileX, 0.5, tileZ]);
     }
 }
@@ -150,20 +147,18 @@ function findValidTargetPos(minDistance) {
  * @returns valid position for a target to spawn in the world, an XYZ array
  */
 function findRandValidFloorPos() {
-    let currMapSize = g_map.length;
-    let cubeSize = 0.25;
-    let recenter = currMapSize * cubeSize * 0.5;
+    let g_recenter = g_currMapSize * g_cubeScale * 0.5;
     let maxAttempts = 27;
     
     for (let i = 0; i < maxAttempts; ++i) {
-        let x = Math.floor(Math.random() * currMapSize);
-        let z = Math.floor(Math.random() * currMapSize);
+        let x = Math.floor(Math.random() * g_currMapSize);
+        let z = Math.floor(Math.random() * g_currMapSize);
         
         // randomly picked a floor tile, return its 3D world coordinates
         if (g_map[x][z] === 0 || g_map[x][z] === 2) {
-            let testX = (x * cubeSize) - recenter;
+            let testX = (x * g_cubeScale) - g_recenter;
             let testY = 0.5;
-            let testZ = (z * cubeSize) - recenter;
+            let testZ = (z * g_cubeScale) - g_recenter;
 
             // next let's find if there's already a target in current game state
             let isOccupied = false;
