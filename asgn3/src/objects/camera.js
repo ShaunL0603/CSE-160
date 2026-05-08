@@ -33,10 +33,8 @@ class Camera {
     moveCamera(keys) {
         this.forwardVec.set(this.at);
         this.forwardVec.sub(this.eye);
-        
-        if (!g_noclip) this.forwardVec.elements[1] = 0.0;
         this.forwardVec.normalize();
-
+        
         this.movementVec.elements[0] = 0;
         this.movementVec.elements[1] = 0;
         this.movementVec.elements[2] = 0;
@@ -62,6 +60,8 @@ class Camera {
             this.tempVec.mul(-1);
             this.movementVec.add(this.tempVec);
         }
+        
+        if (!g_noclip) this.movementVec.elements[1] = 0.0;
 
         this.movementVec.normalize(); // movement length to 1
         this.movementVec.mul(this.speed); // apply cam speed
