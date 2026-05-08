@@ -27,8 +27,13 @@ function handleEvents() {
         }
     };
 
-    document.addEventListener("keydown", (ev) => { updateKeyDown(ev); switchMap(ev); });
-    document.addEventListener("keyup", (ev) => { updateKeyUp(ev); });
+    document.addEventListener("keydown", (ev) => { 
+        if (g_pointerLocked) {
+            updateKeyDown(ev);
+            switchMap(ev);
+        }
+    });
+    document.addEventListener("keyup", (ev) => { if (g_pointerLocked) updateKeyUp(ev); });
 }
 
 function htmlActions() {
@@ -50,9 +55,16 @@ function htmlActions() {
     settingsPanel.addEventListener("click", (ev) => {
         ev.stopPropagation();
     });
-    
-    camSpeedInput.addEventListener("input", (ev) => {
-        g_camSpeedMult = parseFloat(ev.target.value);
+    camSpeedInput.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (ev.target.value < camSpeedInput.min) {
+                console.log("invalid speed");
+                ev.target.value = g_camSpeedMult;
+                return;
+            }
+
+            g_camSpeedMult = parseFloat(ev.target.value);
+        }
     });
 
     if (resetHeightButton) {
@@ -74,29 +86,36 @@ function htmlActions() {
         }
     });
     // Action to change target size
-    targetSize.addEventListener("input", (ev) => {
-        g_targetSize = parseFloat(ev.target.value);
+    targetSize.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (ev.target.value < 0.05 || ev.target.value > 0.5) {
+                console.log("invalid target size");
+                ev.target.value = g_targetSize;
+                return;
+            }
 
-        for (let i = 0; i < g_targets.length; ++i) {
-            let t = g_targets[i];
-            t.matrix = new Matrix4(t.baseMatrix);
-            t.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
-            updateHitBox(t);
-        };
+            g_targetSize = parseFloat(ev.target.value);
+            rescaleTargets();
+        }
     });
-    changeMapSize.addEventListener("input", (ev) => {
-        if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value);
-    })
-
-    floorTileCount.addEventListener("input", (ev) => {
-        if (ev.target.value > 0) g_floorTileCount = parseInt(ev.target.value);
-    })
+    changeMapSize.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value);
+        }
+    });
+    floorTileCount.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (ev.target.value > 0) g_floorTileCount = parseInt(ev.target.value);
+        }
+    });
     // Action to change the maximum number of target on screen
-    maxTargets.addEventListener("input", (ev) => {
-        let newMax = parseInt(ev.target.value);
-        if (0 < newMax && newMax <= 10000) {
-            g_maxTargets = newMax;
-            rebuildTargets();
+    maxTargets.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            let newMax = parseInt(ev.target.value);
+            if (0 < newMax && newMax <= 10000) {
+                g_maxTargets = newMax;
+                rebuildTargets();
+            }
         }
     });
     volumeSlider.addEventListener("input", (ev) => {
@@ -104,9 +123,11 @@ function htmlActions() {
         g_hitSound.volume = newVolume;
         sendTextToHTML(parseInt(newVolume * 100), "volumeValue");
     });
-    camRotSpeed.addEventListener("input", (ev) => {
-        if (0 < ev.target.value && ev.target.value <= 100) {
-            g_camera.rotSpeed = parseInt(ev.target.value) * 0.001;
+    camRotSpeed.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (0 < ev.target.value && ev.target.value <= 100) {
+                g_camera.rotSpeed = parseInt(ev.target.value) * 0.001;
+            }
         }
     });
 }

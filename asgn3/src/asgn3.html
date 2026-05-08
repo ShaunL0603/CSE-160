@@ -8,41 +8,68 @@
   </head>
 
   <body onload="main()">
-    <div style="justify-self: center;">
-        <h1 style="text-align: center;">Blocky World: Aim Trainer</h1>
-        <h2 style="text-align: center;"><u>Controls</u></h2>
+    <div style="width: 80vw; margin: 0 auto;">
+        <div style="text-align: center;">
+            <h1>Blocky World: Aim Trainer</h1>
+        </div>
 
-        <h3 style="text-align: center;">Player camera controls:</h3>
-        <ul style="text-align: center; padding-right: 6%;">
-            <li>W to move forward</li>
-            <li>A to move left</li>
-            <li>S to move back</li>
-            <li>D to move right</li>
-            <li>SHIFT to "sprint"</li>
-            <li>R to reset camera height</li>
-            <li>X to reset camera to center of world</li>
-        </ul>
+        <div style="display: flex; justify-content: space-between; gap: 40px; margin-bottom: 20px;">
+            
+            <div style="flex: 1; text-align: left;">
+                <h2><u>Description</u></h2>
+                <p>Welcome! This WebGL program is a very basic FPS like aim trainer. Here are some things to know:</p>
+                <ul>
+                    <li>Scroll down to see the canvas and start interacting</li>
+                    <li>Click on the canvas to:</li>
+                        <ul>
+                            <li>lock and hide the mouse cursor to the center of screen</li>
+                            <li>be able to interact with the world</li>
+                        </ul>
+                    <li>Hit the "escape" button to regain mouse cursor control</li>
+                    <li>Use the settings panel to customize your experience!</li>
+                    <ul>
+                        <li>Camera movement changes the "sprint" speed</li>
+                        <li>Camera sensitiviy goes from 1 to 100 (integers only)</li>
+                        <li>Change the target size! You can go into </li>
+                    </ul>
+                </ul>
+            </div>
 
-        <h3 style="text-align: center;">Player mode controls:</h3>
-        <ul style="text-align: center; padding-right: 6%;">
-            <li>1 to enter "Mine" mining mode</li>
-            <li>2 to enter "FPS" (shooting) mode</li>
-            <li>v to enter noclip (fly) mode</li>
-        </ul>
+            <div style="flex: 1; text-align: left;">
+                <h2><u>Controls</u></h2>
 
-        <h3 style="text-align: center;">Mouse controls:</h3>
-        <ul style="text-align: center; padding-right: 6%;">
-            <li>LEFT MOUSE BUTTON to destroy block (In MINE mode) or shoot (FPS MODE)</li>
-            <li>RIGHT MOUSE BUTTON to place block</li>
-        </ul>
+                <h3>Player camera controls:</h3>
+                <ul>
+                    <li>W to move forward</li>
+                    <li>A to move left</li>
+                    <li>S to move back</li>
+                    <li>D to move right</li>
+                    <li>SHIFT to "sprint"</li>
+                    <li>R to reset camera height</li>
+                    <li>X to reset camera to center of world</li>
+                </ul>
 
-        <h3 style="text-align: center;">Other controls:</h3>
-        <ul style="text-align: center; padding-right: 6%;">
-            <li>ALT + 1 to switch to Range map</li>
-            <li>ALT + 2 to switch to Randomly generated map</li>
-            <li>Z to regenerate the randomly generated map</li>
-        </ul>
+                <h3>Player mode controls:</h3>
+                <ul>
+                    <li>1 to enter "Mine" mining mode</li>
+                    <li>2 to enter "FPS" (shooting) mode</li>
+                    <li>v to enter noclip (fly) mode</li>
+                </ul>
 
+                <h3>Mouse controls:</h3>
+                <ul>
+                    <li>LEFT MOUSE BUTTON to destroy block (In MINE mode) or shoot (FPS MODE)</li>
+                    <li>RIGHT MOUSE BUTTON to place block</li>
+                </ul>
+
+                <h3>Other controls:</h3>
+                <ul>
+                    <li>ALT + 1 to switch to Range map</li>
+                    <li>ALT + 2 to switch to Randomly generated map</li>
+                    <li>Z to regenerate the randomly generated map</li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div id="container">
@@ -57,37 +84,38 @@
 
         <div id="settingRow">
           <label for="camMovSpeed">Camera Movement Speed:</label>
-          <input id="camMovSpeed" type="number" value="2">
+          <input id="camMovSpeed" type="number" value="2" step="1">
         </div>
 
         <div id="settingRow">
-          <label for="camRotSpeed">Sensitivity:</label>
-          <input id="camRotSpeed" min="0" max="100" type="number" value="50">
+          <label for="camRotSpeed">Camera Sensitivity:</label>
+          <input id="camRotSpeed" min="1" max="100" type="number" value="50">
         </div>
 
-        <div id ="settingRow" style="margin-top: 10px;">
+        <div id="settingRow" style="margin-top: 10px;">
           <label for="targetSize">Target Size:</label>
           <input id="targetSize" type="number" value="0.1" step="0.01">
         </div>
 
-        <div id ="settingRow" style="margin-top: 10px;">
+        <div id="settingRow" style="margin-top: 10px;">
           <label for="maxTargets">Number of Targets:</label>
           <input id="maxTargets" type="number" value="15" step="1">
         </div>
 
         <h4 class="settingsText">Settings for randomly generated map:</h4>
 
-        <div id ="settingRow" style="margin-top: 10px;">
+        <div id="settingRow" style="margin-top: 10px;">
           <label for="changeMapSize">Change size of map:</label>
           <input id="changeMapSize" type="number" value="64" step="1">
         </div>
 
-        <div id ="settingRow" style="margin-top: 10px;">
-          <label for="floorTileCount">Number of floor tiles:</label>
+        <div id="settingRow" style="margin-top: 10px;">
+          <label for="floorTileCount">Number of steps digger takes:</label>
           <input id="floorTileCount" type="number" value="2048" step="1">
+          <p style="margin: 0%">(See descriptin for more information on this setting)</p>
         </div>
 
-        <div id ="settingRow" style="margin-top: 10px;">
+        <div id="settingRow" style="margin-top: 10px;">
           <label for="volumeSlider">Volume <span class="slider-value" id="volumeValue" style="margin-right: 10px;">100</span>:</label>
           <input id="volumeSlider" type="range" min="0" max="1" value="1" step="0.01">
         </div>

@@ -212,3 +212,12 @@ function rebuildTargets() {
     if (g_currMap === RANGE) createTargetsForRange();
     else if (g_currMap === RANDOM) createTargetsForRandMap();
 }
+
+function rescaleTargets() {
+    for (let i = 0; i < g_targets.length; ++i) {
+        let t = g_targets[i];
+        t.matrix = new Matrix4(t.baseMatrix);
+        t.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
+        updateHitBox(t);
+    };
+}
