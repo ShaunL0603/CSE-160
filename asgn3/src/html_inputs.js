@@ -38,16 +38,20 @@ function handleEvents() {
 
 function htmlActions() {
     const settingsPanel = document.getElementById("settingsPanel");
+
     const camSpeedInput = document.getElementById("camMovSpeed");
+    const camRotSpeed = document.getElementById("camRotSpeed");
     const resetHeightButton = document.getElementById("resetHeightButton");
-    const volumeSlider = document.getElementById("volumeSlider");
+
     const maxTargets = document.getElementById("maxTargets");
     const makeHitBoxVisible = document.getElementById("makeHitBoxVisible");
     const targetSize = document.getElementById("targetSize");
+
     const changeMapSize = document.getElementById("changeMapSize");
     const floorTileCount = document.getElementById("floorTileCount");
+
     const playerScore = document.getElementById("playerScore");
-    const camRotSpeed = document.getElementById("camRotSpeed");
+    const volumeSlider = document.getElementById("volumeSlider");
 
     settingsPanel.addEventListener("mousedown", (ev) => {
         ev.stopPropagation(); 
@@ -55,6 +59,8 @@ function htmlActions() {
     settingsPanel.addEventListener("click", (ev) => {
         ev.stopPropagation();
     });
+
+    // Actions for camera
     camSpeedInput.addEventListener("keydown", (ev) => {
         if (ev.key === "Enter") {
             if (ev.target.value < camSpeedInput.min) {
@@ -66,7 +72,16 @@ function htmlActions() {
             g_camSpeedMult = parseFloat(ev.target.value);
         }
     });
-
+    camRotSpeed.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (ev.target.value < parseFloat(camRotSpeed.min) || ev.target.value > parseFloat(camRotSpeed.max)) {
+                console.log("invalid rotation sensitivity");
+                ev.target.value = g_camera.rotSpeed * 1000;
+                return;
+            }
+            g_camera.rotSpeed = parseInt(ev.target.value) * 0.001;
+        }
+    });
     if (resetHeightButton) {
         resetHeightButton.addEventListener("click", () => {
            if (typeof g_camera !== null) {
@@ -74,6 +89,21 @@ function htmlActions() {
            } 
         });
     }
+
+    // --- SETTINGS FOR TARGETS ---
+    // Action to change target size
+    targetSize.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (ev.target.value < parseFloat(targetSize.min) || ev.target.value > parseFloat(targetSize.max)) {
+                console.log("invalid target size");
+                ev.target.value = g_targetSize;
+                return;
+            }
+
+            g_targetSize = parseFloat(ev.target.value);
+            rescaleTargets();
+        }
+    });
     // Action to make the hit box visible
     makeHitBoxVisible.addEventListener("click", () => {
         g_hitboxVisible = !g_hitboxVisible;
@@ -85,29 +115,6 @@ function htmlActions() {
             }
         }
     });
-    // Action to change target size
-    targetSize.addEventListener("keydown", (ev) => {
-        if (ev.key === "Enter") {
-            if (ev.target.value < 0.05 || ev.target.value > 0.5) {
-                console.log("invalid target size");
-                ev.target.value = g_targetSize;
-                return;
-            }
-
-            g_targetSize = parseFloat(ev.target.value);
-            rescaleTargets();
-        }
-    });
-    changeMapSize.addEventListener("keydown", (ev) => {
-        if (ev.key === "Enter") {
-            if (ev.target.value > 0) g_mapSize = parseInt(ev.target.value);
-        }
-    });
-    floorTileCount.addEventListener("keydown", (ev) => {
-        if (ev.key === "Enter") {
-            if (ev.target.value > 0) g_floorTileCount = parseInt(ev.target.value);
-        }
-    });
     // Action to change the maximum number of target on screen
     maxTargets.addEventListener("keydown", (ev) => {
         if (ev.key === "Enter") {
@@ -116,19 +123,29 @@ function htmlActions() {
                 g_maxTargets = newMax;
                 rebuildTargets();
             }
+            ev.target.value = g_maxTargets
         }
     });
+
+    // --- SETTINGS FOR RNADOM MAP ---
+    changeMapSize.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (ev.target.value >= 5) g_mapSize = parseInt(ev.target.value);
+            ev.target.value = g_mapSize;
+        }
+    });
+    floorTileCount.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") {
+            if (ev.target.value >= 0) g_floorTileCount = parseInt(ev.target.value);
+            ev.target.value = g_floorTileCount;
+        }
+    });
+
+    // --- OTHER ---
     volumeSlider.addEventListener("input", (ev) => {
         let newVolume = parseFloat(ev.target.value);
         g_hitSound.volume = newVolume;
         sendTextToHTML(parseInt(newVolume * 100), "volumeValue");
-    });
-    camRotSpeed.addEventListener("keydown", (ev) => {
-        if (ev.key === "Enter") {
-            if (0 < ev.target.value && ev.target.value <= 100) {
-                g_camera.rotSpeed = parseInt(ev.target.value) * 0.001;
-            }
-        }
     });
 }
 
