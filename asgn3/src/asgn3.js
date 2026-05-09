@@ -316,6 +316,84 @@ function isObjVisible(obj) {
     return dotProduct >= threshold;
 }
 
+function handleModes(obj, mouseBtn, closestDistance) {
+    if (g_playerMode === MINE) {
+        // Left click delete block
+        if (mouseBtn === 0) {
+            if (obj.type === "ground" || obj.type === "rangeWall") return;
+            
+            let idx = g_worldObjs.indexOf(obj);
+            if (idx > -1) {
+                // delete block from rendering list
+                g_worldObjs.splice(idx, 1);
+            }
+        }
+        // right click place block
+        else if (mouseBtn === 2) {
+            placeBlock(closestDistance);
+        };
+    } else if (g_playerMode === FPS) {
+        if (mouseBtn === 0) {
+            obj.active = false;
+            obj.tod = g_seconds;
+            if (obj.hitbox) {
+                obj.hitbox.active = false;
+            }
+            hitEvent();
+        }
+    } else {
+        console.warn("Error: unrecognized mode", g_playerMode);
+    };
+}
+
+/**
+ * Let user switch between two maps
+ * User presses alt + 1 or alt + 2 to switch between maps
+ * 1 = RANGE map
+ * 2 = RANDOM, randomly generated map
+ * @param {*} ev to see if aly and specific keys are pressed
+ */
+function switchMap(ev) {
+    // switch to range
+    if (ev.altKey && ev.key === "1") {
+        // Don't execute rest of if statement if same map is trying to be loaded
+        if (g_currMap === RANGE) return;
+        
+        g_worldObjs = g_worldObjs.filter(obj => 
+            obj.type !== "wall" &&
+            obj.type !== "block"
+        );
+        createRange();
+        g_currMap = RANGE;
+        rebuildTargets();
+    } 
+    // switch to randomly generated map
+    else if (ev.altKey && ev.key === "2") {
+        if (g_currMap === RANDOM) return;
+        
+        // filter out objs in range map and remove targets
+        g_worldObjs = g_worldObjs.filter(obj => 
+            obj.type !== "rangeWall" && 
+            obj.type !== "target" && 
+            obj.type !== "hit box" &&
+            obj.type !== "block"
+        );
+        g_targets = [];
+
+        if (g_map.length === 0 || g_currMapSize !== g_mapSize || g_currFloorTileCount !== g_floorTileCount) {
+            console.log("Generating map for the first time...");
+            g_recenter = g_mapSize * g_cubeScale * 0.5; // first initalize g_recenter
+            g_map = generateRandWalk(g_mapSize, g_floorTileCount);
+            g_currMapSize = g_mapSize;
+            g_currFloorTileCount = g_floorTileCount;
+        }
+
+        createRandomMap();
+        createTargetsForRandMap();
+        g_currMap = RANDOM;
+    }
+}
+
 function createWorld() {
     g_skybox = new Cube();
     g_skybox.type = "sky";
@@ -371,54 +449,6 @@ function createRange() {
     rangeWall3.matrix.rotate(-90, 0, 1, 0);
     rangeWall3.matrix.scale(9.8, 5.0, 0.2);
     g_worldObjs.push(rangeWall3);
-}
-
-/**
- * Let user switch between two maps
- * User presses alt + 1 or alt + 2 to switch between maps
- * 1 = RANGE map
- * 2 = RANDOM, randomly generated map
- * @param {*} ev to see if aly and specific keys are pressed
- */
-function switchMap(ev) {
-    // switch to range
-    if (ev.altKey && ev.key === "1") {
-        // Don't execute rest of if statement if same map is trying to be loaded
-        if (g_currMap === RANGE) return;
-        
-        g_worldObjs = g_worldObjs.filter(obj => 
-            obj.type !== "wall" &&
-            obj.type !== "block"
-        );
-        createRange();
-        g_currMap = RANGE;
-        rebuildTargets();
-    } 
-    // switch to randomly generated map
-    else if (ev.altKey && ev.key === "2") {
-        if (g_currMap === RANDOM) return;
-        
-        // filter out objs in range map and remove targets
-        g_worldObjs = g_worldObjs.filter(obj => 
-            obj.type !== "rangeWall" && 
-            obj.type !== "target" && 
-            obj.type !== "hit box" &&
-            obj.type !== "block"
-        );
-        g_targets = [];
-
-        if (g_map.length === 0 || g_currMapSize !== g_mapSize || g_currFloorTileCount !== g_floorTileCount) {
-            console.log("Generating map for the first time...");
-            g_recenter = g_mapSize * g_cubeScale * 0.5; // first initalize g_recenter
-            g_map = generateRandWalk(g_mapSize, g_floorTileCount);
-            g_currMapSize = g_mapSize;
-            g_currFloorTileCount = g_floorTileCount;
-        }
-
-        createRandomMap();
-        createTargetsForRandMap();
-        g_currMap = RANDOM;
-    }
 }
 
 // Event player scores a hit on target

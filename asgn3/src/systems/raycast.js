@@ -128,31 +128,6 @@ function intersectRayAABB(origin, direction, boxMin, boxMax) {
     return tmin > 0 ? tmin : tmax;
 }
 
-function handleModes(obj, mouseBtn, closestDistance) {
-    if (g_playerMode === MINE) {
-        // Left click delete block
-        if (mouseBtn === 0) {
-            if (obj.type === "ground" || obj.type === "rangeWall") return;
-            obj.active = false;
-        }
-        // right click place block
-        else if (mouseBtn === 2) {
-            placeBlock(closestDistance);
-        };
-    } else if (g_playerMode === FPS) {
-        if (mouseBtn === 0) {
-            obj.active = false;
-            obj.tod = g_seconds;
-            if (obj.hitbox) {
-                obj.hitbox.active = false;
-            }
-            hitEvent();
-        }
-    } else {
-        console.warn("Error: unrecognized mode", g_playerMode);
-    };
-}
-
 /**
  * 
  * @param {*} closestDistance closest distance to player to place block at 
