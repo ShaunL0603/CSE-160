@@ -37,7 +37,7 @@ class Sphere {
 
         // Rebind normal buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereNormBuffer);
-        gl.vertexAttribPointer(a_Normal, 2, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Normal);
         
         // Scale texture
