@@ -15,7 +15,7 @@
 
         <div style="display: flex; justify-content: space-between; gap: 40px; margin-bottom: 20px;">
             
-            <div style="flex: 1; text-align: left;">
+            <!-- <div style="flex: 1; text-align: left;">
                 <h2><u>Description</u></h2>
                 <p>Welcome! This WebGL program is a very basic FPS like aim trainer. Here are some things to know:</p>
                 <ul>
@@ -91,7 +91,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div id="container">
       <canvas id="webgl">
@@ -99,8 +99,11 @@
       </canvas>
 
       <div id="crosshair"></div>
+
+      <button id="settingsToggleBtn">Settings</button>
       
-      <div id="settingsPanel">
+      <div id="settingsPanel" class="hidden">
+        <span class="close-btn" id="closeSettings">X</span>
         <h3>Settings</h3>
 
         <div id="settingRow">
@@ -156,6 +159,10 @@
       <div id="scorePanel">
         <p style="text-align: center;">Score: <span id="playerScore">0</span></p>
       </div>
+    </div>
+
+    <div>
+        <button id="toggleNormals">Toggle Normals</button>
     </div>
     
     <!-- LIBRARYS -->

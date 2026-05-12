@@ -37,6 +37,8 @@ function handleEvents() {
 }
 
 function htmlActions() {
+    const settingsBtn = document.getElementById("settingsToggleBtn");
+    const closeBtn = document.getElementById("closeSettings");
     const settingsPanel = document.getElementById("settingsPanel");
 
     const camSpeedInput = document.getElementById("camMovSpeed");
@@ -52,7 +54,18 @@ function htmlActions() {
 
     const playerScore = document.getElementById("playerScore");
     const volumeSlider = document.getElementById("volumeSlider");
+    const toggleNormals = document.getElementById("toggleNormals");
 
+    // --- settings panel actions ---
+    // click on settings button and close btn
+    settingsBtn.addEventListener('click', () => {toggleSettings(settingsPanel, settingsBtn); });
+    closeBtn.addEventListener('click', () => {toggleSettings(settingsPanel, settingsBtn); });
+    // press escape to exit settings
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !settingsPanel.classList.contains('hidden')) {
+            toggleSettings(settingsPanel, settingsBtn)
+        }
+    });
     settingsPanel.addEventListener("mousedown", (ev) => {
         ev.stopPropagation(); 
     });
@@ -60,7 +73,7 @@ function htmlActions() {
         ev.stopPropagation();
     });
 
-    // Actions for camera
+    // --- Actions for camera ---
     camSpeedInput.addEventListener("keydown", (ev) => {
         if (ev.key === "Enter") {
             if (ev.target.value < camSpeedInput.min) {
@@ -147,6 +160,7 @@ function htmlActions() {
         g_hitSound.volume = newVolume;
         sendTextToHTML(parseInt(newVolume * 100), "volumeValue");
     });
+    toggleNormals.onclick = () => { g_toggleNormals = !g_toggleNormals; };
 }
 
 function updateKeyDown(ev) {
@@ -253,4 +267,8 @@ function sendTextToHTML(text, htmlID) {
     }
 
     htmlElm.innerHTML = text;
+}
+function toggleSettings(settingsPanel, settingsBtn) {
+    settingsPanel.classList.toggle("hidden");
+    settingsBtn.classList.toggle('hidden');
 }
