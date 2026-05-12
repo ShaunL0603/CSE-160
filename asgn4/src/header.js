@@ -17,6 +17,7 @@ var u_Sampler1;
 var u_Sampler2;
 var u_Sampler3;
 var u_ShowNormals;
+var u_LightPos;
 let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
 
 // Global variables

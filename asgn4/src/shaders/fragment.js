@@ -11,7 +11,9 @@ var FSHADER_SOURCE =
 
     varying vec2 v_UV;
     varying vec3 v_Normal;
+    varying vec4 v_VertPos;
 
+    uniform vec3 u_LightPos;
     uniform vec4 u_FragColor;
     uniform sampler2D u_Sampler0; // Debug texture
     uniform sampler2D u_Sampler1; // Sky texture
@@ -40,6 +42,14 @@ var FSHADER_SOURCE =
             gl_FragColor = texture2D(u_Sampler4, v_UV); // use 2nd wall texture
         } else {
             gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red
+        }
+
+        vec3 lightVec = vec3(v_VertPos) - u_LightPos;
+        float r = length(lightVec);
+        if (0.1 < r && r <= 1.0) {
+            gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+        } else if (1.0 < r && r <= 2.0) {
+            gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0 );
         }
     }
     `;

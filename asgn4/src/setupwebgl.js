@@ -118,4 +118,9 @@ function connectVariablesToGLSL() {
         return -1;
     }
 
+    u_LightPos = gl.getUniformLocation(gl.program, 'u_LightPos');
+    if (!u_LightPos) {
+        console.log('Failed to get the storage location of u_LightPos');
+        return -1;
+    }
 }
