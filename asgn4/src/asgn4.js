@@ -19,7 +19,7 @@ function main() {
     createCubeVertices();
     createCubeBuffers();
     // Create global sphere verts n buffers
-    createSphereVertices(10);
+    createSphereVertices(15);
     createSphereBuffers();
 
     initTextures();
