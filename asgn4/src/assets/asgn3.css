@@ -1,0 +1,94 @@
+#webgl {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.slider-value {
+    display: inline-block;
+    width: 2ch;
+    text-align: right;
+}
+
+input[type="number"] {
+    width: 50px;
+}
+
+#settingsText {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#container {
+    position: relative;
+    width: 80vw;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10vh auto;
+}
+
+#settingsPanel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-family: sans-serif;
+    padding: 15px 20px;
+    border-radius: 8px;
+    min-width: 200px;
+    z-index: 10; /* Ensures it sits on top of the WebGL canvas */
+    backdrop-filter: blur(4px);
+}
+
+#scorePanel {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-family: sans-serif;
+    padding: 5px 10px;
+    border-radius: 8px;
+    min-width: 100px;
+    z-index: 10; /* Ensures it sits on top of the WebGL canvas */
+    backdrop-filter: blur(4px);
+}
+
+#settingsPanel h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 5px;
+}
+
+.settingRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.settingRow input {
+    cursor: pointer;
+}
+
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Makes the square a perfect circle */
+    border-radius: 50%;
+    /* shift and center */
+    transform: translate(-50%, -50%); 
+    /* Don't accidentally click crosshair */
+    pointer-events: none; 
+    z-index: 5;
+}
