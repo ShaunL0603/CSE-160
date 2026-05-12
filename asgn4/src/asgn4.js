@@ -48,7 +48,6 @@ function resizeCanvas(canvas) {
     }
 }
 
-let g_NonMineable = ["ground", "rangeWall", "light"];
 function handleModes(obj, mouseBtn, closestDistance) {
     if (g_playerMode === MINE) {
         // Left click delete block

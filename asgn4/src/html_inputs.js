@@ -56,6 +56,14 @@ function htmlActions() {
     const volumeSlider = document.getElementById("volumeSlider");
     const toggleNormals = document.getElementById("toggleNormals");
 
+    const lightX = document.getElementById("lightX");
+    const lightY = document.getElementById("lightY");
+    const lightZ = document.getElementById("lightZ");
+
+    // const light2X = document.getElementById("light2X");
+    // const light2Y = document.getElementById("light2Y");
+    // const light2Z = document.getElementById("light2Z");
+
     // --- settings panel actions ---
     // click on settings button and close btn
     settingsBtn.addEventListener('click', () => {toggleSettings(settingsPanel, settingsBtn); });
@@ -154,6 +162,24 @@ function htmlActions() {
         }
     });
 
+    // --- LIGHT ACTIONS ---
+    // Moving position of the light
+    lightX.addEventListener("input", (ev) => {
+        let newx = parseFloat(ev.target.value);
+        g_lightPos[0] = newx;
+        moveLight();
+    });
+    lightY.addEventListener("input", (ev) => {
+        let newy = parseFloat(ev.target.value);
+        g_lightPos[1] = newy;
+        moveLight();
+    });
+    lightZ.addEventListener("input", (ev) => {
+        let newz = parseFloat(ev.target.value);
+        g_lightPos[2] = newz;
+        moveLight();
+    });
+
     // --- OTHER ---
     volumeSlider.addEventListener("input", (ev) => {
         let newVolume = parseFloat(ev.target.value);
@@ -161,6 +187,18 @@ function htmlActions() {
         sendTextToHTML(parseInt(newVolume * 100), "volumeValue");
     });
     toggleNormals.onclick = () => { g_toggleNormals = !g_toggleNormals; };
+}
+
+function moveLight() {
+    let x = g_lightPos[0];
+    let y = g_lightPos[1];
+    let z = g_lightPos[2];
+    let sx = g_lightScale[0];
+    let sy = g_lightScale[1];
+    let sz = g_lightScale[2];
+
+    g_light.matrix.setTranslate(x, y, z);
+    g_light.matrix.scale(sx, sy, sz);
 }
 
 function updateKeyDown(ev) {
