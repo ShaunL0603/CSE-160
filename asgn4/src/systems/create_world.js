@@ -16,6 +16,14 @@ function createWorld() {
     g_ground.matrix.scale(40, 0.2, 40);
     g_worldObjs.push(g_ground);
 
+    g_light = new Cube();
+    g_light.type = "light";
+    g_light.color = [1.0, 1.0, 0.0, 1.0];
+    g_light.texture = t_COLOR;
+    g_light.matrix.translate(-0.1, 2.5, -5.0);
+    g_light.matrix.scale(0.2, 0.2, 0.2,);
+    g_worldObjs.push(g_light);
+
     // Default map to load to
     createRange();
     createTargetsForRange();

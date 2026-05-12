@@ -48,11 +48,12 @@ function resizeCanvas(canvas) {
     }
 }
 
+let g_NonMineable = ["ground", "rangeWall", "light"];
 function handleModes(obj, mouseBtn, closestDistance) {
     if (g_playerMode === MINE) {
         // Left click delete block
         if (mouseBtn === 0) {
-            if (obj.type === "ground" || obj.type === "rangeWall") return;
+            if (g_NonMineable.includes(obj.type)) return;
             
             let idx = g_worldObjs.indexOf(obj);
             if (idx > -1) {
