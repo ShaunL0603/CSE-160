@@ -9,7 +9,7 @@ function createTarget(pos) {
     var target = new Sphere();
     target.type = "target";
     target.color = [1.0, 0.0, 0.0, 1.0];
-    target.textureNum = -2;
+    target.texture = t_COLOR;
     target.pos = pos;
     target.baseMatrix = new Matrix4();
     target.baseMatrix.translate(pos[0], pos[1], pos[2]);
@@ -19,7 +19,7 @@ function createTarget(pos) {
     var targetHitBox = new Cube();
     targetHitBox.type = "hit box";
     targetHitBox.color = [1.0, 1.0, 0.0, (g_hitboxVisible) ? 1.0 : 0.0];
-    targetHitBox.textureNum = -2;
+    targetHitBox.texture = t_COLOR;
     target.hitbox = targetHitBox;
     updateHitBox(target);
 

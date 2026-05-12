@@ -12,7 +12,7 @@ function createRandomMap() {
                     var wall = new Cube();
                     wall.type = "wall";
                     wall.color = [0.5, 0.5, 0.5, 1.0];
-                    wall.textureNum = 2;
+                    wall.texture = t_WALL;
                     wall.pos = [
                         (x * g_cubeScale) - g_recenter,
                         (h * g_cubeScale),

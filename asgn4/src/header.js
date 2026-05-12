@@ -96,9 +96,17 @@ let u_UVScale = 1.0;                                                            
 const degToRad = Math.PI / 180;
 const g_invFPSCap = 1 / g_fpsCap;
 const g_invPi = 1 / Math.PI;
-// --- for player modes ---
-const FPS = "FPS";
-const MINE = "MINE";
-// ---- for current map ---
-const RANGE = "m_RANGE";
-const RANDOM = "m_RANDOM";
+    // --- for player modes ---
+    const FPS = "FPS";
+    const MINE = "MINE";
+    // ---- for current map ---
+    const RANGE = "m_RANGE";
+    const RANDOM = "m_RANDOM";
+
+    // For textures
+    const t_COLOR = -2 //"COLOR"
+    const t_DEBUG = -1 //"DEBUG"
+    const t_SKY = 0 // "SKY"
+    const t_GROUND = 1 //"GROUND"
+    const t_WALL = 2 // "WALL"
+    const t_RANGEWALL = 3 // "RANGEWALL" 

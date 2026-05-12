@@ -3,7 +3,7 @@ class Sphere {
         this.type = "sphere";
         this.color = [1.0, 0.0, 0.0, 1.0];
         this.matrix = new Matrix4();
-        this.textureNum = 0; 
+        this.texture = t_COLOR; 
         this.UVScale = 1.0; 
         
         this.baseMatrix = new Matrix4();
@@ -17,7 +17,7 @@ class Sphere {
     render() {
         var rgba = this.color;
         // Pass texture number
-        gl.uniform1i(u_whichTexture, this.textureNum);
+        gl.uniform1i(u_whichTexture, this.texture);
         
         // Pass the color to u_FragColor variable
         gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);

@@ -7,6 +7,7 @@ var VSHADER_SOURCE =
     attribute vec2 a_UV;
 
     varying vec2 v_UV;
+    varying vec3 v_Normal;
 
     uniform mat4 u_ModelMatrix;
     // uniform mat4 u_GlobalRotationMatrix;
@@ -17,5 +18,6 @@ var VSHADER_SOURCE =
     void main() {
         gl_Position = u_ProjectionMatrix * u_ViewMatrix *  u_ModelMatrix * a_Position;
         v_UV = a_UV * u_UVScale;
+        // v_Normal = a_Normal;
     }
     `;

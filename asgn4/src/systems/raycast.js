@@ -154,7 +154,7 @@ function placeBlock(closestDistance) {
     let newCube = new Cube();
     newCube.type = "block";
     newCube.color = [0.8, 0.8, 0.0, 1.0];
-    newCube.textureNum = -2;
+    newCube.texture = t_COLOR;
     newCube.matrix.translate(snapToX, snapToY, snapToZ);
     newCube.matrix.scale(g_cubeScale, g_cubeScale, g_cubeScale);
     g_worldObjs.push(newCube);
