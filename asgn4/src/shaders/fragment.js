@@ -18,20 +18,25 @@ var FSHADER_SOURCE =
     uniform sampler2D u_Sampler2; // Ground texture
     uniform sampler2D u_Sampler3; // Wall texture
     uniform sampler2D u_Sampler4; // 2nd wall texture
-    uniform int u_whichTexture;
+    uniform int u_WhichTexture;
+    uniform bool u_ShowNormals;
 
     void main() {
-        if (u_whichTexture == t_COLOR) {
-            gl_FragColor = u_FragColor; // use color
-        } else if (u_whichTexture == t_DEBUG) {
+        if (u_WhichTexture == t_COLOR) {
+            if (u_ShowNormals) {
+                gl_FragColor = vec4((v_Normal + 1.0) * 0.5, 1.0); // use normal
+            } else {
+                gl_FragColor = u_FragColor;
+            }
+        } else if (u_WhichTexture == t_DEBUG) {
             gl_FragColor = texture2D(u_Sampler0, v_UV); // use debug texture
-        } else if (u_whichTexture == t_SKY) {
+        } else if (u_WhichTexture == t_SKY) {
             gl_FragColor = texture2D(u_Sampler1, v_UV); // use sky texture
-        } else if (u_whichTexture == t_GROUND) {
+        } else if (u_WhichTexture == t_GROUND) {
             gl_FragColor = texture2D(u_Sampler2, v_UV); // use ground texture
-        } else if (u_whichTexture == t_WALL) {
+        } else if (u_WhichTexture == t_WALL) {
             gl_FragColor = texture2D(u_Sampler3, v_UV); // use wall texture
-        } else if (u_whichTexture == t_RANGEWALL) {
+        } else if (u_WhichTexture == t_RANGEWALL) {
             gl_FragColor = texture2D(u_Sampler4, v_UV); // use 2nd wall texture
         } else {
             gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red

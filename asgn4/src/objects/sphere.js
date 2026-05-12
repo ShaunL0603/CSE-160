@@ -17,7 +17,7 @@ class Sphere {
     render() {
         var rgba = this.color;
         // Pass texture number
-        gl.uniform1i(u_whichTexture, this.texture);
+        gl.uniform1i(u_WhichTexture, this.texture);
         
         // Pass the color to u_FragColor variable
         gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
@@ -42,6 +42,8 @@ class Sphere {
         
         // Scale texture
         gl.uniform1f(u_UVScale, this.UVScale);
+        // toggle normal
+        gl.uniform1i(u_ShowNormals, g_toggleNormals ? 1 : 0);
         
         // Draw
         gl.drawArrays(gl.TRIANGLES, 0, g_sphereVertices.length / 3);

@@ -11,7 +11,7 @@ class Cube {
     render() {
         var rgba = this.color;
         // Pass texture number
-        gl.uniform1i(u_whichTexture, this.texture);
+        gl.uniform1i(u_WhichTexture, this.texture);
         // Pass the color of a triangle to u_FragColor variable
         gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
         // Pass the matrix to u_ModelMatrix attribute
@@ -37,8 +37,11 @@ class Cube {
         gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0);
         // Enable the assignment to a_Normal variable
         gl.enableVertexAttribArray(a_Normal);
+
         // Scale texture
         gl.uniform1f(u_UVScale, this.UVScale);
+        // toggle normal
+        gl.uniform1i(u_ShowNormals, g_toggleNormals ? 1 : 0);
         
         gl.drawArrays(gl.TRIANGLES, 0, g_cubeVertices.length / 3);
     }

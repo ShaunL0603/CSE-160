@@ -11,11 +11,12 @@ var u_ModelMatrix;
 var u_ProjectionMatrix;
 var u_ViewMatrix;
 var u_FragColor;
-var u_whichTexture;
+var u_WhichTexture;
 var u_Sampler0;
 var u_Sampler1;
 var u_Sampler2;
 var u_Sampler3;
+var u_ShowNormals;
 let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
 
 // Global variables
@@ -90,7 +91,7 @@ let u_UVScale = 1.0;                                                            
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
     let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
-    let g_toggleNormals = true;
+    let g_toggleNormals = false;
     
     // --- For placing blocks ---
     let g_tempOrigin3v = new Vector3();

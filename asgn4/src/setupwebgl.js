@@ -40,7 +40,7 @@ function connectVariablesToGLSL() {
     }
 
     a_Normal = gl.getAttribLocation(gl.program, "a_Normal");
-    if (a_UV < 0) {
+    if (a_Normal < 0) {
         console.log("Failed to get storage location of a_Normal");
         return -1;
     }
@@ -100,9 +100,9 @@ function connectVariablesToGLSL() {
         return -1;
     }
 
-    u_whichTexture = gl.getUniformLocation(gl.program, 'u_whichTexture');
-    if (!u_whichTexture) {
-        console.log('Failed to get the storage location of u_whichTexture');
+    u_WhichTexture = gl.getUniformLocation(gl.program, 'u_WhichTexture');
+    if (!u_WhichTexture) {
+        console.log('Failed to get the storage location of u_WhichTexture');
         return -1;
     }
 
@@ -111,4 +111,11 @@ function connectVariablesToGLSL() {
         console.log('Failed to get the storage location of u_UVScale');
         return -1;
     }
+
+    u_ShowNormals = gl.getUniformLocation(gl.program, 'u_ShowNormals');
+    if (!u_ShowNormals) {
+        console.log('Failed to get the storage location of u_ShowNormals');
+        return -1;
+    }
+
 }
