@@ -30,6 +30,13 @@ class Cube {
         gl.vertexAttribPointer(a_UV, 2, gl.FLOAT, false, 0, 0);
         // Enable the assignment to a_UV variable
         gl.enableVertexAttribArray(a_UV);
+
+        // Rebind normals vert buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeNormBuffer);
+        // Assign the buffer object to a_Normal variable
+        gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0);
+        // Enable the assignment to a_Normal variable
+        gl.enableVertexAttribArray(a_Normal);
         // Scale texture
         gl.uniform1f(u_UVScale, this.UVScale);
         
@@ -59,7 +66,7 @@ function createCubeVertices() {
         0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0
     ]);
     
-    g_cubeUVVertices = new Float32Array([
+    g_cubeUVVerts = new Float32Array([
         // Front Face
         0.0, 0.0,  1.0, 0.0,  1.0, 1.0, 
         0.0, 0.0,  1.0, 1.0,  0.0, 1.0, 
@@ -79,12 +86,34 @@ function createCubeVertices() {
         0.0, 0.0,  1.0, 0.0,  1.0, 1.0, 
         0.0, 0.0,  1.0, 1.0,  0.0, 1.0
     ]);
+
+    g_cubeNormVerts = new Float32Array([
+        // Front face
+        0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  
+        0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  
+        // Back face
+        0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  
+        0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  
+        // Left face
+        -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  
+        -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  
+        // Right face
+        1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  
+        1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  
+        // Top face
+        0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  
+        0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  
+        // Bottom face
+        0.0, -1.0, 0.0,  0.0, -1.0, 0.0,  0.0, -1.0, 0.0,  
+        0.0, -1.0, 0.0,  0.0, -1.0, 0.0,  0.0, -1.0, 0.0
+    ]);
 }
 
 function createCubeBuffers() {
     g_cubeVertBuffer = gl.createBuffer();
     g_cubeUVVertBuffer = gl.createBuffer();
-    if (!g_cubeVertBuffer || !g_cubeUVVertBuffer) {
+    g_cubeNormBuffer = gl.createBuffer();
+    if (!g_cubeVertBuffer || !g_cubeUVVertBuffer || !g_cubeNormBuffer) {
         console.error("Failed to creaete global cube buffers");
         return -1;
     }
@@ -92,11 +121,17 @@ function createCubeBuffers() {
     // Bind the buffer object to target
     gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeVertBuffer);
     // Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, g_cubeVertices, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_cubeVertices, gl.DYNAMIC_DRAW);
 
     // --- UV ---
     // Bind the buffer object to target
     gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeUVVertBuffer);
     // Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, g_cubeUVVertices, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_cubeUVVerts, gl.DYNAMIC_DRAW);
+
+    // --- NORMALS ---
+    // Bind the buffer object to target
+    gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeNormBuffer);
+    // Write date into the buffer object
+    gl.bufferData(gl.ARRAY_BUFFER, g_cubeNormVerts, gl.DYNAMIC_DRAW);
 }

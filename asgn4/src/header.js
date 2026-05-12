@@ -5,6 +5,7 @@
 var canvas;
 var gl;
 var a_Position;
+var a_Normal;
 var a_UV;
 var u_ModelMatrix;
 var u_ProjectionMatrix;
@@ -46,14 +47,18 @@ let u_UVScale = 1.0;                                                            
     // initialize them here
     // --- FOR CUBE ---
     let g_cubeVertices = null;
-    let g_cubeUVVertices = null;
+    let g_cubeUVVerts = null;
+    let g_cubeNormVerts = null;
     let g_cubeVertBuffer = null;
     let g_cubeUVVertBuffer = null;
+    let g_cubeNormBuffer = null;
     // --- FOR SPHERE ---
     let g_sphereVertices = null;
-    let g_sphereUVVertices = null;
+    let g_sphereUVVerts = null;
+    let g_sphereNormVerts = null;
     let g_sphereVertBuffer = null;
     let g_sphereUVVertBuffer = null;
+    let g_sphereNormBuffer = null;
 
     // --- World objects ---
     let g_worldObjs = [];                                                                       // list of objects to render
@@ -95,7 +100,6 @@ let u_UVScale = 1.0;                                                            
 // CONSTANTS
 const degToRad = Math.PI / 180;
 const g_invFPSCap = 1 / g_fpsCap;
-const g_invPi = 1 / Math.PI;
     // --- for player modes ---
     const FPS = "FPS";
     const MINE = "MINE";
