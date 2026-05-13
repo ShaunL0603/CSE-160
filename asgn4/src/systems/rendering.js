@@ -33,14 +33,16 @@ function tick() {
     if (elapsed > frameInterval) {
         g_lastFrameTime = now - (elapsed % frameInterval);
         g_seconds = (now * 0.001) - g_startTime;
+
         // Main rendering
         handleRespawning();
+        updateAnimationAngles();
         renderAllShapes();
-
+        
         if (now - g_lastFPSUpdateTime > 500) {
             let fps = Math.round(1000.0 / elapsed);
             let msPerFrame = Math.round(elapsed);
-
+            
             let text = `ms: ${msPerFrame} fps: ${fps} / ${g_fpsCap}`;
             sendTextToHTML(text, "numdot");
             g_lastFPSUpdateTime = now;
@@ -84,4 +86,35 @@ function isObjVisible(obj) {
     let paddingAngle = g_camera.fov;
     let threshold = Math.cos(paddingAngle * degToRad);
     return dotProduct >= threshold;
+}
+
+let cx = -0.1;  // -0.1 offset due to scale when centering with world origin
+let cz = -5.0;   // 5.0 offset for same reason
+let radius = 4.5;
+let angle = 0;
+function updateAnimationAngles() {
+    // Circular path for light cube
+    // for (let angle = 0; angle < 360; angle += 5)
+    angle += 0.01;
+    if (angle > 360) angle = 0;
+
+    let newx = cx + radius * Math.cos(angle);
+    let newz = cz + radius * Math.sin(angle);
+
+    g_lightPos[0] = newx;
+    g_lightPos[2] = newz;
+    moveLight();
+}
+
+function moveLight() {
+    let x = g_lightPos[0];
+    let y = g_lightPos[1];
+    let z = g_lightPos[2];
+
+    let sx = g_lightScale[0];
+    let sy = g_lightScale[1];
+    let sz = g_lightScale[2];
+
+    g_light.matrix.setTranslate(x, y, z);
+    g_light.matrix.scale(sx, sy, sz);
 }

@@ -70,7 +70,7 @@ let u_UVScale = 1.0;                                                            
     let g_targets = [];                                                                         // list of objects to keep track of and perform calculations on
     var g_currMap;                                                                              // Keep track of which map is currently loaded
     let g_NonMineable = ["ground", "rangeWall", "light"];                                       // keep track of types that shouldn't be destroyed by players
-    let g_lightPos = [-0.1, 2.5, -5.0];
+    let g_lightPos = [0.0, 2.5, 0.0];
     let g_lightScale = [0.05, 0.05, 0.05];
 
     
