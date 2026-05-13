@@ -36,7 +36,7 @@ function tick() {
 
         // Main rendering
         handleRespawning();
-        updateAnimationAngles();
+        if (g_toggleLightPath) updateAnimationAngles();
         renderAllShapes();
         
         if (now - g_lastFPSUpdateTime > 500) {
@@ -111,10 +111,6 @@ function moveLight() {
     let y = g_lightPos[1];
     let z = g_lightPos[2];
 
-    let sx = g_lightScale[0];
-    let sy = g_lightScale[1];
-    let sz = g_lightScale[2];
-
     g_light.matrix.setTranslate(x, y, z);
-    g_light.matrix.scale(sx, sy, sz);
+    g_light.matrix.scale(g_lightScale, g_lightScale, g_lightScale);
 }

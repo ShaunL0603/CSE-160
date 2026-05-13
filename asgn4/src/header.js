@@ -71,7 +71,7 @@ let u_UVScale = 1.0;                                                            
     var g_currMap;                                                                              // Keep track of which map is currently loaded
     let g_NonMineable = ["ground", "rangeWall", "light"];                                       // keep track of types that shouldn't be destroyed by players
     let g_lightPos = [0.0, 2.5, 0.0];
-    let g_lightScale = [0.05, 0.05, 0.05];
+    let g_lightScale = 0.05;
 
     
     // --- FOR TARGETS ---
@@ -93,16 +93,17 @@ let u_UVScale = 1.0;                                                            
     let g_cubeScale = 0.25;                                                                     // scale for player placed blocks and walls
     var g_recenter;                                                                             // recenter cubes of rand map so that span room is 0,0,0
 
+    // --- For placing blocks ---
+    let g_tempOrigin3v = new Vector3();
+    let g_tempDir3v = new Vector3();
+    let g_tempHitPoint3v = new Vector3();  
+
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
     let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
     let g_toggleNormals = false;
-    
-    // --- For placing blocks ---
-    let g_tempOrigin3v = new Vector3();
-    let g_tempDir3v = new Vector3();
-    let g_tempHitPoint3v = new Vector3();    
+    let g_toggleLightPath = true;
 
 // CONSTANTS
 const degToRad = Math.PI / 180;

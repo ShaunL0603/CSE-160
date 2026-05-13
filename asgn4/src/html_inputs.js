@@ -59,6 +59,7 @@ function htmlActions() {
     const lightX = document.getElementById("lightX");
     const lightY = document.getElementById("lightY");
     const lightZ = document.getElementById("lightZ");
+    const toggleLightPath = document.getElementById("toggleLightPath");
 
     // const light2X = document.getElementById("light2X");
     // const light2Y = document.getElementById("light2Y");
@@ -147,6 +148,7 @@ function htmlActions() {
             ev.target.value = g_maxTargets
         }
     });
+    toggleLightPath.addEventListener("click", (ev) => { g_toggleLightPath = !g_toggleLightPath; })
 
     // --- SETTINGS FOR RNADOM MAP ---
     changeMapSize.addEventListener("keydown", (ev) => {

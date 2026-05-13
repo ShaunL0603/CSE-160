@@ -44,12 +44,14 @@ var FSHADER_SOURCE =
             gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red
         }
 
-        vec3 lightVec = vec3(v_VertPos) - u_LightPos;
+        vec3 lightVec = u_LightPos - vec3(v_VertPos);
         float r = length(lightVec);
-        if (0.1 < r && r <= 1.0) {
-            gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-        } else if (1.0 < r && r <= 2.0) {
-            gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0 );
-        }
+        // if (0.1 < r && r <= 1.0) {
+        //     gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+        // } else if (1.0 < r && r <= 2.0) {
+        //     gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0 );
+        // }
+ 
+        gl_FragColor = vec4(vec3(gl_FragColor) / (r*r), 1.0);
     }
     `;

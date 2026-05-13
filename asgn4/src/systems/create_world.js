@@ -16,11 +16,7 @@ function createWorld() {
     g_ground.matrix.scale(40, 0.2, 40);
     g_worldObjs.push(g_ground);
 
-    let sx = g_lightScale[0];
-    let sy = g_lightScale[1];
-    let sz = g_lightScale[2];
-
-    g_light = new Cube();
+    g_light = new Sphere();
     g_light.type = "light";
     g_light.color = [1.0, 1.0, 0.0, 1.0];
     g_light.texture = t_COLOR;
@@ -29,7 +25,7 @@ function createWorld() {
         g_lightPos[1], 
         g_lightPos[2]
     );
-    g_light.matrix.scale(sx, sy, sz);
+    g_light.matrix.scale(g_lightScale, g_lightScale, g_lightScale);
     g_worldObjs.push(g_light);
 
     // Default map to load to
