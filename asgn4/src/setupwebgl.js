@@ -106,6 +106,12 @@ function connectVariablesToGLSL() {
         return -1;
     }
 
+    u_Shininess = gl.getUniformLocation(gl.program, 'u_Shininess');
+    if (!u_Shininess) {
+        console.log('Failed to get the storage location of u_Shininess');
+        return -1;
+    }
+
     u_UVScale = gl.getUniformLocation(gl.program, 'u_UVScale');
     if (!u_UVScale) {
         console.log('Failed to get the storage location of u_UVScale');

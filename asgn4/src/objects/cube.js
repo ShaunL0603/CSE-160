@@ -6,6 +6,7 @@ class Cube {
     this.texture = t_COLOR;
     this.UVScale = 1.0;
     this.active = true;
+    this.shininess = 10.0;
   }
 
     render() {
@@ -40,6 +41,8 @@ class Cube {
 
         // Scale texture
         gl.uniform1f(u_UVScale, this.UVScale);
+        // object shininess
+        gl.uniform1f(u_Shininess, this.shininess);
         // toggle normal
         gl.uniform1i(u_ShowNormals, g_toggleNormals ? 1 : 0);
         // toggle texture

@@ -5,13 +5,13 @@ class Sphere {
         this.matrix = new Matrix4();
         this.texture = t_COLOR; 
         this.UVScale = 1.0; 
-        
         this.baseMatrix = new Matrix4();
         this.hitbox = new Cube();
         this.active = true; // render objectsif they're active, not hit
         this.tod = 0.0; // save sphere's time of death
         this.respawnDelay = 2.0; // time until respawn
         this.pos = [];
+        this.shininess = 10.0;
     }
 
     render() {
@@ -42,6 +42,8 @@ class Sphere {
         
         // Scale texture
         gl.uniform1f(u_UVScale, this.UVScale);
+        // object shininess
+        gl.uniform1f(u_Shininess, this.shininess);
         // toggle normal
         gl.uniform1i(u_ShowNormals, g_toggleNormals ? 1 : 0);
         // toggle texture

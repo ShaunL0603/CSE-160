@@ -12,6 +12,7 @@ var u_ProjectionMatrix;
 var u_ViewMatrix;
 var u_FragColor;
 var u_WhichTexture;
+var u_Shininess;
 var u_Sampler0;
 var u_Sampler1;
 var u_Sampler2;
