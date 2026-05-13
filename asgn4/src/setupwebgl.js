@@ -123,4 +123,10 @@ function connectVariablesToGLSL() {
         console.log('Failed to get the storage location of u_LightPos');
         return -1;
     }
+
+    u_CameraPos = gl.getUniformLocation(gl.program, 'u_CameraPos');
+    if (!u_CameraPos) {
+        console.log('Failed to get the storage location of u_CameraPos');
+        return -1;
+    }
 }
