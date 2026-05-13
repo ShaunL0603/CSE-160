@@ -14,12 +14,14 @@ var VSHADER_SOURCE =
     uniform mat4 u_ModelMatrix;
     uniform mat4 u_ViewMatrix;
     uniform mat4 u_ProjectionMatrix;
+    uniform mat4 u_NormalMatrix;
+
     uniform float u_UVScale;
 
     void main() {
         gl_Position = u_ProjectionMatrix * u_ViewMatrix *  u_ModelMatrix * a_Position;
         v_UV = a_UV * u_UVScale;
-        v_Normal = a_Normal;
+        v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
         v_VertPos = u_ModelMatrix * a_Position;
     }
     `;

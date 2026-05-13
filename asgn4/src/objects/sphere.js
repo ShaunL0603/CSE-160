@@ -3,6 +3,7 @@ class Sphere {
         this.type = "sphere";
         this.color = [1.0, 0.0, 0.0, 1.0];
         this.matrix = new Matrix4();
+        this.normalMat = new Matrix4();
         this.texture = t_COLOR; 
         this.UVScale = 1.0; 
         this.baseMatrix = new Matrix4();

@@ -64,6 +64,11 @@ function connectVariablesToGLSL() {
         console.log("Failed to get the storage location of u_ViewMatrix");
         return -1;
     }
+    u_NormalMatrix = gl.getUniformLocation(gl.program, "u_NormalMatrix");
+    if (!u_NormalMatrix) {
+        console.log("Failed to get the storage location of u_NormalMatrix");
+        return -1;
+    }
 
     // --- VECS ---
     u_LightPos = gl.getUniformLocation(gl.program, 'u_LightPos');

@@ -10,6 +10,7 @@ var a_UV;
 var u_ModelMatrix;
 var u_ProjectionMatrix;
 var u_ViewMatrix;
+var u_NormalMatrix;
 var u_FragColor;
 var u_Sampler0;
 var u_Sampler1;
