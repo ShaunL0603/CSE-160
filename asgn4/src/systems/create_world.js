@@ -5,6 +5,7 @@ function createWorld() {
     g_skybox.texture = t_SKY;
     g_skybox.pos = null;
     g_skybox.matrix.scale(1000.0, 1000.0, 1000.0);
+    g_skybox.normalMat.setInverseOf(g_skybox.matrix).transpose();
     g_worldObjs.push(g_skybox);
 
     g_ground = new Cube();
@@ -14,6 +15,7 @@ function createWorld() {
     g_ground.UVScale = 5.0;
     g_ground.matrix.translate(-20.0, -0.2, -20.0);
     g_ground.matrix.scale(40, 0.2, 40);
+    g_ground.normalMat.setInverseOf(g_ground.matrix).transpose();
     g_worldObjs.push(g_ground);
 
     g_light = new Sphere();

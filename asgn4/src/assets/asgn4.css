@@ -26,7 +26,7 @@ input[type="number"] {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10vh auto;
+    margin: 2vh auto;
 }
 
 #settingsPanel {

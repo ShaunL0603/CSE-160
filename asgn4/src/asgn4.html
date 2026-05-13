@@ -13,9 +13,9 @@
             <h1>Blocky World: Aim Trainer</h1>
         </div>
 
-        <div style="display: flex; justify-content: space-between; gap: 40px; margin-bottom: 20px;">
+        <!-- <div style="display: flex; justify-content: space-between; gap: 40px; margin-bottom: 20px;">
             
-            <!-- <div style="flex: 1; text-align: left;">
+            <div style="flex: 1; text-align: left;">
                 <h2><u>Description</u></h2>
                 <p>Welcome! This WebGL program is a very basic FPS like aim trainer. Here are some things to know:</p>
                 <ul>
@@ -90,8 +90,16 @@
                     <li>Z to regenerate the randomly generated map</li>
                 </ul>
             </div>
+        </div> -->
+        <div>
+            <p id="numdot">NN</p>
+            <p>Player Mode: <span id="playerMode">NNNN</span></p>
+            <button id="toggleTextures" style="margin-top: 10px;">Toggle Textures</button>
+            <button id="toggleLighting" style="margin-top: 10px;">Toggle Lighting</button>
+            <button id="toggleLightPath" style="margin-top: 10px;">Light Moves</button>
+            <button id="toggleNormals" style="margin-top: 10px;">Toggle Normals</button>
         </div>
-    </div> -->
+    </div>
 
     <div id="container">
       <canvas id="webgl">
@@ -171,15 +179,6 @@
       <div id="scorePanel">
         <p style="text-align: center;">Score: <span id="playerScore">0</span></p>
       </div>
-    </div>
-
-    <div>
-        <p id="numdot">NN</p>
-        <p>Player Mode: <span id="playerMode">NNNN</span></p>
-        <button id="toggleTextures" style="margin-top: 10px;">Toggle Textures</button>
-        <button id="toggleLighting" style="margin-top: 10px;">Toggle Lighting</button>
-        <button id="toggleLightPath" style="margin-top: 10px;">Light Moves</button>
-        <button id="toggleNormals" style="margin-top: 10px;">Toggle Normals</button>
     </div>
     
     <!-- LIBRARYS -->

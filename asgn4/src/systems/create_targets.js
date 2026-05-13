@@ -16,6 +16,7 @@ function createTarget(pos) {
     target.baseMatrix.translate(pos[0], pos[1], pos[2]);
     target.matrix = new Matrix4(target.baseMatrix);
     target.matrix.scale(g_targetSize, g_targetSize, g_targetSize);
+    target.normalMat.setInverseOf(target.matrix).transpose();
     
     var targetHitBox = new Cube();
     targetHitBox.type = "hit box";

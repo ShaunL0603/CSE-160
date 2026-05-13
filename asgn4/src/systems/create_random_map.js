@@ -24,6 +24,7 @@ function createRandomMap() {
                         (z * g_cubeScale) - g_recenter
                     );
                     wall.matrix.scale(g_cubeScale, g_cubeScale, g_cubeScale);
+                    wall.normalMat.setInverseOf(wall.matrix).transpose();
                     g_worldObjs.push(wall);
                 }
             }

@@ -7,6 +7,7 @@ function createRange() {
     rangeWall.matrix.translate(-5.0, 0.0, -10.0);
     var rangeWallMat = new Matrix4(rangeWall.matrix);
     rangeWall.matrix.scale(10.0, 5.0, 0.2);
+    rangeWall.normalMat.setInverseOf(rangeWall.matrix).transpose();
     g_worldObjs.push(rangeWall);
 
     var rangeWall2 = new Cube();
@@ -18,6 +19,7 @@ function createRange() {
     rangeWall2.matrix.translate(0.0, 0.0, 10.0);
     rangeWall2.matrix.rotate(90, 0, 1, 0);
     rangeWall2.matrix.scale(9.8, 5.0, 0.2);
+    rangeWall2.normalMat.setInverseOf(rangeWall2.matrix).transpose();
     g_worldObjs.push(rangeWall2);
 
     var rangeWall3 = new Cube();
@@ -29,5 +31,6 @@ function createRange() {
     rangeWall3.matrix.translate(10.0, 0.0, 0.2);
     rangeWall3.matrix.rotate(-90, 0, 1, 0);
     rangeWall3.matrix.scale(9.8, 5.0, 0.2);
+    rangeWall3.normalMat.setInverseOf(rangeWall3.matrix).transpose();
     g_worldObjs.push(rangeWall3);
 }
