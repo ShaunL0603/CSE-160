@@ -10,13 +10,14 @@ function renderAllShapes() {
     // Start rendering all objects in global world obj list
     for (let i = 0; i < g_worldObjs.length; ++i) {
         let obj = g_worldObjs[i];
+        
         // Only render objects that are active
         if (obj.active) {
             // Don't render transparent objects (hitbox)
             if (obj.color && obj.color[3] == 0.0) continue;
             // skip objects outside camera's vision
             if (!isObjVisible(obj)) continue;
-
+            if (obj.type === "sky") console.log("rendering sky");
             obj.render();
         }
     }
