@@ -49,7 +49,7 @@ var FSHADER_SOURCE =
                 gl_FragColor = u_FragColor;
             }
         } else {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red
+            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red
         }
 
         if (u_LightOn) {

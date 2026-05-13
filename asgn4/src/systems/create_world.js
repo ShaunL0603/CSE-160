@@ -22,6 +22,7 @@ function createWorld() {
     g_light.type = "light";
     g_light.color = [1.0, 1.0, 0.0, 1.0];
     g_light.texture = t_COLOR;
+    g_light.showTexture = false;
     g_light.matrix.translate(
         g_lightPos[0], 
         g_lightPos[1], 

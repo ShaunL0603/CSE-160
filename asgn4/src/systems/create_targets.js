@@ -10,6 +10,7 @@ function createTarget(pos) {
     target.type = "target";
     target.color = [1.0, 0.0, 0.0, 1.0];
     target.texture = t_COLOR;
+    target.showTexture = false;
     target.pos = pos;
     target.shininess = 100.0;
     target.baseMatrix = new Matrix4();
@@ -22,6 +23,7 @@ function createTarget(pos) {
     targetHitBox.type = "hit box";
     targetHitBox.color = [1.0, 1.0, 0.0, (g_hitboxVisible) ? 1.0 : 0.0];
     targetHitBox.texture = t_COLOR;
+    targetHitBox.showTexture = false;
     target.hitbox = targetHitBox;
     updateHitBox(target);
 

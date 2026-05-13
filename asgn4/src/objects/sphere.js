@@ -5,6 +5,7 @@ class Sphere {
         this.matrix = new Matrix4();
         this.normalMat = new Matrix4();
         this.texture = t_COLOR; 
+        this.showTexture = true;
         this.UVScale = 1.0; 
         this.baseMatrix = new Matrix4();
         this.hitbox = new Cube();
@@ -48,7 +49,7 @@ class Sphere {
         // toggle normal
         gl.uniform1i(u_ShowNormals, g_toggleNormals ? 1 : 0);
         // toggle texture
-        gl.uniform1i(u_ShowTexture, g_showTexture ? 1 : 0);
+        gl.uniform1i(u_ShowTexture, toggleTexture(this.showTexture));
         
         // Draw
         gl.drawArrays(gl.TRIANGLES, 0, g_sphereVertices.length / 3);

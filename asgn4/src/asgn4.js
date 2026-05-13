@@ -132,3 +132,11 @@ function hitEvent() {
     sendTextToHTML(g_score, "playerScore");
     g_hitSound.play();
 }
+
+function toggleTexture(showTexture) {
+    if (g_showTexture) {
+        return showTexture ? true : false;
+    } else {
+        return false;
+    }
+}
