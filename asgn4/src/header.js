@@ -17,6 +17,7 @@ var u_Sampler1;
 var u_Sampler2;
 var u_Sampler3;
 var u_ShowNormals;
+var u_ShowTexture;
 var u_LightPos;
 var u_CameraPos;
 let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
@@ -102,6 +103,7 @@ let u_UVScale = 1.0;                                                            
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
     let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
+    let g_showTexture = true;
     let g_toggleNormals = false;
     let g_toggleLightPath = true;
 

@@ -26,7 +26,7 @@ class Camera {
         )
 
         this.projectionMatrix.setPerspective(this.fov, this.canvasWidth / this.canvasHeight, 
-            0.1, 1250
+            0.1, 2000
         );
     }
 

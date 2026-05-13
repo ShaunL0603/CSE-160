@@ -118,6 +118,12 @@ function connectVariablesToGLSL() {
         return -1;
     }
 
+    u_ShowTexture = gl.getUniformLocation(gl.program, 'u_ShowTexture');
+    if (!u_ShowTexture) {
+        console.log('Failed to get the storage location of u_ShowTexture');
+        return -1;
+    }
+
     u_LightPos = gl.getUniformLocation(gl.program, 'u_LightPos');
     if (!u_LightPos) {
         console.log('Failed to get the storage location of u_LightPos');

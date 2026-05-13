@@ -1,10 +1,9 @@
 function createWorld() {
-    g_skybox = new Cube();
+    g_skybox = new Sphere();
     g_skybox.type = "sky";
     g_skybox.color = [0.0, 0.0, 1.0, 1.0];
     g_skybox.texture = t_SKY;
-    g_skybox.matrix.translate(-500.0, -500.0, -500.0);
-    // g_skybox.pos = null;
+    g_skybox.pos = null;
     g_skybox.matrix.scale(1000.0, 1000.0, 1000.0);
     g_worldObjs.push(g_skybox);
 

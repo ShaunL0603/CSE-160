@@ -54,6 +54,8 @@ function htmlActions() {
 
     const playerScore = document.getElementById("playerScore");
     const volumeSlider = document.getElementById("volumeSlider");
+
+    const toggleTextures = document.getElementById("toggleTextures");
     const toggleNormals = document.getElementById("toggleNormals");
 
     const lightX = document.getElementById("lightX");
@@ -189,6 +191,7 @@ function htmlActions() {
         sendTextToHTML(parseInt(newVolume * 100), "volumeValue");
     });
     toggleNormals.onclick = () => { g_toggleNormals = !g_toggleNormals; };
+    toggleTextures.onclick = () => { g_showTexture = !g_showTexture; }; 
 }
 
 function updateKeyDown(ev) {

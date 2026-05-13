@@ -17,7 +17,7 @@ function renderAllShapes() {
             if (obj.color && obj.color[3] == 0.0) continue;
             // skip objects outside camera's vision
             if (!isObjVisible(obj)) continue;
-            if (obj.type === "sky") console.log("rendering sky");
+            
             obj.render();
         }
     }

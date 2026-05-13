@@ -42,6 +42,8 @@ class Cube {
         gl.uniform1f(u_UVScale, this.UVScale);
         // toggle normal
         gl.uniform1i(u_ShowNormals, g_toggleNormals ? 1 : 0);
+        // toggle texture
+        gl.uniform1i(u_ShowTexture, g_showTexture ? 1 : 0);
         
         gl.drawArrays(gl.TRIANGLES, 0, g_cubeVertices.length / 3);
     }
