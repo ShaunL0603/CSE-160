@@ -58,6 +58,7 @@ function htmlActions() {
     const toggleTextures = document.getElementById("toggleTextures");
     const toggleNormals = document.getElementById("toggleNormals");
 
+    const toggleLighting = document.getElementById("toggleLighting");
     const lightX = document.getElementById("lightX");
     const lightY = document.getElementById("lightY");
     const lightZ = document.getElementById("lightZ");
@@ -167,6 +168,9 @@ function htmlActions() {
     });
 
     // --- LIGHT ACTIONS ---
+    toggleLighting.onclick = () => { g_LightOn = !g_LightOn; };
+    toggleNormals.onclick = () => { g_toggleNormals = !g_toggleNormals; };
+    toggleTextures.onclick = () => { g_showTexture = !g_showTexture; };
     // Moving position of the light
     lightX.addEventListener("input", (ev) => {
         let newx = parseFloat(ev.target.value);
@@ -183,15 +187,13 @@ function htmlActions() {
         g_lightPos[2] = newz;
         moveLight();
     });
-
+    
     // --- OTHER ---
     volumeSlider.addEventListener("input", (ev) => {
         let newVolume = parseFloat(ev.target.value);
         g_hitSound.volume = newVolume;
         sendTextToHTML(parseInt(newVolume * 100), "volumeValue");
     });
-    toggleNormals.onclick = () => { g_toggleNormals = !g_toggleNormals; };
-    toggleTextures.onclick = () => { g_showTexture = !g_showTexture; }; 
 }
 
 function updateKeyDown(ev) {

@@ -32,13 +32,11 @@ function connectVariablesToGLSL() {
         console.log("Failed to get the storage location of a_Position");
         return -1;
     }
-    
     a_UV = gl.getAttribLocation(gl.program, "a_UV");
     if (a_UV < 0) {
         console.log("Failed to get storage location of a_UV");
         return -1;
     }
-
     a_Normal = gl.getAttribLocation(gl.program, "a_Normal");
     if (a_Normal < 0) {
         console.log("Failed to get storage location of a_Normal");
@@ -51,25 +49,35 @@ function connectVariablesToGLSL() {
         console.log('Failed to get the storage location of u_FragColor');
         return -1;
     }
-
     u_ModelMatrix = gl.getUniformLocation(gl.program, "u_ModelMatrix");
     if (!u_ModelMatrix) {
         console.log("Failed to get the storage location of u_ModelMatrix");
         return -1;
     }
-
     u_ProjectionMatrix = gl.getUniformLocation(gl.program, "u_ProjectionMatrix");
     if (!u_ProjectionMatrix) {
         console.log("Failed to get the storage location of u_ProjectionMatrix");
         return -1;
     }
-
     u_ViewMatrix = gl.getUniformLocation(gl.program, "u_ViewMatrix");
     if (!u_ViewMatrix) {
         console.log("Failed to get the storage location of u_ViewMatrix");
         return -1;
     }
+
+    // --- VECS ---
+    u_LightPos = gl.getUniformLocation(gl.program, 'u_LightPos');
+    if (!u_LightPos) {
+        console.log('Failed to get the storage location of u_LightPos');
+        return -1;
+    }
+    u_CameraPos = gl.getUniformLocation(gl.program, 'u_CameraPos');
+    if (!u_CameraPos) {
+        console.log('Failed to get the storage location of u_CameraPos');
+        return -1;
+    }
     
+    // --- TEXUTRE SAMPLERS ---
     u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');
     if (!u_Sampler0) {
         console.log('Failed to get the storage location of u_Sampler0');
@@ -100,45 +108,37 @@ function connectVariablesToGLSL() {
         return -1;
     }
 
-    u_WhichTexture = gl.getUniformLocation(gl.program, 'u_WhichTexture');
-    if (!u_WhichTexture) {
-        console.log('Failed to get the storage location of u_WhichTexture');
+    // --- NUMBERS ---
+    u_UVScale = gl.getUniformLocation(gl.program, 'u_UVScale');
+    if (!u_UVScale) {
+        console.log('Failed to get the storage location of u_UVScale');
         return -1;
     }
-
     u_Shininess = gl.getUniformLocation(gl.program, 'u_Shininess');
     if (!u_Shininess) {
         console.log('Failed to get the storage location of u_Shininess');
         return -1;
     }
 
-    u_UVScale = gl.getUniformLocation(gl.program, 'u_UVScale');
-    if (!u_UVScale) {
-        console.log('Failed to get the storage location of u_UVScale');
-        return -1;
-    }
-
+    // --- BOOLS ---
     u_ShowNormals = gl.getUniformLocation(gl.program, 'u_ShowNormals');
     if (!u_ShowNormals) {
         console.log('Failed to get the storage location of u_ShowNormals');
         return -1;
     }
-
     u_ShowTexture = gl.getUniformLocation(gl.program, 'u_ShowTexture');
     if (!u_ShowTexture) {
         console.log('Failed to get the storage location of u_ShowTexture');
         return -1;
     }
-
-    u_LightPos = gl.getUniformLocation(gl.program, 'u_LightPos');
-    if (!u_LightPos) {
-        console.log('Failed to get the storage location of u_LightPos');
+    u_WhichTexture = gl.getUniformLocation(gl.program, 'u_WhichTexture');
+    if (!u_WhichTexture) {
+        console.log('Failed to get the storage location of u_WhichTexture');
         return -1;
     }
-
-    u_CameraPos = gl.getUniformLocation(gl.program, 'u_CameraPos');
-    if (!u_CameraPos) {
-        console.log('Failed to get the storage location of u_CameraPos');
+    u_LightOn = gl.getUniformLocation(gl.program, 'u_LightOn');
+    if (!u_LightOn) {
+        console.log('Failed to get the storage location of u_LightOn');
         return -1;
     }
 }

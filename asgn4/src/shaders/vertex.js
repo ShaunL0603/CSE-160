@@ -12,7 +12,6 @@ var VSHADER_SOURCE =
     varying vec4 v_VertPos;
 
     uniform mat4 u_ModelMatrix;
-    // uniform mat4 u_GlobalRotationMatrix;
     uniform mat4 u_ViewMatrix;
     uniform mat4 u_ProjectionMatrix;
     uniform float u_UVScale;

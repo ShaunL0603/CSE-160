@@ -25,6 +25,7 @@ var FSHADER_SOURCE =
     uniform float u_Shininess;
     uniform bool u_ShowNormals;
     uniform bool u_ShowTexture;
+    uniform bool u_LightOn;
 
     void main() {
         if (u_ShowTexture) {
@@ -51,34 +52,36 @@ var FSHADER_SOURCE =
                 gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Error, put red
         }
 
-        // light distance
-        vec3 lightVec = u_LightPos - vec3(v_VertPos);
-        float r = length(lightVec);
-        // N dot L
-        vec3 L = normalize(lightVec);
-        vec3 N = normalize(v_Normal);
-        float nDotL = max(dot(N, L), 0.0);
-        // Reflection
-        vec3 R = reflect(-L, N);
-        // eye
-        vec3 E = normalize(u_CameraPos - vec3(v_VertPos));
-        // Specular
-        // if (!u_Shininess) u_Shininess = 10.0;
-        float specular = pow(max(dot(E, R), 0.0), u_Shininess);
-    
-        vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
-        vec3 ambient = vec3(gl_FragColor) * 0.3;
+        if (u_LightOn) {
+            // light distance
+            vec3 lightVec = u_LightPos - vec3(v_VertPos);
+            float r = length(lightVec);
+            // N dot L
+            vec3 L = normalize(lightVec);
+            vec3 N = normalize(v_Normal);
+            float nDotL = max(dot(N, L), 0.0);
+            // Reflection
+            vec3 R = reflect(-L, N);
+            // eye
+            vec3 E = normalize(u_CameraPos - vec3(v_VertPos));
+            // Specular
+            // if (!u_Shininess) u_Shininess = 10.0;
+            float specular = pow(max(dot(E, R), 0.0), u_Shininess);
+        
+            vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
+            vec3 ambient = vec3(gl_FragColor) * 0.3;
 
-        if (u_WhichTexture == t_SKY) {
-            gl_FragColor = vec4(gl_FragColor.rgb, 1.0);
-        } else if (u_WhichTexture == t_GROUND) {
-            gl_FragColor = vec4(diffuse + ambient, 1.0);
-        } else if (u_WhichTexture == t_WALL) {
-            gl_FragColor = vec4(diffuse + ambient, 1.0);
-        } else if (u_WhichTexture == t_RANGEWALL) {
-            gl_FragColor = vec4(diffuse + ambient, 1.0);
-        } else {
-            gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
+            if (u_WhichTexture == t_SKY) {
+                gl_FragColor = vec4(gl_FragColor.rgb, 1.0);
+            } else if (u_WhichTexture == t_GROUND) {
+                gl_FragColor = vec4(diffuse + ambient, 1.0);
+            } else if (u_WhichTexture == t_WALL) {
+                gl_FragColor = vec4(diffuse + ambient, 1.0);
+            } else if (u_WhichTexture == t_RANGEWALL) {
+                gl_FragColor = vec4(diffuse + ambient, 1.0);
+            } else {
+                gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
+            }
         }
     }
     `;

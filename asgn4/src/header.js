@@ -11,16 +11,17 @@ var u_ModelMatrix;
 var u_ProjectionMatrix;
 var u_ViewMatrix;
 var u_FragColor;
-var u_WhichTexture;
-var u_Shininess;
 var u_Sampler0;
 var u_Sampler1;
 var u_Sampler2;
 var u_Sampler3;
+var u_WhichTexture;
 var u_ShowNormals;
 var u_ShowTexture;
 var u_LightPos;
 var u_CameraPos;
+var u_LightOn;
+var u_Shininess;
 let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
 
 // Global variables
@@ -107,6 +108,8 @@ let u_UVScale = 1.0;                                                            
     let g_showTexture = true;
     let g_toggleNormals = false;
     let g_toggleLightPath = true;
+    let g_LightOn = true;
+
 
 // CONSTANTS
 const degToRad = Math.PI / 180;
