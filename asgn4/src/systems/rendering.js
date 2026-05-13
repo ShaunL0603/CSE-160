@@ -113,4 +113,6 @@ function moveLight() {
 
     g_light.matrix.setTranslate(x, y, z);
     g_light.matrix.scale(g_lightScale, g_lightScale, g_lightScale);
+    // Note to self, cullin relies on the pos not being a empty array
+    g_light.pos = g_lightPos;
 }
