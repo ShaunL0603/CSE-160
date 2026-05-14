@@ -19,7 +19,7 @@ var VSHADER_SOURCE =
     uniform float u_UVScale;
 
     // --- SHADOW VARIABLES ---
-    varying vec4 v_PosFromLight
+    varying vec4 v_PosFromLight;
     uniform mat4 u_LightViewMatrix;
     uniform mat4 u_LightProjMatrix;
 
@@ -38,14 +38,14 @@ var VSHADER_SOURCE_SHADOW =
     `    
     precision mediump float;
 
-    attribute vec4 a_Position;
-    uniform mat4 u_ModelMatrix;
+    attribute vec4 a_ShadowPosition;
+    uniform mat4 u_ShadowModelMatrix;
     
     // The "Sun Camera" matrices
-    uniform mat4 u_LightViewMatrix;
-    uniform mat4 u_LightProjectionMatrix;
+    uniform mat4 u_ShadowLightViewMatrix;
+    uniform mat4 u_ShadowLightProjMatrix;
     
     void main() {
-        gl_Position = u_LightProjectionMatrix * u_LightViewMatrix * u_ModelMatrix * a_Position;
+        gl_Position = u_ShadowLightProjMatrix * u_ShadowLightViewMatrix * u_ShadowModelMatrix * a_ShadowPosition;
     }
     `;

@@ -66,6 +66,7 @@ function loadTexture(image, sampler, texUnit, glTex) {
 
     gl.generateMipmap(gl.TEXTURE_2D);
     
+    gl.useProgram(g_mainProgram);
     // Set the texture unit 0 to the sampler
     gl.uniform1i(sampler, texUnit);
 }

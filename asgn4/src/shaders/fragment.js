@@ -32,6 +32,10 @@ var FSHADER_SOURCE =
     uniform bool u_ShowTexture;
     uniform bool u_LightOn;
 
+    // --- SHADOW VARIABLES ---
+    uniform sampler2D u_ShadowMapSampler;
+    varying vec4 v_PosFromLight;
+
     void main() {
         if (u_ShowTexture) {
             if (u_WhichTexture == t_DEBUG) {
@@ -65,6 +69,34 @@ var FSHADER_SOURCE =
         vec3 totalDiffuse = vec3(0.0);
         vec3 totalSpecular = vec3(0.0);
 
+        // --- SHADOW MAPPING MATH ---
+        // Perspective Divide, standardizing coordinates
+        vec3 shadowCoord = (v_PosFromLight.xyz / v_PosFromLight.w);
+        
+        // Convert from WebGL Clip Space (-1 to 1) to Texture UV Space (0 to 1)
+        shadowCoord = (shadowCoord + 1.0) * 0.5;
+
+        // Default to fully lit
+        float shadowVisibility = 1.0; 
+
+        // Only calculate shadows if the pixel is actually inside the Sun's camera box
+        if (shadowCoord.x >= 0.0 && shadowCoord.x <= 1.0 &&
+            shadowCoord.y >= 0.0 && shadowCoord.y <= 1.0 &&
+            shadowCoord.z >= 0.0 && shadowCoord.z <= 1.0) {
+
+            // Read the depth recorded in Pass 1 (stored in the RED channel)
+            float depthFromMap = texture2D(u_ShadowMapSampler, shadowCoord.xy).r;
+
+            // Add a tiny bias to prevent self-shadowing glitchess
+            float bias = 0.005; 
+
+            // If our current distance is greater than the recorded distance,
+            // we are in shadow!
+            if (shadowCoord.z > depthFromMap + bias) {
+                shadowVisibility = 0.0; // Turn off the light!
+            }
+        }
+
         // For sun
         if (u_LightOn) {
             vec3 sunL = normalize(u_LightPos - vec3(v_VertPos));
@@ -72,8 +104,8 @@ var FSHADER_SOURCE =
             vec3 sunR = reflect(-sunL, N);
             float sunSpec = pow(max(dot(E, sunR), 0.0), u_Shininess);
 
-            totalDiffuse += vec3(gl_FragColor) * u_LightColor * sunNDotL * 0.7;
-            totalSpecular += u_LightColor * sunSpec;
+            totalDiffuse += vec3(gl_FragColor) * u_LightColor * sunNDotL * 0.7 * shadowVisibility;
+            totalSpecular += u_LightColor * sunSpec * shadowVisibility;
         }
 
         // For flashlight (SPOTLIGHT)
@@ -110,6 +142,10 @@ var FSHADER_SOURCE =
         } else {
             gl_FragColor = vec4(totalSpecular + totalDiffuse + ambient, 1.0); // Everything else
         }
+
+        // debugging
+        // float depthFromMap = texture2D(u_ShadowMapSampler, shadowCoord.xy).r;
+        // gl_FragColor = vec4(depthFromMap, depthFromMap, depthFromMap, 1.0);
     }
     `;
 

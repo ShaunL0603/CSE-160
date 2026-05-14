@@ -6,7 +6,6 @@ function main() {
     g_playerMode = FPS;
     sendTextToHTML(FPS, "playerMode");
     g_currMap = RANGE;
-    createPrograms();
     // sets up canvas and gl variables
     setupWebGL();
     // set up GLSL shader programs and connect GLSL variables
@@ -26,6 +25,11 @@ function main() {
     createSphereBuffers();
     // getting textures
     initTextures();
+    g_shadowMapFBO = initFramebufferObject();
+    if (!g_shadowMapFBO) {
+        console.error("Failed to initialize Framebuffer Object for shadow mapping.");
+        return -1;
+    }
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     createWorld();
@@ -43,7 +47,7 @@ function resizeCanvas(canvas) {
 
         gl.viewport(0, 0, canvas.width, canvas.height);
 
-        if (typeof g_camera !== null) {
+        if (g_camera) {
         g_camera.canvasWidth = canvas.width;
         g_camera.canvasHeight = canvas.height;
         g_camera.updateMatrices();

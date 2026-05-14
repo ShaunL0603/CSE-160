@@ -34,6 +34,7 @@ var u_Sampler0;
 var u_Sampler1;
 var u_Sampler2;
 var u_Sampler3;
+var u_Sampler4;
 var u_WhichTexture;
 var u_ShowNormals;
 var u_ShowTexture;
@@ -45,20 +46,23 @@ var u_LightOn;
 var u_FlashlightOn;
 var u_Shininess;
 // For shadow mapping
+var u_LightViewMatrix;
+var u_LightProjMatrix;
 var a_ShadowPosition;
 var u_ShadowModelMatrix;
 var u_ShadowLightViewMatrix;
 var u_ShadowLightProjMatrix;
+var u_ShadowMapSampler;
 let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
 
 // Global variables
     // --- SHADER PROGRAMS ---
     var g_mainProgram;
     var g_shadowProgram;
-    var g_shadowMapFOB;
+    var g_shadowMapFBO;
 
     // --- FOR SHADOW MAPPING ---
-    var g_shadowMapFOB;                                                                          // Framebuffer Object for shadow mapping
+    var g_shadowMapFBO;                                                                          // Framebuffer Object for shadow mapping
     let g_lightProjMatrix = new Matrix4();                                                       // Projection matrix for the "sun camera" (light source)
     let g_lightViewMatrix = new Matrix4();                                                       // View matrix for the "sun camera" (light source)
     let shadowMat = new Matrix4();

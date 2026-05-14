@@ -6,11 +6,20 @@ function renderAllShapes() {
     // Reset viewport to canvas size
     gl.viewport(0, 0, canvas.width, canvas.height);
     // clear canvas
+    // gl.clearColor(0.0, 0.5, 0.0, 1.0); // debugging
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
     // Use main shader program
     gl.useProgram(g_mainProgram);
+    // Take the texture we just drew when rendering shadows, and hand it to the Main Shader
+    gl.activeTexture(gl.TEXTURE5); // texture unit 5 for shadows
+    gl.bindTexture(gl.TEXTURE_2D, g_shadowMapFBO.texture);
+    gl.uniform1i(u_ShadowMapSampler, 5); // We will add this uniform in Step 5
 
-    //TODO: handoff texture
+    // Passing Sun's camera matrices to the Main Shader as well
+    // Main shader needs to know where the sun was to align the image properly
+    gl.uniformMatrix4fv(u_LightViewMatrix, false, g_lightViewMatrix.elements);
+    gl.uniformMatrix4fv(u_LightProjMatrix, false, g_lightProjMatrix.elements);
 
     gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
     gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
@@ -42,16 +51,17 @@ function renderAllShapes() {
 }
 
 function renderShadows() {
-    // First update sun camera     (same as in renderAllShapes since we want sun camera to be in correct position for shadow rendering as well)
+    // First update sun camera
     updateLightCamera();
     // Bind the shadow framebuffer
-    gl.bindFramebuffer(gl.FRAMEBUFFER, g_shadowMapFOB.fbo);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, g_shadowMapFBO.fbo);
     // Set the viewport to the size of the shadow map
-    gl.viewport(0, 0, g_shadowMapFOB.width, g_shadowMapFOB.height);
+    gl.viewport(0, 0, g_shadowMapFBO.width, g_shadowMapFBO.height);
     // Clear the depth buffer (no need to clear color buffer since we won't be sampling color)
     gl.clear(gl.DEPTH_BUFFER_BIT);
     // Use shadow shader
     gl.useProgram(g_shadowProgram);
+    
     // pass sun's camera matrices to shadow shader
     gl.uniformMatrix4fv(u_ShadowLightViewMatrix, false, g_lightViewMatrix.elements);
     gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_lightProjMatrix.elements);
@@ -63,7 +73,7 @@ function renderShadows() {
 
 let shadowiIdentityMat = new Matrix4();
 function drawMapShadows() {
-    if (g_currMap !== RANDOM || !g_mergedMapVertBuffer) return;
+    if (!g_mergedMapVertBuffer) return;
 
     // Setting the Model Matrix
     gl.uniformMatrix4fv(u_ShadowModelMatrix, false, shadowiIdentityMat.elements);
@@ -76,8 +86,9 @@ function drawMapShadows() {
     gl.drawArrays(gl.TRIANGLES, 0, g_mergedMapVerts.length / 3);
 }
 
-let renderCubeShadows = ["cube", "wall", "rangewall"];
+let renderCubeShadows = ["cube", "wall", "rangewall", "ground"];
 let renderSphereShadows = ["sphere", "target"];
+
 function drawObjsShadows() {
     for (let i = 0; i < g_worldObjs.length; ++i) {
         let obj = g_worldObjs[i];
@@ -95,12 +106,12 @@ function drawObjsShadows() {
         // Apparently instanceof can be more costly but use it anyways
         if (renderCubeShadows.includes(obj.type)) {
             currBuffer = g_cubeVertBuffer;
-            currVerts = g_cubeVerts;
+            currVerts = g_cubeVertices;
         } else if (renderSphereShadows.includes(obj.type)) {
             currBuffer = g_sphereVertBuffer;
-            currVerts = g_sphereVerts;
+            currVerts = g_sphereVertices;
         } else {
-            console.warn("Error: unrecognized obj type in shadow rendering", obj);
+            // console.warn("Error: unrecognized obj type in shadow rendering", obj);
             continue;
         }
 
