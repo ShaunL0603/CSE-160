@@ -19,7 +19,7 @@ function createWorld() {
     g_worldObjs.push(g_ground);
 
     g_sun = new Sphere();
-    g_sun.type = "light";
+    g_sun.type = "sun";
     g_sun.color = [1.0, 1.0, 0.0, 1.0];
     g_sun.texture = t_COLOR;
     g_sun.showTexture = false;

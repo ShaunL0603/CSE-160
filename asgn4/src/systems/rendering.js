@@ -29,6 +29,30 @@ function renderAllShapes() {
     }
 }
 
+let shadowMat = new Matrix4();
+function renderMapShadows() {
+    // Force solid color mode and pass the shadow color
+    gl.uniform1i(u_WhichTexture, t_COLOR);
+    gl.uniform4f(u_FragColor, 0.0, 0.0, 0.0, 0.8);
+
+    // Create an identity matrix, then squash it using the light position
+    shadowMat.dropShadowDirectionally(
+        0, 1, 0, 
+        0, 0, 0, 
+        g_sunPos[0], g_sunPos[1], g_sunPos[2]
+    );
+    
+    // Pass the squashed matrix to the shader
+    gl.uniformMatrix4fv(u_ModelMatrix, false, shadowMat.elements);
+
+    // Bind position buffer and draw! (No need to bind UVs/Normals for shadows)
+    gl.bindBuffer(gl.ARRAY_BUFFER, g_mergedMapVertBuffer);
+    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_Position);
+
+    gl.drawArrays(gl.TRIANGLES, 0, g_mergedMapVerts.length / 3);
+}
+
 // Redraw the canvas
 function tick() {
     let now = performance.now();
@@ -42,6 +66,7 @@ function tick() {
         g_lastFrameTime = now - (elapsed % frameInterval);
         g_seconds = (now * 0.001) - g_startTime;
 
+        resizeCanvas(canvas);
         // Main rendering
         handleRespawning();
         if (g_toggleLightPath) updateAnimationAngles();
