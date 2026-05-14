@@ -81,6 +81,11 @@ function connectVariablesToGLSL() {
         console.log('Failed to get the storage location of u_CameraPos');
         return -1;
     }
+    u_LightColor = gl.getUniformLocation(gl.program, 'u_LightColor');
+    if (!u_LightColor) {
+        console.log('Failed to get the storage location of u_LightColor');
+        return -1;
+    }
     
     // --- TEXUTRE SAMPLERS ---
     u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');

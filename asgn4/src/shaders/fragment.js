@@ -15,6 +15,7 @@ var FSHADER_SOURCE =
 
     uniform vec3 u_LightPos;
     uniform vec3 u_CameraPos;
+    uniform vec3 u_LightColor;
     uniform vec4 u_FragColor;
     uniform sampler2D u_Sampler0; // Debug texture
     uniform sampler2D u_Sampler1; // Sky texture
@@ -53,7 +54,7 @@ var FSHADER_SOURCE =
         }
 
         if (!u_LightOn) return;
-        
+
         // light distance
         vec3 lightVec = u_LightPos - vec3(v_VertPos);
         float r = length(lightVec);
@@ -69,8 +70,9 @@ var FSHADER_SOURCE =
         // if (!u_Shininess) u_Shininess = 10.0;
         float specular = pow(max(dot(E, R), 0.0), u_Shininess);
     
-        vec3 diffuse = vec3(gl_FragColor) * nDotL * 0.7;
+        vec3 diffuse = vec3(gl_FragColor) * u_LightColor * nDotL * 0.7;
         vec3 ambient = vec3(gl_FragColor) * 0.3;
+        vec3 specularColor = u_LightColor * specular;
 
         if (u_WhichTexture == t_SKY) {
             gl_FragColor = vec4(gl_FragColor.rgb, 1.0);
@@ -81,7 +83,7 @@ var FSHADER_SOURCE =
         } else if (u_WhichTexture == t_RANGEWALL) {
             gl_FragColor = vec4(diffuse + ambient, 1.0);
         } else {
-            gl_FragColor = vec4(specular + diffuse + ambient, 1.0);
+            gl_FragColor = vec4(specularColor + diffuse + ambient, 1.0);
         }
     }
     `;

@@ -7,6 +7,7 @@ function renderAllShapes() {
     gl.uniform1i(u_LightOn, g_LightOn ? 1 : 0);
     gl.uniform3f(u_LightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
     gl.uniform3f(u_CameraPos, g_camera.eye.elements[0], g_camera.eye.elements[1], g_camera.eye.elements[2]);
+    gl.uniform3f(u_LightColor, 2.0, 1.9, 1.5);
 
     // Start rendering all objects in global world obj list
     for (let i = 0; i < g_worldObjs.length; ++i) {
