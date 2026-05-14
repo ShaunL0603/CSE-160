@@ -90,7 +90,8 @@ let u_UVScale = 1.0;                                                            
     let g_worldObjs = [];                                                                       // list of objects to render
     var g_skybox;
     var g_ground;
-    var g_sun;                                                                                  // sun cube
+    var g_sun;                                                                                  // sun sphere
+    var g_flashlight;                                                                           // flashlight sphere that follows camera
     let g_targets = [];                                                                         // list of objects to keep track of and perform calculations on
     var g_currMap;                                                                              // Keep track of which map is currently loaded
     let g_NonMineable = ["ground", "rangeWall", "sun"];                                         // keep track of types that shouldn't be destroyed by players

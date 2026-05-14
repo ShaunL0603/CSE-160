@@ -70,6 +70,7 @@ function tick() {
         // Main rendering
         handleRespawning();
         if (g_toggleLightPath) updateAnimationAngles();
+        moveFlashlight();
         renderAllShapes();
         
         if (now - g_lastFPSUpdateTime > 500) {
@@ -134,6 +135,15 @@ function updateAnimationAngles() {
     g_sunPos[1] = newy;
     g_sunPos[2] = newz;
     moveLight();
+}
+
+function moveFlashlight() {
+    g_flashlight.matrix.setTranslate(
+        g_camera.eye.elements[0], 
+        g_camera.eye.elements[1],
+        g_camera.eye.elements[2]
+    );
+    g_flashlight.matrix.scale(g_flScale, g_flScale, g_flScale);
 }
 
 function moveLight() {

@@ -1,3 +1,5 @@
+let g_flScale = 0.02; // scale for flashlight sphere]
+
 function createWorld() {
     g_skybox = new Sphere();
     g_skybox.type = "sky";
@@ -31,6 +33,20 @@ function createWorld() {
     g_sun.matrix.scale(g_sunScale, g_sunScale, g_sunScale);
     g_sun.pos = null;
     g_worldObjs.push(g_sun);
+
+    g_flashlight = new Sphere();
+    g_flashlight.type = "flashLight";
+    g_flashlight.color = [1.0, 0.0, 0.0, 0.0];
+    g_flashlight.texture = t_COLOR;
+    g_flashlight.showTexture = false;
+    g_flashlight.matrix.translate(
+        g_camera.eye.elements[0], 
+        g_camera.eye.elements[1],
+        g_camera.eye.elements[2]
+    );
+    g_flashlight.matrix.scale(g_flScale, g_flScale, g_flScale);
+    g_flashlight.pos = null;
+    g_worldObjs.push(g_flashlight);
 
     // Default map to load to
     createRange();
