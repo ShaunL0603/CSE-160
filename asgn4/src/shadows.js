@@ -56,7 +56,7 @@ function initFramebufferObject() {
 function updateLightCamera() {
     // Projection (Sun's "Lens")
     // Defining the size of the shadow bounding box
-    let boxSize = 64.0; //TODO: adjust baserd on g_currMapSize and g_cubeScale
+    let boxSize = 40.0; //TODO: adjust baserd on g_currMapSize and g_cubeScale
     
     g_lightProjMatrix.setOrtho(-boxSize, boxSize, -boxSize, boxSize, 1.0, 2000.0);
 

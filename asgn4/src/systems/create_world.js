@@ -4,7 +4,7 @@ function createWorld() {
     g_skybox.color = [0.0, 0.0, 1.0, 1.0];
     g_skybox.texture = t_SKY;
     g_skybox.pos = null;
-    g_skybox.matrix.scale(1000.0, 1000.0, 1000.0);
+    g_skybox.matrix.scale(150.0, 150.0, 150.0);
     g_skybox.normalMat.setInverseOf(g_skybox.matrix).transpose();
     g_worldObjs.push(g_skybox);
 

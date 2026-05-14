@@ -88,7 +88,7 @@ var FSHADER_SOURCE =
             float depthFromMap = texture2D(u_ShadowMapSampler, shadowCoord.xy).r;
 
             // Add a tiny bias to prevent self-shadowing glitchess
-            float bias = 0.005; 
+            float bias = 0.0001; 
 
             // If our current distance is greater than the recorded distance,
             // we are in shadow!

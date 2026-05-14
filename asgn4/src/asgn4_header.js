@@ -124,7 +124,7 @@ let u_UVScale = 1.0;                                                            
     var g_currMap;                                                                              // Keep track of which map is currently loaded
     let g_NonMineable = ["ground", "rangewall", "sun"];                                         // keep track of types that shouldn't be destroyed by players
     let g_sunPos = [0.0, 2.5, 0.0];
-    let g_sunScale = -25.0;
+    let g_sunScale = -5.0;
     
     // --- FOR TARGETS ---
     let g_targetSize = Number(document.getElementById("targetSize").defaultValue);
@@ -161,7 +161,7 @@ let u_UVScale = 1.0;                                                            
     let cx = 0.0;  // -0.1 offset due to scale when centering with world origin
     let cy = 0.0;
     let cz = 0.0;   // 5.0 offset for same reason
-    let radius = 950.0;
+    let radius = 120.0;
     let angle = 0.0;
     let tilt = -45.0 * degToRad;
 
