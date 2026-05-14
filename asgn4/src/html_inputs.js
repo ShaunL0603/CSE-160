@@ -59,14 +59,10 @@ function htmlActions() {
     const toggleNormals = document.getElementById("toggleNormals");
 
     const toggleLighting = document.getElementById("toggleLighting");
-    const lightX = document.getElementById("lightX");
-    const lightY = document.getElementById("lightY");
-    const lightZ = document.getElementById("lightZ");
+    const sunX = document.getElementById("sunX");
+    const sunY = document.getElementById("sunY");
+    const sunZ = document.getElementById("sunZ");
     const toggleLightPath = document.getElementById("toggleLightPath");
-
-    // const light2X = document.getElementById("light2X");
-    // const light2Y = document.getElementById("light2Y");
-    // const light2Z = document.getElementById("light2Z");
 
     // --- settings panel actions ---
     // click on settings button and close btn
@@ -171,20 +167,20 @@ function htmlActions() {
     toggleLighting.onclick = () => { g_LightOn = !g_LightOn; };
     toggleNormals.onclick = () => { g_toggleNormals = !g_toggleNormals; };
     toggleTextures.onclick = () => { g_showTexture = !g_showTexture; };
-    // Moving position of the light
-    lightX.addEventListener("input", (ev) => {
+    // Moving position of the sun
+    sunX.addEventListener("input", (ev) => {
         let newx = parseFloat(ev.target.value);
-        g_lightPos[0] = newx;
+        g_sunPos[0] = newx;
         moveLight();
     });
-    lightY.addEventListener("input", (ev) => {
+    sunY.addEventListener("input", (ev) => {
         let newy = parseFloat(ev.target.value);
-        g_lightPos[1] = newy;
+        g_sunPos[1] = newy;
         moveLight();
     });
-    lightZ.addEventListener("input", (ev) => {
+    sunZ.addEventListener("input", (ev) => {
         let newz = parseFloat(ev.target.value);
-        g_lightPos[2] = newz;
+        g_sunPos[2] = newz;
         moveLight();
     });
     

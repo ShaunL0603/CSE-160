@@ -5,7 +5,7 @@ function renderAllShapes() {
     gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
     gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
     gl.uniform1i(u_LightOn, g_LightOn ? 1 : 0);
-    gl.uniform3f(u_LightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]);
+    gl.uniform3f(u_LightPos, g_sunPos[0], g_sunPos[1], g_sunPos[2]);
     gl.uniform3f(u_CameraPos, g_camera.eye.elements[0], g_camera.eye.elements[1], g_camera.eye.elements[2]);
     gl.uniform3f(u_LightColor, 2.0, 1.9, 1.5);
 
@@ -101,19 +101,19 @@ function updateAnimationAngles() {
     let newy = cy + (radius * Math.sin(angle)) * Math.cos(tilt);
     let newz = cz + (radius * Math.sin(angle)) * Math.sin(tilt);
 
-    g_lightPos[0] = newx;
-    g_lightPos[1] = newy;
-    g_lightPos[2] = newz;
+    g_sunPos[0] = newx;
+    g_sunPos[1] = newy;
+    g_sunPos[2] = newz;
     moveLight();
 }
 
 function moveLight() {
-    let x = g_lightPos[0];
-    let y = g_lightPos[1];
-    let z = g_lightPos[2];
+    let x = g_sunPos[0];
+    let y = g_sunPos[1];
+    let z = g_sunPos[2];
 
-    g_light.matrix.setTranslate(x, y, z);
-    g_light.matrix.scale(g_lightScale, g_lightScale, g_lightScale);
+    g_sun.matrix.setTranslate(x, y, z);
+    g_sun.matrix.scale(g_sunScale, g_sunScale, g_sunScale);
     // Note to self, cullin relies on the pos not being a empty array
-    g_light.pos = g_lightPos;
+    g_sun.pos = g_sunPos;
 }

@@ -18,19 +18,19 @@ function createWorld() {
     g_ground.normalMat.setInverseOf(g_ground.matrix).transpose();
     g_worldObjs.push(g_ground);
 
-    g_light = new Sphere();
-    g_light.type = "light";
-    g_light.color = [1.0, 1.0, 0.0, 1.0];
-    g_light.texture = t_COLOR;
-    g_light.showTexture = false;
-    g_light.matrix.translate(
-        g_lightPos[0], 
-        g_lightPos[1], 
-        g_lightPos[2]
+    g_sun = new Sphere();
+    g_sun.type = "light";
+    g_sun.color = [1.0, 1.0, 0.0, 1.0];
+    g_sun.texture = t_COLOR;
+    g_sun.showTexture = false;
+    g_sun.matrix.translate(
+        g_sunPos[0], 
+        g_sunPos[1], 
+        g_sunPos[2]
     );
-    g_light.matrix.scale(g_lightScale, g_lightScale, g_lightScale);
-    g_light.pos = g_lightPos;
-    g_worldObjs.push(g_light);
+    g_sun.matrix.scale(g_sunScale, g_sunScale, g_sunScale);
+    g_sun.pos = g_sunPos;
+    g_worldObjs.push(g_sun);
 
     // Default map to load to
     createRange();

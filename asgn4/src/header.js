@@ -90,12 +90,12 @@ let u_UVScale = 1.0;                                                            
     let g_worldObjs = [];                                                                       // list of objects to render
     var g_skybox;
     var g_ground;
-    var g_light;                                                                                // light cube
+    var g_sun;                                                                                  // sun cube
     let g_targets = [];                                                                         // list of objects to keep track of and perform calculations on
     var g_currMap;                                                                              // Keep track of which map is currently loaded
-    let g_NonMineable = ["ground", "rangeWall", "light"];                                       // keep track of types that shouldn't be destroyed by players
-    let g_lightPos = [0.0, 2.5, 0.0];
-    let g_lightScale = -0.05;
+    let g_NonMineable = ["ground", "rangeWall", "sun"];                                         // keep track of types that shouldn't be destroyed by players
+    let g_sunPos = [0.0, 2.5, 0.0];
+    let g_sunScale = -0.05;
     
     // --- FOR TARGETS ---
     let g_targetSize = Number(document.getElementById("targetSize").defaultValue);
