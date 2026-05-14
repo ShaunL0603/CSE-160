@@ -214,4 +214,7 @@ function getShadowLocations() {
         console.log("Failed to get the storage location of u_LightProjMatrix");
         return -1;
     }
+
+    // switch back to main program
+    gl.useProgram(g_mainProgram);
 }
