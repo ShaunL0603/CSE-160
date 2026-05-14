@@ -1,5 +1,3 @@
-let g_flScale = 0.02; // scale for flashlight sphere]
-
 function createWorld() {
     g_skybox = new Sphere();
     g_skybox.type = "sky";

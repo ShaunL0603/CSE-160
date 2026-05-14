@@ -1,12 +1,6 @@
 // --- File with functions to create a randomly generated map ---
 
 
-let g_mergedMapVerts = null;
-let g_mergedMapUVVerts = null;
-let g_mergedMapNormals = null;
-let g_mergedMapVertBuffer = null;
-let g_mergedMapUVVertBuffer = null;
-let g_mergedMapNormBuffer = null;
 // --- Functions to create random map --- 
 function createRandomMap() {
     let wallHeight = 3;
@@ -73,7 +67,6 @@ function createRandomMap() {
     gl.bufferData(gl.ARRAY_BUFFER, g_mergedMapNormals, gl.STATIC_DRAW);
 }
 
-let identityMat = new Matrix4();
 function renderMap() {
     gl.uniform1i(u_WhichTexture, t_WALL);
     gl.uniform1i(u_ShowTexture, true);

@@ -59,8 +59,10 @@ let u_UVScale = 1.0;                                                            
 
     // --- FOR SHADOW MAPPING ---
     var g_shadowMapFOB;                                                                          // Framebuffer Object for shadow mapping
-    let g_lightProjMatrix = new Matrix4();                                                                // Projection matrix for the "sun camera" (light source)
-    let g_lightViewMatrix = new Matrix4();                                                                // View matrix for the "sun camera" (light source)
+    let g_lightProjMatrix = new Matrix4();                                                       // Projection matrix for the "sun camera" (light source)
+    let g_lightViewMatrix = new Matrix4();                                                       // View matrix for the "sun camera" (light source)
+    let shadowMat = new Matrix4();
+
 
     // --- FOR CAMERA ---
     var g_camera;
@@ -131,6 +133,12 @@ let u_UVScale = 1.0;                                                            
     let g_tempResult4v = new Vector4();
     
     // --- CREATE RANDOMLY GENERATED MAP ---
+    var g_mergedMapVerts;
+    var g_mergedMapUVVerts;
+    var g_mergedMapNormals;
+    var g_mergedMapVertBuffer;
+    var g_mergedMapUVVertBuffer;
+    var g_mergedMapNormBuffer;
     let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);            // Store new map size that user puts in
     let g_floorTileCount = parseInt(document.getElementById("floorTileCount").defaultValue);    // for digger, number of times it breaks a wall
     let g_currMapSize = g_mapSize;                                                              // Store current map size
@@ -138,6 +146,7 @@ let u_UVScale = 1.0;                                                            
     let g_map = [];
     let g_cubeScale = 0.25;                                                                     // scale for player placed blocks and walls
     var g_recenter;                                                                             // recenter cubes of rand map so that span room is 0,0,0
+    let identityMat = new Matrix4();
 
     // --- For placing blocks ---
     let g_tempOrigin3v = new Vector3();
@@ -156,3 +165,4 @@ let u_UVScale = 1.0;                                                            
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
     let g_tempVec = new Vector3();                                                             // temporary, used for culling in isObjVisible()
+    let g_flScale = 0.02; // scale for flashlight sphere]

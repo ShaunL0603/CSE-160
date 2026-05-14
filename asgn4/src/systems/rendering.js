@@ -1,6 +1,16 @@
 function renderAllShapes() {
+    // First render shadows to texture
+    renderShadows();
+    // switch back to HTML canvas
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    // Reset viewport to canvas size
+    gl.viewport(0, 0, canvas.width, canvas.height);
     // clear canvas
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // Use main shader program
+    gl.useProgram(g_mainProgram);
+
+    //TODO: handoff texture
 
     gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
     gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
@@ -31,7 +41,26 @@ function renderAllShapes() {
     }
 }
 
-let shadowMat = new Matrix4();
+function renderShadows() {
+    // First update sun camera     (same as in renderAllShapes since we want sun camera to be in correct position for shadow rendering as well)
+    updateLightCamera();
+    // Bind the shadow framebuffer
+    gl.bindFramebuffer(gl.FRAMEBUFFER, g_shadowMapFOB.fbo);
+    // Set the viewport to the size of the shadow map
+    gl.viewport(0, 0, g_shadowMapFOB.width, g_shadowMapFOB.height);
+    // Clear the depth buffer (no need to clear color buffer since we won't be sampling color)
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+    // Use shadow shader
+    gl.useProgram(g_shadowProgram);
+    // pass sun's camera matrices to shadow shader
+    gl.uniformMatrix4fv(u_ShadowLightViewMatrix, false, g_lightViewMatrix.elements);
+    gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_lightProjMatrix.elements);
+
+    // Draw geometry
+    drawMapForShadows();
+    drawObjsForShadows();
+}
+
 function renderMapShadows() {
     // Force solid color mode and pass the shadow color
     gl.uniform1i(u_WhichTexture, t_COLOR);
