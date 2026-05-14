@@ -57,6 +57,11 @@ let u_UVScale = 1.0;                                                            
     var g_shadowProgram;
     var g_shadowMapFOB;
 
+    // --- FOR SHADOW MAPPING ---
+    var g_shadowMapFOB;                                                                          // Framebuffer Object for shadow mapping
+    let g_lightProjMatrix = new Matrix4();                                                                // Projection matrix for the "sun camera" (light source)
+    let g_lightViewMatrix = new Matrix4();                                                                // View matrix for the "sun camera" (light source)
+
     // --- FOR CAMERA ---
     var g_camera;
     let g_camSpeedMult = Number(document.getElementById("camMovSpeed").defaultValue);           // speed camera moves through world
@@ -80,6 +85,11 @@ let u_UVScale = 1.0;                                                            
         "1": false, "2": false, "z": false,
         "x": false
     };
+    let g_showTexture = true;
+    let g_toggleNormals = false;
+    let g_toggleLightPath = true;
+    let g_LightOn = true;
+    let g_FlashlightOn = true;
 
     // create necessary vertices and buffers for cubes and spheres once
     // initialize them here
@@ -145,10 +155,4 @@ let u_UVScale = 1.0;                                                            
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
-    let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
-    let g_showTexture = true;
-    let g_toggleNormals = false;
-    let g_toggleLightPath = true;
-    let g_LightOn = true;
-    let g_FlashlightOn = true;
-    let g_shadowMapFOB;                                                                          // Framebuffer Object for shadow mapping
+    let g_tempVec = new Vector3();                                                             // temporary, used for culling in isObjVisible()
