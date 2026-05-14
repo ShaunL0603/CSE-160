@@ -141,3 +141,4 @@ let u_UVScale = 1.0;                                                            
     let g_toggleLightPath = true;
     let g_LightOn = true;
     let g_FlashlightOn = true;
+    let g_shadowMapFOB;                                                                          // Framebuffer Object for shadow mapping

@@ -22,6 +22,11 @@ function main() {
     createSphereVertices(15);
     createSphereBuffers();
 
+    g_shadowMapFOB = initFramebufferObject();
+    if (!g_shadowMapFOB) {
+        console.error("Failed to initialize Framebuffer Object for shadow mapping.");
+        return -1;
+    }
     initTextures();
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
