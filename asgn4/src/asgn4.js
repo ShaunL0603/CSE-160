@@ -108,7 +108,7 @@ function switchMap(ev) {
         
         // filter out objs in range map and remove targets
         g_worldObjs = g_worldObjs.filter(obj => 
-            obj.type !== "rangeWall" && 
+            obj.type !== "rangewall" && 
             obj.type !== "target" && 
             obj.type !== "hit box" &&
             obj.type !== "block"

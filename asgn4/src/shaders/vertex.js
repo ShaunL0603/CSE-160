@@ -18,18 +18,26 @@ var VSHADER_SOURCE =
 
     uniform float u_UVScale;
 
+    // --- SHADOW VARIABLES ---
+    varying vec4 v_PosFromLight
+    uniform mat4 u_LightViewMatrix;
+    uniform mat4 u_LightProjMatrix;
+
     void main() {
         gl_Position = u_ProjectionMatrix * u_ViewMatrix *  u_ModelMatrix * a_Position;
         v_UV = a_UV * u_UVScale;
         v_Normal = normalize(vec3(u_NormalMatrix * vec4(a_Normal, 1.0)));
         v_VertPos = u_ModelMatrix * a_Position;
+
+        // --- SHADOW CALCULATION ---
+        v_PosFromLight = u_LightProjMatrix * u_LightViewMatrix * v_VertPos;
     }
     `;
 
 var VSHADER_SOURCE_SHADOW =
     `    
     precision mediump float;
-    
+
     attribute vec4 a_Position;
     uniform mat4 u_ModelMatrix;
     

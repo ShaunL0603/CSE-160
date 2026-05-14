@@ -57,31 +57,58 @@ function renderShadows() {
     gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_lightProjMatrix.elements);
 
     // Draw geometry
-    drawMapForShadows();
-    drawObjsForShadows();
+    drawMapShadows();
+    drawObjsShadows();
 }
 
-function renderMapShadows() {
-    // Force solid color mode and pass the shadow color
-    gl.uniform1i(u_WhichTexture, t_COLOR);
-    gl.uniform4f(u_FragColor, 0.0, 0.0, 0.0, 0.8);
+let shadowiIdentityMat = new Matrix4();
+function drawMapShadows() {
+    if (g_currMap !== RANDOM || !g_mergedMapVertBuffer) return;
 
-    // Create an identity matrix, then squash it using the light position
-    shadowMat.dropShadowDirectionally(
-        0, 1, 0, 
-        0, 0, 0, 
-        g_sunPos[0], g_sunPos[1], g_sunPos[2]
-    );
-    
-    // Pass the squashed matrix to the shader
-    gl.uniformMatrix4fv(u_ModelMatrix, false, shadowMat.elements);
+    // Setting the Model Matrix
+    gl.uniformMatrix4fv(u_ShadowModelMatrix, false, shadowiIdentityMat.elements);
 
-    // Bind position buffer and draw! (No need to bind UVs/Normals for shadows)
+    // Bind position buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, g_mergedMapVertBuffer);
-    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(a_Position);
+    gl.vertexAttribPointer(a_ShadowPosition, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_ShadowPosition);
 
     gl.drawArrays(gl.TRIANGLES, 0, g_mergedMapVerts.length / 3);
+}
+
+let renderCubeShadows = ["cube", "wall", "rangewall"];
+let renderSphereShadows = ["sphere", "target"];
+function drawObjsShadows() {
+    for (let i = 0; i < g_worldObjs.length; ++i) {
+        let obj = g_worldObjs[i];
+        if (!obj.active) continue;
+        // Don't render shadows for light sources
+        if (obj.type === "sun" || obj.type === "flashlight") continue;
+        // Don't render transparent objects (hitbox)
+        if (obj.color && obj.color[3] == 0.0) continue;
+        // Setting the Model Matrix
+        gl.uniformMatrix4fv(u_ShadowModelMatrix, false, obj.matrix.elements);
+
+        // Bind position buffer
+        var currBuffer;
+        var currVerts;
+        // Apparently instanceof can be more costly but use it anyways
+        if (renderCubeShadows.includes(obj.type)) {
+            currBuffer = g_cubeVertBuffer;
+            currVerts = g_cubeVerts;
+        } else if (renderSphereShadows.includes(obj.type)) {
+            currBuffer = g_sphereVertBuffer;
+            currVerts = g_sphereVerts;
+        } else {
+            console.warn("Error: unrecognized obj type in shadow rendering", obj);
+            continue;
+        }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, currBuffer);
+        gl.vertexAttribPointer(a_ShadowPosition, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(a_ShadowPosition);
+        gl.drawArrays(gl.TRIANGLES, 0, currVerts.length / 3);
+    }
 }
 
 // Redraw the canvas

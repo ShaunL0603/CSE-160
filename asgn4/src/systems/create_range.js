@@ -1,6 +1,6 @@
 function createRange() {
     var rangeWall = new Cube();
-    rangeWall.type = "rangeWall"
+    rangeWall.type = "rangewall"
     rangeWall.color = [0.2, 0.0, 0.2, 1.0];
     rangeWall.UVScale = 5;
     rangeWall.texture = t_RANGEWALL;
@@ -11,7 +11,7 @@ function createRange() {
     g_worldObjs.push(rangeWall);
 
     var rangeWall2 = new Cube();
-    rangeWall2.type = "rangeWall"
+    rangeWall2.type = "rangewall"
     rangeWall2.color = [0.2, 0.0, 0.2, 1.0];
     rangeWall2.UVScale = 5;
     rangeWall2.texture = t_RANGEWALL;
@@ -23,7 +23,7 @@ function createRange() {
     g_worldObjs.push(rangeWall2);
 
     var rangeWall3 = new Cube();
-    rangeWall3.type = "rangeWall"
+    rangeWall3.type = "rangewall"
     rangeWall3.color = [0.2, 0.0, 0.2, 1.0];
     rangeWall3.UVScale = 5;
     rangeWall3.texture = t_RANGEWALL;

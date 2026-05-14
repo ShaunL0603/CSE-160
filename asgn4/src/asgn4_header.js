@@ -118,7 +118,7 @@ let u_UVScale = 1.0;                                                            
     var g_flashlight;                                                                           // flashlight sphere that follows camera
     let g_targets = [];                                                                         // list of objects to keep track of and perform calculations on
     var g_currMap;                                                                              // Keep track of which map is currently loaded
-    let g_NonMineable = ["ground", "rangeWall", "sun"];                                         // keep track of types that shouldn't be destroyed by players
+    let g_NonMineable = ["ground", "rangewall", "sun"];                                         // keep track of types that shouldn't be destroyed by players
     let g_sunPos = [0.0, 2.5, 0.0];
     let g_sunScale = -25.0;
     
