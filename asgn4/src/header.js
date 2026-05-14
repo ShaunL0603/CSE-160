@@ -74,14 +74,14 @@ let u_UVScale = 1.0;                                                            
     // --- FOR CUBE ---
     let g_cubeVertices = null;
     let g_cubeUVVerts = null;
-    let g_cubeNormVerts = null;
+    let g_cubeNormals = null;
     let g_cubeVertBuffer = null;
     let g_cubeUVVertBuffer = null;
     let g_cubeNormBuffer = null;
     // --- FOR SPHERE ---
     let g_sphereVertices = null;
     let g_sphereUVVerts = null;
-    let g_sphereNormVerts = null;
+    let g_sphereNormals = null;
     let g_sphereVertBuffer = null;
     let g_sphereUVVertBuffer = null;
     let g_sphereNormBuffer = null;

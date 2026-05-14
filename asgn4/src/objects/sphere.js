@@ -94,7 +94,7 @@ function createSphereVertices(segments) {
 
     g_sphereVertices = new Float32Array(vPositions);
     g_sphereUVVerts = new Float32Array(vUVs);
-    g_sphereNormVerts = new Float32Array(vNormals);
+    g_sphereNormals = new Float32Array(vNormals);
 }
 
 function createSphereBuffers() {
@@ -108,13 +108,13 @@ function createSphereBuffers() {
 
     // --- Positions ---
     gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereVertBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, g_sphereVertices, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_sphereVertices, gl.STATIC_DRAW);
 
     // --- UVs ---
     gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereUVVertBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, g_sphereUVVerts, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_sphereUVVerts, gl.STATIC_DRAW);
 
     // --- NORMALS ---
     gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereNormBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, g_sphereNormVerts, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_sphereNormals, gl.STATIC_DRAW);
 }

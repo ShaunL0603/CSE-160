@@ -9,6 +9,10 @@ function renderAllShapes() {
     gl.uniform3f(u_CameraPos, g_camera.eye.elements[0], g_camera.eye.elements[1], g_camera.eye.elements[2]);
     gl.uniform3f(u_LightColor, 2.0, 1.9, 1.5);
 
+    if (g_currMap == RANDOM && g_mergedMapVertBuffer) {
+        renderMap();
+    }
+
     // Start rendering all objects in global world obj list
     for (let i = 0; i < g_worldObjs.length; ++i) {
         let obj = g_worldObjs[i];

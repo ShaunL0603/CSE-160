@@ -99,7 +99,7 @@ function createCubeVertices() {
         0.0, 0.0,  1.0, 1.0,  0.0, 1.0
     ]);
 
-    g_cubeNormVerts = new Float32Array([
+    g_cubeNormals = new Float32Array([
         // Front face
         0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  
         0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  
@@ -133,17 +133,17 @@ function createCubeBuffers() {
     // Bind the buffer object to target
     gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeVertBuffer);
     // Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, g_cubeVertices, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_cubeVertices, gl.STATIC_DRAW);
 
     // --- UV ---
     // Bind the buffer object to target
     gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeUVVertBuffer);
     // Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, g_cubeUVVerts, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_cubeUVVerts, gl.STATIC_DRAW);
 
     // --- NORMALS ---
     // Bind the buffer object to target
     gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeNormBuffer);
     // Write date into the buffer object
-    gl.bufferData(gl.ARRAY_BUFFER, g_cubeNormVerts, gl.DYNAMIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, g_cubeNormals, gl.STATIC_DRAW);
 }
