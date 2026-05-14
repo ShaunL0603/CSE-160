@@ -9,6 +9,7 @@ class Cube {
     this.UVScale = 1.0;
     this.active = true;
     this.shininess = 10.0;
+    cubeVertLen = 36;
   }
 
     render() {
@@ -52,7 +53,7 @@ class Cube {
         // toggle texture
         gl.uniform1i(u_ShowTexture, toggleTexture(this.showTexture));
         
-        gl.drawArrays(gl.TRIANGLES, 0, g_cubeVertices.length / 3);
+        gl.drawArrays(gl.TRIANGLES, 0, cubeVertLen);
     }
 }
 

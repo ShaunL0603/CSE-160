@@ -172,14 +172,18 @@ function drawObjsShadows() {
 
         // Bind position buffer
         var currBuffer;
-        var currVerts;
+        let currVertCount = 0;
         // Apparently instanceof can be more costly but use it anyways
         if (renderCubeShadows.includes(obj.type)) {
             currBuffer = g_cubeVertBuffer;
-            currVerts = g_cubeVertices;
+            currVertCount = cubeVertLen;
         } else if (renderSphereShadows.includes(obj.type)) {
             currBuffer = g_sphereVertBuffer;
-            currVerts = g_sphereVertices;
+            currVertCount = g_sphereVertices.length / 3;
+        } else if (obj.type === "customModel") {
+            if (!obj.loaded) continue; // don't try to render shadow if model isn't loaded yet
+            currBuffer = obj.vertBuffer;
+            currVertCount = obj.vertexCount;
         } else {
             // console.warn("Error: unrecognized obj type in shadow rendering", obj);
             continue;
@@ -188,7 +192,7 @@ function drawObjsShadows() {
         gl.bindBuffer(gl.ARRAY_BUFFER, currBuffer);
         gl.vertexAttribPointer(a_ShadowPosition, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_ShadowPosition);
-        gl.drawArrays(gl.TRIANGLES, 0, currVerts.length / 3);
+        gl.drawArrays(gl.TRIANGLES, 0, currVertCount);
     }
 }
 
