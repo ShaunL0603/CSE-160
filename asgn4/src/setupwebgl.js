@@ -81,6 +81,11 @@ function connectVariablesToGLSL() {
         console.log('Failed to get the storage location of u_CameraPos');
         return -1;
     }
+    u_CameraAtPos = gl.getUniformLocation(gl.program, 'u_CameraAtPos');
+    if (!u_CameraAtPos) {
+        console.log('Failed to get the storage location of u_CameraAtPos');
+        return -1;
+    }
     u_LightColor = gl.getUniformLocation(gl.program, 'u_LightColor');
     if (!u_LightColor) {
         console.log('Failed to get the storage location of u_LightColor');
@@ -149,6 +154,11 @@ function connectVariablesToGLSL() {
     u_LightOn = gl.getUniformLocation(gl.program, 'u_LightOn');
     if (!u_LightOn) {
         console.log('Failed to get the storage location of u_LightOn');
+        return -1;
+    }
+    u_FlashlightOn = gl.getUniformLocation(gl.program, 'u_FlashlightOn');
+    if (!u_FlashlightOn) {
+        console.log('Failed to get the storage location of u_FlashlightOn');
         return -1;
     }
 }

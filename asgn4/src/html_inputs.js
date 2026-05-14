@@ -242,6 +242,11 @@ function updateKeyDown(ev) {
                 if (typeof g_camera !== null) g_camera.recenterCamera();
             }
             break;
+        case "f":
+            if (!g_keys["f"]) {
+                g_FlashlightOn = !g_FlashlightOn;
+            }
+            break;
         default:
             // console.log(`${key} pressed`);
     }
@@ -282,6 +287,9 @@ function updateKeyUp(ev) {
             break;
         case "x":
             g_keys["x"] = false;
+            break;
+        case "f":
+            g_keys["f"] = false;
             break;
         default:
             // console.log(`${key} pressed`);

@@ -5,8 +5,10 @@ function renderAllShapes() {
     gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
     gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
     gl.uniform1i(u_LightOn, g_LightOn ? 1 : 0);
+    gl.uniform1i(u_FlashlightOn, g_FlashlightOn ? 1 : 0);
     gl.uniform3f(u_LightPos, g_sunPos[0], g_sunPos[1], g_sunPos[2]);
     gl.uniform3f(u_CameraPos, g_camera.eye.elements[0], g_camera.eye.elements[1], g_camera.eye.elements[2]);
+    gl.uniform3f(u_CameraAtPos, g_camera.at.elements[0], g_camera.at.elements[1], g_camera.at.elements[2]);
     gl.uniform3f(u_LightColor, 2.0, 1.9, 1.5);
 
     if (g_currMap == RANDOM && g_mergedMapVertBuffer) {

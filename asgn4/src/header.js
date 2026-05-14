@@ -39,8 +39,10 @@ var u_ShowNormals;
 var u_ShowTexture;
 var u_LightPos;
 var u_CameraPos;
+var u_CameraAtPos;
 var u_LightColor;
 var u_LightOn;
+var u_FlashlightOn;
 var u_Shininess;
 let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
 
@@ -138,3 +140,4 @@ let u_UVScale = 1.0;                                                            
     let g_toggleNormals = false;
     let g_toggleLightPath = true;
     let g_LightOn = true;
+    let g_FlashlightOn = true;
