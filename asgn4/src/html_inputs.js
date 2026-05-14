@@ -57,6 +57,7 @@ function htmlActions() {
 
     const toggleTextures = document.getElementById("toggleTextures");
     const toggleNormals = document.getElementById("toggleNormals");
+    const toggleShadows = document.getElementById("toggleShadows");
 
     const toggleLighting = document.getElementById("toggleLighting");
     const sunX = document.getElementById("sunX");
@@ -167,6 +168,7 @@ function htmlActions() {
     toggleLighting.onclick = () => { g_LightOn = !g_LightOn; };
     toggleNormals.onclick = () => { g_toggleNormals = !g_toggleNormals; };
     toggleTextures.onclick = () => { g_showTexture = !g_showTexture; };
+    toggleShadows.onclick = () => { g_toggleShadows = !g_toggleShadows; };
     // Moving position of the sun
     sunX.addEventListener("input", (ev) => {
         let newx = parseFloat(ev.target.value);

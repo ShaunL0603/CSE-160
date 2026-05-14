@@ -31,6 +31,7 @@ var FSHADER_SOURCE =
     uniform bool u_ShowNormals;
     uniform bool u_ShowTexture;
     uniform bool u_LightOn;
+    uniform bool u_ShadowsOn;
 
     // --- SHADOW VARIABLES ---
     uniform sampler2D u_ShadowMapSampler;
@@ -70,30 +71,33 @@ var FSHADER_SOURCE =
         vec3 totalSpecular = vec3(0.0);
 
         // --- SHADOW MAPPING MATH ---
-        // Perspective Divide, standardizing coordinates
-        vec3 shadowCoord = (v_PosFromLight.xyz / v_PosFromLight.w);
-        
-        // Convert from WebGL Clip Space (-1 to 1) to Texture UV Space (0 to 1)
-        shadowCoord = (shadowCoord + 1.0) * 0.5;
-
-        // Default to fully lit
         float shadowVisibility = 1.0; 
+        
+        if (u_ShadowsOn) {
+            // Perspective Divide, standardizing coordinates
+            vec3 shadowCoord = (v_PosFromLight.xyz / v_PosFromLight.w);
+            
+            // Convert from WebGL Clip Space (-1 to 1) to Texture UV Space (0 to 1)
+            shadowCoord = (shadowCoord + 1.0) * 0.5;
 
-        // Only calculate shadows if the pixel is actually inside the Sun's camera box
-        if (shadowCoord.x >= 0.0 && shadowCoord.x <= 1.0 &&
-            shadowCoord.y >= 0.0 && shadowCoord.y <= 1.0 &&
-            shadowCoord.z >= 0.0 && shadowCoord.z <= 1.0) {
+            // Default to fully lit
 
-            // Read the depth recorded in Pass 1 (stored in the RED channel)
-            float depthFromMap = texture2D(u_ShadowMapSampler, shadowCoord.xy).r;
+            // Only calculate shadows if the pixel is actually inside the Sun's camera box
+            if (shadowCoord.x >= 0.0 && shadowCoord.x <= 1.0 &&
+                shadowCoord.y >= 0.0 && shadowCoord.y <= 1.0 &&
+                shadowCoord.z >= 0.0 && shadowCoord.z <= 1.0) {
 
-            // Add a tiny bias to prevent self-shadowing glitchess
-            float bias = 0.0001; 
+                // Read the depth recorded in Pass 1 (stored in the RED channel)
+                float depthFromMap = texture2D(u_ShadowMapSampler, shadowCoord.xy).r;
 
-            // If our current distance is greater than the recorded distance,
-            // we are in shadow!
-            if (shadowCoord.z > depthFromMap + bias) {
-                shadowVisibility = 0.0; // Turn off the light!
+                // Add a tiny bias to prevent self-shadowing glitchess
+                float bias = 0.0001; 
+
+                // If our current distance is greater than the recorded distance,
+                // we are in shadow!
+                if (shadowCoord.z > depthFromMap + bias) {
+                    shadowVisibility = 0.0; // Turn off the light!
+                }
             }
         }
 

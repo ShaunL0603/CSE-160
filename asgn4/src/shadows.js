@@ -7,8 +7,8 @@ function initFramebufferObject() {
     }
 
     // Define the resolution of your shadow map
-    var OFFSCREEN_WIDTH = 2048;
-    var OFFSCREEN_HEIGHT = 2048;
+    var OFFSCREEN_WIDTH = 8192;
+    var OFFSCREEN_HEIGHT = 8192;
 
     // Create custom Framebuffer
     var framebuffer = gl.createFramebuffer();

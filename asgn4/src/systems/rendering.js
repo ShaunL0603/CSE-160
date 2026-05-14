@@ -1,30 +1,31 @@
 function renderAllShapes() {
-    // First render shadows to texture
-    renderShadows();
-    // switch back to HTML canvas
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    // Reset viewport to canvas size
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    // clear canvas
-    // gl.clearColor(0.0, 0.5, 0.0, 1.0); // debugging
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        // First render shadows to texture
+        if (g_toggleShadows) renderShadows();
+        // switch back to HTML canvas
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        // Reset viewport to canvas size
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        // clear canvas
+        // gl.clearColor(0.0, 0.5, 0.0, 1.0); // debugging
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Use main shader program
-    gl.useProgram(g_mainProgram);
-    // Take the texture we just drew when rendering shadows, and hand it to the Main Shader
-    gl.activeTexture(gl.TEXTURE5); // texture unit 5 for shadows
-    gl.bindTexture(gl.TEXTURE_2D, g_shadowMapFBO.texture);
-    gl.uniform1i(u_ShadowMapSampler, 5); // We will add this uniform in Step 5
+        // Use main shader program
+        gl.useProgram(g_mainProgram);
+        // Take the texture we just drew when rendering shadows, and hand it to the Main Shader
+        gl.activeTexture(gl.TEXTURE5); // texture unit 5 for shadows
+        gl.bindTexture(gl.TEXTURE_2D, g_shadowMapFBO.texture);
+        gl.uniform1i(u_ShadowMapSampler, 5); // We will add this uniform in Step 5
 
-    // Passing Sun's camera matrices to the Main Shader as well
-    // Main shader needs to know where the sun was to align the image properly
-    gl.uniformMatrix4fv(u_LightViewMatrix, false, g_lightViewMatrix.elements);
-    gl.uniformMatrix4fv(u_LightProjMatrix, false, g_lightProjMatrix.elements);
+        // Passing Sun's camera matrices to the Main Shader as well
+        // Main shader needs to know where the sun was to align the image properly
+        gl.uniformMatrix4fv(u_LightViewMatrix, false, g_lightViewMatrix.elements);
+        gl.uniformMatrix4fv(u_LightProjMatrix, false, g_lightProjMatrix.elements);
 
     gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
     gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
     gl.uniform1i(u_LightOn, g_LightOn ? 1 : 0);
     gl.uniform1i(u_FlashlightOn, g_FlashlightOn ? 1 : 0);
+    gl.uniform1i(u_ShadowsOn, g_toggleShadows ? 1 : 0);
     gl.uniform3f(u_LightPos, g_sunPos[0], g_sunPos[1], g_sunPos[2]);
     gl.uniform3f(u_CameraPos, g_camera.eye.elements[0], g_camera.eye.elements[1], g_camera.eye.elements[2]);
     gl.uniform3f(u_CameraAtPos, g_camera.at.elements[0], g_camera.at.elements[1], g_camera.at.elements[2]);
@@ -48,6 +49,75 @@ function renderAllShapes() {
             obj.render();
         }
     }
+}
+
+// Redraw the canvas
+function tick() {
+    let now = performance.now();
+    let elapsed = now - g_lastFrameTime;
+    let frameInterval = 1000.0 * g_invFPSCap;
+    
+    g_camera.speed = (g_keys["shift"]) ? g_camSpeed * g_camSpeedMult : g_camSpeed;
+    g_camera.moveCamera(g_keys);
+
+    if (elapsed > frameInterval) {
+        g_lastFrameTime = now - (elapsed % frameInterval);
+        g_seconds = (now * 0.001) - g_startTime;
+        resizeCanvas(canvas);
+
+        // Main rendering
+        handleRespawning();
+        if (g_toggleLightPath) updateAnimationAngles();
+        moveFlashlight();
+        renderAllShapes();
+        
+        if (now - g_lastFPSUpdateTime > 500) {
+            let fps = Math.round(1000.0 / elapsed);
+            let msPerFrame = Math.round(elapsed);
+            
+            let text = `ms: ${msPerFrame} fps: ${fps} / ${g_fpsCap}`;
+            sendTextToHTML(text, "numdot");
+            g_lastFPSUpdateTime = now;
+        }
+    };
+    requestAnimationFrame(tick);
+}
+
+/**
+ * Cone culling, don't render anything behind the camera
+ * along with any obj beyond the 60 degree fov of the camera
+ * @param {*} obj object to do culling math on
+ * @returns boolean, is obj within camera fov
+ */
+function isObjVisible(obj) {
+    // avoid objects with empty/no pos array (like ground)
+    if (!obj.pos) return true;
+    let maxDrawDist = 100.0;
+
+    // get direction vector
+    let dx = obj.pos[0] - g_camera.eye.elements[0];
+    let dy = obj.pos[1] - g_camera.eye.elements[1];
+    let dz = obj.pos[2] - g_camera.eye.elements[2];
+
+    // first check if the distance squared is greater than our
+    // max distance squared to avoid unnecessary math
+    let distSqr = dx*dx + dy*dy + dz*dz;
+    if (distSqr > maxDrawDist*maxDrawDist) return false;
+
+    let dist = Math.sqrt(distSqr);
+    // if the distance is less than 1 then obj is right next to camera
+    if (dist < 1.0) return true;
+
+    let invDist = 1 / dist; // divide once multiply a bunch later
+    // normalize vector pointing to object
+    g_tempVec.elements[0] = dx * invDist;
+    g_tempVec.elements[1] = dy * invDist;
+    g_tempVec.elements[2] = dz * invDist;
+    let dotProduct = Vector3.dot(g_tempVec, g_camera.forwardVec);
+
+    let paddingAngle = g_camera.fov;
+    let threshold = Math.cos(paddingAngle * degToRad);
+    return dotProduct >= threshold;
 }
 
 function renderShadows() {
@@ -120,75 +190,6 @@ function drawObjsShadows() {
         gl.enableVertexAttribArray(a_ShadowPosition);
         gl.drawArrays(gl.TRIANGLES, 0, currVerts.length / 3);
     }
-}
-
-// Redraw the canvas
-function tick() {
-    let now = performance.now();
-    let elapsed = now - g_lastFrameTime;
-    let frameInterval = 1000.0 * g_invFPSCap;
-    
-    g_camera.speed = (g_keys["shift"]) ? g_camSpeed * g_camSpeedMult : g_camSpeed;
-    g_camera.moveCamera(g_keys);
-
-    if (elapsed > frameInterval) {
-        g_lastFrameTime = now - (elapsed % frameInterval);
-        g_seconds = (now * 0.001) - g_startTime;
-
-        resizeCanvas(canvas);
-        // Main rendering
-        handleRespawning();
-        if (g_toggleLightPath) updateAnimationAngles();
-        moveFlashlight();
-        renderAllShapes();
-        
-        if (now - g_lastFPSUpdateTime > 500) {
-            let fps = Math.round(1000.0 / elapsed);
-            let msPerFrame = Math.round(elapsed);
-            
-            let text = `ms: ${msPerFrame} fps: ${fps} / ${g_fpsCap}`;
-            sendTextToHTML(text, "numdot");
-            g_lastFPSUpdateTime = now;
-        }
-    };
-    requestAnimationFrame(tick);
-}
-
-/**
- * Cone culling, don't render anything behind the camera
- * along with any obj beyond the 60 degree fov of the camera
- * @param {*} obj object to do culling math on
- * @returns boolean, is obj within camera fov
- */
-function isObjVisible(obj) {
-    // avoid objects with empty/no pos array (like ground)
-    if (!obj.pos) return true;
-    let maxDrawDist = 100.0;
-
-    // get direction vector
-    let dx = obj.pos[0] - g_camera.eye.elements[0];
-    let dy = obj.pos[1] - g_camera.eye.elements[1];
-    let dz = obj.pos[2] - g_camera.eye.elements[2];
-
-    // first check if the distance squared is greater than our
-    // max distance squared to avoid unnecessary math
-    let distSqr = dx*dx + dy*dy + dz*dz;
-    if (distSqr > maxDrawDist*maxDrawDist) return false;
-
-    let dist = Math.sqrt(distSqr);
-    // if the distance is less than 1 then obj is right next to camera
-    if (dist < 1.0) return true;
-
-    let invDist = 1 / dist; // divide once multiply a bunch later
-    // normalize vector pointing to object
-    g_tempVec.elements[0] = dx * invDist;
-    g_tempVec.elements[1] = dy * invDist;
-    g_tempVec.elements[2] = dz * invDist;
-    let dotProduct = Vector3.dot(g_tempVec, g_camera.forwardVec);
-
-    let paddingAngle = g_camera.fov;
-    let threshold = Math.cos(paddingAngle * degToRad);
-    return dotProduct >= threshold;
 }
 
 function updateAnimationAngles() {

@@ -96,6 +96,7 @@ let u_UVScale = 1.0;                                                            
     let g_toggleLightPath = true;
     let g_LightOn = true;
     let g_FlashlightOn = true;
+    let g_toggleShadows = true;
 
     // create necessary vertices and buffers for cubes and spheres once
     // initialize them here
@@ -168,5 +169,5 @@ let u_UVScale = 1.0;                                                            
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
-    let g_tempVec = new Vector3();                                                             // temporary, used for culling in isObjVisible()
+    let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
     let g_flScale = 0.02; // scale for flashlight sphere]

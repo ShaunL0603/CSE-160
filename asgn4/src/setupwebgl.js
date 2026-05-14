@@ -177,6 +177,11 @@ function connectVariablesToGLSL() {
         console.log('Failed to get the storage location of u_FlashlightOn');
         return -1;
     }
+    u_ShadowsOn = gl.getUniformLocation(gl.program, 'u_ShadowsOn');
+    if (!u_ShadowsOn) {
+        console.log('Failed to get the storage location of u_ShadowsOn');
+        return -1;
+    }
 
     // --- FOR SHADOWS ---
     u_LightViewMatrix = gl.getUniformLocation(gl.program, 'u_LightViewMatrix');
