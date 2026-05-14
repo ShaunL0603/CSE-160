@@ -25,3 +25,19 @@ var VSHADER_SOURCE =
         v_VertPos = u_ModelMatrix * a_Position;
     }
     `;
+
+var VSHADER_SOURCE_SHADOW =
+    `    
+    precision mediump float;
+    
+    attribute vec4 a_Position;
+    uniform mat4 u_ModelMatrix;
+    
+    // The "Sun Camera" matrices
+    uniform mat4 u_LightViewMatrix;
+    uniform mat4 u_LightProjectionMatrix;
+    
+    void main() {
+        gl_Position = u_LightProjectionMatrix * u_LightViewMatrix * u_ModelMatrix * a_Position;
+    }
+    `;

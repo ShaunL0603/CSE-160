@@ -9,6 +9,7 @@ function setupWebGL() {
         return;
     }
 
+    createPrograms();
     g_camera = new Camera();
     resizeCanvas(canvas);
 
@@ -17,6 +18,24 @@ function setupWebGL() {
     gl.enable(gl.BLEND);
     // Tell WebGL how to mix the transparent color with the background
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+}
+
+function createPrograms() {
+    // compile main shader program
+    g_mainProgram = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE);
+    // compile shadow shader program
+    g_shadowProgram = createProgram(gl, VSHADER_SOURCE_SHADOW, SHADOW_FSHADER_SOURCE);
+    if (!g_mainProgram || !g_shadowProgram) {
+        console.log('Failed to create shader programs.');
+        return;
+    }
+
+    // Tell WebGL to start by using the main program
+    gl.useProgram(g_mainProgram);
+    
+    // We are now using multiple shader programs
+    // Attach main one to gl object so old code doesn't break
+    gl.program = g_mainProgram;
 }
 
 function connectVariablesToGLSL() {
@@ -159,6 +178,40 @@ function connectVariablesToGLSL() {
     u_FlashlightOn = gl.getUniformLocation(gl.program, 'u_FlashlightOn');
     if (!u_FlashlightOn) {
         console.log('Failed to get the storage location of u_FlashlightOn');
+        return -1;
+    }
+
+    g_shadowMapFOB = initFramebufferObject();
+    if (!g_shadowMapFOB) {
+        console.error("Failed to initialize Framebuffer Object for shadow mapping.");
+        return -1;
+    }
+}
+
+function getShadowLocations() {
+    // temporarily set WebGL to the shadow program
+    gl.useProgram(g_shadowProgram);
+
+    // Get attribute storage locations
+    a_ShadowPosition = gl.getAttribLocation(g_shadowProgram, "a_Position");
+    if (a_ShadowPosition < 0) {
+        console.log("Failed to get the storage location of a_Position");
+        return -1;
+    }
+    // Get uniform storage locations
+    u_ShadowModelMatrix = gl.getUniformLocation(g_shadowProgram, "u_ModelMatrix");
+    if (!u_ShadowModelMatrix) {
+        console.log("Failed to get the storage location of u_ModelMatrix");
+        return -1;
+    }
+    u_ShadowLightViewMatrix = gl.getUniformLocation(g_shadowProgram, "u_LightViewMatrix");
+    if (!u_ShadowLightViewMatrix) {
+        console.log("Failed to get the storage location of u_LightViewMatrix");
+        return -1;
+    }
+    u_ShadowLightProjMatrix = gl.getUniformLocation(g_shadowProgram, "u_LightProjMatrix");
+    if (!u_ShadowLightProjMatrix) {
+        console.log("Failed to get the storage location of u_LightProjMatrix");
         return -1;
     }
 }

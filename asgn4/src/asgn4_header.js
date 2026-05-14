@@ -44,9 +44,19 @@ var u_LightColor;
 var u_LightOn;
 var u_FlashlightOn;
 var u_Shininess;
+// For shadow mapping
+var a_ShadowPosition;
+var u_ShadowModelMatrix;
+var u_ShadowLightViewMatrix;
+var u_ShadowLightProjMatrix;
 let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
 
 // Global variables
+    // --- SHADER PROGRAMS ---
+    var g_mainProgram;
+    var g_shadowProgram;
+    var g_shadowMapFOB;
+
     // --- FOR CAMERA ---
     var g_camera;
     let g_camSpeedMult = Number(document.getElementById("camMovSpeed").defaultValue);           // speed camera moves through world

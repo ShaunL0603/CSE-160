@@ -112,3 +112,13 @@ var FSHADER_SOURCE =
         }
     }
     `;
+
+var SHADOW_FSHADER_SOURCE =
+    `
+    precision mediump float;
+    void main() {
+        // WebGL automatically writes Z-depth to our depth texture.
+        // We just write a dummy color here to satisfy the compiler.
+        gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 1.0);
+    }
+    `;

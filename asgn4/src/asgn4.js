@@ -6,10 +6,13 @@ function main() {
     g_playerMode = FPS;
     sendTextToHTML(FPS, "playerMode");
     g_currMap = RANGE;
+    createPrograms();
     // sets up canvas and gl variables
     setupWebGL();
     // set up GLSL shader programs and connect GLSL variables
     connectVariablesToGLSL();
+    // get shadow shader variable locations and connect GLSL variables
+    getShadowLocations();
     // Sets up html actions
     htmlActions();
     // document and canvas event listeners
@@ -21,12 +24,7 @@ function main() {
     // Create global sphere verts n buffers
     createSphereVertices(15);
     createSphereBuffers();
-
-    g_shadowMapFOB = initFramebufferObject();
-    if (!g_shadowMapFOB) {
-        console.error("Failed to initialize Framebuffer Object for shadow mapping.");
-        return -1;
-    }
+    // getting textures
     initTextures();
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
