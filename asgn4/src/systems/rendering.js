@@ -94,7 +94,7 @@ function isObjVisible(obj) {
 
 function updateAnimationAngles() {
     // Circular path for light cube
-    angle += 0.01;
+    angle += 0.001;
     if (angle > Math.PI * 2) angle = 0;
 
     let newx = cx + radius * Math.cos(angle);
@@ -114,6 +114,4 @@ function moveLight() {
 
     g_sun.matrix.setTranslate(x, y, z);
     g_sun.matrix.scale(g_sunScale, g_sunScale, g_sunScale);
-    // Note to self, cullin relies on the pos not being a empty array
-    g_sun.pos = g_sunPos;
 }

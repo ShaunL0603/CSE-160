@@ -29,7 +29,7 @@ function createWorld() {
         g_sunPos[2]
     );
     g_sun.matrix.scale(g_sunScale, g_sunScale, g_sunScale);
-    g_sun.pos = g_sunPos;
+    g_sun.pos = null;
     g_worldObjs.push(g_sun);
 
     // Default map to load to
