@@ -1,6 +1,24 @@
 // header file for js files in asgn3, blocky world, folder
 
 
+// CONSTANTS
+const degToRad = Math.PI / 180;
+const g_invFPSCap = 1 / 165; // my cap, 165
+    // --- for player modes ---
+    const FPS = "FPS";
+    const MINE = "MINE";
+    // ---- for current map ---
+    const RANGE = "m_RANGE";
+    const RANDOM = "m_RANDOM";
+
+    // For textures
+    const t_COLOR = -2 //"COLOR"
+    const t_DEBUG = -1 //"DEBUG"
+    const t_SKY = 0 // "SKY"
+    const t_GROUND = 1 //"GROUND"
+    const t_WALL = 2 // "WALL"
+    const t_RANGEWALL = 3 // "RANGEWALL" 
+
 // Global variables, WebGL
 var canvas;
 var gl;
@@ -102,6 +120,14 @@ let u_UVScale = 1.0;                                                            
     let g_tempDir3v = new Vector3();
     let g_tempHitPoint3v = new Vector3();  
 
+    // --- FOR ANIMATION ---
+    let cx = -0.1;  // -0.1 offset due to scale when centering with world origin
+    let cy = 5.0;
+    let cz = -5.0;   // 5.0 offset for same reason
+    let radius = 4.5;
+    let angle = 0.0;
+    let tilt = -45.0 * degToRad;
+
     // --- OTHER ---
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
@@ -110,22 +136,3 @@ let u_UVScale = 1.0;                                                            
     let g_toggleNormals = false;
     let g_toggleLightPath = true;
     let g_LightOn = true;
-
-
-// CONSTANTS
-const degToRad = Math.PI / 180;
-const g_invFPSCap = 1 / g_fpsCap;
-    // --- for player modes ---
-    const FPS = "FPS";
-    const MINE = "MINE";
-    // ---- for current map ---
-    const RANGE = "m_RANGE";
-    const RANDOM = "m_RANDOM";
-
-    // For textures
-    const t_COLOR = -2 //"COLOR"
-    const t_DEBUG = -1 //"DEBUG"
-    const t_SKY = 0 // "SKY"
-    const t_GROUND = 1 //"GROUND"
-    const t_WALL = 2 // "WALL"
-    const t_RANGEWALL = 3 // "RANGEWALL" 

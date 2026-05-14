@@ -91,20 +91,17 @@ function isObjVisible(obj) {
     return dotProduct >= threshold;
 }
 
-let cx = -0.1;  // -0.1 offset due to scale when centering with world origin
-let cz = -5.0;   // 5.0 offset for same reason
-let radius = 4.5;
-let angle = 0;
 function updateAnimationAngles() {
     // Circular path for light cube
-    // for (let angle = 0; angle < 360; angle += 5)
     angle += 0.01;
-    if (angle > 360) angle = 0;
+    if (angle > Math.PI * 2) angle = 0;
 
     let newx = cx + radius * Math.cos(angle);
-    let newz = cz + radius * Math.sin(angle);
+    let newy = cy + (radius * Math.sin(angle)) * Math.cos(tilt);
+    let newz = cz + (radius * Math.sin(angle)) * Math.sin(tilt);
 
     g_lightPos[0] = newx;
+    g_lightPos[1] = newy;
     g_lightPos[2] = newz;
     moveLight();
 }

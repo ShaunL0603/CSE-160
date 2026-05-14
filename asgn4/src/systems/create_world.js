@@ -28,8 +28,8 @@ function createWorld() {
         g_lightPos[1], 
         g_lightPos[2]
     );
-    g_light.pos = g_lightPos;
     g_light.matrix.scale(g_lightScale, g_lightScale, g_lightScale);
+    g_light.pos = g_lightPos;
     g_worldObjs.push(g_light);
 
     // Default map to load to
