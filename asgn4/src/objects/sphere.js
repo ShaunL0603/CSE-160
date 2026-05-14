@@ -20,12 +20,12 @@ class Sphere {
         var rgba = this.color;
         // Pass texture number
         gl.uniform1i(u_WhichTexture, this.texture);
-        
         // Pass the color to u_FragColor variable
         gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
-        
         // Pass the matrix to u_ModelMatrix attribute
         gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
+        // Pass normal matrix
+        gl.uniformMatrix4fv(u_NormalMatrix, false, this.normalMat.elements);
         
         // Rebind position buffer
         gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereVertBuffer);
