@@ -34,9 +34,6 @@ function createPrograms() {
 
     // Tell WebGL to start by using the main program
     gl.useProgram(g_mainProgram);
-    
-    // We are now using multiple shader programs
-    // Attach main one to gl object so old code doesn't break
     gl.program = g_mainProgram;
 }
 

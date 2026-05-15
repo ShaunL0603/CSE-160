@@ -22,6 +22,9 @@ var VSHADER_SOURCE =
     varying vec4 v_PosFromLight;
     uniform mat4 u_LightViewMatrix;
     uniform mat4 u_LightProjMatrix;
+    varying vec4 v_PosFromFlashlight;
+    uniform mat4 u_FLLightViewMatrix;
+    uniform mat4 u_FLLightProjMatrix;
 
     void main() {
         gl_Position = u_ProjectionMatrix * u_ViewMatrix *  u_ModelMatrix * a_Position;
@@ -31,6 +34,7 @@ var VSHADER_SOURCE =
 
         // --- SHADOW CALCULATION ---
         v_PosFromLight = u_LightProjMatrix * u_LightViewMatrix * v_VertPos;
+        v_PosFromFlashlight = u_FLLightProjMatrix * u_FLLightViewMatrix * v_VertPos;
     }
     `;
 
