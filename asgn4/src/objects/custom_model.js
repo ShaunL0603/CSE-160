@@ -60,29 +60,37 @@ class CustomModel {
             } else if (type === 'vn') {
                 rawNormals.push([parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3])]);
             } else if (type === 'f') {
-                // Faces are usually defined as: f v/vt/vn v/vt/vn v/vt/vn (Assuming triangles)
-                for (let i = 1; i <= 3; i++) {
-                    const indices = parts[i].split('/');
+                // Create a quick helper function to process a single vertex string (e.g., "1/1/1")
+                const processVertex = (vertexString) => {
+                    const indices = vertexString.split('/');
                     
-                    // OBJ indices are 1-based, so subtract 1 for JavaScript 0-based arrays
+                    // Position
                     const posIndex = parseInt(indices[0]) - 1;
                     finalPositions.push(...rawPositions[posIndex]);
 
-                    // Textures might not exist on all models
+                    // UVs
                     if (indices[1] && indices[1] !== '') {
                         const uvIndex = parseInt(indices[1]) - 1;
                         finalUVs.push(...rawUVs[uvIndex]);
                     } else {
-                        finalUVs.push(0.0, 0.0); // Default UV
+                        finalUVs.push(0.0, 0.0); 
                     }
 
-                    // Normals might not exist on all models
+                    // Normals
                     if (indices[2] && indices[2] !== '') {
                         const normIndex = parseInt(indices[2]) - 1;
                         finalNormals.push(...rawNormals[normIndex]);
                     } else {
-                        finalNormals.push(0.0, 1.0, 0.0); // Default pointing up
+                        finalNormals.push(0.0, 1.0, 0.0); 
                     }
+                };
+
+                // Triangle fan loop
+                // start at 2nd idx and loop up to 2nd-to-last vertex
+                for (let i = 2; i < parts.length - 1; ++i) {
+                    processVertex(parts[1]);
+                    processVertex(parts[i]);
+                    processVertex(parts[i + 1]);
                 }
             }
         }
