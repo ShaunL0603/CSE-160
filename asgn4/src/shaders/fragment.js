@@ -36,7 +36,7 @@ var FSHADER_SOURCE =
 
     // --- SHADOW VARIABLES ---
     uniform sampler2D u_ShadowMapSampler;
-    uniform sampler2D u_ShadowFLSampler;
+    uniform sampler2D u_ShadowFLMapSampler;
     varying vec4 v_PosFromLight;
     varying vec4 v_PosFromFlashlight;
 

@@ -210,9 +210,9 @@ function connectVariablesToGLSL() {
             console.log('Failed to get the storage location of u_FLLightProjMatrix for flashlight shadow map');
             return -1;
         }
-        u_ShadowFLSampler = gl.getUniformLocation(gl.program, 'u_ShadowFLSampler');
-        if (!u_ShadowFLSampler) {
-            console.log('Failed to get the storage location of u_ShadowFLSampler for flashlight shadow map');
+        u_ShadowFLMapSampler = gl.getUniformLocation(gl.program, 'u_ShadowFLMapSampler');
+        if (!u_ShadowFLMapSampler) {
+            console.log('Failed to get the storage location of u_ShadowFLMapSampler for flashlight shadow map');
             return -1;
         }
 }
@@ -246,23 +246,25 @@ function getShadowLocations() {
         return -1;
     }
 
+    gl.useProgram(g_FLShadowProgram);
+    gl.program = g_FLShadowProgram;
     // --- SHADOW MAP FOR FLASHLIGHT ---
-    a_ShadowFLPosition = gl.getAttribLocation(g_shadowProgram, "a_ShadowFLPosition");
+    a_ShadowFLPosition = gl.getAttribLocation(gl.program, "a_ShadowFLPosition");
     if (a_ShadowFLPosition < 0) {
-        console.log("Failed to get the storage location of a_Position for flashlight shadow map");
+        console.log("Failed to get the storage location of a_ShadowFLPosition for flashlight shadow map");
         return -1;
     }
-    u_ShadowFLModelMatrix = gl.getUniformLocation(g_shadowProgram, "u_ShadowFLModelMatrix");
+    u_ShadowFLModelMatrix = gl.getUniformLocation(gl.program, "u_ShadowFLModelMatrix");
     if (!u_ShadowFLModelMatrix) {
         console.log("Failed to get the storage location of u_ShadowFLModelMatrix for flashlight shadow map");
         return -1;
     }
-    u_ShadowFLLightViewMatrix = gl.getUniformLocation(g_shadowProgram, "u_ShadowFLLightViewMatrix");
+    u_ShadowFLLightViewMatrix = gl.getUniformLocation(gl.program, "u_ShadowFLLightViewMatrix");
     if (!u_ShadowFLLightViewMatrix) {
         console.log("Failed to get the storage location of u_ShadowFLLightViewMatrix for flashlight shadow map");
         return -1;
     }
-    u_ShadowFLLightProjMatrix = gl.getUniformLocation(g_shadowProgram, "u_ShadowFLLightProjMatrix");
+    u_ShadowFLLightProjMatrix = gl.getUniformLocation(gl.program, "u_ShadowFLLightProjMatrix");
     if (!u_ShadowFLLightProjMatrix) {
         console.log("Failed to get the storage location of u_ShadowFLLightProjMatrix for flashlight shadow map");
         return -1;
