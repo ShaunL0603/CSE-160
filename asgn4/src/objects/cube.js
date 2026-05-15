@@ -1,16 +1,15 @@
 class Cube {
-  constructor() {
-    this.type = "cube"; // give type name to put right texture on cube
-    this.color = [1.0, 0.0, 0.0, 1.0];
-    this.matrix = new Matrix4();
-    this.normalMat = new Matrix4();
-    this.texture = t_COLOR;
-    this.showTexture = true;
-    this.UVScale = 1.0;
-    this.active = true;
-    this.shininess = 10.0;
-    cubeVertLen = 36;
-  }
+    constructor() {
+        this.type = "cube"; // give type name to put right texture on cube
+        this.color = [1.0, 0.0, 0.0, 1.0];
+        this.matrix = new Matrix4();
+        this.normalMat = new Matrix4();
+        this.texture = t_COLOR;
+        this.showTexture = true;
+        this.UVScale = 1.0;
+        this.active = true;
+        this.shininess = 10.0;
+    }
 
     render() {
         var rgba = this.color;

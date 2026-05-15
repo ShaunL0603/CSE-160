@@ -25,11 +25,8 @@ function main() {
     createSphereBuffers();
     // getting textures
     initTextures();
-    g_shadowMapFBO = initFramebufferObject();
-    if (!g_shadowMapFBO) {
-        console.error("Failed to initialize Framebuffer Object for shadow mapping.");
-        return -1;
-    }
+    // getting shadow framebuffer objects
+    createShadowFBOs();
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     createWorld();

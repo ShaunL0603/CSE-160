@@ -67,7 +67,7 @@ function tick() {
 
         // Main rendering
         handleRespawning();
-        if (g_toggleLightPath) updateAnimationAngles();
+        if (g_toggleSunPath) updateAnimationAngles();
         moveFlashlight();
         renderAllShapes();
         
@@ -141,7 +141,6 @@ function renderShadows() {
     drawObjsShadows();
 }
 
-let shadowiIdentityMat = new Matrix4();
 function drawMapShadows() {
     if (!g_mergedMapVertBuffer) return;
 
@@ -155,9 +154,6 @@ function drawMapShadows() {
 
     gl.drawArrays(gl.TRIANGLES, 0, g_mergedMapVerts.length / 3);
 }
-
-let renderCubeShadows = ["cube", "wall", "rangewall", "ground"];
-let renderSphereShadows = ["sphere", "target"];
 
 function drawObjsShadows() {
     for (let i = 0; i < g_worldObjs.length; ++i) {
@@ -221,10 +217,6 @@ function moveFlashlight() {
 }
 
 function moveLight() {
-    let x = g_sunPos[0];
-    let y = g_sunPos[1];
-    let z = g_sunPos[2];
-
-    g_sun.matrix.setTranslate(x, y, z);
+    g_sun.matrix.setTranslate(g_sunPos[0], g_sunPos[1], g_sunPos[2]);
     g_sun.matrix.scale(g_sunScale, g_sunScale, g_sunScale);
 }

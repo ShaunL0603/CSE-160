@@ -14,28 +14,31 @@ var FSHADER_SOURCE =
     varying vec4 v_VertPos;
 
     uniform vec3 u_LightPos;
-
     uniform vec3 u_CameraPos;
     uniform vec3 u_CameraAtPos;
-    uniform bool u_FlashlightOn;
-
     uniform vec3 u_LightColor;
     uniform vec4 u_FragColor;
+
     uniform sampler2D u_Sampler0; // Debug texture
     uniform sampler2D u_Sampler1; // Sky texture
     uniform sampler2D u_Sampler2; // Ground texture
     uniform sampler2D u_Sampler3; // Wall texture
     uniform sampler2D u_Sampler4; // 2nd wall texture
+
     uniform int u_WhichTexture;
     uniform float u_Shininess;
+
     uniform bool u_ShowNormals;
     uniform bool u_ShowTexture;
     uniform bool u_LightOn;
     uniform bool u_ShadowsOn;
+    uniform bool u_FlashlightOn;
 
     // --- SHADOW VARIABLES ---
     uniform sampler2D u_ShadowMapSampler;
+    uniform sampler2D u_ShadowFLSampler;
     varying vec4 v_PosFromLight;
+    varying vec4 v_PosFromFlashlight;
 
     void main() {
         if (u_ShowTexture) {
@@ -94,23 +97,24 @@ var FSHADER_SOURCE =
                 float bias = 0.0001; 
 
                 // If our current distance is greater than the recorded distance,
-                // we are in shadow!
+                // we are in shadow
                 if (shadowCoord.z > depthFromMap + bias) {
-                    shadowVisibility = 0.0; // Turn off the light!
+                    shadowVisibility = 0.0; // Turn off the light
                 }
             }
         }
 
-        // For sun
-        if (u_LightOn) {
-            vec3 sunL = normalize(u_LightPos - vec3(v_VertPos));
-            float sunNDotL = max(dot(N, sunL), 0.0);
-            vec3 sunR = reflect(-sunL, N);
-            float sunSpec = pow(max(dot(E, sunR), 0.0), u_Shininess);
+        // lighting off
+        if (!u_LightOn) return;
 
-            totalDiffuse += vec3(gl_FragColor) * u_LightColor * sunNDotL * 0.7 * shadowVisibility;
-            totalSpecular += u_LightColor * sunSpec * shadowVisibility;
-        }
+        // For sun
+        vec3 sunL = normalize(u_LightPos - vec3(v_VertPos));
+        float sunNDotL = max(dot(N, sunL), 0.0);
+        vec3 sunR = reflect(-sunL, N);
+        float sunSpec = pow(max(dot(E, sunR), 0.0), u_Shininess);
+
+        totalDiffuse += vec3(gl_FragColor) * u_LightColor * sunNDotL * 0.7 * shadowVisibility;
+        totalSpecular += u_LightColor * sunSpec * shadowVisibility;
 
         // For flashlight (SPOTLIGHT)
         if (u_FlashlightOn) {
@@ -137,7 +141,7 @@ var FSHADER_SOURCE =
                 totalSpecular += flashColor * flashSpec * edgeFalloff;
             }
         }
-
+        
         // --- COMBINE, APPLY TO TEXTURES ---
         if (u_WhichTexture == t_SKY) {
             gl_FragColor = vec4(gl_FragColor.rgb, 1.0); // Sky ignores all light

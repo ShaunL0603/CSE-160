@@ -148,7 +148,7 @@ function htmlActions() {
             ev.target.value = g_maxTargets
         }
     });
-    toggleLightPath.addEventListener("click", (ev) => { g_toggleLightPath = !g_toggleLightPath; })
+    toggleLightPath.addEventListener("click", (ev) => { g_toggleSunPath = !g_toggleSunPath; })
 
     // --- SETTINGS FOR RNADOM MAP ---
     changeMapSize.addEventListener("keydown", (ev) => {

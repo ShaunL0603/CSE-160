@@ -36,8 +36,8 @@ var u_Sampler2;
 var u_Sampler3;
 var u_Sampler4;
 var u_WhichTexture;
-var u_ShowNormals;
 var u_ShowTexture;
+var u_ShowNormals;
 var u_LightPos;
 var u_CameraPos;
 var u_CameraAtPos;
@@ -65,16 +65,18 @@ let u_UVScale = 1.0;                                                            
     var u_ShadowFLLightProjMatrix;
 
 // Global variables
-    // --- SHADER PROGRAMS ---
+    // --- FOR SHADERS ---
     var g_mainProgram;
     var g_shadowProgram;
+    var g_FLShadowProgram;
     var g_shadowMapFBO;
-
-    // --- FOR SHADOW MAPPING ---
-    var g_shadowMapFBO;                                                                          // Framebuffer Object for shadow mapping
-    let g_lightProjMatrix = new Matrix4();                                                       // Projection matrix for the "sun camera" (light source)
-    let g_lightViewMatrix = new Matrix4();                                                       // View matrix for the "sun camera" (light source)
-    let shadowMat = new Matrix4();
+    var g_FLShadowMapFBO;
+    var g_shadowMapFBO;                                                                         // Framebuffer Object for shadow mapping
+    let g_lightProjMatrix = new Matrix4();                                                      // Projection matrix for the "sun camera" (light source)
+    let g_lightViewMatrix = new Matrix4();                                                      // View matrix for the "sun camera" (light source)
+    let renderCubeShadows = ["cube", "wall", "rangewall", "ground", "block"];                   // list of obj types to render shadows
+    let renderSphereShadows = ["sphere", "target"];
+    let shadowiIdentityMat = new Matrix4();
 
 
     // --- FOR CAMERA ---
@@ -102,7 +104,7 @@ let u_UVScale = 1.0;                                                            
     };
     let g_showTexture = true;
     let g_toggleNormals = false;
-    let g_toggleLightPath = true;
+    let g_toggleSunPath = true;
     let g_LightOn = true;
     let g_FlashlightOn = true;
     let g_toggleShadows = true;
@@ -127,8 +129,6 @@ let u_UVScale = 1.0;                                                            
 
     // --- World objects ---
     let g_worldObjs = [];                                                                       // list of objects to render
-    var g_skybox;
-    var g_ground;
     var g_sun;                                                                                  // sun sphere
     var g_flashlight;                                                                           // flashlight sphere that follows camera
     let g_targets = [];                                                                         // list of objects to keep track of and perform calculations on
@@ -180,4 +180,4 @@ let u_UVScale = 1.0;                                                            
     var g_playerMode;                                                                           // track what mode player is in
     let g_score = 0;                                                                            // track player score
     let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
-    let g_flScale = 0.02; // scale for flashlight sphere]
+    let g_flScale = 0.02;                                                                       // scale for flashlight sphere

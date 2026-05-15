@@ -1,22 +1,22 @@
 function createWorld() {
-    g_skybox = new Sphere();
-    g_skybox.type = "sky";
-    g_skybox.color = [0.0, 0.0, 1.0, 1.0];
-    g_skybox.texture = t_SKY;
-    g_skybox.pos = null;
-    g_skybox.matrix.scale(150.0, 150.0, 150.0);
-    g_skybox.normalMat.setInverseOf(g_skybox.matrix).transpose();
-    g_worldObjs.push(g_skybox);
+    skybox = new Sphere();
+    skybox.type = "sky";
+    skybox.color = [0.0, 0.0, 1.0, 1.0];
+    skybox.texture = t_SKY;
+    skybox.pos = null;
+    skybox.matrix.scale(150.0, 150.0, 150.0);
+    skybox.normalMat.setInverseOf(skybox.matrix).transpose();
+    g_worldObjs.push(skybox);
 
-    g_ground = new Cube();
-    g_ground.type = "ground";
-    g_ground.color = [0.2, 0.5, 0.2, 1.0];
-    g_ground.texture = t_GROUND;
-    g_ground.UVScale = 5.0;
-    g_ground.matrix.translate(-20.0, -0.2, -20.0);
-    g_ground.matrix.scale(40, 0.2, 40);
-    g_ground.normalMat.setInverseOf(g_ground.matrix).transpose();
-    g_worldObjs.push(g_ground);
+    ground = new Cube();
+    ground.type = "ground";
+    ground.color = [0.2, 0.5, 0.2, 1.0];
+    ground.texture = t_GROUND;
+    ground.UVScale = 5.0;
+    ground.matrix.translate(-20.0, -0.2, -20.0);
+    ground.matrix.scale(40, 0.2, 40);
+    ground.normalMat.setInverseOf(ground.matrix).transpose();
+    g_worldObjs.push(ground);
 
     g_sun = new Sphere();
     g_sun.type = "sun";

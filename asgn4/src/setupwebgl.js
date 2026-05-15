@@ -25,7 +25,9 @@ function createPrograms() {
     g_mainProgram = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE);
     // compile shadow shader program
     g_shadowProgram = createProgram(gl, VSHADER_SOURCE_SHADOW, SHADOW_FSHADER_SOURCE);
-    if (!g_mainProgram || !g_shadowProgram) {
+    // compile flashlight shadow shader program
+    g_FLShadowProgram = createProgram(gl, VSHADER_SOURCE_SHADOW_FL, SHADOW_FL_FSHADER_SOURCE);
+    if (!g_mainProgram || !g_shadowProgram || !g_FLShadowProgram) {
         console.log('Failed to create shader programs.');
         return;
     }

@@ -1,14 +1,10 @@
-function initFramebufferObject() {
+function initFramebufferObject(shadowWidth, shadowHeight) {
     // Enabling Depth Texture Extension
     var ext = gl.getExtension("WEBGL_depth_texture");
     if (!ext) {
         console.error("Your browser does not support WEBGL_depth_texture");
         return null;
-    }
-
-    // Define the resolution of your shadow map
-    var OFFSCREEN_WIDTH = 8192;
-    var OFFSCREEN_HEIGHT = 8192;
+    };
 
     // Create custom Framebuffer
     var framebuffer = gl.createFramebuffer();
@@ -18,7 +14,7 @@ function initFramebufferObject() {
     gl.bindTexture(gl.TEXTURE_2D, depthTexture);
     
     // Allocate memory for the texture (Note the use of gl.DEPTH_COMPONENT)
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, shadowWidth, shadowHeight, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
 
     // Set texture filtering parameters
     // Shadows don't need smooth blending, so we use NEAREST
@@ -48,9 +44,28 @@ function initFramebufferObject() {
     return {
         fbo: framebuffer,
         texture: depthTexture,
-        width: OFFSCREEN_WIDTH,
-        height: OFFSCREEN_HEIGHT
+        width: shadowWidth,
+        height: shadowHeight
     };
+}
+
+function createShadowFBOs() {
+    // Defining reslution of shadow map for sun and flashlight
+    let sunOffscreenWidth = 8192;
+    let sunOffscreenHeight = 8192;
+    let FlOffscreenWidth = 1024;
+    let FlOffscreenHeight = 1024;
+    
+    g_shadowMapFBO = initFramebufferObject(sunOffscreenWidth, sunOffscreenHeight);
+    if (!g_shadowMapFBO) {
+        console.error("Failed to initialize Framebuffer Object for shadow mapping.");
+        return -1;
+    }
+    g_FLShadowMapFBO = initFramebufferObject(FlOffscreenWidth, FlOffscreenHeight);
+    if (!g_FLShadowMapFBO) {
+        console.error("Failed to initialize Framebuffer Object for flashlight shadow mapping.");
+        return -1;
+    }
 }
 
 function updateLightCamera() {
