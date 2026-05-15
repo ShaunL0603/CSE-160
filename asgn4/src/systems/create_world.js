@@ -46,6 +46,13 @@ function createWorld() {
     g_flashlight.pos = null;
     g_worldObjs.push(g_flashlight);
 
+    bears = new CustomModel();
+    bears.subtype = "bears";
+    bears.matrix.translate(0.0, 0.0, 5.0);
+    bears.loadOBJ("../objects/customObjs/WeBareBears/bears.obj");
+    g_worldObjs.push(bears);
+
+
     // Default map to load to
     createRange();
     createTargetsForRange();

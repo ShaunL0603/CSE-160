@@ -17,15 +17,18 @@ class CustomModel {
         this.loaded = false; // Flag to prevent rendering before data is ready
     }
 
-    async loadOBJ(url) {
+    async loadOBJ(filepath) {
         try {
-            const response = await fetch(url);
+            const response = await fetch(filepath);
+            if (!response.ok) {
+                throw new Error(`status: ${response.status}`);
+            }
             const text = await response.text();
             this.parseOBJ(text);
             this.createBuffers();
             this.loaded = true;
         } catch (error) {
-            console.error("Failed to load OBJ:", url, error);
+            console.error("Failed to load OBJ:", error);
         }
     }
 
