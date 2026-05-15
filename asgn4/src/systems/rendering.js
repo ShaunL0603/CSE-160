@@ -15,17 +15,10 @@ function renderAllShapes() {
     gl.activeTexture(gl.TEXTURE5); // texture unit 5 for sun shadows
     gl.bindTexture(gl.TEXTURE_2D, g_shadowMapFBO.texture);
     gl.uniform1i(u_ShadowMapSampler, 5);
-
-    gl.activeTexture(gl.TEXTURE6); // texture unit 6 for flashlight shadows
-    gl.bindTexture(gl.TEXTURE_2D, g_FLShadowMapFBO.texture);
-    gl.uniform1i(u_ShadowFLMapSampler, 6);
-
     // Passing Sun's camera matrices to the Main Shader as well
     // Main shader needs to know where the sun was to align the image properly
     gl.uniformMatrix4fv(u_LightViewMatrix, false, g_sunViewMatrix.elements);
     gl.uniformMatrix4fv(u_LightProjMatrix, false, g_sunProjMatrix.elements);
-    gl.uniformMatrix4fv(u_FLLightViewMatrix, false, g_FLLightViewMatrix.elements);
-    gl.uniformMatrix4fv(u_FLLightProjMatrix, false, g_FLLightProjMatrix.elements);
 
     gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
     gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
@@ -109,23 +102,6 @@ function renderShadows() {
     gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_sunProjMatrix.elements);
 
     // Draw geometry
-    if (g_currMap === RANGE) drawMapShadows();
-    drawObjsShadows();
-
-    // --- Flashlight ---
-    // First update flashlight camera
-    updateFlashlightCamera();
-    // Bind the flashlight shadow framebuffer
-    gl.bindFramebuffer(gl.FRAMEBUFFER, g_FLShadowMapFBO.fbo);
-    // Set the viewport to the size of the flashlight shadow map
-    gl.viewport(0, 0, g_FLShadowMapFBO.width, g_FLShadowMapFBO.height);
-    // Clear the depth buffer
-    gl.clear(gl.DEPTH_BUFFER_BIT);
-    
-    // pass flashlight's camera matrices to shadow shader
-    gl.uniformMatrix4fv(u_ShadowLightViewMatrix, false, g_FLLightViewMatrix.elements);
-    gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_FLLightProjMatrix.elements);
-
     if (g_currMap === RANGE) drawMapShadows();
     drawObjsShadows();
 }

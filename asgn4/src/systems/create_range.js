@@ -33,4 +33,16 @@ function createRange() {
     rangeWall3.matrix.scale(9.8, 5.0, 0.2);
     rangeWall3.normalMat.setInverseOf(rangeWall3.matrix).transpose();
     g_worldObjs.push(rangeWall3);
+
+    var rangeRoof = new Cube();
+    rangeRoof.type = "rangewall"
+    rangeRoof.color = [0.2, 0.0, 0.2, 1.0];
+    rangeRoof.UVScale = 5;
+    rangeRoof.texture = t_RANGEWALL;
+    rangeRoof.matrix = new Matrix4(rangeWallMat);
+    rangeRoof.matrix.translate(1.0, 5.0, 1.0);
+    rangeRoof.matrix.rotate(90, 1, 0, 0);
+    rangeRoof.matrix.scale(8.0, 9.0, 0.2);
+    rangeRoof.normalMat.setInverseOf(rangeRoof.matrix).transpose();
+    g_worldObjs.push(rangeRoof);
 }

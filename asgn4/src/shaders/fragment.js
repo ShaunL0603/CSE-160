@@ -36,9 +36,7 @@ var FSHADER_SOURCE =
 
     // --- SHADOW VARIABLES ---
     uniform sampler2D u_ShadowMapSampler;
-    uniform sampler2D u_ShadowFLMapSampler;
     varying vec4 v_PosFromLight;
-    varying vec4 v_PosFromFlashlight;
 
     float getShadowVisibility(sampler2D shadowMap, vec4 posFromLight, float bias) {
         // Perspective Divide, standardizing coordinates
@@ -100,15 +98,10 @@ var FSHADER_SOURCE =
         vec3 totalSpecular = vec3(0.0);
 
         // --- SHADOW MAPPING ---
-        float sunShadowVisibility = 1.0;  
-        float FLShadowVisibility = 1.0;       
+        float sunShadowVisibility = 1.0;      
         if (u_ShadowsOn) {
             // fourth parameter, 0.0001, is our bias
             sunShadowVisibility = getShadowVisibility(u_ShadowMapSampler, v_PosFromLight, 0.0001);
-        }
-
-        if (u_ShadowsOn && u_FlashlightOn) {
-            FLShadowVisibility = getShadowVisibility(u_ShadowFLMapSampler, v_PosFromFlashlight, 0.0001);
         }
 
         // lighting off
@@ -142,8 +135,8 @@ var FSHADER_SOURCE =
                 float edgeFalloff = pow(spotDot, 135.0); 
                 vec3 flashColor = vec3(1.0, 1.0, 1.0); // White flashlight
 
-                totalDiffuse += vec3(gl_FragColor) * flashColor * flashNDotL * 0.8 * edgeFalloff * FLShadowVisibility;
-                totalSpecular += flashColor * flashSpec * edgeFalloff * FLShadowVisibility;
+                totalDiffuse += vec3(gl_FragColor) * flashColor * flashNDotL * 0.8 * edgeFalloff;
+                totalSpecular += flashColor * flashSpec * edgeFalloff;
             }
         }
         
@@ -155,10 +148,6 @@ var FSHADER_SOURCE =
         } else {
             gl_FragColor = vec4(totalSpecular + totalDiffuse + ambient, 1.0); // Everything else
         }
-
-        // debugging
-        // float depthFromMap = texture2D(u_ShadowMapSampler, shadowCoord.xy).r;
-        // gl_FragColor = vec4(depthFromMap, depthFromMap, depthFromMap, 1.0);
     }
     `;
 

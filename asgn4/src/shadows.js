@@ -53,17 +53,10 @@ function createShadowFBOs() {
     // Defining reslution of shadow map for sun and flashlight
     let sunOffscreenWidth = 8192;
     let sunOffscreenHeight = 8192;
-    let FlOffscreenWidth = 1024;
-    let FlOffscreenHeight = 1024;
     
     g_shadowMapFBO = initFramebufferObject(sunOffscreenWidth, sunOffscreenHeight);
     if (!g_shadowMapFBO) {
         console.error("Failed to initialize Framebuffer Object for shadow mapping.");
-        return -1;
-    }
-    g_FLShadowMapFBO = initFramebufferObject(FlOffscreenWidth, FlOffscreenHeight);
-    if (!g_FLShadowMapFBO) {
-        console.error("Failed to initialize Framebuffer Object for flashlight shadow mapping.");
         return -1;
     }
 }
@@ -80,23 +73,5 @@ function updateSunCamera() {
         g_sunPos[0], g_sunPos[1], g_sunPos[2],  // Eye: Where the sun currently is
         0.0, 0.0, 0.0,                          // Target: Looking directly at the center of the map
         0.0, 1.0, 0.0                           // Up: Y-axis is up
-    );
-}
-
-function updateFlashlightCamera() {
-    // projection, setPerspective(fov, aspect, near, far)
-    let fov = 60.0; // flashlights fov
-    let aspect = 1.0;
-    let near = 0.1;
-    let far = 100.0; // max draw distance, same as in isObjVisible max draw distance
-
-    g_FLLightProjMatrix.setPerspective(fov, aspect, near, far);
-
-    // view, setLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
-    // we can use g_camera's position and direction since the flashlight is attached to the camera
-    g_FLLightViewMatrix.setLookAt(
-        g_camera.eye.elements[0], g_camera.eye.elements[1], g_camera.eye.elements[2], // Eye: Flashlight is located at camera position
-        g_camera.at.elements[0], g_camera.at.elements[1], g_camera.at.elements[2], // Target: Flashlight points in the same direction as camera is facing
-        g_camera.up.elements[0], g_camera.up.elements[1], g_camera.up.elements[2]  // Up: Same as camera up vector
     );
 }

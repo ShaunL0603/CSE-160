@@ -197,22 +197,6 @@ function connectVariablesToGLSL() {
             console.log('Failed to get the storage location of u_ShadowMapSampler');
             return -1;
         }
-        // --- SHADOW MAP FOR FLASHLIGHT ---
-        u_FLLightViewMatrix = gl.getUniformLocation(gl.program, 'u_FLLightViewMatrix');
-        if (!u_FLLightViewMatrix) {
-            console.log('Failed to get the storage location of u_FLLightViewMatrix for flashlight shadow map');
-            return -1;
-        }
-        u_FLLightProjMatrix = gl.getUniformLocation(gl.program, 'u_FLLightProjMatrix');
-        if (!u_FLLightProjMatrix) {
-            console.log('Failed to get the storage location of u_FLLightProjMatrix for flashlight shadow map');
-            return -1;
-        }
-        u_ShadowFLMapSampler = gl.getUniformLocation(gl.program, 'u_ShadowFLMapSampler');
-        if (!u_ShadowFLMapSampler) {
-            console.log('Failed to get the storage location of u_ShadowFLMapSampler for flashlight shadow map');
-            return -1;
-        }
 }
 
 function getShadowLocations() {
