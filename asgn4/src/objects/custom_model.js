@@ -6,7 +6,7 @@ class CustomModel {
         this.matrix = new Matrix4();
         this.normalMat = new Matrix4();
         this.texture = t_COLOR;
-        this.showTexture = true;
+        this.showTexture = false;
         this.UVScale = 1.0;
         this.active = true;
         this.shininess = 10.0;
@@ -15,6 +15,9 @@ class CustomModel {
         this.normBuffer = null;
         this.vertexCount = 0;
         this.loaded = false; // Flag to prevent rendering before data is ready
+        this.mtlLoaded = false;
+        this.materials = {};
+        this.drawCalls = [];
     }
 
     async loadOBJ(filepath) {
@@ -27,6 +30,20 @@ class CustomModel {
             this.parseOBJ(text);
             this.createBuffers();
             this.loaded = true;
+        } catch (error) {
+            console.error("Failed to load OBJ:", error);
+        }
+    }
+
+    async loadMTL(filepath) {
+        try {
+            const response = await fetch(filepath);
+            if (!response.ok) {
+                throw new Error(`status: ${response.status}`);
+            }
+            const text = await response.text();
+            this.parseMTL(text);
+            this.mtlLoaded = true;
         } catch (error) {
             console.error("Failed to load OBJ:", error);
         }
@@ -45,6 +62,10 @@ class CustomModel {
         let finalUVs = [];
         let finalNormals = [];
 
+        // Track chunks
+        let currDrawCall = null;
+        let vertCounter = 0;
+
         for (let line of lines) {
             line = line.trim();
             if (line === '' || line.startsWith('#')) continue;
@@ -53,12 +74,31 @@ class CustomModel {
             const parts = line.split(/\s+/);
             const type = parts[0];
 
+            if (type === "mtllib") {
+                const mtlFilename = parts[1];
+                this.loadMTL(`./objects/customObjs/WeBareBears/${mtlFilename}`);
+            }
+
             if (type === 'v') {
                 rawPositions.push([parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3])]);
             } else if (type === 'vt') {
                 rawUVs.push([parseFloat(parts[1]), parseFloat(parts[2])]);
             } else if (type === 'vn') {
                 rawNormals.push([parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3])]);
+            } 
+
+            if (type === 'usemtl') {
+                const matName = parts[1];
+
+                if (currDrawCall && currDrawCall.count > 0) {
+                    this.drawCalls.push(currDrawCall);
+                }
+
+                currDrawCall = {
+                    material: matName,
+                    start: vertCounter,
+                    count: 0
+                }
             } else if (type === 'f') {
                 // Create a quick helper function to process a single vertex string (e.g., "1/1/1")
                 const processVertex = (vertexString) => {
@@ -91,15 +131,53 @@ class CustomModel {
                     processVertex(parts[1]);
                     processVertex(parts[i]);
                     processVertex(parts[i + 1]);
+
+                    vertCounter += 3;
+                    if (currDrawCall) currDrawCall.count += 3;
                 }
             }
+        }
+        // Catch very last chunk at end of file
+        if (currDrawCall && currDrawCall.count > 0) {
+            this.drawCalls.push(currDrawCall);
         }
 
         // Store them in the class to be pushed to the GPU
         this.vertices = new Float32Array(finalPositions);
         this.uvs = new Float32Array(finalUVs);
         this.normals = new Float32Array(finalNormals);
-        this.vertexCount = finalPositions.length / 3;
+        this.vertexCount = vertCounter;
+    }
+
+    parseMTL(text) {
+        const lines = text.split('\n');
+        let currentMaterial = null;
+
+        for (let line of lines) {
+            line = line.trim();
+            if (line === '' || line.startsWith('#')) continue;
+
+            const parts = line.split(/\s+/);
+            const type = parts[0];
+
+            if (type === 'newmtl') {
+                currentMaterial = parts[1];
+                // Initialize defaults for the new material
+                this.materials[currentMaterial] = { 
+                    color: [1.0, 1.0, 1.0, 1.0], 
+                    shininess: 10.0 
+                };
+            } else if (type === 'Kd' && currentMaterial) {
+                this.materials[currentMaterial].color = [
+                    parseFloat(parts[1]), 
+                    parseFloat(parts[2]), 
+                    parseFloat(parts[3]), 
+                    1.0
+                ];
+            } else if (type === 'Ns' && currentMaterial) {
+                this.materials[currentMaterial].shininess = parseFloat(parts[1]);
+            }
+        }
     }
 
     createBuffers() {
@@ -126,7 +204,7 @@ class CustomModel {
     }
 
     render() {
-        // Guard clause: Don't try to draw if the fetch request hasn't finished yet!
+        // Don't try to draw if the fetch request hasn't finished yet
         if (!this.loaded) return;
 
         var rgba = this.color;
@@ -152,7 +230,25 @@ class CustomModel {
         gl.uniform1f(u_Shininess, this.shininess);
         gl.uniform1i(u_ShowNormals, g_toggleNormals ? 1 : 0);
         gl.uniform1i(u_ShowTexture, toggleTexture(this.showTexture));
-        
-        gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
+
+        // draw model with multiple materials
+        if (this.drawCalls.length > 0) {
+            for (let call of this.drawCalls) {
+                let mat = this.materials[call.material];
+                gl.uniform4f(u_FragColor, 1.0, 0.0, 1.0, 1.0); // default magenta for debugging
+                gl.uniform1f(u_Shininess, 10.0);
+
+                if (mat) {
+                    gl.uniform4f(u_FragColor, mat.color[0], mat.color[1], mat.color[2], mat.color[3]);
+                    gl.uniform1f(u_Shininess, mat.shininess);
+                }
+                gl.drawArrays(gl.TRIANGLES, call.start, call.count);
+            }
+        } 
+        // model has no material, draw al at once
+        else {
+            gl.uniform4f(u_FragColor, this.color[0], this.color[1], this.color[2], this.color[3]);
+            gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
+        }
     }
 }

@@ -48,9 +48,10 @@ function createWorld() {
 
     bears = new CustomModel();
     bears.subtype = "bears";
-    bears.matrix.translate(0.0, 0.0, 5.0);
+    bears.matrix.translate(0.0, 0.0, -5.0);
     bears.matrix.scale(0.1, 0.1, 0.1);
     bears.loadOBJ('./objects/customObjs/WeBareBears/bears.obj');
+    // bears.loadMTL('./objects/customObjs/WeBareBears/bears.mtl');
     g_worldObjs.push(bears);
 
 
