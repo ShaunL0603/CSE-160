@@ -40,6 +40,32 @@ var FSHADER_SOURCE =
     varying vec4 v_PosFromLight;
     varying vec4 v_PosFromFlashlight;
 
+    float getShadowVisibility(sampler2D shadowMap, vec4 posFromLight, float bias) {
+        // Perspective Divide, standardizing coordinates
+        vec3 shadowCoord = (posFromLight.xyz / posFromLight.w);
+        
+        // Convert from WebGL Clip Space (-1 to 1) to UV Space (0 to 1)
+        shadowCoord = (shadowCoord + 1.0) * 0.5;
+
+        // Default to fully lit
+
+        // Only calculate shadows if the pixel is actually inside the light's camera box
+        if (shadowCoord.x >= 0.0 && shadowCoord.x <= 1.0 &&
+            shadowCoord.y >= 0.0 && shadowCoord.y <= 1.0 &&
+            shadowCoord.z >= 0.0 && shadowCoord.z <= 1.0) {
+
+            // Read the depth recorded in Pass 1 (stored in the RED channel)
+            float depthFromMap = texture2D(shadowMap, shadowCoord.xy).r;
+
+            // If our current distance is greater than the recorded distance,
+            // we are in shadow
+            if (shadowCoord.z > depthFromMap + bias) {
+                return 0.0; // Turn off the light
+            }
+        }
+        return 1.0; // fully lit
+    }
+
     void main() {
         if (u_ShowTexture) {
             if (u_WhichTexture == t_DEBUG) {
@@ -73,35 +99,16 @@ var FSHADER_SOURCE =
         vec3 totalDiffuse = vec3(0.0);
         vec3 totalSpecular = vec3(0.0);
 
-        // --- SHADOW MAPPING MATH ---
-        float shadowVisibility = 1.0; 
-        
+        // --- SHADOW MAPPING ---
+        float sunShadowVisibility = 1.0;  
+        float FLShadowVisibility = 1.0;       
         if (u_ShadowsOn) {
-            // Perspective Divide, standardizing coordinates
-            vec3 shadowCoord = (v_PosFromLight.xyz / v_PosFromLight.w);
-            
-            // Convert from WebGL Clip Space (-1 to 1) to Texture UV Space (0 to 1)
-            shadowCoord = (shadowCoord + 1.0) * 0.5;
+            // fourth parameter, 0.0001, is our bias
+            sunShadowVisibility = getShadowVisibility(u_ShadowMapSampler, v_PosFromLight, 0.0001);
+        }
 
-            // Default to fully lit
-
-            // Only calculate shadows if the pixel is actually inside the Sun's camera box
-            if (shadowCoord.x >= 0.0 && shadowCoord.x <= 1.0 &&
-                shadowCoord.y >= 0.0 && shadowCoord.y <= 1.0 &&
-                shadowCoord.z >= 0.0 && shadowCoord.z <= 1.0) {
-
-                // Read the depth recorded in Pass 1 (stored in the RED channel)
-                float depthFromMap = texture2D(u_ShadowMapSampler, shadowCoord.xy).r;
-
-                // Add a tiny bias to prevent self-shadowing glitchess
-                float bias = 0.0001; 
-
-                // If our current distance is greater than the recorded distance,
-                // we are in shadow
-                if (shadowCoord.z > depthFromMap + bias) {
-                    shadowVisibility = 0.0; // Turn off the light
-                }
-            }
+        if (u_ShadowsOn && u_FlashlightOn) {
+            FLShadowVisibility = getShadowVisibility(u_ShadowFLMapSampler, v_PosFromFlashlight, 0.0001);
         }
 
         // lighting off
@@ -113,17 +120,15 @@ var FSHADER_SOURCE =
         vec3 sunR = reflect(-sunL, N);
         float sunSpec = pow(max(dot(E, sunR), 0.0), u_Shininess);
 
-        totalDiffuse += vec3(gl_FragColor) * u_LightColor * sunNDotL * 0.7 * shadowVisibility;
-        totalSpecular += u_LightColor * sunSpec * shadowVisibility;
+        totalDiffuse += vec3(gl_FragColor) * u_LightColor * sunNDotL * 0.7 * sunShadowVisibility;
+        totalSpecular += u_LightColor * sunSpec * sunShadowVisibility;
 
         // For flashlight (SPOTLIGHT)
         if (u_FlashlightOn) {
             vec3 flashL = normalize(u_CameraPos - vec3(v_VertPos)); // Vector TO the camera
             vec3 spotDir = normalize(u_CameraAtPos - u_CameraPos); // Where camera is looking
-            
             // dot product of inverted light vector and spot direction
             float spotDot = dot(-flashL, spotDir); 
-            
             // Cutoff angle 15 degrees, cos(15) about 0.965
             float cutoff = 0.965; 
 
@@ -137,8 +142,8 @@ var FSHADER_SOURCE =
                 float edgeFalloff = pow(spotDot, 135.0); 
                 vec3 flashColor = vec3(1.0, 1.0, 1.0); // White flashlight
 
-                totalDiffuse += vec3(gl_FragColor) * flashColor * flashNDotL * 0.8 * edgeFalloff;
-                totalSpecular += flashColor * flashSpec * edgeFalloff;
+                totalDiffuse += vec3(gl_FragColor) * flashColor * flashNDotL * 0.8 * edgeFalloff * FLShadowVisibility;
+                totalSpecular += flashColor * flashSpec * edgeFalloff * FLShadowVisibility;
             }
         }
         
@@ -163,15 +168,6 @@ var SHADOW_FSHADER_SOURCE =
     void main() {
         // WebGL automatically writes Z-depth to our depth texture.
         // We just write a dummy color here to satisfy the compiler.
-        gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 1.0);
-    }
-    `;
-
-var SHADOW_FL_FSHADER_SOURCE =
-    `
-    precision mediump float;
-    void main() {
-        // satisfy compiler
         gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 1.0);
     }
     `;

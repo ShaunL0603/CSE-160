@@ -25,9 +25,7 @@ function createPrograms() {
     g_mainProgram = createProgram(gl, VSHADER_SOURCE, FSHADER_SOURCE);
     // compile shadow shader program
     g_shadowProgram = createProgram(gl, VSHADER_SOURCE_SHADOW, SHADOW_FSHADER_SOURCE);
-    // compile flashlight shadow shader program
-    g_FLShadowProgram = createProgram(gl, VSHADER_SOURCE_SHADOW_FL, SHADOW_FL_FSHADER_SOURCE);
-    if (!g_mainProgram || !g_shadowProgram || !g_FLShadowProgram) {
+    if (!g_mainProgram || !g_shadowProgram) {
         console.log('Failed to create shader programs.');
         return;
     }
@@ -243,30 +241,6 @@ function getShadowLocations() {
     u_ShadowLightProjMatrix = gl.getUniformLocation(gl.program, "u_LightProjMatrix");
     if (!u_ShadowLightProjMatrix) {
         console.log("Failed to get the storage location of u_LightProjMatrix");
-        return -1;
-    }
-
-    gl.useProgram(g_FLShadowProgram);
-    gl.program = g_FLShadowProgram;
-    // --- SHADOW MAP FOR FLASHLIGHT ---
-    a_ShadowFLPosition = gl.getAttribLocation(gl.program, "a_ShadowFLPosition");
-    if (a_ShadowFLPosition < 0) {
-        console.log("Failed to get the storage location of a_ShadowFLPosition for flashlight shadow map");
-        return -1;
-    }
-    u_ShadowFLModelMatrix = gl.getUniformLocation(gl.program, "u_ShadowFLModelMatrix");
-    if (!u_ShadowFLModelMatrix) {
-        console.log("Failed to get the storage location of u_ShadowFLModelMatrix for flashlight shadow map");
-        return -1;
-    }
-    u_ShadowFLLightViewMatrix = gl.getUniformLocation(gl.program, "u_ShadowFLLightViewMatrix");
-    if (!u_ShadowFLLightViewMatrix) {
-        console.log("Failed to get the storage location of u_ShadowFLLightViewMatrix for flashlight shadow map");
-        return -1;
-    }
-    u_ShadowFLLightProjMatrix = gl.getUniformLocation(gl.program, "u_ShadowFLLightProjMatrix");
-    if (!u_ShadowFLLightProjMatrix) {
-        console.log("Failed to get the storage location of u_ShadowFLLightProjMatrix for flashlight shadow map");
         return -1;
     }
 

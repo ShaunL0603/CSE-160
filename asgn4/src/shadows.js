@@ -73,10 +73,10 @@ function updateSunCamera() {
     // Defining the size of the shadow bounding box
     let boxSize = 40.0; //TODO: adjust baserd on g_currMapSize and g_cubeScale
     
-    g_lightProjMatrix.setOrtho(-boxSize, boxSize, -boxSize, boxSize, 1.0, 2000.0);
+    g_sunProjMatrix.setOrtho(-boxSize, boxSize, -boxSize, boxSize, 1.0, 2000.0);
 
     // The View (Positioning the Sun)
-    g_lightViewMatrix.setLookAt(
+    g_sunViewMatrix.setLookAt(
         g_sunPos[0], g_sunPos[1], g_sunPos[2],  // Eye: Where the sun currently is
         0.0, 0.0, 0.0,                          // Target: Looking directly at the center of the map
         0.0, 1.0, 0.0                           // Up: Y-axis is up

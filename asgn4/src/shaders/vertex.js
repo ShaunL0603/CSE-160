@@ -53,23 +53,3 @@ var VSHADER_SOURCE_SHADOW =
         gl_Position = u_LightProjMatrix * u_LightViewMatrix * u_ModelMatrix * a_Position;
     }
     `;
-
-var VSHADER_SOURCE_SHADOW_FL =
-    `
-    // Vertex shader for flashlight shadow map
-    precision mediump float;
-
-    attribute vec4 a_ShadowFLPosition;
-    uniform mat4 u_ShadowFLModelMatrix;
-    
-    // The "Flashlight Camera" matrices
-    uniform mat4 u_ShadowFLLightViewMatrix;
-    uniform mat4 u_ShadowFLLightProjMatrix;
-    
-    void main() {
-        gl_Position = u_ShadowFLLightProjMatrix *
-                      u_ShadowFLLightViewMatrix *
-                      u_ShadowFLModelMatrix *
-                      a_ShadowFLPosition;
-    }
-    `;

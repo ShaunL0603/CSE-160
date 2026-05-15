@@ -33,6 +33,38 @@ function main() {
     requestAnimationFrame(tick);
 }
 
+// Redraw the canvas
+function tick() {
+    let now = performance.now();
+    let elapsed = now - g_lastFrameTime;
+    let frameInterval = 1000.0 * g_invFPSCap;
+    
+    g_camera.speed = (g_keys["shift"]) ? g_camSpeed * g_camSpeedMult : g_camSpeed;
+    g_camera.moveCamera(g_keys);
+
+    if (elapsed > frameInterval) {
+        g_lastFrameTime = now - (elapsed % frameInterval);
+        g_seconds = (now * 0.001) - g_startTime;
+        resizeCanvas(canvas);
+
+        // Main rendering
+        handleRespawning();
+        if (g_toggleSunPath) updateAnimationAngles();
+        if (g_FlashlightOn) moveFlashlight();
+        renderAllShapes();
+        
+        if (now - g_lastFPSUpdateTime > 500) {
+            let fps = Math.round(1000.0 / elapsed);
+            let msPerFrame = Math.round(elapsed);
+            
+            let text = `ms: ${msPerFrame} fps: ${fps} / ${g_fpsCap}`;
+            sendTextToHTML(text, "numdot");
+            g_lastFPSUpdateTime = now;
+        }
+    };
+    requestAnimationFrame(tick);
+}
+
 // Resize the canvas to users display size
 function resizeCanvas(canvas) {
     const width = canvas.clientWidth;

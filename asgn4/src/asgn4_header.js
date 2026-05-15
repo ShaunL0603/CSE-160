@@ -59,20 +59,15 @@ let u_UVScale = 1.0;                                                            
     var u_FLLightViewMatrix;
     var u_FLLightProjMatrix;
     var u_ShadowFLMapSampler;
-    var a_ShadowFLPosition;
-    var u_ShadowFLModelMatrix;
-    var u_ShadowFLLightViewMatrix;
-    var u_ShadowFLLightProjMatrix;
 
 // Global variables
     // --- FOR SHADERS ---
     var g_mainProgram;
     var g_shadowProgram;
-    var g_FLShadowProgram;
-    var g_FLShadowMapFBO;
     var g_shadowMapFBO;                                                                         // Framebuffer Object for shadow mapping
-    let g_lightProjMatrix = new Matrix4();                                                      // Projection matrix for the "sun camera" (light source)
-    let g_lightViewMatrix = new Matrix4();                                                      // View matrix for the "sun camera" (light source)
+    var g_FLShadowMapFBO;
+    let g_sunProjMatrix = new Matrix4();                                                        // Projection matrix for the "sun camera" (light source)
+    let g_sunViewMatrix = new Matrix4();                                                        // View matrix for the "sun camera" (light source)
     let g_FLLightProjMatrix = new Matrix4();                                                    // Projection matrix for the "flashlight camera"
     let g_FLLightViewMatrix = new Matrix4();                                                    // View matrix for the "flashlight camera"
     let renderCubeShadows = ["cube", "wall", "rangewall", "ground", "block"];                   // list of obj types to render shadows

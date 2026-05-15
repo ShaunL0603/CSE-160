@@ -22,8 +22,10 @@ function renderAllShapes() {
 
     // Passing Sun's camera matrices to the Main Shader as well
     // Main shader needs to know where the sun was to align the image properly
-    gl.uniformMatrix4fv(u_LightViewMatrix, false, g_lightViewMatrix.elements);
-    gl.uniformMatrix4fv(u_LightProjMatrix, false, g_lightProjMatrix.elements);
+    gl.uniformMatrix4fv(u_LightViewMatrix, false, g_sunViewMatrix.elements);
+    gl.uniformMatrix4fv(u_LightProjMatrix, false, g_sunProjMatrix.elements);
+    gl.uniformMatrix4fv(u_FLLightViewMatrix, false, g_FLLightViewMatrix.elements);
+    gl.uniformMatrix4fv(u_FLLightProjMatrix, false, g_FLLightProjMatrix.elements);
 
     gl.uniformMatrix4fv(u_ProjectionMatrix, false, g_camera.projectionMatrix.elements);
     gl.uniformMatrix4fv(u_ViewMatrix, false, g_camera.viewMatrix.elements);
@@ -51,38 +53,6 @@ function renderAllShapes() {
             obj.render();
         }
     }
-}
-
-// Redraw the canvas
-function tick() {
-    let now = performance.now();
-    let elapsed = now - g_lastFrameTime;
-    let frameInterval = 1000.0 * g_invFPSCap;
-    
-    g_camera.speed = (g_keys["shift"]) ? g_camSpeed * g_camSpeedMult : g_camSpeed;
-    g_camera.moveCamera(g_keys);
-
-    if (elapsed > frameInterval) {
-        g_lastFrameTime = now - (elapsed % frameInterval);
-        g_seconds = (now * 0.001) - g_startTime;
-        resizeCanvas(canvas);
-
-        // Main rendering
-        handleRespawning();
-        if (g_toggleSunPath) updateAnimationAngles();
-        if (g_FlashlightOn) moveFlashlight();
-        renderAllShapes();
-        
-        if (now - g_lastFPSUpdateTime > 500) {
-            let fps = Math.round(1000.0 / elapsed);
-            let msPerFrame = Math.round(elapsed);
-            
-            let text = `ms: ${msPerFrame} fps: ${fps} / ${g_fpsCap}`;
-            sendTextToHTML(text, "numdot");
-            g_lastFPSUpdateTime = now;
-        }
-    };
-    requestAnimationFrame(tick);
 }
 
 /**
@@ -135,11 +105,11 @@ function renderShadows() {
     gl.useProgram(g_shadowProgram);
     
     // pass sun's camera matrices to shadow shader
-    gl.uniformMatrix4fv(u_ShadowLightViewMatrix, false, g_lightViewMatrix.elements);
-    gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_lightProjMatrix.elements);
+    gl.uniformMatrix4fv(u_ShadowLightViewMatrix, false, g_sunViewMatrix.elements);
+    gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_sunProjMatrix.elements);
 
     // Draw geometry
-    drawMapShadows();
+    if (g_currMap === RANGE) drawMapShadows();
     drawObjsShadows();
 
     // --- Flashlight ---
@@ -151,14 +121,12 @@ function renderShadows() {
     gl.viewport(0, 0, g_FLShadowMapFBO.width, g_FLShadowMapFBO.height);
     // Clear the depth buffer
     gl.clear(gl.DEPTH_BUFFER_BIT);
-    // Use flashlight shadow shader
-    gl.useProgram(g_FLShadowProgram);
     
     // pass flashlight's camera matrices to shadow shader
-    gl.uniformMatrix4fv(u_ShadowFLLightViewMatrix, false, g_FLLightViewMatrix.elements);
-    gl.uniformMatrix4fv(u_ShadowFLLightProjMatrix, false, g_FLLightProjMatrix.elements);
+    gl.uniformMatrix4fv(u_ShadowLightViewMatrix, false, g_FLLightViewMatrix.elements);
+    gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_FLLightProjMatrix.elements);
 
-    drawMapShadows();
+    if (g_currMap === RANGE) drawMapShadows();
     drawObjsShadows();
 }
 
