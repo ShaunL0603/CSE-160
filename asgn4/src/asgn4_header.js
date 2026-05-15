@@ -45,15 +45,24 @@ var u_LightColor;
 var u_LightOn;
 var u_FlashlightOn;
 var u_Shininess;
-// For shadow mapping
-var u_LightViewMatrix;
-var u_LightProjMatrix;
-var a_ShadowPosition;
-var u_ShadowModelMatrix;
-var u_ShadowLightViewMatrix;
-var u_ShadowLightProjMatrix;
-var u_ShadowMapSampler;
 let u_UVScale = 1.0;                                                                            // used to repeat textures on single object
+// For shadow mapping
+    // --- Sun shadow map ---
+    var u_LightViewMatrix;
+    var u_LightProjMatrix;
+    var a_ShadowPosition;
+    var u_ShadowModelMatrix;
+    var u_ShadowLightViewMatrix;
+    var u_ShadowLightProjMatrix;
+    var u_ShadowMapSampler;
+    // --- Flashlight shadow map ---
+    var u_FLLightViewMatrix;
+    var u_FLLightProjMatrix;
+    var u_ShadowFLSampler;
+    var a_ShadowFLPosition;
+    var u_ShadowFLModelMatrix;
+    var u_ShadowFLLightViewMatrix;
+    var u_ShadowFLLightProjMatrix;
 
 // Global variables
     // --- SHADER PROGRAMS ---

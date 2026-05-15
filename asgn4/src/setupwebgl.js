@@ -184,27 +184,46 @@ function connectVariablesToGLSL() {
     }
 
     // --- FOR SHADOWS ---
-    u_LightViewMatrix = gl.getUniformLocation(gl.program, 'u_LightViewMatrix');
-    if (!u_LightViewMatrix) {
-        console.log('Failed to get the storage location of u_LightViewMatrix');
-        return -1;
-    }
-    u_LightProjMatrix = gl.getUniformLocation(gl.program, 'u_LightProjMatrix');
-    if (!u_LightProjMatrix) {
-        console.log('Failed to get the storage location of u_LightProjMatrix');
-        return -1;
-    }
-    u_ShadowMapSampler = gl.getUniformLocation(gl.program, 'u_ShadowMapSampler');
-    if (!u_ShadowMapSampler) {
-        console.log('Failed to get the storage location of u_ShadowMapSampler');
-        return -1;
-    }
+        // --- SHADOW MAP FOR SUN ---
+        u_LightViewMatrix = gl.getUniformLocation(gl.program, 'u_LightViewMatrix');
+        if (!u_LightViewMatrix) {
+            console.log('Failed to get the storage location of u_LightViewMatrix');
+            return -1;
+        }
+        u_LightProjMatrix = gl.getUniformLocation(gl.program, 'u_LightProjMatrix');
+        if (!u_LightProjMatrix) {
+            console.log('Failed to get the storage location of u_LightProjMatrix');
+            return -1;
+        }
+        u_ShadowMapSampler = gl.getUniformLocation(gl.program, 'u_ShadowMapSampler');
+        if (!u_ShadowMapSampler) {
+            console.log('Failed to get the storage location of u_ShadowMapSampler');
+            return -1;
+        }
+        // --- SHADOW MAP FOR FLASHLIGHT ---
+        u_FLLightViewMatrix = gl.getUniformLocation(gl.program, 'u_FLLightViewMatrix');
+        if (!u_FLLightViewMatrix) {
+            console.log('Failed to get the storage location of u_FLLightViewMatrix for flashlight shadow map');
+            return -1;
+        }
+        u_FLLightProjMatrix = gl.getUniformLocation(gl.program, 'u_FLLightProjMatrix');
+        if (!u_FLLightProjMatrix) {
+            console.log('Failed to get the storage location of u_FLLightProjMatrix for flashlight shadow map');
+            return -1;
+        }
+        u_ShadowFLSampler = gl.getUniformLocation(gl.program, 'u_ShadowFLSampler');
+        if (!u_ShadowFLSampler) {
+            console.log('Failed to get the storage location of u_ShadowFLSampler for flashlight shadow map');
+            return -1;
+        }
 }
 
 function getShadowLocations() {
     // temporarily set WebGL to the shadow program
     gl.useProgram(g_shadowProgram);
     gl.program = g_shadowProgram;
+
+    // --- SHADOW MAP FOR SUN ---
     // Get attribute storage locations
     a_ShadowPosition = gl.getAttribLocation(gl.program, "a_Position");
     if (a_ShadowPosition < 0) {
@@ -225,6 +244,28 @@ function getShadowLocations() {
     u_ShadowLightProjMatrix = gl.getUniformLocation(gl.program, "u_LightProjMatrix");
     if (!u_ShadowLightProjMatrix) {
         console.log("Failed to get the storage location of u_LightProjMatrix");
+        return -1;
+    }
+
+    // --- SHADOW MAP FOR FLASHLIGHT ---
+    a_ShadowFLPosition = gl.getAttribLocation(g_shadowProgram, "a_ShadowFLPosition");
+    if (a_ShadowFLPosition < 0) {
+        console.log("Failed to get the storage location of a_Position for flashlight shadow map");
+        return -1;
+    }
+    u_ShadowFLModelMatrix = gl.getUniformLocation(g_shadowProgram, "u_ShadowFLModelMatrix");
+    if (!u_ShadowFLModelMatrix) {
+        console.log("Failed to get the storage location of u_ShadowFLModelMatrix for flashlight shadow map");
+        return -1;
+    }
+    u_ShadowFLLightViewMatrix = gl.getUniformLocation(g_shadowProgram, "u_ShadowFLLightViewMatrix");
+    if (!u_ShadowFLLightViewMatrix) {
+        console.log("Failed to get the storage location of u_ShadowFLLightViewMatrix for flashlight shadow map");
+        return -1;
+    }
+    u_ShadowFLLightProjMatrix = gl.getUniformLocation(g_shadowProgram, "u_ShadowFLLightProjMatrix");
+    if (!u_ShadowFLLightProjMatrix) {
+        console.log("Failed to get the storage location of u_ShadowFLLightProjMatrix for flashlight shadow map");
         return -1;
     }
 

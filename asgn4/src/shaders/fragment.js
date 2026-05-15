@@ -162,3 +162,12 @@ var SHADOW_FSHADER_SOURCE =
         gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 1.0);
     }
     `;
+
+var SHADOW_FL_FSHADER_SOURCE =
+    `
+    precision mediump float;
+    void main() {
+        // satisfy compiler
+        gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 1.0);
+    }
+    `;
