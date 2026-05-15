@@ -130,7 +130,7 @@ var FSHADER_SOURCE =
                 float flashSpec = pow(max(dot(E, flashR), 0.0), u_Shininess);
 
                 // Add a smooth falloff to the edges of the flashlight beam
-                float edgeFalloff = pow(spotDot, 20.0); 
+                float edgeFalloff = pow(spotDot, 135.0); 
                 vec3 flashColor = vec3(1.0, 1.0, 1.0); // White flashlight
 
                 totalDiffuse += vec3(gl_FragColor) * flashColor * flashNDotL * 0.8 * edgeFalloff;
