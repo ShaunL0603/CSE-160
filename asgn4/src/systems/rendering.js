@@ -110,7 +110,7 @@ function drawMapShadows() {
     if (!g_mergedMapVertBuffer) return;
 
     // Setting the Model Matrix
-    gl.uniformMatrix4fv(u_ShadowModelMatrix, false, shadowiIdentityMat.elements);
+    gl.uniformMatrix4fv(u_ShadowModelMatrix, false, identityMat.elements);
 
     // Bind position buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, g_mergedMapVertBuffer);

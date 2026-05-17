@@ -67,8 +67,6 @@ let u_UVScale = 1.0;                                                            
     let g_sunViewMatrix = new Matrix4();                                                        // View matrix for the "sun camera" (light source)
     let renderCubeShadows = ["cube", "wall", "rangewall", "ground", "block"];                   // list of obj types to render shadows
     let renderSphereShadows = ["sphere", "target"];
-    let shadowiIdentityMat = new Matrix4();
-
 
     // --- FOR CAMERA ---
     var g_camera;
@@ -152,7 +150,6 @@ let u_UVScale = 1.0;                                                            
     let g_map = [];
     let g_cubeScale = 0.25;                                                                     // scale for player placed blocks and walls
     var g_recenter;                                                                             // recenter cubes of rand map so that span room is 0,0,0
-    let identityMat = new Matrix4();
     let randMapIndices = 0.0;
 
 
@@ -174,3 +171,4 @@ let u_UVScale = 1.0;                                                            
     let g_score = 0;                                                                            // track player score
     let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
     let g_flScale = 0.02;                                                                       // scale for flashlight sphere
+    let identityMat = new Matrix4();
