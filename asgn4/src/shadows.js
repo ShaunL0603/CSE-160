@@ -64,7 +64,8 @@ function createShadowFBOs() {
 function updateSunCamera() {
     // Projection (Sun's "Lens")
     // Defining the size of the shadow bounding box
-    let boxSize = 40.0; //TODO: adjust baserd on g_currMapSize and g_cubeScale
+    let boxSize = 50.0;
+    if (g_currMap === RANDOM) boxSize = g_currMapSize;
     
     g_sunProjMatrix.setOrtho(-boxSize, boxSize, -boxSize, boxSize, 1.0, 2000.0);
 

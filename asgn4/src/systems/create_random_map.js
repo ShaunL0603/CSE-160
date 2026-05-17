@@ -48,6 +48,7 @@ function createRandomMap() {
 
     // Convert to typed arrays
     g_mergedMapVerts = new Float32Array(mapPos);
+    randMapIndices = g_mergedMapVerts.length / 3;
     g_mergedMapUVVerts = new Float32Array(mapUVs);
     g_mergedMapNormals = new Float32Array(mapNorms);
 
@@ -89,7 +90,7 @@ function renderMap() {
     gl.enableVertexAttribArray(a_Normal);
 
     // Draw entire map
-    gl.drawArrays(gl.TRIANGLES, 0, g_mergedMapVerts.length / 3);
+    gl.drawArrays(gl.TRIANGLES, 0, randMapIndices);
 }
 
 /**

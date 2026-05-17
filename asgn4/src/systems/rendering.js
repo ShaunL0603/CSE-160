@@ -102,7 +102,7 @@ function renderShadows() {
     gl.uniformMatrix4fv(u_ShadowLightProjMatrix, false, g_sunProjMatrix.elements);
 
     // Draw geometry
-    if (g_currMap === RANGE) drawMapShadows();
+    if (g_currMap === RANDOM) drawMapShadows();
     drawObjsShadows();
 }
 
@@ -117,7 +117,7 @@ function drawMapShadows() {
     gl.vertexAttribPointer(a_ShadowPosition, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_ShadowPosition);
 
-    gl.drawArrays(gl.TRIANGLES, 0, g_mergedMapVerts.length / 3);
+    gl.drawArrays(gl.TRIANGLES, 0, randMapIndices);
 }
 
 function drawObjsShadows() {

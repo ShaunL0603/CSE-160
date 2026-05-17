@@ -153,6 +153,8 @@ let u_UVScale = 1.0;                                                            
     let g_cubeScale = 0.25;                                                                     // scale for player placed blocks and walls
     var g_recenter;                                                                             // recenter cubes of rand map so that span room is 0,0,0
     let identityMat = new Matrix4();
+    let randMapIndices = 0.0;
+
 
     // --- For placing blocks ---
     let g_tempOrigin3v = new Vector3();
