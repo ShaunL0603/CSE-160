@@ -13,7 +13,7 @@
             <h1>Blocky World: Aim Trainer</h1>
         </div>
 
-        <!-- <div style="display: flex; justify-content: space-between; gap: 40px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; gap: 40px; margin-bottom: 20px;">
             
             <div style="flex: 1; text-align: left;">
                 <h2><u>Description</u></h2>
@@ -90,13 +90,13 @@
                     <li>Z to regenerate the randomly generated map</li>
                 </ul>
             </div>
-        </div> -->
+        </div>
         <div>
             <p id="numdot">NN</p>
             <p>Player Mode: <span id="playerMode">NNNN</span></p>
             <button id="toggleTextures" style="margin-top: 10px;">Toggle Textures</button>
             <button id="toggleLighting" style="margin-top: 10px;">Toggle Lighting</button>
-            <button id="toggleLightPath" style="margin-top: 10px;">Light Moves</button>
+            <button id="toggleLightPath" style="margin-top: 10px;">Toggle Sun Movement</button>
             <button id="toggleNormals" style="margin-top: 10px;">Toggle Normals</button>
             <button id="toggleShadows" style="margin-top: 10px;">Toggle Shadows</button>
         </div>
@@ -157,15 +157,15 @@
 
         <div id="settingRow" style="margin-top: 10px;">
           <label for="sunX">x positon:</label>
-          <input id="sunX" type="range" min="-4" max="4" value="-0.1" step="0.01">
+          <input id="sunX" type="range" min="-120" max="120" value="-0.1" step="0.01">
         </div>
         <div id="settingRow" style="margin-top: 10px;">
           <label for="sunY">y positon:</label>
-          <input id="sunY" type="range" min="1" max="10" value="2.5" step="0.01">
+          <input id="sunY" type="range" min="-120" max="120" value="2.5" step="0.01">
         </div>
         <div id="settingRow" style="margin-top: 10px;">
           <label for="sunZ">z positon:</label>
-          <input id="sunZ" type="range" min="-8" max="4" value="-5.0" step="0.01">
+          <input id="sunZ" type="range" min="-60" max="60" value="-5.0" step="0.01">
         </div>
 
         <div id="settingsRow" style="margin-top: 20px;">

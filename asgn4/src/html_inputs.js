@@ -173,17 +173,17 @@ function htmlActions() {
     sunX.addEventListener("input", (ev) => {
         let newx = parseFloat(ev.target.value);
         g_sunPos[0] = newx;
-        moveLight();
+        moveSun();
     });
     sunY.addEventListener("input", (ev) => {
         let newy = parseFloat(ev.target.value);
         g_sunPos[1] = newy;
-        moveLight();
+        moveSun();
     });
     sunZ.addEventListener("input", (ev) => {
         let newz = parseFloat(ev.target.value);
         g_sunPos[2] = newz;
-        moveLight();
+        moveSun();
     });
     
     // --- OTHER ---

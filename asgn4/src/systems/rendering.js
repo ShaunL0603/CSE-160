@@ -186,3 +186,12 @@ function moveFlashlight() {
     );
     g_flashlight.matrix.scale(g_flScale, g_flScale, g_flScale);
 }
+
+function moveSun() {
+    g_sun.matrix.setTranslate(
+        g_sunPos[0], 
+        g_sunPos[1], 
+        g_sunPos[2]
+    );
+    g_sun.matrix.scale(g_sunScale, g_sunScale, g_sunScale);
+}
