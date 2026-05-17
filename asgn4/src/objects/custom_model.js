@@ -14,7 +14,6 @@ class CustomModel {
         this.uvBuffer = null;
         this.normBuffer = null;
         this.indexBuffer = null;
-        this.vertexCount = 0;
         this.loaded = false; // Flag to prevent rendering before data is ready
         this.mtlLoaded = false;
         this.materials = {};
@@ -162,7 +161,6 @@ class CustomModel {
         this.indices = new Uint16Array(finalIndices);
         this.uvs = new Float32Array(finalUVs);
         this.normals = new Float32Array(finalNormals);
-        this.vertexCount = vertCounter;
     }
 
     parseMTL(text) {

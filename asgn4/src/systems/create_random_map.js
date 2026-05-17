@@ -1,7 +1,6 @@
 // --- File with functions to create a randomly generated map ---
 
-let g_mergedMapIndices = null;
-let g_mergedMapIndexBuffer = null;
+
 // --- Functions to create random map --- 
 function createRandomMap() {
     let wallHeight = 3;

@@ -133,19 +133,21 @@ function drawObjsShadows() {
         gl.uniformMatrix4fv(u_ShadowModelMatrix, false, obj.matrix.elements);
 
         // Bind position buffer
-        var currBuffer;
-        let currVertCount = 0;
+        let currIndiceCount = 0;
         // Apparently instanceof can be more costly but use it anyways
         if (renderCubeShadows.includes(obj.type)) {
             currBuffer = g_cubeVertBuffer;
-            currVertCount = cubeVertLen;
+            currIndexBuffer = g_cubeIndexBuffer;
+            currIndiceCount = g_cubeIndices.length;
         } else if (renderSphereShadows.includes(obj.type)) {
             currBuffer = g_sphereVertBuffer;
-            currVertCount = g_sphereVertices.length / 3;
+            currIndexBuffer = g_sphereIndexBuffer;
+            currIndiceCount = g_sphereIndices.length;
         } else if (obj.type === "customModel") {
             if (!obj.loaded) continue; // don't try to render shadow if model isn't loaded yet
             currBuffer = obj.vertBuffer;
-            currVertCount = obj.vertexCount;
+            currIndexBuffer = obj.indexBuffer;
+            currIndiceCount = obj.indices.length;
         } else {
             // console.warn("Error: unrecognized obj type in shadow rendering", obj);
             continue;
@@ -154,7 +156,9 @@ function drawObjsShadows() {
         gl.bindBuffer(gl.ARRAY_BUFFER, currBuffer);
         gl.vertexAttribPointer(a_ShadowPosition, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_ShadowPosition);
-        gl.drawArrays(gl.TRIANGLES, 0, currVertCount);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, currIndexBuffer);
+        // gl.drawArrays(gl.TRIANGLES, 0, currVertCount);
+        gl.drawElements(gl.TRIANGLES, currIndiceCount, gl.UNSIGNED_SHORT, 0);
     }
 }
 

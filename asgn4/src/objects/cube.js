@@ -58,9 +58,6 @@ class Cube {
     }
 }
 
-let g_cubeIndices = null;
-let g_cubeIndexBuffer = null;
-
 function createCubeVertices() {
     g_cubeVertices = new Float32Array([
         // Front Face

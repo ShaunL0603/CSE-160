@@ -59,10 +59,12 @@ let u_UVScale = 1.0;                                                            
     var u_ShadowLightProjMatrix;
 
 // Global variables
-    // --- FOR SHADERS ---
+    // --- FOR SHADOWS ---
     var g_mainProgram;
     var g_shadowProgram;
     var g_shadowMapFBO;                                                                         // Framebuffer Object for shadow mapping
+    var currBuffer;                                                                             // used in drawObjShadows to switch between buffers
+    var currIndexBuffer;                                                                        // same reason fromm currBuffer
     let g_sunProjMatrix = new Matrix4();                                                        // Projection matrix for the "sun camera" (light source)
     let g_sunViewMatrix = new Matrix4();                                                        // View matrix for the "sun camera" (light source)
     let renderCubeShadows = ["cube", "wall", "rangewall", "ground", "block"];                   // list of obj types to render shadows
@@ -101,22 +103,24 @@ let u_UVScale = 1.0;                                                            
     // create necessary vertices and buffers for cubes and spheres once
     // initialize them here
     // --- FOR CUBE ---
-    let g_cubeVertices = null;
-    let g_cubeUVVerts = null;
-    let g_cubeNormals = null;
-    let g_cubeVertBuffer = null;
-    let g_cubeUVVertBuffer = null;
-    let g_cubeNormBuffer = null;
+    var g_cubeVertices;
+    var g_cubeIndices;
+    var g_cubeUVVerts;
+    var g_cubeNormals;
+    var g_cubeVertBuffer;
+    var g_cubeUVVertBuffer;
+    var g_cubeNormBuffer;
+    var g_cubeIndexBuffer;
     let cubeVertLen = 36;
     // --- FOR SPHERE ---
-    let g_sphereIndices = null;
-    let g_sphereIndexBuffer = null;
-    let g_sphereVertices = null;
-    let g_sphereUVVerts = null;
-    let g_sphereNormals = null;
-    let g_sphereVertBuffer = null;
-    let g_sphereUVVertBuffer = null;
-    let g_sphereNormBuffer = null;
+    var g_sphereIndices;
+    var g_sphereVertices;
+    var g_sphereUVVerts;
+    var g_sphereNormals;
+    var g_sphereVertBuffer;
+    var g_sphereUVVertBuffer;
+    var g_sphereNormBuffer;
+    var g_sphereIndexBuffer;
     let sphereSegments = 16;
 
     // --- World objects ---
@@ -141,11 +145,13 @@ let u_UVScale = 1.0;                                                            
     
     // --- CREATE RANDOMLY GENERATED MAP ---
     var g_mergedMapVerts;
+    var g_mergedMapIndices;
     var g_mergedMapUVVerts;
     var g_mergedMapNormals;
     var g_mergedMapVertBuffer;
     var g_mergedMapUVVertBuffer;
     var g_mergedMapNormBuffer;
+    var g_mergedMapIndexBuffer;
     let g_mapSize = parseInt(document.getElementById("changeMapSize").defaultValue);            // Store new map size that user puts in
     let g_floorTileCount = parseInt(document.getElementById("floorTileCount").defaultValue);    // for digger, number of times it breaks a wall
     let g_currMapSize = g_mapSize;                                                              // Store current map size
