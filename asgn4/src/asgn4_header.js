@@ -109,12 +109,15 @@ let u_UVScale = 1.0;                                                            
     let g_cubeNormBuffer = null;
     let cubeVertLen = 36;
     // --- FOR SPHERE ---
+    let g_sphereIndices = null;
+    let g_sphereIndexBuffer = null;
     let g_sphereVertices = null;
     let g_sphereUVVerts = null;
     let g_sphereNormals = null;
     let g_sphereVertBuffer = null;
     let g_sphereUVVertBuffer = null;
     let g_sphereNormBuffer = null;
+    let sphereSegments = 16;
 
     // --- World objects ---
     let g_worldObjs = [];                                                                       // list of objects to render

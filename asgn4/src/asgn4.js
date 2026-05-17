@@ -21,7 +21,7 @@ function main() {
     createCubeVertices();
     createCubeBuffers();
     // Create global sphere verts n buffers
-    createSphereVertices(15);
+    initSphere(sphereSegments);
     createSphereBuffers();
     // getting textures
     initTextures();

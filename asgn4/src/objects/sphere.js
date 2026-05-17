@@ -41,6 +41,9 @@ class Sphere {
         gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereNormBuffer);
         gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Normal);
+
+        // rebind indices buffer
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g_sphereIndexBuffer)
         
         // Scale texture
         gl.uniform1f(u_UVScale, this.UVScale);
@@ -52,56 +55,80 @@ class Sphere {
         gl.uniform1i(u_ShowTexture, toggleTexture(this.showTexture));
         
         // Draw
-        gl.drawArrays(gl.TRIANGLES, 0, g_sphereVertices.length / 3);
+        gl.drawElements(gl.TRIANGLES, g_sphereIndices.length, gl.UNSIGNED_SHORT, 0);
     }
 }
 
-function createSphereVertices(segments) {
-    var d = Math.PI / segments;
-    var dd = (Math.PI * 2) / segments;
-    let invTwoPI = 1 / (Math.PI * 2);
-    let invPi = 1 / Math.PI;
+function initSphere(segments) {
+    // generate spheres data once
+    if (g_sphereVertices) return;
+
+    let invSeg = 1 / segments;
+    let d = Math.PI / segments;
+    let dd = (Math.PI * 2) / segments;
 
     let vPositions = [];
     let vUVs = [];
     let vNormals = [];
+    let vIndices = [];
 
-    // Loop through polar and azimuthal angles
-    for (var t = 0; t < Math.PI; t += d) {
-        for (var s = 0; s < (Math.PI * 2); s += dd) {
-            var p1 = [Math.sin(t) * Math.cos(s), Math.cos(t), Math.sin(t) * Math.sin(s)];
-            var p2 = [Math.sin(t + d) * Math.cos(s), Math.cos(t + d), Math.sin(t + d) * Math.sin(s)];
-            var p3 = [Math.sin(t) * Math.cos(s + dd), Math.cos(t), Math.sin(t) * Math.sin(s + dd)];
-            var p4 = [Math.sin(t + d) * Math.cos(s + dd), Math.cos(t + d), Math.sin(t + d) * Math.sin(s + dd)];
-            
-            // Map UVs based on current angles relative to total angles (PI and 2*PI)
-            var uv1 = [s * invTwoPI, t * invPi];
-            var uv2 = [s * invTwoPI, (t + d) * invPi];
-            var uv3 = [(s + dd) * invTwoPI, t * invPi];
-            var uv4 = [(s + dd) * invTwoPI, (t + d) * invPi];
+    // Generate unique vertices
+    for (var latNum = 0; latNum <= segments; ++latNum) {
+        var theta = latNum * d;
+        var sinTheta = Math.sin(theta);
+        var cosTheta = Math.cos(theta);
 
-            // Triangle 1
-            vPositions.push(...p1, ...p2, ...p4);
-            vUVs.push(...uv1, ...uv2, ...uv4);
-            vNormals.push(...p1, ...p2, ...p4);
+        for (var lonNum = 0; lonNum <= segments; ++lonNum) {
+            let phi = lonNum * dd;
+            let sinPhi = Math.sin(phi);
+            let cosPhi = Math.cos(phi);
 
-            // Triangle 2
-            vPositions.push(...p1, ...p4, ...p3);
-            vUVs.push(...uv1, ...uv4, ...uv3);
-            vNormals.push(...p1, ...p4, ...p3);
+            // X,Y,Z coords
+            let x = cosPhi * sinTheta;
+            let y = cosTheta;
+            let z = sinPhi * sinTheta;
+
+            // U,V texture coords
+            let u = 1 - (lonNum * invSeg);
+            let v = 1 - (latNum * invSeg);
+
+            vPositions.push(x, y, z);
+            vNormals.push(x, y, z);
+            vUVs.push(u, v);
+        }
+    }
+
+    // generate indices
+    for (var latNum = 0; latNum < segments; ++latNum) {
+        for (var lonNum = 0; lonNum < segments; ++lonNum) {
+            let first = (latNum * (segments + 1)) + lonNum;
+            let second = first + segments + 1;
+
+            // 1st triangle
+            vIndices.push(first);
+            vIndices.push(second);
+            vIndices.push(first + 1);
+
+            // 2nd triangle
+            vIndices.push(second);
+            vIndices.push(second + 1);
+            vIndices.push(first + 1);
         }
     }
 
     g_sphereVertices = new Float32Array(vPositions);
     g_sphereUVVerts = new Float32Array(vUVs);
     g_sphereNormals = new Float32Array(vNormals);
+    g_sphereIndices = new Uint16Array(vIndices);
 }
 
 function createSphereBuffers() {
     g_sphereVertBuffer = gl.createBuffer();
     g_sphereUVVertBuffer = gl.createBuffer();
     g_sphereNormBuffer = gl.createBuffer();
-    if (!g_sphereVertBuffer || !g_sphereUVVertBuffer || !g_sphereNormBuffer) {
+    g_sphereIndexBuffer = gl.createBuffer();
+    if (!g_sphereVertBuffer || !g_sphereUVVertBuffer || 
+        !g_sphereNormBuffer || !g_sphereIndexBuffer) {
         console.error("Failed to create global sphere buffers");
         return -1;
     }
@@ -117,4 +144,8 @@ function createSphereBuffers() {
     // --- NORMALS ---
     gl.bindBuffer(gl.ARRAY_BUFFER, g_sphereNormBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, g_sphereNormals, gl.STATIC_DRAW);
+
+    // --- INDICES ---
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g_sphereIndexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, g_sphereIndices, gl.STATIC_DRAW);
 }

@@ -245,7 +245,7 @@ class CustomModel {
                 gl.drawArrays(gl.TRIANGLES, call.start, call.count);
             }
         } 
-        // model has no material, draw al at once
+        // model has no material, draw
         else {
             gl.uniform4f(u_FragColor, this.color[0], this.color[1], this.color[2], this.color[3]);
             gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
