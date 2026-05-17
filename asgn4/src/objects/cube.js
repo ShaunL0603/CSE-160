@@ -43,6 +43,8 @@ class Cube {
         // Enable the assignment to a_Normal variable
         gl.enableVertexAttribArray(a_Normal);
 
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g_cubeIndexBuffer);
+
         // Scale texture
         gl.uniform1f(u_UVScale, this.UVScale);
         // object shininess
@@ -52,72 +54,72 @@ class Cube {
         // toggle texture
         gl.uniform1i(u_ShowTexture, toggleTexture(this.showTexture));
         
-        gl.drawArrays(gl.TRIANGLES, 0, cubeVertLen);
+        gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
     }
 }
+
+let g_cubeIndices = null;
+let g_cubeIndexBuffer = null;
 
 function createCubeVertices() {
     g_cubeVertices = new Float32Array([
         // Front Face
-        0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 
-        0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 
+        0.0, 0.0, 1.0,  1.0, 0.0, 1.0,  1.0, 1.0, 1.0,  0.0, 1.0, 1.0,  
         // Back Face
-        1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 
-        1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 
+        1.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 1.0, 0.0,  1.0, 1.0, 0.0,  
         // Left Face
-        0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 
-        0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 
+        0.0, 0.0, 0.0,  0.0, 0.0, 1.0,  0.0, 1.0, 1.0,  0.0, 1.0, 0.0,  
         // Right Face
-        1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 
-        1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 
+        1.0, 0.0, 1.0,  1.0, 0.0, 0.0,  1.0, 1.0, 0.0,  1.0, 1.0, 1.0,  
         // Top Face
-        0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 
-        0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 
+        0.0, 1.0, 0.0,  1.0, 1.0, 0.0,  1.0, 1.0, 1.0,  0.0, 1.0, 1.0,  
         // Bottom Face
-        0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 
-        0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        0.0, 0.0, 1.0,  1.0, 0.0, 1.0,  1.0, 0.0, 0.0,  0.0, 0.0, 0.0
     ]);
     
     g_cubeUVVerts = new Float32Array([
         // Front Face
-        0.0, 0.0,  1.0, 0.0,  1.0, 1.0, 
-        0.0, 0.0,  1.0, 1.0,  0.0, 1.0, 
+        0.0, 0.0,  1.0, 0.0,  1.0, 1.0,  0.0, 1.0,  
         // Back Face
-        0.0, 0.0,  1.0, 0.0,  1.0, 1.0, 
-        0.0, 0.0,  1.0, 1.0,  0.0, 1.0, 
+        0.0, 0.0,  1.0, 0.0,  1.0, 1.0,  0.0, 1.0,  
         // Left Face
-        0.0, 0.0,  1.0, 0.0,  1.0, 1.0, 
-        0.0, 0.0,  1.0, 1.0,  0.0, 1.0, 
+        0.0, 0.0,  1.0, 0.0,  1.0, 1.0,  0.0, 1.0,  
         // Right Face
-        0.0, 0.0,  1.0, 0.0,  1.0, 1.0, 
-        0.0, 0.0,  1.0, 1.0,  0.0, 1.0, 
+        0.0, 0.0,  1.0, 0.0,  1.0, 1.0,  0.0, 1.0,  
         // Top Face
-        0.0, 0.0,  1.0, 0.0,  1.0, 1.0, 
-        0.0, 0.0,  1.0, 1.0,  0.0, 1.0, 
+        0.0, 0.0,  1.0, 0.0,  1.0, 1.0,  0.0, 1.0,  
         // Bottom Face
-        0.0, 0.0,  1.0, 0.0,  1.0, 1.0, 
-        0.0, 0.0,  1.0, 1.0,  0.0, 1.0
+        0.0, 0.0,  1.0, 0.0,  1.0, 1.0,  0.0, 1.0
     ]);
 
     g_cubeNormals = new Float32Array([
         // Front face
-        0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  
-        0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  
+        0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  0.0, 0.0, 1.0,  
         // Back face
-        0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  
-        0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  
+        0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  0.0, 0.0, -1.0,  
         // Left face
-        -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  
-        -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  
+        -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  
         // Right face
-        1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  
-        1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  
+        1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  1.0, 0.0, 0.0,  
         // Top face
-        0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  
-        0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  
+        0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  0.0, 1.0, 0.0,  
         // Bottom face
-        0.0, -1.0, 0.0,  0.0, -1.0, 0.0,  0.0, -1.0, 0.0,  
-        0.0, -1.0, 0.0,  0.0, -1.0, 0.0,  0.0, -1.0, 0.0
+        0.0, -1.0, 0.0,  0.0, -1.0, 0.0,  0.0, -1.0, 0.0,  0.0, -1.0, 0.0  
+    ]);
+
+    g_cubeIndices = new Uint16Array([
+        // front
+        0, 1, 2,  0, 2, 3,  
+        // back
+        4, 5, 6,  4, 6 ,7,  
+        // left
+        8, 9, 10,  8, 10, 11,  
+        // right
+        12, 13, 14,  12, 14, 15,  
+        // top
+        16, 17, 18,  16, 18, 19,  
+        // bottom
+        20, 21, 22,  20, 22, 23
     ]);
 }
 
@@ -125,7 +127,8 @@ function createCubeBuffers() {
     g_cubeVertBuffer = gl.createBuffer();
     g_cubeUVVertBuffer = gl.createBuffer();
     g_cubeNormBuffer = gl.createBuffer();
-    if (!g_cubeVertBuffer || !g_cubeUVVertBuffer || !g_cubeNormBuffer) {
+    g_cubeIndexBuffer = gl.createBuffer();
+    if (!g_cubeVertBuffer || !g_cubeUVVertBuffer || !g_cubeNormBuffer || !g_cubeIndexBuffer) {
         console.error("Failed to creaete global cube buffers");
         return -1;
     }
@@ -146,4 +149,11 @@ function createCubeBuffers() {
     gl.bindBuffer(gl.ARRAY_BUFFER, g_cubeNormBuffer);
     // Write date into the buffer object
     gl.bufferData(gl.ARRAY_BUFFER, g_cubeNormals, gl.STATIC_DRAW);
+
+
+    // --- INDICES ---
+    // Bind the buffer object to target
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g_cubeIndexBuffer);
+    // Write date into the buffer object
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, g_cubeIndices, gl.STATIC_DRAW);
 }
