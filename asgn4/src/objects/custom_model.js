@@ -13,6 +13,7 @@ class CustomModel {
         this.vertBuffer = null;
         this.uvBuffer = null;
         this.normBuffer = null;
+        this.indexBuffer = null;
         this.vertexCount = 0;
         this.loaded = false; // Flag to prevent rendering before data is ready
         this.mtlLoaded = false;
@@ -61,6 +62,12 @@ class CustomModel {
         let finalPositions = [];
         let finalUVs = [];
         let finalNormals = [];
+        let finalIndices = [];
+
+        // Cache map, when looking at new string, i.e. "1710/22301/6943" if we've already
+        // seen it and it's in vertexCache we grab same vertices and push to indices array
+        let vertexCache = {};
+        let unifiedIndex = 0;
 
         // Track chunks
         let currDrawCall = null;
@@ -102,27 +109,35 @@ class CustomModel {
             } else if (type === 'f') {
                 // Create a quick helper function to process a single vertex string (e.g., "1/1/1")
                 const processVertex = (vertexString) => {
-                    const indices = vertexString.split('/');
-                    
-                    // Position
-                    const posIndex = parseInt(indices[0]) - 1;
-                    finalPositions.push(...rawPositions[posIndex]);
-
-                    // UVs
-                    if (indices[1] && indices[1] !== '') {
-                        const uvIndex = parseInt(indices[1]) - 1;
-                        finalUVs.push(...rawUVs[uvIndex]);
+                    if (vertexCache[vertexString] !== undefined) {
+                        finalIndices.push(vertexCache[vertexString]);
                     } else {
-                        finalUVs.push(0.0, 0.0); 
-                    }
+                        const indices = vertexString.split('/');
+                        
+                        // Position
+                        const posIndex = parseInt(indices[0]) - 1;
+                        finalPositions.push(...rawPositions[posIndex]);
 
-                    // Normals
-                    if (indices[2] && indices[2] !== '') {
-                        const normIndex = parseInt(indices[2]) - 1;
-                        finalNormals.push(...rawNormals[normIndex]);
-                    } else {
-                        finalNormals.push(0.0, 1.0, 0.0); 
-                    }
+                        // UVs
+                        if (indices[1] && indices[1] !== '') {
+                            const uvIndex = parseInt(indices[1]) - 1;
+                            finalUVs.push(...rawUVs[uvIndex]);
+                        } else {
+                            finalUVs.push(0.0, 0.0); 
+                        }
+
+                        // Normals
+                        if (indices[2] && indices[2] !== '') {
+                            const normIndex = parseInt(indices[2]) - 1;
+                            finalNormals.push(...rawNormals[normIndex]);
+                        } else {
+                            finalNormals.push(0.0, 1.0, 0.0); 
+                        }
+
+                        vertexCache[vertexString] = unifiedIndex;
+                        finalIndices.push(unifiedIndex);
+                        ++unifiedIndex;
+                    };
                 };
 
                 // Triangle fan loop
@@ -144,6 +159,7 @@ class CustomModel {
 
         // Store them in the class to be pushed to the GPU
         this.vertices = new Float32Array(finalPositions);
+        this.indices = new Uint16Array(finalIndices);
         this.uvs = new Float32Array(finalUVs);
         this.normals = new Float32Array(finalNormals);
         this.vertexCount = vertCounter;
@@ -184,8 +200,9 @@ class CustomModel {
         this.vertBuffer = gl.createBuffer();
         this.uvBuffer = gl.createBuffer();
         this.normBuffer = gl.createBuffer();
+        this.indexBuffer = gl.createBuffer();
 
-        if (!this.vertBuffer || !this.uvBuffer || !this.normBuffer) {
+        if (!this.vertBuffer || !this.uvBuffer || !this.normBuffer || !this.indexBuffer) {
             console.error("Failed to create buffers for CustomModel");
             return;
         }
@@ -201,6 +218,10 @@ class CustomModel {
         // Send Normals to GPU
         gl.bindBuffer(gl.ARRAY_BUFFER, this.normBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.normals, gl.STATIC_DRAW);
+
+        // indices
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
     }
 
     render() {
@@ -226,6 +247,8 @@ class CustomModel {
         gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Normal);
 
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+
         gl.uniform1f(u_UVScale, this.UVScale);
         gl.uniform1f(u_Shininess, this.shininess);
         gl.uniform1i(u_ShowNormals, g_toggleNormals ? 1 : 0);
@@ -242,13 +265,14 @@ class CustomModel {
                     gl.uniform4f(u_FragColor, mat.color[0], mat.color[1], mat.color[2], mat.color[3]);
                     gl.uniform1f(u_Shininess, mat.shininess);
                 }
-                gl.drawArrays(gl.TRIANGLES, call.start, call.count);
+                let byteOffset = call.start * 2;
+                gl.drawElements(gl.TRIANGLES, call.count, gl.UNSIGNED_SHORT, byteOffset);
             }
         } 
         // model has no material, draw
         else {
             gl.uniform4f(u_FragColor, this.color[0], this.color[1], this.color[2], this.color[3]);
-            gl.drawArrays(gl.TRIANGLES, 0, this.vertexCount);
+            gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
         }
     }
 }
