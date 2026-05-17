@@ -1,12 +1,15 @@
 // --- File with functions to create a randomly generated map ---
 
-
+let g_mergedMapIndices = null;
+let g_mergedMapIndexBuffer = null;
 // --- Functions to create random map --- 
 function createRandomMap() {
     let wallHeight = 3;
     let mapPos = [];
     let mapUVs = [];
     let mapNorms = [];
+    let mapIndices = [];
+    let vertexOffset = 0;
 
     for (let x = 0; x < g_currMapSize; ++x) {
         for (let z = 0; z < g_currMapSize; ++z) {
@@ -18,7 +21,7 @@ function createRandomMap() {
                     let worldZ = (z * g_cubeScale) - g_recenter;
                     
                     // loop through cube vertices and add to map verts with world coords
-                    for (let v = 0; v < 36; ++v) {
+                    for (let v = 0; v < 24; ++v) {
                         // get local vertex coords
                         let localX = g_cubeVertices[v*3];
                         let localY = g_cubeVertices[v*3 + 1];
@@ -29,8 +32,7 @@ function createRandomMap() {
                             (localY * g_cubeScale) + worldY,
                             (localZ * g_cubeScale) + worldZ
                         );
-                        // normals and uvs don't change based on position
-                        // copy them
+                        // normals and uvs don't change based on position copy them
                         mapUVs.push(
                             g_cubeUVVerts[v*2],
                             g_cubeUVVerts[v*2 + 1]
@@ -41,6 +43,11 @@ function createRandomMap() {
                             g_cubeNormals[v*3 + 2]
                         );
                     }
+                    // lopp through 36 indices
+                    for (let i = 0; i < 36; ++i) {
+                        mapIndices.push(g_cubeIndices[i] + vertexOffset);
+                    }
+                    vertexOffset += 24;
                 }
             }
         }
@@ -48,15 +55,18 @@ function createRandomMap() {
 
     // Convert to typed arrays
     g_mergedMapVerts = new Float32Array(mapPos);
-    randMapIndices = g_mergedMapVerts.length / 3;
     g_mergedMapUVVerts = new Float32Array(mapUVs);
     g_mergedMapNormals = new Float32Array(mapNorms);
+    g_mergedMapIndices = new Uint32Array(mapIndices);
+    randMapIndices = g_mergedMapIndices.length;
 
     // Create and bind buffers exactly once
     g_mergedMapVertBuffer = gl.createBuffer();
     g_mergedMapUVVertBuffer = gl.createBuffer();
     g_mergedMapNormBuffer = gl.createBuffer();
-    if (!g_mergedMapVertBuffer || !g_mergedMapUVVertBuffer || !g_mergedMapNormBuffer) {
+    g_mergedMapIndexBuffer = gl.createBuffer();
+    if (!g_mergedMapVertBuffer || !g_mergedMapUVVertBuffer || 
+        !g_mergedMapNormBuffer || !g_mergedMapIndexBuffer) {
         console.error("Failed to create global merged map buffers");
         return -1;
     }
@@ -66,6 +76,8 @@ function createRandomMap() {
     gl.bufferData(gl.ARRAY_BUFFER, g_mergedMapUVVerts, gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, g_mergedMapNormBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, g_mergedMapNormals, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g_mergedMapIndexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, g_mergedMapIndices, gl.STATIC_DRAW);
 }
 
 function renderMap() {
@@ -89,8 +101,9 @@ function renderMap() {
     gl.vertexAttribPointer(a_Normal, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_Normal);
 
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g_mergedMapIndexBuffer);
     // Draw entire map
-    gl.drawArrays(gl.TRIANGLES, 0, randMapIndices);
+    gl.drawElements(gl.TRIANGLES, randMapIndices, gl.UNSIGNED_INT, 0);
 }
 
 /**

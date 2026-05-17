@@ -116,8 +116,9 @@ function drawMapShadows() {
     gl.bindBuffer(gl.ARRAY_BUFFER, g_mergedMapVertBuffer);
     gl.vertexAttribPointer(a_ShadowPosition, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_ShadowPosition);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, g_mergedMapIndexBuffer);
 
-    gl.drawArrays(gl.TRIANGLES, 0, randMapIndices);
+    gl.drawElements(gl.TRIANGLES, randMapIndices, gl.UNSIGNED_INT, 0);
 }
 
 function drawObjsShadows() {

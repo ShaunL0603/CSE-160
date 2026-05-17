@@ -18,6 +18,7 @@ function setupWebGL() {
     gl.enable(gl.BLEND);
     // Tell WebGL how to mix the transparent color with the background
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.getExtension("OES_element_index_uint");
 }
 
 function createPrograms() {
