@@ -93,7 +93,7 @@ function renderShadows() {
     gl.bindFramebuffer(gl.FRAMEBUFFER, g_shadowMapFBO.fbo);
     // avoiding "shadow acne"
     gl.enable(gl.POLYGON_OFFSET_FILL);
-    gl.polygonOffset(2.0, 2.0);
+    gl.polygonOffset(3.0, 3.0);
     // Set the viewport to the size of the shadow map
     gl.viewport(0, 0, g_shadowMapFBO.width, g_shadowMapFBO.height);
     // Clear the depth buffer

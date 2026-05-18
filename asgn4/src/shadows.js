@@ -64,15 +64,21 @@ function createShadowFBOs() {
 function updateSunCamera() {
     // Projection (Sun's "Lens")
     // Defining the size of the shadow bounding box
-    let boxSize = 50.0;
-    if (g_currMap === RANDOM) boxSize = g_currMapSize;
+    let boxSize = 20.0;
+    let centerY = 1.5;
+    let centerZ = 0.0;
+    if (g_currMap === RANGE) {
+        centerY = 5.0;
+        centerZ = -5.0;
+    }
+    if (g_currMap === RANDOM) boxSize = g_currMapSize * 1.5;
     
-    g_sunProjMatrix.setOrtho(-boxSize, boxSize, -boxSize, boxSize, 1.0, 2000.0);
+    g_sunProjMatrix.setOrtho(-boxSize, boxSize, -boxSize, boxSize, 0.1, 250.0);
 
     // The View (Positioning the Sun)
     g_sunViewMatrix.setLookAt(
         g_sunPos[0], g_sunPos[1], g_sunPos[2],  // Eye: Where the sun currently is
-        0.0, 0.0, 0.0,                          // Target: Looking directly at the center of the map
+        0.0, centerY, centerZ,                  // Target: Looking directly at the center of the map
         0.0, 1.0, 0.0                           // Up: Y-axis is up
     );
 }
