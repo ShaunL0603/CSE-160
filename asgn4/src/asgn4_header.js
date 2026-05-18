@@ -131,7 +131,7 @@ let u_UVScale = 1.0;                                                            
     var g_currMap;                                                                              // Keep track of which map is currently loaded
     let g_NonMineable = ["ground", "rangewall", "sun"];                                         // keep track of types that shouldn't be destroyed by players
     let g_sunPos = [0.0, 2.5, 0.0];
-    let g_sunScale = -5.0;
+    let g_sunScale = -1.0;
     
     // --- FOR TARGETS ---
     let g_targetSize = Number(document.getElementById("targetSize").defaultValue);

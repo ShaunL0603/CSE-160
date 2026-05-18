@@ -38,7 +38,7 @@ var FSHADER_SOURCE =
     uniform sampler2D u_ShadowMapSampler;
     varying vec4 v_PosFromLight;
 
-    float getShadowVisibility(sampler2D shadowMap, vec4 posFromLight, float bias) {
+    float getShadowVisibility(sampler2D shadowMap, vec4 posFromLight) {
         // Perspective Divide, standardizing coordinates
         vec3 shadowCoord = (posFromLight.xyz / posFromLight.w);
         
@@ -57,7 +57,7 @@ var FSHADER_SOURCE =
 
             // If our current distance is greater than the recorded distance,
             // we are in shadow
-            if (shadowCoord.z > depthFromMap + bias) {
+            if (shadowCoord.z > depthFromMap) {
                 return 0.0; // Turn off the light
             }
         }
@@ -100,8 +100,7 @@ var FSHADER_SOURCE =
         // --- SHADOW MAPPING ---
         float sunShadowVisibility = 1.0;      
         if (u_ShadowsOn) {
-            // fourth parameter, 0.0001, is our bias
-            sunShadowVisibility = getShadowVisibility(u_ShadowMapSampler, v_PosFromLight, 0.0001);
+            sunShadowVisibility = getShadowVisibility(u_ShadowMapSampler, v_PosFromLight);
         }
 
         // lighting off

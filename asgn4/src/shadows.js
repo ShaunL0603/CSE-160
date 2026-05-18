@@ -51,8 +51,8 @@ function initFramebufferObject(shadowWidth, shadowHeight) {
 
 function createShadowFBOs() {
     // Defining reslution of shadow map for sun and flashlight
-    let sunOffscreenWidth = 8192;
-    let sunOffscreenHeight = 8192;
+    let sunOffscreenWidth = 4096;
+    let sunOffscreenHeight = 4096;
     
     g_shadowMapFBO = initFramebufferObject(sunOffscreenWidth, sunOffscreenHeight);
     if (!g_shadowMapFBO) {
