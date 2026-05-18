@@ -12,7 +12,7 @@ function createTarget(pos) {
     target.texture = t_COLOR;
     target.showTexture = false;
     target.pos = pos;
-    target.shininess = 100.0;
+    target.shininess = 25.0;
     target.baseMatrix = new Matrix4();
     target.baseMatrix.translate(pos[0], pos[1], pos[2]);
     target.matrix = new Matrix4(target.baseMatrix);

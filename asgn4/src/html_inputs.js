@@ -165,7 +165,7 @@ function htmlActions() {
     });
 
     // --- LIGHT ACTIONS ---
-    toggleLighting.onclick = () => { g_LightOn = !g_LightOn; };
+    toggleLighting.onclick = () => { g_LightOn = !g_LightOn; g_toggleShadows = !g_toggleShadows; };
     toggleNormals.onclick = () => { g_toggleNormals = !g_toggleNormals; };
     toggleTextures.onclick = () => { g_showTexture = !g_showTexture; };
     toggleShadows.onclick = () => { g_toggleShadows = !g_toggleShadows; };
