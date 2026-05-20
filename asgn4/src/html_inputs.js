@@ -64,6 +64,9 @@ function htmlActions() {
     const sunY = document.getElementById("sunY");
     const sunZ = document.getElementById("sunZ");
     const toggleLightPath = document.getElementById("toggleLightPath");
+    const flashlightColorR = document.getElementById("flashlightColorR");
+    const flashlightColorG = document.getElementById("flashlightColorG");
+    const flashlightColorB = document.getElementById("flashlightColorB");
 
     // --- settings panel actions ---
     // click on settings button and close btn
@@ -185,6 +188,18 @@ function htmlActions() {
         g_sunPos[2] = newz;
         moveSun();
     });
+    flashlightColorR.addEventListener("input", (ev) => {
+        let newRed = parseFloat(ev.target.value);
+        flashlightColor[0] = newRed;
+    })
+    flashlightColorG.addEventListener("input", (ev) => {
+        let newGreen = parseFloat(ev.target.value);
+        flashlightColor[1] = newGreen;
+    })
+    flashlightColorB.addEventListener("input", (ev) => {
+        let newBlue = parseFloat(ev.target.value);
+        flashlightColor[2] = newBlue;
+    })
     
     // --- OTHER ---
     volumeSlider.addEventListener("input", (ev) => {

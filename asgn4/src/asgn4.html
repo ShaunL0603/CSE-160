@@ -101,6 +101,8 @@
             <button id="toggleLightPath" style="margin-top: 10px;">Toggle Sun Movement</button>
             <button id="toggleNormals" style="margin-top: 10px;">Toggle Normals</button>
             <button id="toggleShadows" style="margin-top: 10px;">Toggle Shadows</button>
+            <button id="makeHitBoxVisible" style="margin-top: 10px;">Toggle Hit Boxes</button>
+            <button id="resetHeightButton" style="margin-top: 10px;">Reset Camera Height</button>
         </div>
     </div>
 
@@ -155,9 +157,8 @@
           <input id="volumeSlider" type="range" min="0" max="1" value="1" step="0.01">
         </div>
 
-        <h4 class="settingsText">Settings for light:</h4>
-
-        <div id="settingRow" style="margin-top: 10px;">
+        <h4 class="settingsText">Settings for lights:</h4>
+        <div id="settingRow">
           <label for="sunX">x positon:</label>
           <input id="sunX" type="range" min="-120" max="120" value="-0.1" step="0.01">
         </div>
@@ -170,12 +171,18 @@
           <input id="sunZ" type="range" min="-60" max="60" value="-5.0" step="0.01">
         </div>
 
-        <div id="settingsRow" style="margin-top: 20px;">
-          <button id="makeHitBoxVisible">Toggle Hit Box</button>
+        <h5 class="settingsText">Flashlight Color</h5>
+        <div id="settingRow" style="margin-top: 10px;">
+          <label for="flashlightColorR">Red:</label>
+          <input id="flashlightColorR" type="range" min="0.0" max="1.0" value="1.0" step="0.01">
         </div>
-
-        <div id="settingsRow" style="margin-top: 10px;">
-          <button id="resetHeightButton">Reset Height</button>
+        <div id="settingRow" style="margin-top: 10px;">
+          <label for="flashlightColorG">Green:</label>
+          <input id="flashlightColorG" type="range" min="0.0" max="1.0" value="1.0" step="0.01">
+        </div>
+        <div id="settingRow" style="margin-top: 10px;">
+          <label for="flashlightColorB">Blue:</label>
+          <input id="flashlightColorB" type="range" min="0.0" max="1.0" value="1.0" step="0.01">
         </div>
       </div>
 
