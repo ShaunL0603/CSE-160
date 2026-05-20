@@ -192,24 +192,22 @@ function htmlActions() {
     flashlightColorR.addEventListener("input", (ev) => {
         let newRed = parseFloat(ev.target.value);
         flashlightColor[0] = newRed;
-    })
+    });
     flashlightColorG.addEventListener("input", (ev) => {
         let newGreen = parseFloat(ev.target.value);
         flashlightColor[1] = newGreen;
-    })
+    });
     flashlightColorB.addEventListener("input", (ev) => {
         let newBlue = parseFloat(ev.target.value);
         flashlightColor[2] = newBlue;
-    })
+    });
     sunAngle.addEventListener("input", (ev) => {
         if (!g_toggleSunPath) {
             let newAngle = parseInt(ev.target.value);
             angle = newAngle * 0.0174;
             updateAnimationAngles();
-        } else {
-            ev.target.value = angle;
         }
-    })
+    });
     
     // --- OTHER ---
     volumeSlider.addEventListener("input", (ev) => {
