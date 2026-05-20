@@ -150,7 +150,7 @@ class Camera {
         let cx = this.eye.elements[0];
         let cy = this.eye.elements[1];
         let cz = this.eye.elements[2];
-
+        
         // Check each axis independently for sliding
         if (!this.checkCollision(cx + moveX, cy, cz)) {
             cx += moveX;
@@ -168,14 +168,19 @@ class Camera {
         let actualMoveZ = cz - this.eye.elements[2];
 
         // Update global eye vectors
-        this.eye.elements[0] = cx;
-        this.eye.elements[1] = cy;
-        this.eye.elements[2] = cz;
+        if (!g_noclip) {
+            this.eye.elements[0] = cx;
+            this.eye.elements[1] = cy;
+            this.eye.elements[2] = cz;
 
-        // Apply exact same translation to the 'at' vector to maintain look direction
-        this.at.elements[0] += actualMoveX;
-        this.at.elements[1] += actualMoveY;
-        this.at.elements[2] += actualMoveZ;
+            // Apply exact same translation to the 'at' vector to maintain look direction
+            this.at.elements[0] += actualMoveX;
+            this.at.elements[1] += actualMoveY;
+            this.at.elements[2] += actualMoveZ;
+        } else {
+            this.eye.add(this.movementVec);
+            this.at.add(this.movementVec);
+        }
 
         this.updateMatrices();
     }
