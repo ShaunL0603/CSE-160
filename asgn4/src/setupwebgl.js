@@ -105,6 +105,11 @@ function connectVariablesToGLSL() {
         console.log('Failed to get the storage location of u_LightColor');
         return -1;
     }
+    u_FlashlightColor = gl.getUniformLocation(gl.program, 'u_FlashlightColor');
+    if (!u_FlashlightColor) {
+        console.log('Failed to get the storage location of u_FlashlightColor');
+        return -1;
+    }
     
     // --- TEXUTRE SAMPLERS ---
     u_Sampler0 = gl.getUniformLocation(gl.program, 'u_Sampler0');

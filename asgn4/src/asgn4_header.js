@@ -180,4 +180,5 @@ let u_UVScale = 1.0;                                                            
     let g_score = 0;                                                                            // track player score
     let g_tempVec = new Vector3();                                                              // temporary, used for culling in isObjVisible()
     let g_flScale = 0.02;                                                                       // scale for flashlight sphere
+    let flashlightColor = [1.0, 1.0, 1.0];
     let identityMat = new Matrix4();

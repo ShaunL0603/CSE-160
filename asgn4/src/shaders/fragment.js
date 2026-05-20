@@ -17,6 +17,7 @@ var FSHADER_SOURCE =
     uniform vec3 u_CameraPos;
     uniform vec3 u_CameraAtPos;
     uniform vec3 u_LightColor;
+    uniform vec3 u_FlashlightColor;
     uniform vec4 u_FragColor;
 
     uniform sampler2D u_Sampler0; // Debug texture
@@ -132,7 +133,8 @@ var FSHADER_SOURCE =
 
                 // Add a smooth falloff to the edges of the flashlight beam
                 float edgeFalloff = pow(spotDot, 135.0); 
-                vec3 flashColor = vec3(1.0, 1.0, 1.0); // White flashlight
+                // vec3 flashColor = vec3(1.0, 1.0, 1.0); // White flashlight
+                vec3 flashColor = u_FlashlightColor;
 
                 totalDiffuse += vec3(gl_FragColor) * flashColor * flashNDotL * 0.8 * edgeFalloff;
                 totalSpecular += flashColor * flashSpec * edgeFalloff;
