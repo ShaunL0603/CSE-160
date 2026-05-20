@@ -67,6 +67,7 @@ function htmlActions() {
     const flashlightColorR = document.getElementById("flashlightColorR");
     const flashlightColorG = document.getElementById("flashlightColorG");
     const flashlightColorB = document.getElementById("flashlightColorB");
+    const sunAngle = document.getElementById("sunAngle");
 
     // --- settings panel actions ---
     // click on settings button and close btn
@@ -199,6 +200,15 @@ function htmlActions() {
     flashlightColorB.addEventListener("input", (ev) => {
         let newBlue = parseFloat(ev.target.value);
         flashlightColor[2] = newBlue;
+    })
+    sunAngle.addEventListener("input", (ev) => {
+        if (!g_toggleSunPath) {
+            let newAngle = parseInt(ev.target.value);
+            angle = newAngle * 0.0174;
+            updateAnimationAngles();
+        } else {
+            ev.target.value = angle;
+        }
     })
     
     // --- OTHER ---
