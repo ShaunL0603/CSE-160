@@ -45,4 +45,11 @@ function createRange() {
     rangeRoof.matrix.scale(8.0, 9.0, 0.2);
     rangeRoof.normalMat.setInverseOf(rangeRoof.matrix).transpose();
     g_worldObjs.push(rangeRoof);
+
+    let bears = new CustomModel();
+    bears.subtype = "bears";
+    bears.matrix.translate(-5.0, 0.0, 1.0);
+    bears.matrix.scale(0.1, 0.1, 0.1);
+    bears.loadOBJ('./objects/customObjs/WeBareBears/bears.obj');
+    g_worldObjs.push(bears);
 }

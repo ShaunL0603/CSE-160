@@ -144,7 +144,8 @@ function switchMap(ev) {
             obj.type !== "rangewall" && 
             obj.type !== "target" && 
             obj.type !== "hit box" &&
-            obj.type !== "block"
+            obj.type !== "block" &&
+            obj.type !== "customModel"
         );
         g_targets = [];
 

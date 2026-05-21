@@ -59,6 +59,7 @@ function renderAllShapes() {
 function isObjVisible(obj) {
     // avoid objects with empty/no pos array (like ground)
     if (!obj.pos) return true;
+    if (obj.type === "hit box") return true;
     let maxDrawDist = 100.0;
 
     // get direction vector
