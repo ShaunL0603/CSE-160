@@ -18,7 +18,6 @@
             <div style="flex: 1; text-align: left;">
                 <h2><u>Description</u></h2>
                 <p>Welcome! This WebGL program is a very basic FPS like aim trainer. Here are some things to know:</p>
-                <p>What's New? There's lighting, shadows, and bears model!</p>
                 <ul>
                     <li>Scroll down to see the canvas and start interacting</li>
                     <li>Click on the canvas to:</li>
@@ -93,7 +92,10 @@
                 </ul>
             </div>
         </div>
-        <div>
+
+        <div style="margin-bottom: 40px;">
+            <p><b>New</b> in ver. 1.1, There's lighting, shadows, and a we bare bears model!</p>
+            <p>For grader: flashlight is spot light, but it only moves with you (no sliders). The sun is movable with sliders by changing it's XYZ or it's path angle.</p>
             <p id="numdot">NN</p>
             <p>Player Mode: <span id="playerMode">NNNN</span></p>
             <button id="toggleTextures" style="margin-top: 10px;">Toggle Textures</button>
@@ -104,10 +106,11 @@
             <button id="makeHitBoxVisible" style="margin-top: 10px;">Toggle Hit Boxes</button>
             <button id="resetHeightButton" style="margin-top: 10px;">Reset Camera Height</button>
         </div>
+
     </div>
 
     <div id="container">
-      <canvas id="webgl">
+      <canvas id="webgl" style="margin-bottom: 50px;">
         Please use a browser that supports "canvas"
       </canvas>
 
