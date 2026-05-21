@@ -20,6 +20,7 @@ var VSHADER_SOURCE =
 
     // --- SHADOW VARIABLES ---
     varying vec4 v_PosFromLight;
+    
     uniform mat4 u_LightViewMatrix;
     uniform mat4 u_LightProjMatrix;
 
