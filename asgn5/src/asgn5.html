@@ -2,9 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" name="color-scheme" content="light dark"/>
-        <title>
-            Assignment 5
-        </title>
+        <title>Assignment 5</title>
         <script type="importmap">
         {
             "imports": {
@@ -13,10 +11,16 @@
             }
         }
         </script>
+        <script src="./assets/asgn5.css"></script>
     </head>
 
     <body>
-        <canvas id="c"></canvas>
+        <canvas id="c" height="500" width="500"></canvas>
+        
+        <div id="loading">
+            <div class="progress"><div class="progressbar"></div></div>
+        </div>
+
         <script src="asgn5_header.js"></script>
         <script type="module" src="asgn5.js"></script>
     </body>
