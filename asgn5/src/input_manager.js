@@ -19,6 +19,8 @@ export class InputManager {
         this.mouseDelta = { x: 0, y: 0 };
         this.isLocked = false;
 
+        this.fireTriggered = false;
+
         this.initListeners();
     }
 
@@ -35,6 +37,9 @@ export class InputManager {
         window.addEventListener('keydown', (e) => this.onKeyDown(e));
         window.addEventListener('keyup', (e) => this.onKeyUp(e));
         window.addEventListener('mousemove', (e) => this.onMouseMove(e));
+
+        // Mouse events
+        this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
     }
 
     lockPointer() {
@@ -49,6 +54,13 @@ export class InputManager {
         // Accumulate mouse movement deltas across frame ticks
         this.mouseDelta.x += e.movementX;
         this.mouseDelta.y += e.movementY;
+    }
+
+    onMouseDown(e) {
+        if (!this.isLocked) return;
+        if (e.button === 0) {
+            this.fireTriggered = true;
+        }
     }
 
     onKeyDown(e) {
@@ -84,5 +96,6 @@ export class InputManager {
         this.mouseDelta.x = 0;
         this.mouseDelta.y = 0;
         this.noclipTriggered = false;
+        this.fireTriggered = false;
     }
 }

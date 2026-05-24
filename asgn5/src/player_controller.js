@@ -140,4 +140,12 @@ export class PlayerController {
         this._temp.copy(this.velocity).multiplyScalar(dt);
         this.position.add(this._temp);
     }
+
+    getLookDirection(outVector) {
+        outVector.set(
+            -Math.sin(this.yaw) * Math.cos(this.pitch),
+            Math.sin(this.pitch),
+            -Math.cos(this.yaw) * Math.cos(this.pitch)
+        ).normalize();
+    }
 }

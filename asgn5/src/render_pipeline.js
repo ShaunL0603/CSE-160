@@ -29,6 +29,13 @@ export class RenderPipeline {
 
         this.camera.rotation.order = 'YXZ';
 
+        // Pre-allocated variables for instanced mesh matrix generation
+        this._pos = new THREE.Vector3();
+        this._scale = new THREE.Vector3();
+        this._quat = new THREE.Quaternion(); // Identity rotation (no rtoation for spheres)
+        this._matrix = new THREE.Matrix4();
+        this._zeroScale = new THREE.Vector3(0, 0, 0); // hide inactive targets
+
         this.initEnvironment();
         this.initResizeHandler();
     }
@@ -48,12 +55,18 @@ export class RenderPipeline {
         grid.position.y = -0.01; // Slanted offset to avoid z-fighting
         this.scene.add(grid);
 
-        // Mock Target Mesh to visual show interpolation of positions
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 });
-        this.testBox = new THREE.Mesh(geometry, material);
-        this.testBox.position.set(0, 0.5, -3);
-        this.scene.add(this.testBox);
+        // instanced mesh setup
+        // match maximum pool capacity (50 targets). Configured in TargetManager
+        const targetGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const targetMaterial = new THREE.MeshPhongMaterial({
+            color: 0xff0000,
+            shininess: 50
+        });
+
+        this.targetMeshInstances = new THREE.InstancedMesh(targetGeometry, targetMaterial, 50);
+        this.targetMeshInstances.castShadow = true;
+        this.targetMeshInstances.receiveShadow = true;
+        this.scene.add(this.targetMeshInstances);
     }
 
     initResizeHandler() {
@@ -71,7 +84,7 @@ export class RenderPipeline {
     // Renders the visual frame, interpolating the logic states via the calculated alpha
     render(logic, alpha) {
         const player = logic.player;
-
+        // ensure stable camera (no stuttering), interpolate
         this.camera.position.lerpVectors(player.prevPosition, player.position, alpha);
 
         const currentYaw = THREE.MathUtils.lerp(player.prevYaw, player.yaw, alpha);
@@ -81,7 +94,27 @@ export class RenderPipeline {
         this.camera.rotation.y = currentYaw;
         this.camera.rotation.x = currentPitch;
 
-        this.testBox.rotation.y += 0.01;
+        const targets = logic.targetManager.targets;
+        for (let i = 0; i < targets.length; ++i) {
+            const target = targets[i];
+
+            if (target.active) {
+                // interpolate target positions, avoid stutter
+                this._pos.lerpVectors(target.prevPosition, target.position, alpha);
+                this._scale.setScalar(target.scale);
+
+                // combine transforms into instanced allocation matrix
+                this._matrix.compose(this._pos, this._quat, this._scale);
+            } else {
+                // hiding inactive targets
+                this._matrix.compose(this._pos.set(0, -999, 0), this._quat, this._zeroScale);
+            }
+
+            this.targetMeshInstances.setMatrixAt(i, this._matrix);
+        }
+
+        // notify WebGL that instance matrix positions must be sent to GPU
+        this.targetMeshInstances.instanceMatrix.needsUpdate = true;
 
         this.renderer.render(this.scene, this.camera);
     }
