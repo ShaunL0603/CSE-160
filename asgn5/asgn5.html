@@ -2,7 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" name="color-scheme" content="light dark"/>
-        <title>Assignment 5</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Assignment 5: Three JS Aim Trainer</title>
+        <link rel="stylesheet" href="./asgn5.css">
+
         <script type="importmap">
         {
             "imports": {
@@ -11,17 +14,16 @@
             }
         }
         </script>
-        <script src="./assets/asgn5.css"></script>
     </head>
 
     <body>
-        <canvas id="c" height="500" width="500"></canvas>
+        <canvas id="c"></canvas>
         
-        <div id="loading">
-            <div class="progress"><div class="progressbar"></div></div>
+        <div id="loading" class="hidden">
+            <div class="progress">
+                <div class="progressbar"></div>
+            </div>
         </div>
-
-        <script src="asgn5_header.js"></script>
         <script type="module" src="asgn5.js"></script>
     </body>
 </html>
