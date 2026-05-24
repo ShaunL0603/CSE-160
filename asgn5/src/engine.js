@@ -31,7 +31,7 @@ export class Engine {
     }
 
     async start() {
-        if (this.isRunning) return;
+        // if (this.isRunning) return;
         this.audio.init();
 
         await this.assets.loadAll(this.audio.context);

@@ -27,7 +27,6 @@ export class GameLogic {
     update(dt, input, assets, audio) {
         // move player
         this.player.update(dt, input);
-
         // move targets
         this.targetManager.update(dt);
 

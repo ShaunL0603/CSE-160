@@ -62,6 +62,7 @@ export class PlayerController {
 
         // Select Kinematic Mode
         if (this.isNoclip) {
+            this.isGrounded = false; // player falls back down if exiting noclip
             this.applyNoclipMovement(dt, input);
         } else {
             this.applyNormalMovement(dt, input);
