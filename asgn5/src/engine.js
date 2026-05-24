@@ -1,6 +1,9 @@
 import { GameLogic } from './game_logic.js';
 import { RenderPipeline } from './render_pipeline.js';
 import { InputManager } from './input_manager.js';
+import { AudioManager } from './audio_manager.js';
+import { AssetManager } from './asset_manager.js';
+import { UIManager } from './UI_manager.js';
 
 export class Engine {
     constructor(canvas) {
@@ -19,19 +22,43 @@ export class Engine {
 
         // Subsystems Instantiation
         this.input = new InputManager(this.canvas);
+        this.audio = new AudioManager();
+        this.assets = new AssetManager();
+        this.ui = new UIManager();
+
         this.logic = new GameLogic();
         this.renderer = new RenderPipeline(this.canvas);
     }
 
-    start() {
+    async start() {
         if (this.isRunning) return;
-        this.isRunning = true;
-        
+        this.audio.init();
+
+        await this.assets.loadAll(this.audio.context);
+        this.ui.hideLoading();
+
+        this.ui.bindSettings(this.logic);
+        this.setupLockHandlers();
+
+        this.isRunning = true; 
         // Establish timing baseline
         this.lastTime = performance.now() * 0.001;
         this.accumulator = 0;
         
         this.rafId = requestAnimationFrame((time) => this.loop(time));
+    }
+
+    setupLockHandlers() {
+        // Toggle settings menu visibility based on Pointer Lock state
+        document.addEventListener('pointerlockchange', () => {
+            const locked = (document.pointerLockElement === this.canvas);
+            this.ui.showSettings(!locked);
+            if (!locked) {
+                this.ui.syncForm(this.logic);
+            } else {
+                this.audio.init(); // Re-verify browser audio locks are released
+            }
+        });
     }
 
     stop() {
@@ -59,7 +86,7 @@ export class Engine {
         // Run fixed-step logical update sequences
         while (this.accumulator >= this.fixedTimeStep) {
             this.logic.savePreviousState();
-            this.logic.update(this.fixedTimeStep, this.input);
+            this.logic.update(this.fixedTimeStep, this.input, this.assets, this.audio);
             this.input.flush(); // clear mouse movement buffers once used in this simulation tick
             this.accumulator -= this.fixedTimeStep;
         }
@@ -69,6 +96,9 @@ export class Engine {
 
         // Feed pure state values + alpha directly to rendering pipeline
         this.renderer.render(this.logic, alpha);
+
+        // update HUD display values
+        this.ui.updateHUD(this.logic.score, this.logic.shotsFired);
 
         this.rafId = requestAnimationFrame((time) => this.loop(time));
     }

@@ -12,6 +12,9 @@ export class GameLogic {
         this.targetManager.spawnInitial(10);
 
         this._lookDir = new THREE.Vector3();
+
+        this.score = 0;
+        this.shotsFired = 0;
     }
 
     // Stores positioning records before executing mutation steps
@@ -21,7 +24,7 @@ export class GameLogic {
     }
 
     // Executed at a predictable, fixed interval of 60Hz
-    update(dt, input) {
+    update(dt, input, assets, audio) {
         // move player
         this.player.update(dt, input);
 
@@ -30,9 +33,11 @@ export class GameLogic {
 
         // shot processing
         if (input.fireTriggered) {
+            ++this.shotsFired;
             // get current direction player looking in
             this.player.getLookDirection(this._lookDir);
 
+            // raycast check
             const hitTargetId = this.hitDetection.evaluateShot(
                 this.player.position,
                 this._lookDir,
@@ -40,10 +45,19 @@ export class GameLogic {
             );
 
             if (hitTargetId !== null) {
-                console.log(`Hit registered on target: ${hitTargetId}`);
+                ++this.score;
+                // console.log(`Hit registered on target: ${hitTargetId}`);
 
                 this.targetManager.despawnTarget(hitTargetId);
                 this.targetManager.spawnTarget();
+
+                const sfx = assets.sounds.get('hit');
+                if (sfx) audio.playSound(sfx);
+                else audio.synthesizeBeep(880, 0.08, 'triangle');
+            } else {
+                const sfx = assets.sounds.get('miss');
+                if (sfx) audio.playSound(sfx);
+                else audio.synthesizeBeep(220, 0.1, 'sawtooth');
             }
         }
     }

@@ -19,11 +19,48 @@
     <body>
         <canvas id="c"></canvas>
         
-        <div id="loading" class="hidden">
-            <div class="progress">
-                <div class="progressbar"></div>
+        <!-- Crosshair positioned dead center -->
+        <div id="crosshair"></div>
+        
+        <div id="hud">
+            <div class="hud-item">Score: <span id="score-val">0</span></div>
+            <div class="hud-item">Accuracy: <span id="accuracy-val">100</span>%</div>
+        </div>
+
+        <!-- Pause / Settings Overlay -->
+        <div id="settings-menu" class="hidden">
+            <div class="menu-content">
+                <h2>GAME PAUSED</h2>
+                <p class="instruction">Click inside the window to Resume</p>
+                
+                <div class="setting-row">
+                    <label for="slider-speed">Target Speed:</label>
+                    <input type="range" id="slider-speed" min="1" max="10" step="0.5" value="3.5">
+                    <span id="speed-val">3.5</span>
+                </div>
+
+                <div class="setting-row">
+                    <label for="slider-size">Target Size:</label>
+                    <input type="range" id="slider-size" min="0.2" max="3" step="0.1" value="1.0">
+                    <span id="size-val">1.0</span>
+                </div>
+
+                <div class="setting-row">
+                    <label for="toggle-noclip">Flight Mode (V):</label>
+                    <input type="checkbox" id="toggle-noclip">
+                </div>
             </div>
         </div>
+
+        <div id="loading">
+            <div class="loading-content">
+                <h1>LOADING ASSETS</h1>
+                <div class="progress">
+                    <div class="progressbar"></div>
+                </div>
+            </div>
+        </div>
+
         <script type="module" src="asgn5.js"></script>
     </body>
 </html>
