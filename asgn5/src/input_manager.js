@@ -26,7 +26,35 @@ export class InputManager {
 
     initListeners() {
         // Request Pointer Lock on canvas click
-        this.canvas.addEventListener('click', () => this.lockPointer());
+        this.canvas.addEventListener('click', () => {
+            if (!this.isLocked) this.lockPointer(); // only lock if settings menu is hidden
+        });
+
+        // able to click on outside of menu to resume
+        const settingsMenu = document.querySelector('#settings-menu');
+        if (settingsMenu) {
+            settingsMenu.addEventListener('click', (e) => {
+                if (e.target === settingsMenu && !this.isLocked) {
+                    this.lockPointer();
+                }
+            });
+        }
+
+        const resumeBtn = document.querySelector('#btn-resume');
+        if (resumeBtn) {
+            resumeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!this.isLocked) this.lockPointer();
+            });
+        }
+
+        // stop propagation inside settings menu
+        // isolate sliderstoggles from canvas click listeners
+        const menuContent = document.querySelector('.menu-content');
+        if (menuContent) {
+            menuContent.addEventListener('click', (e) => e.stopPropagation());
+            menuContent.addEventListener('mousedown', (e) => e.stopPropagation());
+        }
 
         // Tracking lock changes
         document.addEventListener('pointerlockchange', () => {
@@ -44,7 +72,14 @@ export class InputManager {
 
     lockPointer() {
         if (!this.isLocked) {
-            this.canvas.requestPointerLock();
+            const promise = this.canvas.requestPointerLock();
+            // check for pointer lock promise
+            if (promise && typeof promise.catch === 'function') {
+                // catch pointer lock error
+                promise.catch((error) => {
+                    console.warn("Pointer lock bs, cooldown.", error.message);
+                });
+            }
         }
     }
 

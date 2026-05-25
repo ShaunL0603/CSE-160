@@ -20,6 +20,8 @@ export class Engine {
         this.isRunning = false;
         this.rafId = null;
 
+        this.isPaused = true;
+
         // Subsystems Instantiation
         this.input = new InputManager(this.canvas);
         this.audio = new AudioManager();
@@ -31,7 +33,7 @@ export class Engine {
     }
 
     async start() {
-        // if (this.isRunning) return;
+        if (this.isRunning) return;
         this.audio.init();
 
         await this.assets.loadAll(this.audio.context);
@@ -52,11 +54,17 @@ export class Engine {
         // Toggle settings menu visibility based on Pointer Lock state
         document.addEventListener('pointerlockchange', () => {
             const locked = (document.pointerLockElement === this.canvas);
-            this.ui.showSettings(!locked);
-            if (!locked) {
-                this.ui.syncForm(this.logic);
+            this.input.isLocked = locked;
+            if (locked) {
+                this.ui.showSettings(false);
+                this.isPaused = false;
+
+                // reset lastTime to current instance
+                this.lastTime = performance.now() * 0.001;
             } else {
-                this.audio.init(); // Re-verify browser audio locks are released
+                this.ui.showSettings(true);
+                this.ui.syncForm(this.logic);
+                this.isPaused = true;
             }
         });
     }
@@ -71,7 +79,6 @@ export class Engine {
 
     loop(currentTimeMs) {
         if (!this.isRunning) return;
-
         const currentTime = currentTimeMs * 0.001; // Scale to seconds
         let frameTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
@@ -81,24 +88,31 @@ export class Engine {
             frameTime = this.maxFrameTime;
         }
 
-        this.accumulator += frameTime;
+        if (!this.isPaused) {
+            this.accumulator += frameTime;
 
-        // Run fixed-step logical update sequences
-        while (this.accumulator >= this.fixedTimeStep) {
-            this.logic.savePreviousState();
-            this.logic.update(this.fixedTimeStep, this.input, this.assets, this.audio);
-            this.input.flush(); // clear mouse movement buffers once used in this simulation tick
-            this.accumulator -= this.fixedTimeStep;
+            // Run fixed-step logical update sequences
+            while (this.accumulator >= this.fixedTimeStep) {
+                this.logic.savePreviousState();
+                this.logic.update(this.fixedTimeStep, this.input, this.assets, this.audio);
+                this.input.flush(); // clear mouse movement buffers once used in this simulation tick
+                this.accumulator -= this.fixedTimeStep;
+            }
+        } else {
+            // keep state flushed while paused, prevent gunshots
+            this.input.flush();
         }
 
         // Calculate interpolation alpha (0.0 to 1.0)
-        const alpha = this.accumulator / this.fixedTimeStep;
+        const alpha = this.isPaused ? 1.0 : this.accumulator / this.fixedTimeStep;
 
         // Feed pure state values + alpha directly to rendering pipeline
         this.renderer.render(this.logic, alpha);
 
         // update HUD display values
-        this.ui.updateHUD(this.logic.score, this.logic.shotsFired);
+        if (!this.isPaused) {
+            this.ui.updateHUD(this.logic.score, this.logic.shotsFired);
+        }
 
         this.rafId = requestAnimationFrame((time) => this.loop(time));
     }

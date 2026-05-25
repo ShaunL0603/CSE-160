@@ -147,3 +147,33 @@ html, body {
     letter-spacing: 4px;
     margin-bottom: 15px;
 }
+
+.menu-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    background-color: #44aa88;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.menu-btn:hover {
+    background-color: #3b9677;
+}
+
+.menu-btn:active {
+    transform: scale(0.98);
+}
+
+.menu-btn:disabled {
+    background-color: #2a2a35;
+    color: #66667a;
+    cursor: not-allowed;
+    transform: none !important; /* Block click scaling */
+}

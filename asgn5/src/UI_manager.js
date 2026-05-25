@@ -28,6 +28,16 @@ export class UIManager {
     showSettings(visible) {
         if (visible) {
             this.settingsMenu.classList.remove('hidden');
+            
+            const resumeBtn = document.querySelector('#btn-resume');
+            if (resumeBtn) {
+                // disable button when brining up pause menu
+                resumeBtn.disabled = true;
+                // re-anable resume button after 1.25 seconds, restriction pass
+                setTimeout(() => {
+                    resumeBtn.disabled = false;
+                }, 1250);
+            }
         } else {
             this.settingsMenu.classList.add('hidden');
         }
