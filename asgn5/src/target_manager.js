@@ -86,13 +86,28 @@ export class TargetManager {
         }
     }
 
+    applyConfigToActive() {
+        for (let i = 0; i < this.poolSize; ++i) {
+            const target = this.targets[i];
+            if (!target.active) continue;
+
+            // update targets scale and velocity
+            target.scale = this.config.targetSize;
+            // need to preserve targets current movement direction when adjusting speed
+            // check if we're dividing by 0 first if velocity is somehow 0
+            if (target.velocity.lengthSq() > 0) {
+                target.velocity.normalize().multiplyScalar(this.config.targetSpeed);
+            }
+        }
+    }
+
     update(dt) {
         const bounds = this.config.spawnBounds;
 
         for (let i = 0; i < this.poolSize; i++) {
             const target = this.targets[i];
             if (!target.active) continue;
-
+            
             // Move target using current velocity direction
             this._tempVector.copy(target.velocity).multiplyScalar(dt);
             target.position.add(this._tempVector);

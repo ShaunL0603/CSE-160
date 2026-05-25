@@ -56,9 +56,12 @@ export class Engine {
         document.addEventListener('pointerlockchange', () => {
             const locked = (document.pointerLockElement === this.canvas);
             this.input.isLocked = locked;
+
             if (locked) {
                 this.ui.showSettings(false);
+                this.logic.targetManager.applyConfigToActive();
                 this.isPaused = false;
+
 
                 // reset lastTime to current instance
                 this.lastTime = performance.now() * 0.001;
