@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { PlayerController } from './player_controller.js';
-import { TargetManager } from './target_manager.js';
-import { HitDetectionSystem } from './hit_detection_system.js';
+import { PlayerController } from './systems/player_controller.js';
+import { TargetManager } from './systems/target_manager.js';
+import { HitDetectionSystem } from './systems/hit_detection_system.js';
 
 export class GameLogic {
     constructor() {
