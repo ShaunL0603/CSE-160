@@ -43,6 +43,7 @@ export class Engine {
         this.setupLockHandlers();
 
         this.isRunning = true; 
+        this.isPaused = false;
         // Establish timing baseline
         this.lastTime = performance.now() * 0.001;
         this.accumulator = 0;
