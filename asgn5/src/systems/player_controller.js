@@ -2,10 +2,14 @@ import * as THREE from 'three';
 
 export class PlayerController {
     constructor() {
-        // Player spatial properties
-        this.position = new THREE.Vector3(0, 1.6, 5); // Start at standard head height (1.6m)
-        this.prevPosition = new THREE.Vector3(0, 1.6, 5);
+        // Player spatial properties, track feet on ground
+        this.position = new THREE.Vector3(0, 0, 5);
+        this.prevPosition = new THREE.Vector3(0, 0, 5);
         this.velocity = new THREE.Vector3(0, 0, 0);
+
+        // eye-height
+        this.eyeHeight = 1.6;
+        this.prevEyeHeight = 1.6;
 
         // Angle states in Radians (Camera orientation tracker)
         this.pitch = 0; // Look up/down
@@ -20,13 +24,9 @@ export class PlayerController {
         this.jumpImpulse = 8.5;
         this.isNoclip = false;
 
-        // Player physics geometry bounds (simple head box boundaries)
         this.bounds = {
-            width: 1.0,
-            depth: 1.0,
             floorY: 0.0,
-            maxY: 20.0,
-            limitXZ: 24.0 // Invisible level borders at +/- 24 units
+            limitXZ: 24.0
         };
 
         this.isGrounded = true;
@@ -42,6 +42,20 @@ export class PlayerController {
         this.prevPosition.copy(this.position);
         this.prevPitch = this.pitch;
         this.prevYaw = this.yaw;
+        this.prevEyeHeight = this.eyeHeight;
+    }
+
+    getEyePosition(outVector) {
+        outVector.copy(this.position);
+        outVector.y += this.eyeHeight;
+    }
+
+    getLookDirection(outVector) {
+        outVector.set(
+            -Math.sin(this.yaw) * Math.cos(this.pitch),
+            Math.sin(this.pitch),
+            -Math.cos(this.yaw) * Math.cos(this.pitch)
+        ).normalize();
     }
 
     update(dt, input) {
@@ -57,12 +71,16 @@ export class PlayerController {
         this.pitch -= input.mouseDelta.y * mouseSensitivity;
 
         // Clamp camera pitch looking up/down to avoid screen flipping (approx. 85 degrees)
-        const pitchLimit = Math.PI / 2 - 0.08;
+        const pitchLimit = (Math.PI * 0.5) - 0.08;
         this.pitch = Math.max(-pitchLimit, Math.min(pitchLimit, this.pitch));
+
+        const targetEyeHeight = input.state.crouch ? 0.8 : 1.6;
+
+        const croutchTransitionSpeed = 14.0;
+        this.eyeHeight = THREE.MathUtils.lerp(this.eyeHeight, targetEyeHeight, croutchTransitionSpeed * dt);
 
         // Select Kinematic Mode
         if (this.isNoclip) {
-            this.isGrounded = false; // player falls back down if exiting noclip
             this.applyNoclipMovement(dt, input);
         } else {
             this.applyNormalMovement(dt, input);
@@ -80,7 +98,6 @@ export class PlayerController {
         if (input.state.backward) this._wishDir.sub(this._forward);
         if (input.state.right)    this._wishDir.add(this._right);
         if (input.state.left)     this._wishDir.sub(this._right);
-        
         this._wishDir.normalize();
 
         // Calculate horizontal speed
@@ -105,9 +122,8 @@ export class PlayerController {
         this.position.add(this._temp);
 
         // Simple world boundary collisions
-        const targetEyeY = input.state.crouch ? 0.8 : 1.6;
-        if (this.position.y <= this.bounds.floorY + targetEyeY) {
-            this.position.y = this.bounds.floorY + targetEyeY;
+        if (this.position.y <= this.bounds.floorY) {
+            this.position.y = this.bounds.floorY;
             this.velocity.y = 0;
             this.isGrounded = true;
         }
@@ -140,13 +156,7 @@ export class PlayerController {
         
         this._temp.copy(this.velocity).multiplyScalar(dt);
         this.position.add(this._temp);
-    }
 
-    getLookDirection(outVector) {
-        outVector.set(
-            -Math.sin(this.yaw) * Math.cos(this.pitch),
-            Math.sin(this.pitch),
-            -Math.cos(this.yaw) * Math.cos(this.pitch)
-        ).normalize();
+        this.isGrounded = false; // player falls back down if exiting noclip
     }
 }

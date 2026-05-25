@@ -12,6 +12,7 @@ export class GameLogic {
         this.targetManager.spawnInitial(10);
 
         this._lookDir = new THREE.Vector3();
+        this._tempVector = new THREE.Vector3();
 
         this.score = 0;
         this.shotsFired = 0;
@@ -35,10 +36,12 @@ export class GameLogic {
             ++this.shotsFired;
             // get current direction player looking in
             this.player.getLookDirection(this._lookDir);
+            // get eye-level position
+            this.player.getEyePosition(this._tempVector);
 
             // raycast check
             const hitTargetId = this.hitDetection.evaluateShot(
-                this.player.position,
+                this._tempVector,
                 this._lookDir,
                 this.targetManager.targets
             );

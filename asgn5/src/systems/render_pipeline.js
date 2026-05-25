@@ -87,9 +87,12 @@ export class RenderPipeline {
         // ensure stable camera (no stuttering), interpolate
         this.camera.position.lerpVectors(player.prevPosition, player.position, alpha);
 
+        // interpolate visual eye height and apply vertical offset
+        const currentEyeHeight = THREE.MathUtils.lerp(player.prevEyeHeight, player.prevEyeHeight, alpha);
+        this.camera.position.y += currentEyeHeight;
+
         const currentYaw = THREE.MathUtils.lerp(player.prevYaw, player.yaw, alpha);
         const currentPitch = THREE.MathUtils.lerp(player.prevPitch, player.pitch, alpha);
-
         this.camera.rotation.set(0, 0, 0);
         this.camera.rotation.y = currentYaw;
         this.camera.rotation.x = currentPitch;
