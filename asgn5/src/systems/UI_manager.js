@@ -85,7 +85,7 @@ export class UIManager {
         bindSlider('slider-sens-x', 'controls.sensX', 'sens-x-val');
         bindSlider('slider-sens-y', 'controls.sensY', 'sens-y-val');
         bindSlider('slider-ads-sens', 'controls.adsSensMultiplier', 'ads-sens-val');
-        bindSlider('slider-fov', 'camera.baseFov', 'fov-val', false);
+        bindSlider('slider-fov', 'camera.baseFOV', 'fov-val', false);
         bindCheckbox('toggle-crouch', 'controls.toggleCrouch');
         bindCheckbox('toggle-sprint', 'controls.toggleSprint');
         
@@ -131,7 +131,7 @@ export class UIManager {
         syncSlider('slider-sens-x', logic.config.controls.sensX, 'sens-x-val');
         syncSlider('slider-sens-y', logic.config.controls.sensY, 'sens-y-val');
         syncSlider('slider-ads-sens', logic.config.controls.adsSensMultiplier, 'ads-sens-val');
-        syncSlider('slider-fov', logic.config.camera.baseFov, 'fov-val', false);
+        syncSlider('slider-fov', logic.config.camera.baseFOV, 'fov-val', false);
         
         syncCheckbox('toggle-crouch', logic.config.controls.toggleCrouch);
         syncCheckbox('toggle-sprint', logic.config.controls.toggleSprint);
