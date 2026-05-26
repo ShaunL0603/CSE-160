@@ -8,7 +8,7 @@ class TargetState {
         this.position = new THREE.Vector3();
         this.prevPosition = new THREE.Vector3();
         this.velocity = new THREE.Vector3();
-        this.scale = 1.0;
+        this.scale = 0.5;
         this.boundingRadius = 0.5; // Baseline sphere bounds radius
     }
 
@@ -26,7 +26,7 @@ export class TargetManager {
 
         this.config = {
             targetSpeed: 3.5,
-            targetSize: 1.0,
+            targetSize: 0.5,
             // Spawning region in front of player
             spawnBounds: new THREE.Box3(
                 new THREE.Vector3(-12, 1.5, -15), // Min X, Y, Z
