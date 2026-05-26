@@ -97,6 +97,14 @@ export class RenderPipeline {
         this.camera.rotation.y = currentYaw;
         this.camera.rotation.x = currentPitch;
 
+        // FOV interpolation for zoom
+        const currentFOV = THREE.MathUtils.lerp(player.prevFOV, player.fov, alpha);
+        // only update projection matrix if FOV is changing
+        if (Math.abas(this.camera.fov - currentFOV) > 0.01) {
+            this.camera.fov = currentFOV;
+            this.camera.updateProjectionMatrix();
+        }
+
         const targets = logic.targetManager.targets;
         for (let i = 0; i < targets.length; ++i) {
             const target = targets[i];
@@ -105,7 +113,6 @@ export class RenderPipeline {
                 // interpolate target positions, avoid stutter
                 this._pos.lerpVectors(target.prevPosition, target.position, alpha);
                 this._scale.setScalar(target.scale);
-
                 // combine transforms into instanced allocation matrix
                 this._matrix.compose(this._pos, this._quat, this._scale);
             } else {
