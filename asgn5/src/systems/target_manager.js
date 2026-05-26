@@ -47,7 +47,6 @@ export class TargetManager {
         if (!target) return; // Pool exhausted (safety fallback)
 
         const min = this.spawnBounds.min;
-
         // Position target randomly within spawn bounding region
         target.position.set(
             min.x + Math.random() * this._boundsSize.x,
@@ -56,12 +55,17 @@ export class TargetManager {
         );
         target.prevPosition.copy(target.position);
 
-        // Assign random direction vector and scale by configured velocity
-        target.velocity.set(
-            Math.random() - 0.5,
-            Math.random() - 0.5,
-            Math.random() - 0.5
-        ).normalize().multiplyScalar(config.targetSpeed);
+        // map logic
+        if (config.mapType === 'static') {
+            target.velocity.set(0, 0, 0);
+        } else {
+            // Assign random direction vector and scale by configured velocity
+            target.velocity.set(
+                Math.random() - 0.5,
+                Math.random() - 0.5,
+                Math.random() - 0.5
+            ).normalize().multiplyScalar(config.targetSpeed);
+        }
 
         target.scale = config.targetSize;
         target.active = true;
@@ -89,9 +93,21 @@ export class TargetManager {
 
             activeCount++;
             target.scale = config.targetSize;
-            
-            if (target.velocity.lengthSq() > 0) {
-                target.velocity.normalize().multiplyScalar(config.targetSpeed);
+
+            if (config.mapType === 'static') {
+                target.velocity.set(0, 0, 0);
+            } else {
+                // if target was static, give random new directino
+                if (target.velocity.lengthSq() === 0) {
+                    target.velocity.set(
+                        Math.random() - 0.5,
+                        Math.random() - 0.5,
+                        Math.random() - 0.5
+                    ).normalize().multiplyScalar(config.targetSpeed);
+                } else {
+                    // update speed, otherwise
+                    target.velocity.normalize().multiplyScalar(config.targetSpeed);
+                }
             }
         }
 

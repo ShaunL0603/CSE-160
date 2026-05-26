@@ -8,6 +8,8 @@ export class UIManager {
         
         this._lastScore = -1;
         this._lastAccuracy = -1;
+
+        this.initTabs();
     }
 
     initTabs() {
@@ -16,12 +18,13 @@ export class UIManager {
  
         tabBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
+                const currentBtn = e.currentTarget;
                 // Remove active class from all
                 tabBtns.forEach(b => b.classList.remove('active'));
                 tabPanes.forEach(p => p.classList.remove('active'));
                 // Add active class to clicked tab
-                e.target.classList.add('active');
-                const targetId = e.target.getAttribute('data-target');
+                currentBtn.classList.add('active');
+                const targetId = currentBtn.getAttribute('data-target');
                 document.getElementById(targetId).classList.add('active');
             });
         });

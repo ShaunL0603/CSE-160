@@ -50,20 +50,32 @@ export class RenderPipeline {
         dirLight.castShadow = true;
         this.scene.add(dirLight);
 
-        // Grid platform boundary
+        // --- Map 1: Moving Targets (Grid) ---
+        this.mapMoving = new THREE.Group();
         const grid = new THREE.GridHelper(50, 50, 0x44aa88, 0x222228);
-        grid.position.y = -0.01; // Slanted offset to avoid z-fighting
-        this.scene.add(grid);
+        grid.position.y = -0.01; 
+        this.mapMoving.add(grid);
+        this.scene.add(this.mapMoving);
 
-        // instanced mesh setup
-        // match maximum pool capacity (50 targets). Configured in TargetManager
+        // --- Map 2: Static Targets (color cube floor) ---
+        this.mapStatic = new THREE.Group();
+        const floorGeo = new THREE.BoxGeometry(50, 1, 50);
+        const floorMat = new THREE.MeshPhongMaterial({ color: 0x2a2a35 });
+        const solidFloor = new THREE.Mesh(floorGeo, floorMat);
+        solidFloor.position.y = -0.51; // Top face sits just below Y=0
+        solidFloor.receiveShadow = true;
+        this.mapStatic.add(solidFloor);
+        this.mapStatic.visible = false; // Hidden by default
+        this.scene.add(this.mapStatic);
+
+        // InstancedMesh Setup (Shared across maps)
         const targetGeometry = new THREE.SphereGeometry(0.5, 16, 16);
         const targetMaterial = new THREE.MeshPhongMaterial({
             color: 0xff0000,
             shininess: 50
         });
 
-        this.targetMeshInstances = new THREE.InstancedMesh(targetGeometry, targetMaterial, 50);
+        this.targetMeshInstances = new THREE.InstancedMesh(targetGeometry, targetMaterial, 100);
         this.targetMeshInstances.castShadow = true;
         this.targetMeshInstances.receiveShadow = true;
         this.scene.add(this.targetMeshInstances);
@@ -104,6 +116,10 @@ export class RenderPipeline {
             this.camera.fov = currentFOV;
             this.camera.updateProjectionMatrix();
         }
+
+        const isStaticMap = logic.config.gameplay.mapType === 'static';
+        this.mapStatic.visible = isStaticMap;
+        this.mapMoving.visible = !isStaticMap;
 
         const targets = logic.targetManager.targets;
         for (let i = 0; i < targets.length; ++i) {
