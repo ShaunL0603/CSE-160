@@ -3,8 +3,8 @@ export class UIManager {
         this.loadingScreen = document.querySelector('#loading');
         this.settingsMenu = document.querySelector('#settings-menu');
 
-        this.speedLabel = document.querySelector('#speed-val');
-        this.sizeLabel = document.querySelector('#size-val');
+        this.scoreVal = document.querySelector('#score-val');
+        this.accuracyVal = document.querySelector('#accuracy-val');
         
         this._lastScore = -1;
         this._lastAccuracy = -1;
