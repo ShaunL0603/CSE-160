@@ -29,13 +29,17 @@ export class GameLogic {
         this.targetManager = new TargetManager();
         this.hitDetection = new HitDetectionSystem();
 
-        this.targetManager.spawnInitial(10);
+        this.targetManager.spawnInitial(this.config.gameplay.targetCount, this.config.gameplay);
 
         this._lookDir = new THREE.Vector3();
         this._tempVector = new THREE.Vector3();
 
         this.score = 0;
         this.shotsFired = 0;
+    }
+
+    applyConfigChanges() {
+        this.targetManager.applyConfigToActive(this.config.gameplay);
     }
 
     // Stores positioning records before executing mutation steps
@@ -86,6 +90,6 @@ export class GameLogic {
         this.score = 0;
         this.shotsFired = 0;
         this.player.reset(this.config.camera.baseFOV);
-        this.targetManager.reset(this.config.gameplay.targetCount);
+        this.targetManager.reset(this.config.gameplay);
     }
 }

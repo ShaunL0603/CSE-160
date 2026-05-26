@@ -18,24 +18,18 @@ class TargetState {
 }
 
 export class TargetManager {
-    constructor(poolSize = 50) {
+    constructor(poolSize = 100) {
         this.poolSize = poolSize;
-        
         // Generate a pre-allocated pool of target states
         this.targets = Array.from({ length: this.poolSize }, (_, idx) => new TargetState(idx));
 
-        this.config = {
-            targetSpeed: 3.5,
-            targetSize: 0.5,
-            // Spawning region in front of player
-            spawnBounds: new THREE.Box3(
-                new THREE.Vector3(-12, 1.5, -15), // Min X, Y, Z
-                new THREE.Vector3(12, 7.5, -5)    // Max X, Y, Z
-            )
-        };
+        this.spawnBounds = new THREE.Box3(
+            new THREE.Vector3(-12, 1.5, -15), // Min X, Y, Z
+            new THREE.Vector3(12, 7.5, -5)    // Max X, Y, Z
+        )
 
         this._boundsSize = new THREE.Vector3();
-        this.config.spawnBounds.getSize(this._boundsSize);
+        this.spawnBounds.getSize(this._boundsSize);
         this._tempVector = new THREE.Vector3();
     }
 
@@ -47,12 +41,12 @@ export class TargetManager {
         }
     }
 
-    spawnTarget() {
+    spawnTarget(config) {
         // Find the first available inactive target in the pool
         const target = this.targets.find(t => !t.active);
         if (!target) return; // Pool exhausted (safety fallback)
 
-        const min = this.config.spawnBounds.min;
+        const min = this.spawnBounds.min;
 
         // Position target randomly within spawn bounding region
         target.position.set(
@@ -67,9 +61,9 @@ export class TargetManager {
             Math.random() - 0.5,
             Math.random() - 0.5,
             Math.random() - 0.5
-        ).normalize().multiplyScalar(this.config.targetSpeed);
+        ).normalize().multiplyScalar(config.targetSpeed);
 
-        target.scale = this.config.targetSize;
+        target.scale = config.targetSize;
         target.active = true;
     }
 
@@ -80,34 +74,50 @@ export class TargetManager {
         }
     }
 
-    spawnInitial(count) {
+    spawnInitial(count, config) {
         for (let i = 0; i < count; i++) {
-            this.spawnTarget();
+            this.spawnTarget(config);
         }
     }
 
-    applyConfigToActive() {
+    applyConfigToActive(config) {
+        let activeCount = 0;
+
         for (let i = 0; i < this.poolSize; ++i) {
             const target = this.targets[i];
             if (!target.active) continue;
 
-            // update targets scale and velocity
-            target.scale = this.config.targetSize;
-            // need to preserve targets current movement direction when adjusting speed
-            // check if we're dividing by 0 first if velocity is somehow 0
+            activeCount++;
+            target.scale = config.targetSize;
+            
             if (target.velocity.lengthSq() > 0) {
-                target.velocity.normalize().multiplyScalar(this.config.targetSpeed);
+                target.velocity.normalize().multiplyScalar(config.targetSpeed);
+            }
+        }
+
+        // If user increased target count in menu, spawn the difference
+        if (activeCount < config.targetCount) {
+            const diff = config.targetCount - activeCount;
+            for (let i = 0; i < diff; i++) this.spawnTarget(config);
+        } 
+        // If user decreased target count, despawn the excess
+        else if (activeCount > config.targetCount) {
+            let diff = activeCount - config.targetCount;
+            for (let i = 0; i < this.poolSize && diff > 0; i++) {
+                if (this.targets[i].active) {
+                    this.targets[i].active = false;
+                    diff--;
+                }
             }
         }
     }
 
     update(dt) {
-        const bounds = this.config.spawnBounds;
-
-        for (let i = 0; i < this.poolSize; i++) {
+        const bounds = this.spawnBounds;
+        for (let i = 0; i < this.poolSize; ++i) {
             const target = this.targets[i];
             if (!target.active) continue;
-            
+
             // Move target using current velocity direction
             this._tempVector.copy(target.velocity).multiplyScalar(dt);
             target.position.add(this._tempVector);
@@ -128,10 +138,10 @@ export class TargetManager {
         }
     }
 
-    reset(targetCount) {
+    reset(config) {
         for (let i = 0; i < this.poolSize; ++i) {
             this.targets[i].active = false;
         }
-        this.spawnInitial(targetCount);
+        this.spawnInitial(config.targetCount, config);
     }
 }

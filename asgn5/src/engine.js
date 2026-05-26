@@ -59,7 +59,7 @@ export class Engine {
 
             if (locked) {
                 this.ui.showSettings(false);
-                this.logic.targetManager.applyConfigToActive();
+                this.logic.applyConfigChanges();
                 this.isPaused = false;
                 // reset lastTime to current instance
                 this.lastTime = performance.now() * 0.001;
