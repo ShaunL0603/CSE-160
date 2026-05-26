@@ -31,6 +31,7 @@ export class TargetManager {
         this._boundsSize = new THREE.Vector3();
         this.spawnBounds.getSize(this._boundsSize);
         this._tempVector = new THREE.Vector3();
+        this._helperClosest = new THREE.Vector3();
     }
 
     savePreviousStates() {
@@ -41,19 +42,66 @@ export class TargetManager {
         }
     }
 
-    spawnTarget(config) {
+    spawnTarget(config, environment) {
         // Find the first available inactive target in the pool
         const target = this.targets.find(t => !t.active);
         if (!target) return; // Pool exhausted (safety fallback)
 
         const min = this.spawnBounds.min;
-        // Position target randomly within spawn bounding region
-        target.position.set(
-            min.x + Math.random() * this._boundsSize.x,
-            min.y + Math.random() * this._boundsSize.y,
-            min.z + Math.random() * this._boundsSize.z
-        );
-        target.prevPosition.copy(target.position);
+        let spawnSuccess = false;
+        const maxAttempts = 20;
+
+        for (let attempt = 0; attempt < maxAttempts; ++attempt) {
+            // Position target randomly within spawn bounding region
+            target._tempVector.set(
+                min.x + Math.random() * this._boundsSize.x,
+                min.y + Math.random() * this._boundsSize.y,
+                min.z + Math.random() * this._boundsSize.z
+            );
+
+            const candidateRadius = target.boundingRadius * config.targetSize;
+            let collided = false;
+            // check for overlap with existing targets
+            for (let i = 0; i < this.poolSize; ++i) {
+                const other = this.targets[i];
+                if (!other.active) continue;
+
+                const otherRadius = other.boundingRadius * other.scale;
+                const minDist = candidateRadius + otherRadius;
+
+                if (this._tempVector.distanceToSquared(other.position) < minDist * minDist) {
+                    collided = true;
+                    break;
+                }
+            }
+
+            if (collided) continue;
+
+            // check overlap against walls
+            for (let i = 0; i < environment.walls.length; ++i) {
+                const wall = environment.walls[i];
+                // find the closest point on wall
+                this._helperClosest.copy(this._tempVector).clamp(wall.boundingBox.min, wall.boundingBox.max);
+                const distSq = this._tempVector.distanceToSquared(this._helperClosest);
+
+                if (distSq < candidateRadius * candidateRadius) {
+                    collided = true;
+                    break;
+                }
+            }
+
+            if (!collided) {
+                target.position.copy(this._tempVector);
+                target.prevPosition.copy(target.position);
+                spawnSuccess = true;
+                break;
+            }
+        }
+
+        if (!spawnSuccess) {
+            console.warn("Could not find a position to spawn target after 20 attempts");
+            return;
+        }
 
         // map logic
         if (config.mapType === 'static') {
@@ -73,18 +121,16 @@ export class TargetManager {
 
     despawnTarget(id) {
         const target = this.targets.find(t => t.id === id);
-        if (target) {
-            target.active = false;
+        if (target) target.active = false;
+    }
+
+    spawnInitial(count, config, environment) {
+        for (let i = 0; i < count; ++i) {
+            this.spawnTarget(config, environment);
         }
     }
 
-    spawnInitial(count, config) {
-        for (let i = 0; i < count; i++) {
-            this.spawnTarget(config);
-        }
-    }
-
-    applyConfigToActive(config) {
+    applyConfigToActive(config, environment) {
         let activeCount = 0;
 
         for (let i = 0; i < this.poolSize; ++i) {
@@ -114,12 +160,12 @@ export class TargetManager {
         // If user increased target count in menu, spawn the difference
         if (activeCount < config.targetCount) {
             const diff = config.targetCount - activeCount;
-            for (let i = 0; i < diff; i++) this.spawnTarget(config);
+            for (let i = 0; i < diff; ++i) this.spawnTarget(config, environment);
         } 
         // If user decreased target count, despawn the excess
         else if (activeCount > config.targetCount) {
             let diff = activeCount - config.targetCount;
-            for (let i = 0; i < this.poolSize && diff > 0; i++) {
+            for (let i = 0; i < this.poolSize && diff > 0; ++i) {
                 if (this.targets[i].active) {
                     this.targets[i].active = false;
                     diff--;
@@ -154,10 +200,10 @@ export class TargetManager {
         }
     }
 
-    reset(config) {
+    reset(config, environment) {
         for (let i = 0; i < this.poolSize; ++i) {
             this.targets[i].active = false;
         }
-        this.spawnInitial(config.targetCount, config);
+        this.spawnInitial(config.targetCount, config, environment);
     }
 }
