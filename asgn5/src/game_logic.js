@@ -75,4 +75,11 @@ export class GameLogic {
             }
         }
     }
+
+    reset() {
+        this.score = 0;
+        this.shotsFired = 0;
+        this.player.reset(this.config.camera.baseFOV);
+        this.targetManager.reset(this.config.gameplay.targetCount);
+    }
 }

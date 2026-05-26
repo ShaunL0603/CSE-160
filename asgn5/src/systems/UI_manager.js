@@ -2,21 +2,29 @@ export class UIManager {
     constructor() {
         this.loadingScreen = document.querySelector('#loading');
         this.settingsMenu = document.querySelector('#settings-menu');
-        
-        // HUD element cache
-        this.scoreVal = document.querySelector('#score-val');
-        this.accuracyVal = document.querySelector('#accuracy-val');
-
-        // Settings input fields
-        this.sliderSpeed = document.querySelector('#slider-speed');
-        this.sliderSize = document.querySelector('#slider-size');
-        this.toggleNoclip = document.querySelector('#toggle-noclip');
 
         this.speedLabel = document.querySelector('#speed-val');
         this.sizeLabel = document.querySelector('#size-val');
         
         this._lastScore = -1;
         this._lastAccuracy = -1;
+    }
+
+    initTabs() {
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+ 
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Remove active class from all
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabPanes.forEach(p => p.classList.remove('active'));
+                // Add active class to clicked tab
+                e.target.classList.add('active');
+                const targetId = e.target.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
     }
 
     hideLoading() {
@@ -45,32 +53,96 @@ export class UIManager {
 
     // Binds DOM slider values directly to config states
     bindSettings(logic) {
-        this.sliderSpeed.addEventListener('input', (e) => {
-            const val = parseFloat(e.target.value);
-            this.speedLabel.textContent = val.toFixed(1);
-            logic.targetManager.config.targetSpeed = val;
-        });
+        const bindSlider = (id, configPath, labelId, isFloat = true) => {
+            const slider = document.getElementById(id);
+            const label = document.getElementById(labelId);
+            if (!slider || !label) return;
 
-        this.sliderSize.addEventListener('input', (e) => {
-            const val = parseFloat(e.target.value);
-            this.sizeLabel.textContent = val.toFixed(1);
-            logic.targetManager.config.targetSize = val;
-        });
+            slider.addEventListener('input', (e) => {
+                const val = isFloat ? parseFloat(e.target.value) : parseInt(e.target.value, 10);
+                label.textContent = isFloat ? val.toFixed(2) : val;
+                
+                // Dynamically set nested config property
+                const keys = configPath.split('.');
+                let obj = logic.config;
+                for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]];
+                obj[keys[keys.length - 1]] = val;
+            });
+        };
 
-        this.toggleNoclip.addEventListener('change', (e) => {
+        const bindCheckbox = (id, configPath) => {
+            const checkbox = document.getElementById(id);
+            if (!checkbox) return;
+            checkbox.addEventListener('change', (e) => {
+                const keys = configPath.split('.');
+                let obj = logic.config;
+                for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]];
+                obj[keys[keys.length - 1]] = e.target.checked;
+            });
+        };
+
+        // Camera & Controls
+        bindSlider('slider-sens-x', 'controls.sensX', 'sens-x-val');
+        bindSlider('slider-sens-y', 'controls.sensY', 'sens-y-val');
+        bindSlider('slider-ads-sens', 'controls.adsSensMultiplier', 'ads-sens-val');
+        bindSlider('slider-fov', 'camera.baseFov', 'fov-val', false);
+        bindCheckbox('toggle-crouch', 'controls.toggleCrouch');
+        bindCheckbox('toggle-sprint', 'controls.toggleSprint');
+        
+        // Noclip is a special case (lives on player, not config)
+        document.getElementById('toggle-noclip').addEventListener('change', (e) => {
             logic.player.isNoclip = e.target.checked;
+        });
+
+        // Target Settings
+        bindSlider('slider-speed', 'gameplay.targetSpeed', 'speed-val', true);
+        bindSlider('slider-size', 'gameplay.targetSize', 'size-val', true);
+        bindSlider('slider-count', 'gameplay.targetCount', 'count-val', false);
+
+        // Map Selection
+        document.getElementById('select-map').addEventListener('change', (e) => {
+            logic.config.gameplay.mapType = e.target.value;
+        });
+
+        // Reset Button
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            logic.reset();
+            // Force HUD update immediately
+            this.updateHUD(logic.score, logic.shotsFired, true);
         });
     }
 
     // Synchronize current active configurations to the UI elements on menu open
     syncForm(logic) {
-        this.sliderSpeed.value = logic.targetManager.config.targetSpeed;
-        this.speedLabel.textContent = logic.targetManager.config.targetSpeed.toFixed(1);
+        const syncSlider = (id, val, labelId, isFloat = true) => {
+            const slider = document.getElementById(id);
+            const label = document.getElementById(labelId);
+            if (slider && label) {
+                slider.value = val;
+                label.textContent = isFloat ? val.toFixed(2) : val;
+            }
+        };
 
-        this.sliderSize.value = logic.targetManager.config.targetSize;
-        this.sizeLabel.textContent = logic.targetManager.config.targetSize.toFixed(1);
+        const syncCheckbox = (id, val) => {
+            const checkbox = document.getElementById(id);
+            if (checkbox) checkbox.checked = val;
+        };
 
-        this.toggleNoclip.checked = logic.player.isNoclip;
+        syncSlider('slider-sens-x', logic.config.controls.sensX, 'sens-x-val');
+        syncSlider('slider-sens-y', logic.config.controls.sensY, 'sens-y-val');
+        syncSlider('slider-ads-sens', logic.config.controls.adsSensMultiplier, 'ads-sens-val');
+        syncSlider('slider-fov', logic.config.camera.baseFov, 'fov-val', false);
+        
+        syncCheckbox('toggle-crouch', logic.config.controls.toggleCrouch);
+        syncCheckbox('toggle-sprint', logic.config.controls.toggleSprint);
+        syncCheckbox('toggle-noclip', logic.player.isNoclip);
+
+        syncSlider('slider-speed', logic.config.gameplay.targetSpeed, 'speed-val');
+        syncSlider('slider-size', logic.config.gameplay.targetSize, 'size-val');
+        syncSlider('slider-count', logic.config.gameplay.targetCount, 'count-val', false);
+
+        const mapSelect = document.getElementById('select-map');
+        if (mapSelect) mapSelect.value = logic.config.gameplay.mapType;
     }
 
     updateHUD(score, shotsFired) {
