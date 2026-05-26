@@ -73,7 +73,7 @@ export class GameLogic {
             if (hitTargetId !== null) {
                 ++this.score;
                 this.targetManager.despawnTarget(hitTargetId);
-                this.targetManager.spawnTarget();
+                this.targetManager.spawnTarget(this.config.gameplay);
 
                 const sfx = assets.sounds.get('hit');
                 if (sfx) audio.playSound(sfx);
