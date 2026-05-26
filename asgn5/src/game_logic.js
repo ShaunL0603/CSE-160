@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { PlayerController } from './systems/player_controller.js';
 import { TargetManager } from './systems/target_manager.js';
 import { HitDetectionSystem } from './systems/hit_detection_system.js';
+import { EnvironmentManager } from './systems/environment_manager.js';
 
 export class GameLogic {
     constructor() {
@@ -28,8 +29,11 @@ export class GameLogic {
         this.player = new PlayerController(this.config.camera.baseFOV);
         this.targetManager = new TargetManager();
         this.hitDetection = new HitDetectionSystem();
+        this.environment = new EnvironmentManager();
 
-        this.targetManager.spawnInitial(this.config.gameplay.targetCount, this.config.gameplay);
+        this.environment.loadMap(this.config.gameplay.mapType);
+
+        this.targetManager.spawnInitial(this.config.gameplay.targetCount, this.config.gameplay, this.environment);
 
         this._lookDir = new THREE.Vector3();
         this._tempVector = new THREE.Vector3();
@@ -39,7 +43,8 @@ export class GameLogic {
     }
 
     applyConfigChanges() {
-        this.targetManager.applyConfigToActive(this.config.gameplay);
+        this.environment.loadMap(this.config.gameplay.mapType);
+        this.targetManager.applyConfigToActive(this.config.gameplay, this.environment);
     }
 
     // Stores positioning records before executing mutation steps
@@ -73,7 +78,7 @@ export class GameLogic {
             if (hitTargetId !== null) {
                 ++this.score;
                 this.targetManager.despawnTarget(hitTargetId);
-                this.targetManager.spawnTarget(this.config.gameplay);
+                this.targetManager.spawnTarget(this.config.gameplay, this.environment);
 
                 const sfx = assets.sounds.get('hit');
                 if (sfx) audio.playSound(sfx);
@@ -90,6 +95,6 @@ export class GameLogic {
         this.score = 0;
         this.shotsFired = 0;
         this.player.reset(this.config.camera.baseFOV);
-        this.targetManager.reset(this.config.gameplay);
+        this.targetManager.reset(this.config.gameplay, this.environment);
     }
 }
