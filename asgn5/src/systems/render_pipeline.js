@@ -100,7 +100,7 @@ export class RenderPipeline {
         // FOV interpolation for zoom
         const currentFOV = THREE.MathUtils.lerp(player.prevFOV, player.fov, alpha);
         // only update projection matrix if FOV is changing
-        if (Math.abas(this.camera.fov - currentFOV) > 0.01) {
+        if (Math.abs(this.camera.fov - currentFOV) > 0.01) {
             this.camera.fov = currentFOV;
             this.camera.updateProjectionMatrix();
         }

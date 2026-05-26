@@ -75,6 +75,7 @@ export class InputManager {
 
         // Mouse events
         this.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e));
+        this.canvas.addEventListener('mouseup', (e) => this.onMouseUp(e));
     }
 
     lockPointer() {

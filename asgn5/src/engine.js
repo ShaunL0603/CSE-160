@@ -61,11 +61,10 @@ export class Engine {
                 this.ui.showSettings(false);
                 this.logic.targetManager.applyConfigToActive();
                 this.isPaused = false;
-
-
                 // reset lastTime to current instance
                 this.lastTime = performance.now() * 0.001;
             } else {
+                this.input.resetKeys();
                 this.ui.showSettings(true);
                 this.ui.syncForm(this.logic);
                 this.isPaused = true;
