@@ -9,17 +9,21 @@ export class InputManager {
             left: false,
             right: false,
             jump: false,
-            crouch: false
+            crouch: false,
+            sprint: false,
+            ads: false
         };
 
-        // One-shot triggers
-        this.noclipTriggered = false;
+        this.triggers = {
+            crouch: false,
+            sprint: false,
+            noclip: false,
+            fire: false
+        }
 
         // Accumulated mouse coordinates between ticks
         this.mouseDelta = { x: 0, y: 0 };
         this.isLocked = false;
-
-        this.fireTriggered = false;
 
         this.initListeners();
     }
@@ -56,6 +60,9 @@ export class InputManager {
             menuContent.addEventListener('mousedown', (e) => e.stopPropagation());
         }
 
+        // prevent right-click context menu from popping up when ads
+        this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
         // Tracking lock changes
         document.addEventListener('pointerlockchange', () => {
             this.isLocked = (document.pointerLockElement === this.canvas);
@@ -82,6 +89,13 @@ export class InputManager {
             }
         }
     }
+    // hard reset, prevent input desync when opening menu
+    resetKeys() {
+        for (let key in this.state) this.state[key] = false;
+        for (let key in this.triggers) this.triggers[key] = false;
+        this.mouseDelta.x = 0;
+        this.mouseDelta.y = 0;
+    }
 
     onMouseMove(e) {
         if (!this.isLocked) return;
@@ -93,9 +107,12 @@ export class InputManager {
 
     onMouseDown(e) {
         if (!this.isLocked) return;
-        if (e.button === 0) {
-            this.fireTriggered = true;
-        }
+        if (e.button === 0) this.triggers.fire = true;
+        if (e.button === 2) this.state.ads = true;
+    }
+
+    onMouseUp(e) {
+        if (e.button === 2) this.state.ads = false;
     }
 
     onKeyDown(e) {
@@ -107,10 +124,16 @@ export class InputManager {
             case 'KeyA': case 'ArrowLeft':  this.state.left = true; break;
             case 'KeyD': case 'ArrowRight': this.state.right = true; break;
             case 'Space':                   this.state.jump = true; break;
-            case 'KeyC':                    this.state.crouch = true; break;
+            case 'KeyC':
+                this.state.crouch = true;
+                if (!e.repeat) this.triggers.crouch = true;
+                break;
+            case 'ShiftLeft':
+                this.state.sprint = true;
+                if (!e.repeat) this.triggers.sprint = true;
+                break;
             case 'KeyV': 
-                // Edge detection trigger to prevent continuous toggling
-                this.noclipTriggered = true; 
+                if (!e.repeat) this.triggers.noclip = true;
                 break;
         }
     }
@@ -123,6 +146,7 @@ export class InputManager {
             case 'KeyD': case 'ArrowRight': this.state.right = false; break;
             case 'Space':                   this.state.jump = false; break;
             case 'KeyC':                    this.state.crouch = false; break;
+            case 'ShiftLeft':               this.state.sprint = false; break;
         }
     }
 
@@ -130,7 +154,6 @@ export class InputManager {
     flush() {
         this.mouseDelta.x = 0;
         this.mouseDelta.y = 0;
-        this.noclipTriggered = false;
-        this.fireTriggered = false;
+        for (let key in this.triggers) this.triggers[key] = false;
     }
 }

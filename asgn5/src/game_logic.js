@@ -5,7 +5,21 @@ import { HitDetectionSystem } from './systems/hit_detection_system.js';
 
 export class GameLogic {
     constructor() {
-        this.player = new PlayerController();
+        // centralized game config
+        this.config = {
+            controls: {
+                sensX: 0.50,
+                sensY: 0.50,
+                adsSensMultiplier: 1.00, // 100%
+                toggleCroch: false,
+                toggleSprint: false
+            },
+            camera: {
+                baseFOV: 90
+            }
+        };
+
+        this.player = new PlayerController(this.config.camera.baseFOV);
         this.targetManager = new TargetManager();
         this.hitDetection = new HitDetectionSystem();
 
@@ -27,12 +41,12 @@ export class GameLogic {
     // Executed at a predictable, fixed interval of 60Hz
     update(dt, input, assets, audio) {
         // move player
-        this.player.update(dt, input);
+        this.player.update(dt, input, this.config);
         // move targets
         this.targetManager.update(dt);
 
         // shot processing
-        if (input.fireTriggered) {
+        if (input.triggers.fire) {
             ++this.shotsFired;
             // get current direction player looking in
             this.player.getLookDirection(this._lookDir);
@@ -48,8 +62,6 @@ export class GameLogic {
 
             if (hitTargetId !== null) {
                 ++this.score;
-                // console.log(`Hit registered on target: ${hitTargetId}`);
-
                 this.targetManager.despawnTarget(hitTargetId);
                 this.targetManager.spawnTarget();
 

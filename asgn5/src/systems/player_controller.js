@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 export class PlayerController {
-    constructor() {
+    constructor(baseFOV) {
         // Player spatial properties, track feet on ground
         this.position = new THREE.Vector3(0, 0, 5);
         this.prevPosition = new THREE.Vector3(0, 0, 5);
@@ -17,19 +17,27 @@ export class PlayerController {
         this.yaw = 0;   // Look left/right
         this.prevYaw = 0;
 
+        this.fov = baseFOV;
+        this.prevFOV = baseFOV;
+
+        // logic states
+        this.isCrouched = false;
+        this.isSprinting = false;
+        this.isADS = false;
+        this.isGrounded = true;
+        this.isNoclip = false;
+
         // Kinematics Configuration
         this.moveSpeed = 6.0;
         this.noclipSpeed = 12.0;
         this.gravity = -24.0;
         this.jumpImpulse = 8.5;
-        this.isNoclip = false;
 
         this.bounds = {
             floorY: 0.0,
             limitXZ: 24.0
         };
 
-        this.isGrounded = true;
 
         // Pre-allocated Vector3s
         this._forward = new THREE.Vector3();
@@ -43,6 +51,7 @@ export class PlayerController {
         this.prevPitch = this.pitch;
         this.prevYaw = this.yaw;
         this.prevEyeHeight = this.eyeHeight;
+        this.prevFOV = this.fov;
     }
 
     getEyePosition(outVector) {
@@ -58,24 +67,51 @@ export class PlayerController {
         ).normalize();
     }
 
-    update(dt, input) {
+    update(dt, input, config) {
         // Handle noclip toggle state transitions
-        if (input.noclipTriggered) {
+        if (input.triggers.noclip) {
             this.isNoclip = !this.isNoclip;
             this.velocity.set(0, 0, 0); // Reset forces
         }
 
+        // toggles or holding button
+        if (config.controls.toggleCrouch) {
+            if (input.triggers.crouch) this.isCrouched = !this.isCrouched;
+        } else {
+            this.isCrouched = input.state.crouch;
+        }
+        if (config.controls.toggleSprint) {
+            if (input.triggers.sprint) this.isSprinting = !this.isSprinting;
+        } else {
+            this.isSprinting = input.state.sprint;
+        }
+
+        this.isADS = input.state.ads;
+        // FOV zoom
+        const targetFOV = this.isADS ? config.camera.baseFOV / 1.5 : config.camera.baseFOV;
+        const zoomSpeed = 15.0;
+        this.fov = THREE.MathUtils.lerp(this.fov, targetFOV, zoomSpeed * dt);
+
+        // mouse sens
+        const fovRatio = this.fov / config.camera.baseFOV;
+        let currentSensX = config.controls.sensX * fovRatio;
+        let currentSensY = config.controls.sensY * fovRatio;
+
+        if (this.isADS) { 
+            currentSensX *= config.controls.adsSensMultiplier;
+            currentSensY *= config.controls.adsSensMultiplier;
+        }
+
         // Process Rotation via Accumulated Mouse Delta
-        const mouseSensitivity = 0.002;
-        this.yaw -= input.mouseDelta.x * mouseSensitivity;
-        this.pitch -= input.mouseDelta.y * mouseSensitivity;
+        // base multi (0.005) keeping 0-1 slider range feeling normal
+        this.yaw -= input.mouseDelta.x * currentSensX * 0.005;
+        this.pitch -= input.mouseDelta.y * currentSensY * 0.005;
 
         // Clamp camera pitch looking up/down to avoid screen flipping (approx. 85 degrees)
         const pitchLimit = (Math.PI * 0.5) - 0.08;
         this.pitch = Math.max(-pitchLimit, Math.min(pitchLimit, this.pitch));
 
-        const targetEyeHeight = input.state.crouch ? 0.8 : 1.6;
-
+        const targetEyeHeight = this.isCrouched ? 0.8 : 1.6;
         const croutchTransitionSpeed = 14.0;
         this.eyeHeight = THREE.MathUtils.lerp(this.eyeHeight, targetEyeHeight, croutchTransitionSpeed * dt);
 
@@ -101,9 +137,16 @@ export class PlayerController {
         this._wishDir.normalize();
 
         // Calculate horizontal speed
-        const speed = input.state.crouch ? this.moveSpeed * 0.5 : this.moveSpeed;
-        this.velocity.x = this._wishDir.x * speed;
-        this.velocity.z = this._wishDir.z * speed;
+        let currentSpeed = this.moveSpeed;
+        if (this.isCrouched && this.isSprinting) {
+            currentSpeed = this.moveSpeed * 0.75;
+        } else if (this.isCrouched) {
+            currentSpeed = this.moveSpeed * 0.5;
+        } else if (this.isSprinting) {
+            currentSpeed = this.moveSpeed * 1.5;
+        }
+        this.velocity.x = this._wishDir.x * currentSpeed;
+        this.velocity.z = this._wishDir.z * currentSpeed;
 
         // Apply environment gravity
         if (!this.isGrounded) {
@@ -148,12 +191,10 @@ export class PlayerController {
         if (input.state.backward) this._wishDir.sub(this._forward);
         if (input.state.right)    this._wishDir.add(this._right);
         if (input.state.left)     this._wishDir.sub(this._right);
-
         this._wishDir.normalize();
 
         // Fly direct kinematic translation
         this.velocity.copy(this._wishDir).multiplyScalar(this.noclipSpeed);
-        
         this._temp.copy(this.velocity).multiplyScalar(dt);
         this.position.add(this._temp);
 
