@@ -31,23 +31,89 @@
         <div id="settings-menu" class="hidden">
             <div class="menu-content">
                 <h2>GAME PAUSED</h2>
-                <p class="instruction">Click inside the window to Resume</p>
+                <p class="instruction">Click outside or press Resume to play</p>
                 
-                <div class="setting-row">
-                    <label for="slider-speed">Target Speed:</label>
-                    <input type="range" id="slider-speed" min="1" max="10" step="0.5" value="3.5">
-                    <span id="speed-val">3.5</span>
+                <!-- Tab Navigation -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-target="tab-settings">Settings</button>
+                    <button class="tab-btn" data-target="tab-maps">Maps</button>
                 </div>
 
-                <div class="setting-row">
-                    <label for="slider-size">Target Size:</label>
-                    <input type="range" id="slider-size" min="0.2" max="1.5" step="0.1" value="1.0">
-                    <span id="size-val">1.0</span>
+                <!-- Settings Tab -->
+                <div id="tab-settings" class="tab-pane active">
+                    <fieldset>
+                        <legend>Camera & Controls</legend>
+                        <div class="setting-row">
+                            <label>Horizontal sensitivity:</label>
+                            <input type="range" id="slider-sens-x" min="0.01" max="1.0" step="0.01" value="0.50">
+                            <span id="sens-x-val">0.50</span>
+                        </div>
+                        <div class="setting-row">
+                            <label>Vertical sensitivity:</label>
+                            <input type="range" id="slider-sens-y" min="0.01" max="1.0" step="0.01" value="0.50">
+                            <span id="sens-y-val">0.50</span>
+                        </div>
+                        <div class="setting-row">
+                            <label>ADS Sens (Multiplier):</label>
+                            <input type="range" id="slider-ads-sens" min="0.1" max="2.0" step="0.01" value="1.00">
+                            <span id="ads-sens-val">1.00</span>
+                        </div>
+                        <div class="setting-row">
+                            <label>Field of View (FOV):</label>
+                            <input type="range" id="slider-fov" min="60" max="120" step="1" value="90">
+                            <span id="fov-val">90</span>
+                        </div>
+                        <div class="setting-row">
+                            <label>Toggle Crouch:</label>
+                            <input type="checkbox" id="toggle-crouch">
+                        </div>
+                        <div class="setting-row">
+                            <label>Toggle Sprint:</label>
+                            <input type="checkbox" id="toggle-sprint">
+                        </div>
+                        <div class="setting-row">
+                            <label>Flight Mode (V):</label>
+                            <input type="checkbox" id="toggle-noclip">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Target Settings</legend>
+                        <div class="setting-row">
+                            <label>Target Speed:</label>
+                            <input type="range" id="slider-speed" min="1" max="10" step="0.5" value="3.5">
+                            <span id="speed-val">3.5</span>
+                        </div>
+                        <div class="setting-row">
+                            <label>Target Size:</label>
+                            <input type="range" id="slider-size" min="0.2" max="1.5" step="0.1" value="0.5">
+                            <span id="size-val">0.5</span>
+                        </div>
+                        <div class="setting-row">
+                            <label>Target Count:</label>
+                            <input type="range" id="slider-count" min="1" max="100" step="1" value="10">
+                            <span id="count-val">10</span>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Game</legend>
+                        <button id="btn-reset" class="menu-btn danger">RESET GAME</button>
+                    </fieldset>
                 </div>
 
-                <div class="setting-row">
-                    <label for="toggle-noclip">Flight Mode (V):</label>
-                    <input type="checkbox" id="toggle-noclip">
+                <!-- Maps Tab -->
+                <div id="tab-maps" class="tab-pane">
+                    <fieldset>
+                        <legend>Scenario Selection</legend>
+                        <div class="setting-row">
+                            <label>Map Type:</label>
+                            <select id="select-map">
+                                <option value="moving">Moving Targets</option>
+                                <option value="static">Static Targets</option>
+                            </select>
+                        </div>
+                    </fieldset>
                 </div>
 
                 <button id="btn-resume" class="menu-btn">RESUME</button>

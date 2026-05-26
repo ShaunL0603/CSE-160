@@ -177,3 +177,93 @@ html, body {
     cursor: not-allowed;
     transform: none !important; /* Block click scaling */
 }
+
+.menu-content {
+    /* Update existing .menu-content to be wider and scrollable */
+    width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #2a2a38;
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #88889a;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s, border-bottom 0.2s;
+}
+
+.tab-btn:hover {
+    color: #ffffff;
+}
+
+.tab-btn.active {
+    color: #44aa88;
+    border-bottom: 2px solid #44aa88;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+fieldset {
+    border: 1px solid #2a2a38;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+legend {
+    color: #44aa88;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.setting-row label {
+    flex: 1;
+}
+
+.setting-row input[type="range"] {
+    flex: 1;
+    margin: 0 15px;
+}
+
+.setting-row span {
+    width: 40px;
+    text-align: right;
+    font-family: monospace;
+}
+
+select {
+    background: #222228;
+    color: white;
+    border: 1px solid #44aa88;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.menu-btn.danger {
+    background-color: #aa4444;
+    margin-top: 0;
+}
+
+.menu-btn.danger:hover {
+    background-color: #963b3b;
+}
