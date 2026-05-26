@@ -127,4 +127,11 @@ export class TargetManager {
             }
         }
     }
+
+    reset(targetCount) {
+        for (let i = 0; i < this.poolSize; ++i) {
+            this.targets[i].active = false;
+        }
+        this.spawnInitial(targetCount);
+    }
 }

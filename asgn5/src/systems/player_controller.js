@@ -200,4 +200,24 @@ export class PlayerController {
 
         this.isGrounded = false; // player falls back down if exiting noclip
     }
+
+    reset(baseFOV) {
+        this.position.set(0, 0, 5);
+        this.prevPosition.set(0, 0, 5);
+        this.velocity.set(0, 0, 0);
+        
+        this.pitch = 0;
+        this.prevPitch = 0;
+        this.yaw = 0;
+        this.prevYaw = 0;
+
+        this.fov = baseFOV;
+        this.prevFOV = baseFOV;
+
+        this.isCrouched = false;
+        this.isSprinting = false;
+        this.isADS = false;
+        this.isNoclip = false;
+        this.isGrounded = true;   
+    }
 }
