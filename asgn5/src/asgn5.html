@@ -26,6 +26,7 @@
         <div id="hud">
             <div class="hud-item">Score: <span id="score-val">0</span></div>
             <div class="hud-item">Accuracy: <span id="accuracy-val">100</span>%</div>
+            <div class="hud-item">Mode: <span id="mode-val" style="color: #ffaa44;">SHOOTING</span></div>
             <div class="hud-item stats-item"><span id="fps-val">0</span> FPS (<span id="ms-val">0</span> ms)</div>
         </div>
 
@@ -95,6 +96,11 @@
                             <label>Target Count:</label>
                             <input type="range" id="slider-count" min="1" max="100" step="1" value="10">
                             <span id="count-val">10</span>
+                        </div>
+                        <div class="setting-row">
+                            <label for="slider-radius">Blast Radius:</label>
+                            <input type="range" id="slider-radius" min="1.0" max="5.0" step="0.5" value="2.0">
+                            <span id="radius-val">2.00</span>
                         </div>
                     </fieldset>
 
