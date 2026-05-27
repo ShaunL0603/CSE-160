@@ -5,12 +5,14 @@ export class UIManager {
 
         this.scoreVal = document.querySelector('#score-val');
         this.accuracyVal = document.querySelector('#accuracy-val');
+        this.modeVal = document.querySelector('#mode-val');
 
         this.fpsVal = document.querySelector('#fps-val');
         this.msVal = document.querySelector('#ms-val');
         
         this._lastScore = -1;
         this._lastAccuracy = -1;
+        this._lastMode = '';
 
         this.initTabs();
     }
@@ -109,6 +111,7 @@ export class UIManager {
         bindSlider('slider-speed', 'gameplay.targetSpeed', 'speed-val', true);
         bindSlider('slider-size', 'gameplay.targetSize', 'size-val', true);
         bindSlider('slider-count', 'gameplay.targetCount', 'count-val', false);
+        bindSlider('slider-radius', 'gameplay.destructionRadius', 'radius-val', true);
 
         // Map Selection
         document.getElementById('select-map').addEventListener('change', (e) => {
@@ -119,7 +122,7 @@ export class UIManager {
         document.getElementById('btn-reset').addEventListener('click', () => {
             logic.reset();
             // Force HUD update immediately
-            this.updateHUD(logic.score, logic.shotsFired, true);
+            this.updateHUD(logic.score, logic.shotsFired, logic.currentMode, true);
         });
     }
 
@@ -151,6 +154,7 @@ export class UIManager {
         syncSlider('slider-speed', logic.config.gameplay.targetSpeed, 'speed-val');
         syncSlider('slider-size', logic.config.gameplay.targetSize, 'size-val');
         syncSlider('slider-count', logic.config.gameplay.targetCount, 'count-val', false);
+        syncSlider('slider-radius', logic.config.gameplay.destructionRadius, 'radius-val');
 
         const mapSelect = document.getElementById('select-map');
         if (mapSelect) mapSelect.value = logic.config.gameplay.mapType;
@@ -167,6 +171,14 @@ export class UIManager {
         if (accuracy !== this._lastAccuracy) {
             this.accuracyVal.textContent = accuracy;
             this._lastAccuracy = accuracy;
+        }
+
+        if (mode !== this._lastMode || force) {
+            if (this.modeVal) {
+                this.modeVal.textContent = mode === 'SHOOT' ? 'SHOOTING' : 'DESTRUCTION';
+                this.modeVal.style.color = mode === 'SHOOT' ? '#ffaa44' : '#aa44ff';
+            }
+            this._lastMode = mode;
         }
     }
 }
