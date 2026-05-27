@@ -13,7 +13,8 @@ export class EnvironmentManager {
         if (this.currentMap === mapType) return;
         this.currentMap = mapType;
         this.walls = [];
-
+        this.voxelObjects = [];
+        
         if (mapType === 'static') {
             // Static Target Map: Solid floor with two tall pillars (temp)
             this.addVoxelObject('voxel_pillar_left', new THREE.Vector3(-6, 4, -10), new THREE.Vector3(4, 16, 4), 0.5, true);

@@ -71,6 +71,7 @@ export class RenderPipeline {
 
         this.wallMeshesGroup = new THREE.Group();
         this.scene.add(this.wallMeshesGroup);
+        
         this.voxelMeshesGroup = new THREE.Group();
         this.scene.add(this.voxelMeshesGroup);
         this.currentVisualMap = '';
@@ -104,7 +105,7 @@ export class RenderPipeline {
         this.wallMeshesGroup.clear();
 
         this.voxelMeshesGroup.children.forEach(child => {
-            if (child.geometry) child.geometry.dipose();
+            if (child.geometry) child.geometry.dispose();
             if (child.material) child.material.dispose();
         });
         this.voxelMeshesGroup.clear();

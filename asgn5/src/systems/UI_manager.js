@@ -160,15 +160,15 @@ export class UIManager {
         if (mapSelect) mapSelect.value = logic.config.gameplay.mapType;
     }
 
-    updateHUD(score, shotsFired) {
+    updateHUD(score, shotsFired, mode, force = false) {
         // Prevent layout engines from running if data values remain identical
-        if (score !== this._lastScore) {
+        if (score !== this._lastScore || force) {
             this.scoreVal.textContent = score;
             this._lastScore = score;
         }
 
         const accuracy = shotsFired > 0 ? Math.round((score / shotsFired) * 100) : 100;
-        if (accuracy !== this._lastAccuracy) {
+        if (accuracy !== this._lastAccuracy || force) {
             this.accuracyVal.textContent = accuracy;
             this._lastAccuracy = accuracy;
         }

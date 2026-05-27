@@ -109,8 +109,6 @@ export class Engine {
 
         if (!this.isPaused) {
             this.accumulator += clampedFrameTime;
-
-            this.ui.updateHUD(this.logic.score, this.logic.shotsFired, this.logic.currentMode);
             // Run fixed-step logical update sequences
             while (this.accumulator >= this.fixedTimeStep) {
                 this.logic.savePreviousState();
@@ -129,7 +127,7 @@ export class Engine {
         this.renderer.render(this.logic, alpha);
         // update HUD display values
         if (!this.isPaused) {
-            this.ui.updateHUD(this.logic.score, this.logic.shotsFired);
+            this.ui.updateHUD(this.logic.score, this.logic.shotsFired, this.logic.currentMode);
         }
 
         this.rafId = requestAnimationFrame((time) => this.loop(time));

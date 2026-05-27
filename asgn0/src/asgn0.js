@@ -139,6 +139,6 @@ function clearRectangle()
 {
     const ctx = document.getElementById('example').getContext('2d');
     ctx.clearRect(-200, -200, 400, 400);
-    ctx.fillStyle = 'rgba(0, 0, 0, 1.0)';
+    //ctx.fillStyle = 'rgba(0, 0, 0, 1.0)';
     ctx.fillRect(-200, -200, 400, 400);
 }

@@ -25,7 +25,7 @@ Relevant files, directories, and their descriptions
 ## References
 
 Matrix Library: WebGL Programming Guide by Matsuda & Lea from this link https://sites.google.com/site/webglbook/home/downloads.
-CSE 160 assignment 0 vidoe playlist. Link: https://www.youtube.com/watch?v=CkbO7_jYAmM&list=PLbyTU_tFIkcOUaZ9kLznqF6Eyv4jUwgmS.
+CSE 160 assignment 0 video playlist. Link: https://www.youtube.com/watch?v=CkbO7_jYAmM&list=PLbyTU_tFIkcOUaZ9kLznqF6Eyv4jUwgmS.
 Google AI overview
 
 ## Additional Information
