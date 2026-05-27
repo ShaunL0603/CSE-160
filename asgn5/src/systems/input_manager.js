@@ -18,7 +18,8 @@ export class InputManager {
             crouch: false,
             sprint: false,
             noclip: false,
-            fire: false
+            fire: false,
+            modeToggle: false
         }
 
         // Accumulated mouse coordinates between ticks
@@ -125,7 +126,7 @@ export class InputManager {
             case 'KeyA': case 'ArrowLeft':  this.state.left = true; break;
             case 'KeyD': case 'ArrowRight': this.state.right = true; break;
             case 'Space':                   this.state.jump = true; break;
-            case 'KeyC':
+            case 'KeyC': case 'ControlLeft':
                 this.state.crouch = true;
                 if (!e.repeat) this.triggers.crouch = true;
                 break;
@@ -136,18 +137,21 @@ export class InputManager {
             case 'KeyV': 
                 if (!e.repeat) this.triggers.noclip = true;
                 break;
+            case 'KeyZ':
+                if (!e.repeat) this.triggers.modeToggle = true;
+                break;
         }
     }
 
     onKeyUp(e) {
         switch (e.code) {
-            case 'KeyW': case 'ArrowUp':    this.state.forward = false; break;
-            case 'KeyS': case 'ArrowDown':  this.state.backward = false; break;
-            case 'KeyA': case 'ArrowLeft':  this.state.left = false; break;
-            case 'KeyD': case 'ArrowRight': this.state.right = false; break;
-            case 'Space':                   this.state.jump = false; break;
-            case 'KeyC':                    this.state.crouch = false; break;
-            case 'ShiftLeft':               this.state.sprint = false; break;
+            case 'KeyW': case 'ArrowUp':     this.state.forward = false; break;
+            case 'KeyS': case 'ArrowDown':   this.state.backward = false; break;
+            case 'KeyA': case 'ArrowLeft':   this.state.left = false; break;
+            case 'KeyD': case 'ArrowRight':  this.state.right = false; break;
+            case 'Space':                    this.state.jump = false; break;
+            case 'KeyC': case 'ControlLeft': this.state.crouch = false; break;
+            case 'ShiftLeft':                this.state.sprint = false; break;
         }
     }
 
