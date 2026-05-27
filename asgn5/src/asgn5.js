@@ -1,4 +1,4 @@
-import { Engine } from './src/engine.js';
+import { Engine } from './engine.js';
 
 
 function main() {
