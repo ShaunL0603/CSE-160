@@ -136,7 +136,7 @@ export class RenderPipeline {
             const voxelObjects = logic.environment.voxelObjects;
             voxelObjects.forEach(voxelObj => {
                 const s = voxelObj.voxelScale;
-                const geo = new THREE.BoxGeometry(s, s, s);
+                const geo = new THREE.BoxGeometry(1, 1, 1);
                 const mat = new THREE.MeshPhongMaterial({ shininess: 30, flatShading: true });
                 
                 const count = voxelObj.totalVoxels;
@@ -179,7 +179,7 @@ export class RenderPipeline {
                     for (let y = 0; y < h; y++) {
                         for (let z = 0; z < d; z++) {
                             const idx = voxelObj.getIndex(x, y, z);
-                            
+
                             const lx = (x - (w - 1) * 0.5) * s;
                             const ly = (y - (h - 1) * 0.5) * s;
                             const lz = (z - (d - 1) * 0.5) * s;
