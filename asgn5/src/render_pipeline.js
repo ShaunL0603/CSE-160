@@ -129,60 +129,62 @@ export class RenderPipeline {
         const voxelObjects = logic.environment.voxelObjects;
         voxelObjects.forEach(voxelObj => {
             const s = voxelObj.voxelScale;
-            const geo = new THREE.BoxGeometry(s, s, s);
-            
-            // Standard shared material
-            const mat = new THREE.MeshPhongMaterial({
-                shininess: 30,
-                flatShading: true
-            });
 
-            const count = voxelObj.totalVoxels;
-            const instMesh = new THREE.InstancedMesh(geo, mat, count);
-            instMesh.castShadow = true;
-            instMesh.receiveShadow = true;
+            // Only rebuild visual buffers if we load a new map, OR if explosion occurs
+            if (voxelObj.dirty) {
+                const geo = new THREE.BoxGeometry(s, s, s);
+                const mat = new THREE.MeshPhongMaterial({
+                    shininess: 30,
+                    flatShading: true 
+                });
 
-            // Apply procedural colors directly from logic array buffer
-            const colorArray = voxelObj.colors;
-            const tempColor = new THREE.Color();
-            for (let i = 0; i < count; i++) {
-                tempColor.setRGB(colorArray[i * 3], colorArray[i * 3 + 1], colorArray[i * 3 + 2]);
-                instMesh.setColorAt(i, tempColor);
-            }
-            if (instMesh.instanceColor) instMesh.instanceColor.needsUpdate = true;
+                const count = voxelObj.totalVoxels;
+                const instMesh = new THREE.InstancedMesh(geo, mat, count);
+                instMesh.castShadow = true;
+                instMesh.receiveShadow = true;
 
-            // Set matrix positions and apply interior culling scale shifts
-            const { x: w, y: h, z: d } = voxelObj.dimensions;
-            const wp = voxelObj.position;
+                // Apply colors
+                const colorArray = voxelObj.colors;
+                const tempColor = new THREE.Color();
+                for (let i = 0; i < count; i++) {
+                    tempColor.setRGB(colorArray[i * 3], colorArray[i * 3 + 1], colorArray[i * 3 + 2]);
+                    instMesh.setColorAt(i, tempColor);
+                }
+                if (instMesh.instanceColor) instMesh.instanceColor.needsUpdate = true;
 
-            for (let x = 0; x < w; x++) {
-                for (let y = 0; y < h; y++) {
-                    for (let z = 0; z < d; z++) {
-                        const idx = voxelObj.getIndex(x, y, z);
-                        
-                        // Calculate offset coordinates relative to the object's physical center
-                        const lx = (x - (w - 1) * 0.5) * s;
-                        const ly = (y - (h - 1) * 0.5) * s;
-                        const lz = (z - (d - 1) * 0.5) * s;
+                // Update matrix scale transforms with interior culling
+                const { x: w, y: h, z: d } = voxelObj.dimensions;
+                const wp = voxelObj.position;
 
-                        this._pos.set(wp.x + lx, wp.y + ly, wp.z + lz);
+                for (let x = 0; x < w; x++) {
+                    for (let y = 0; y < h; y++) {
+                        for (let z = 0; z < d; z++) {
+                            const idx = voxelObj.getIndex(x, y, z);
+                            
+                            const lx = (x - (w - 1) * 0.5) * s;
+                            const ly = (y - (h - 1) * 0.5) * s;
+                            const lz = (z - (d - 1) * 0.5) * s;
 
-                        // Check visibility status (0 = empty, 1 = surface, 2 = culled)
-                        const vis = voxelObj.visibilityData[idx];
-                        if (vis === 1) {
-                            this._scale.set(s, s, s); // Visible
-                        } else {
-                            this._scale.set(0, 0, 0); // Hidden/Culled
+                            this._pos.set(wp.x + lx, wp.y + ly, wp.z + lz);
+
+                            const vis = voxelObj.visibilityData[idx];
+                            if (vis === 1) {
+                                this._scale.set(s, s, s); // Surface (Visible)
+                            } else {
+                                this._scale.set(0, 0, 0); // Empty or Culled (Hidden)
+                            }
+
+                            this._matrix.compose(this._pos, this._quat, this._scale);
+                            instMesh.setMatrixAt(idx, this._matrix);
                         }
-
-                        this._matrix.compose(this._pos, this._quat, this._scale);
-                        instMesh.setMatrixAt(idx, this._matrix);
                     }
                 }
-            }
 
-            instMesh.instanceMatrix.needsUpdate = true;
-            this.voxelMeshesGroup.add(instMesh);
+                instMesh.instanceMatrix.needsUpdate = true;
+                this.voxelMeshesGroup.add(instMesh);
+
+                voxelObj.dirty = false; // Reset dirty flag
+            }
         });
     }
 

@@ -7,7 +7,7 @@ export class VoxelObject {
         this.dimensions = dimensions.clone();  // Voxel dimensions (e.g., width, height, depth)
         this.voxelScale = voxelScale;          // Size of one individual voxel block
         this.isDestructible = isDestructible;
-        this.dirty = false;
+        this.dirty = true;
 
         this.totalVoxels = this.dimensions.x * this.dimensions.y * this.dimensions.z;
 
