@@ -1,8 +1,10 @@
 import * as THREE from 'three';
+import { VoxelObject } from '../voxel_objects';
 
 export class EnvironmentManager {
     constructor() {
-        this.walls = []; // Array of physical AABB definitions
+        this.walls = []; // Non-voxel solids
+        this.VoxelObject = [];
         this.currentMap = '';
     }
 
@@ -14,12 +16,29 @@ export class EnvironmentManager {
 
         if (mapType === 'static') {
             // Static Target Map: Solid floor with two tall pillars (temp)
-            this.addWall('pillar_left', new THREE.Vector3(-6, 4, -10), new THREE.Vector3(2, 8, 2), false);
-            this.addWall('pillar_right', new THREE.Vector3(6, 4, -10), new THREE.Vector3(2, 8, 2), false);
+            this.addVoxelObject('voxel_pillar_left', new THREE.Vector3(-6, 4, -10), new THREE.Vector3(4, 16, 4), 0.5, true);
+            this.addVoxelObject('voxel_pillar_right', new THREE.Vector3(6, 4, -10), new THREE.Vector3(4, 16, 4), 0.5, true);
         } else if (mapType === 'moving') {
             // Moving Target Map: Grid with a central block obstacle to navigate around (temp)
-            this.addWall('center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(4, 6, 4), false);
+            this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(8, 12, 8), 0.5, true);
         }
+    }
+
+    addVoxelObject(id, position, dimensions, voxelScale = 0.5, isDestructible = true) {
+        const voxelObj = new VoxelObject(id, position, dimensions, voxelScale, isDestructible);
+        this.voxelObjects.push(voxelObj);
+
+        // Also register its broad-phase bounding box inside our physical walls list
+        // keep target spawing overlap checks
+        this.walls.push({
+            id,
+            boundingBox: voxelObj.boundingBox,
+            position: position.clone(),
+            size: new THREE.Vector3(dimensions.x * voxelScale, dimensions.y * voxelScale, dimensions.z * voxelScale),
+            colliderType: 'VOXEL_GRID',
+            isDestructible,
+            voxelRef: voxelObj
+        });
     }
 
     addWall(id, position, size, isDestructible = false) {
