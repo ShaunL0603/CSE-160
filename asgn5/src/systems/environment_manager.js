@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import { VoxelObject } from '../voxel_objects';
+import { VoxelObject } from '../voxel_objects.js';
 
 export class EnvironmentManager {
     constructor() {
         this.walls = []; // Non-voxel solids
-        this.VoxelObject = [];
+        this.voxelObjects = [];
         this.currentMap = '';
     }
 
