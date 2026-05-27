@@ -23,9 +23,12 @@ export class GameLogic {
                 targetSpeed: 3.5,
                 targetSize: 0.5,
                 targetCount: 10,
-                mapType: 'moving'
+                mapType: 'moving',
+                destructionRadius: 2.0
             }
         };
+
+        this.currentMode = 'SHOOT';
 
         this.player = new PlayerController(this.config.camera.baseFOV);
         this.targetManager = new TargetManager();
@@ -34,11 +37,15 @@ export class GameLogic {
         this.physics = new PhysicsSystem();
 
         this.environment.loadMap(this.config.gameplay.mapType);
-
         this.targetManager.spawnInitial(this.config.gameplay.targetCount, this.config.gameplay, this.environment);
 
         this._lookDir = new THREE.Vector3();
         this._tempVector = new THREE.Vector3();
+        
+        this._ray = new THREE.Ray();
+        this._marchPos = new THREE.Vector3();
+        this._tempIntersect = new THREE.Vector3();
+        this._localHitPoint = new THREE.Vector3();
 
         this.score = 0;
         this.shotsFired = 0;
@@ -65,33 +72,105 @@ export class GameLogic {
         this.physics.resolveTargetCollisions(this.targetManager.targets);
         this.physics.resolveWallCollisions(this.targetManager.targets, this.environment.walls);
 
+        if (input.triggers.modeToggle) {
+            this.currentMode = this.currentMode === 'SHOOT' ? 'DESTROY' : 'SHOOT';
+        }
+
         // shot processing
         if (input.triggers.fire) {
-            ++this.shotsFired;
             // get current direction player looking in
             this.player.getLookDirection(this._lookDir);
             // get eye-level position
             this.player.getEyePosition(this._tempVector);
 
-            // raycast check
-            const hitTargetId = this.hitDetection.evaluateShot(
-                this._tempVector,
-                this._lookDir,
-                this.targetManager.targets
-            );
+            if (this.currentMode === 'SHOOT') {
+                ++this.shotsFired;
+                // raycast check
+                const hitTargetId = this.hitDetection.evaluateShot(
+                    this._tempVector,
+                    this._lookDir,
+                    this.targetManager.targets
+                );
 
-            if (hitTargetId !== null) {
-                ++this.score;
-                this.targetManager.despawnTarget(hitTargetId);
-                this.targetManager.spawnTarget(this.config.gameplay, this.environment);
+                if (hitTargetId !== null) {
+                    ++this.score;
+                    this.targetManager.despawnTarget(hitTargetId);
+                    this.targetManager.spawnTarget(this.config.gameplay, this.environment);
 
-                const sfx = assets.sounds.get('hit');
-                if (sfx) audio.playSound(sfx);
-                else audio.synthesizeBeep(880, 0.08, 'triangle');
-            } else {
-                const sfx = assets.sounds.get('miss');
-                if (sfx) audio.playSound(sfx);
-                else audio.synthesizeBeep(220, 0.1, 'sawtooth');
+                    const sfx = assets.sounds.get('hit');
+                    if (sfx) audio.playSound(sfx);
+                    else audio.synthesizeBeep(880, 0.08, 'triangle');
+                } else {
+                    const sfx = assets.sounds.get('miss');
+                    if (sfx) audio.playSound(sfx);
+                    else audio.synthesizeBeep(220, 0.1, 'sawtooth');
+                }
+            }
+            else if (this.currentMode === 'DESTROY') {
+                // Initialize math ray from camera
+                this._ray.set(this._tempVector, this._lookDir);
+
+                let closestVoxelObj = null;
+                let closestDist = Infinity;
+                
+                const voxelObjects = this.environment.voxelObjects;
+
+                // Broad-phase: find closest voxel master bounding box intersected
+                for (let i = 0; i < voxelObjects.length; i++) {
+                    const voxelObj = voxelObjects[i];
+                    const intersectPoint = this._ray.intersectBox(voxelObj.boundingBox, this._tempIntersect);
+                    
+                    if (intersectPoint !== null) {
+                        const dist = this._tempVector.distanceTo(intersectPoint);
+                        if (dist < closestDist) {
+                            closestDist = dist;
+                            closestVoxelObj = voxelObj;
+                            this._marchPos.copy(intersectPoint); // Start raymarching at entry point
+                        }
+                    }
+                }
+
+                // Narrow-phase: parametric Ray-Marching inside the voxel object
+                if (closestVoxelObj !== null) {
+                    const s = closestVoxelObj.voxelScale;
+                    const maxMarchDist = 15.0; // Max depth to search
+                    const stepSize = s * 0.5;  // Half voxel size step to gurantee zero voxel skips
+                    
+                    let hitVoxel = false;
+
+                    for (let distWalked = 0; distWalked < maxMarchDist; distWalked += stepSize) {
+                        // Transform world coordinates to local offsets relative to center
+                        this._localHitPoint.copy(this._marchPos).sub(closestVoxelObj.position);
+
+                        const { x: w, y: h, z: d } = closestVoxelObj.dimensions;
+                        const offsetScalarX = (w - 1) * 0.5;
+                        const x = Math.round(this._localHitPoint.x / s + offsetScalarX);
+
+                        const offsetScalarY = (h - 1) * 0.5;
+                        const y = Math.round(this._localHitPoint.y / s + offsetScalarY);
+
+                        const offsetScalarZ = (d - 1) * 0.5;
+                        const z = Math.round(this._localHitPoint.z / s + offsetScalarZ);
+
+                        if (closestVoxelObj.isSolid(x, y, z)) {
+                            // First solid voxel found! Trigger destruction
+                            closestVoxelObj.applyExplosion(this._localHitPoint, this.config.gameplay.destructionRadius);
+                            hitVoxel = true;
+                            break;
+                        }
+
+                        // March step along direction
+                        this._marchPos.addScaledVector(this._lookDir, stepSize);
+                    }
+
+                    if (hitVoxel) {
+                        audio.synthesizeBeep(120, 0.20, 'sawtooth'); // Deep explosion beep
+                    } else {
+                        audio.synthesizeBeep(220, 0.1, 'sine'); // Solid boundary miss
+                    }
+                } else {
+                    audio.synthesizeBeep(220, 0.1, 'sine'); // Complete miss
+                }
             }
         }
     }
