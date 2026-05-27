@@ -53,7 +53,7 @@ export class TargetManager {
 
         for (let attempt = 0; attempt < maxAttempts; ++attempt) {
             // Position target randomly within spawn bounding region
-            target._tempVector.set(
+            this._tempVector.set(
                 min.x + Math.random() * this._boundsSize.x,
                 min.y + Math.random() * this._boundsSize.y,
                 min.z + Math.random() * this._boundsSize.z

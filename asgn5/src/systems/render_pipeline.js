@@ -55,6 +55,7 @@ export class RenderPipeline {
         const grid = new THREE.GridHelper(50, 50, 0x44aa88, 0x222228);
         grid.position.y = -0.01; 
         this.mapMoving.add(grid);
+        this.mapMoving.visible = true;
         this.scene.add(this.mapMoving);
 
         // --- Map 2: Static Targets (color cube floor) ---
@@ -62,11 +63,15 @@ export class RenderPipeline {
         const floorGeo = new THREE.BoxGeometry(50, 1, 50);
         const floorMat = new THREE.MeshPhongMaterial({ color: 0x2a2a35 });
         const solidFloor = new THREE.Mesh(floorGeo, floorMat);
-        solidFloor.position.y = -0.51; // Top face sits just below Y=0
+        solidFloor.position.y = -0.51;
         solidFloor.receiveShadow = true;
         this.mapStatic.add(solidFloor);
-        this.mapStatic.visible = false; // Hidden by default
+        this.mapStatic.visible = false;
         this.scene.add(this.mapStatic);
+
+        this.wallMeshesGroup = new THREE.Group();
+        this.scene.add(this.wallMeshesGroup);
+        this.currentVisualMap = '';
 
         // InstancedMesh Setup (Shared across maps)
         const targetGeometry = new THREE.SphereGeometry(0.5, 16, 16);
@@ -79,6 +84,38 @@ export class RenderPipeline {
         this.targetMeshInstances.castShadow = true;
         this.targetMeshInstances.receiveShadow = true;
         this.scene.add(this.targetMeshInstances);
+    }
+
+    syncVisualEnvironment(logic) {
+        const mapType = logic.environment.currentMap;
+        if (this.currentVisualMap === mapType) return;
+        this.currentVisualMap = mapType;
+
+        // Dispose existing wall geometry to avoid memory leaks
+        this.wallMeshesGroup.children.forEach(child => {
+            if (child.geometry) child.geometry.dispose();
+            if (child.material) {
+                if (Array.isArray(child.material)) child.material.forEach(m => m.dispose());
+                else child.material.dispose();
+            }
+        });
+        this.wallMeshesGroup.clear();
+
+        // Build structural meshes directly from current math constraints
+        const walls = logic.environment.walls;
+        const wallMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x3e3e4f, 
+            shininess: 30
+        });
+
+        walls.forEach(wall => {
+            const geo = new THREE.BoxGeometry(wall.size.x, wall.size.y, wall.size.z);
+            const mesh = new THREE.Mesh(geo, wallMaterial);
+            mesh.position.copy(wall.position);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            this.wallMeshesGroup.add(mesh);
+        });
     }
 
     initResizeHandler() {
@@ -121,6 +158,9 @@ export class RenderPipeline {
         this.mapStatic.visible = isStaticMap;
         this.mapMoving.visible = !isStaticMap;
 
+        // sync visual meshes dynamically
+        this.syncVisualEnvironment(logic);
+
         const targets = logic.targetManager.targets;
         for (let i = 0; i < targets.length; ++i) {
             const target = targets[i];
@@ -141,7 +181,6 @@ export class RenderPipeline {
 
         // notify WebGL that instance matrix positions must be sent to GPU
         this.targetMeshInstances.instanceMatrix.needsUpdate = true;
-
         this.renderer.render(this.scene, this.camera);
     }
 }
