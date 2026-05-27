@@ -7,6 +7,7 @@ export class VoxelObject {
         this.dimensions = dimensions.clone();  // Voxel dimensions (e.g., width, height, depth)
         this.voxelScale = voxelScale;          // Size of one individual voxel block
         this.isDestructible = isDestructible;
+        this.dirty = false;
 
         this.totalVoxels = this.dimensions.x * this.dimensions.y * this.dimensions.z;
 
@@ -74,6 +75,19 @@ export class VoxelObject {
         );
     }
 
+    exposeNeighbor(x, y, z) {
+        if (x < 0 || x >= this.dimensions.x ||
+            y < 0 || y >= this.dimensions.y ||
+            z < 0 || z >= this.dimensions.z) {
+            return;
+        }
+        const idx = this.getIndex(x, y, z);
+        // If neighbor was previously fully enclosed (2), it is now exposed, so make it visible (1)
+        if (this.visibilityData[idx] === 2) {
+            this.visibilityData[idx] = 1;
+        }
+    }
+
     computeVisibility() {
         const { x: w, y: h, z: d } = this.dimensions;
         for (let x = 0; x < w; x++) {
@@ -116,5 +130,74 @@ export class VoxelObject {
         const max = new THREE.Vector3(this.position.x + halfX, this.position.y + halfY, this.position.z + halfZ);
         
         this.boundingBox.set(min, max);
+    }
+
+    applyExplosion(localPoint, radius) {
+        const s = this.voxelScale;
+        const { x: w, y: h, z: d } = this.dimensions;
+
+        // Map local hit coordinates to grid indices
+        const offsetScalarX = (w - 1) * 0.5;
+        const cx = Math.round(localPoint.x / s + offsetScalarX);
+        
+        const offsetScalarY = (h - 1) * 0.5;
+        const cy = Math.round(localPoint.y / s + offsetScalarY);
+
+        const offsetScalarZ = (d - 1) * 0.5;
+        const cz = Math.round(localPoint.z / s + offsetScalarZ);
+
+        // Convert physical radius to voxel bounds count
+        const voxelRadius = Math.ceil(radius / s);
+
+        const minI = Math.max(0, cx - voxelRadius);
+        const maxI = Math.min(w - 1, cx + voxelRadius);
+
+        const minJ = Math.max(0, cy - voxelRadius);
+        const maxJ = Math.min(h - 1, cy + voxelRadius);
+
+        const minK = Math.max(0, cz - voxelRadius);
+        const maxK = Math.min(d - 1, cz + voxelRadius);
+
+        let destroyedAny = false;
+        const radiusSq = radius * radius;
+
+        for (let x = minI; x <= maxI; x++) {
+            for (let y = minJ; y <= maxJ; y++) {
+                for (let z = minK; z <= maxK; z++) {
+                    const idx = this.getIndex(x, y, z);
+                    if (this.data[idx] === 0) continue; // Already destroyed
+
+                    // Calculate distance in world units from center of hit point
+                    const lx = (x - (w - 1) * 0.5) * s;
+                    const ly = (y - (h - 1) * 0.5) * s;
+                    const lz = (z - (d - 1) * 0.5) * s;
+
+                    const dx = lx - localPoint.x;
+                    const dy = ly - localPoint.y;
+                    const dz = lz - localPoint.z;
+                    const distSq = dx * dx + dy * dy + dz * dz;
+
+                    if (distSq <= radiusSq) {
+                        this.data[idx] = 0;
+                        this.visibilityData[idx] = 0;
+                        destroyedAny = true;
+
+                        // Dynamic Un-Culling of the 6 surrounding neighbors
+                        this.exposeNeighbor(x - 1, y, z);
+                        this.exposeNeighbor(x + 1, y, z);
+                        this.exposeNeighbor(x, y - 1, z);
+                        this.exposeNeighbor(x, y + 1, z);
+                        this.exposeNeighbor(x, y, z - 1);
+                        this.exposeNeighbor(x, y, z + 1);
+                    }
+                }
+            }
+        }
+
+        if (destroyedAny) {
+            this.dirty = true; // Request visual update on next render
+        }
+
+        return destroyedAny;
     }
 }
