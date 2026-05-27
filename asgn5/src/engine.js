@@ -1,5 +1,5 @@
 import { GameLogic } from './game_logic.js';
-import { RenderPipeline } from './systems/render_pipeline.js';
+import { RenderPipeline } from './render_pipeline.js';
 import { InputManager } from './systems/input_manager.js';
 import { AudioManager } from './systems/audio_manager.js';
 import { AssetManager } from './systems/asset_manager.js';
