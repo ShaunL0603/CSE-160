@@ -3,6 +3,7 @@ import { PlayerController } from './player_controller.js';
 import { TargetManager } from './systems/target_manager.js';
 import { HitDetectionSystem } from './systems/hit_detection_system.js';
 import { EnvironmentManager } from './systems/environment_manager.js';
+import { PhysicsSystem } from './systems/physics_system.js';
 
 export class GameLogic {
     constructor() {
@@ -30,6 +31,7 @@ export class GameLogic {
         this.targetManager = new TargetManager();
         this.hitDetection = new HitDetectionSystem();
         this.environment = new EnvironmentManager();
+        this.physics = new PhysicsSystem();
 
         this.environment.loadMap(this.config.gameplay.mapType);
 
@@ -59,6 +61,9 @@ export class GameLogic {
         this.player.update(dt, input, this.config);
         // move targets
         this.targetManager.update(dt);
+        // resolve collisions
+        this.physics.resolveTargetCollisions(this.targetManager.targets);
+        this.physics.resolveWallCollisions(this.targetManager.targets, this.environment.walls);
 
         // shot processing
         if (input.triggers.fire) {
