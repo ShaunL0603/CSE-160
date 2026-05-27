@@ -71,10 +71,11 @@ export class RenderPipeline {
 
         this.wallMeshesGroup = new THREE.Group();
         this.scene.add(this.wallMeshesGroup);
-        
+
         this.voxelMeshesGroup = new THREE.Group();
         this.scene.add(this.voxelMeshesGroup);
         this.currentVisualMap = '';
+        this.voxelMeshMap = new Map();
 
         // InstancedMesh Setup (Shared across maps)
         const targetGeometry = new THREE.SphereGeometry(0.5, 16, 16);
@@ -91,58 +92,75 @@ export class RenderPipeline {
 
     syncVisualEnvironment(logic) {
         const mapType = logic.environment.currentMap;
-        if (this.currentVisualMap === mapType) return;
-        this.currentVisualMap = mapType;
+        const mapChanged = this.currentVisualMap !== mapType;
 
-        // Dispose existing wall geometry to avoid memory leaks
-        this.wallMeshesGroup.children.forEach(child => {
-            if (child.geometry) child.geometry.dispose();
-            if (child.material) {
-                if (Array.isArray(child.material)) child.material.forEach(m => m.dispose());
-                else child.material.dispose();
-            }
-        });
-        this.wallMeshesGroup.clear();
+        if (mapChanged) {
+            this.currentVisualMap = mapType;
 
-        this.voxelMeshesGroup.children.forEach(child => {
-            if (child.geometry) child.geometry.dispose();
-            if (child.material) child.material.dispose();
-        });
-        this.voxelMeshesGroup.clear();
+            // Dispose existing wall geometry to avoid memory leaks
+            this.wallMeshesGroup.children.forEach(child => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) {
+                    if (Array.isArray(child.material)) child.material.forEach(m => m.dispose());
+                    else child.material.dispose();
+                }
+            });
+            this.wallMeshesGroup.clear();
 
-        // Build structural meshes directly from current math constraints
-        const walls = logic.environment.walls;
-        const wallMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0x3e3e4f, 
-            shininess: 30
-        });
+            this.voxelMeshesGroup.children.forEach(child => {
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) child.material.dispose();
+            });
+            this.voxelMeshesGroup.clear();
+            this.voxelMeshMap.clear();
 
-        walls.forEach(wall => {
-            const geo = new THREE.BoxGeometry(wall.size.x, wall.size.y, wall.size.z);
-            const mesh = new THREE.Mesh(geo, wallMaterial);
-            mesh.position.copy(wall.position);
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-            this.wallMeshesGroup.add(mesh);
-        });
+            // Build structural meshes directly from current math constraints
+            const walls = logic.environment.walls;
+            const wallMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x3e3e4f, 
+                shininess: 30
+            });
 
-        // Instantiate and draw compiled VoxelObjects
-        const voxelObjects = logic.environment.voxelObjects;
-        voxelObjects.forEach(voxelObj => {
-            const s = voxelObj.voxelScale;
+            walls.forEach(wall => {
+                if (wall.colliderType === 'AABB') {
+                    const geo = new THREE.BoxGeometry(wall.size.x, wall.size.y, wall.size.z);
+                    const mesh = new THREE.Mesh(geo, wallMaterial);
+                    mesh.position.copy(wall.position);
+                    mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+                    this.wallMeshesGroup.add(mesh);
+                }
+            });
 
-            // Only rebuild visual buffers if we load a new map, OR if explosion occurs
-            if (voxelObj.dirty) {
+            // Initialize Voxel InstancedMeshes
+            const voxelObjects = logic.environment.voxelObjects;
+            voxelObjects.forEach(voxelObj => {
+                const s = voxelObj.voxelScale;
                 const geo = new THREE.BoxGeometry(s, s, s);
-                const mat = new THREE.MeshPhongMaterial({
-                    shininess: 30,
-                    flatShading: true 
-                });
-
+                const mat = new THREE.MeshPhongMaterial({ shininess: 30, flatShading: true });
+                
                 const count = voxelObj.totalVoxels;
                 const instMesh = new THREE.InstancedMesh(geo, mat, count);
                 instMesh.castShadow = true;
                 instMesh.receiveShadow = true;
+
+                this.voxelMeshesGroup.add(instMesh);
+                this.voxelMeshMap.set(voxelObj.id, instMesh); // Cache it for fast updates
+
+                voxelObj.dirty = true; // Force an initial matrix build
+            });
+        }
+
+        // Instantiate and draw compiled VoxelObjects
+        const voxelObjects = logic.environment.voxelObjects;
+        voxelObjects.forEach(voxelObj => {
+            // Only rebuild visual buffers if we load a new map, OR if explosion occurs
+            if (voxelObj.dirty) {
+                const instMesh = this.voxelMeshMap.get(voxelObj.id);
+                if (!instMesh) return;
+
+                const s = voxelObj.voxelScale;
+                const count = voxelObj.totalVoxels;
 
                 // Apply colors
                 const colorArray = voxelObj.colors;
@@ -182,8 +200,6 @@ export class RenderPipeline {
                 }
 
                 instMesh.instanceMatrix.needsUpdate = true;
-                this.voxelMeshesGroup.add(instMesh);
-
                 voxelObj.dirty = false; // Reset dirty flag
             }
         });
