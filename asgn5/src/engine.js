@@ -8,10 +8,8 @@ import { UIManager } from './systems/UI_manager.js';
 export class Engine {
     constructor(canvas) {
         this.canvas = canvas;
-        
         // Physics logic locked at exactly 60 updates per second (16.66ms per tick)
         this.fixedTimeStep = 1 / 60; 
-        
         // Failsafe threshold to avoid execution overflow
         this.maxFrameTime = 0.25; 
         
@@ -21,6 +19,9 @@ export class Engine {
         this.rafId = null;
 
         this.isPaused = true;
+
+        this.perfFrameCount = 0;
+        this.perfAccumulator = 0;
 
         // Subsystems Instantiation
         this.input = new InputManager(this.canvas);
@@ -83,16 +84,31 @@ export class Engine {
     loop(currentTimeMs) {
         if (!this.isRunning) return;
         const currentTime = currentTimeMs * 0.001; // Scale to seconds
-        let frameTime = currentTime - this.lastTime;
+        const frameTime = currentTime - this.lastTime;
         this.lastTime = currentTime;
 
-        // Apply fallback limits on severe browser frame drops
-        if (frameTime > this.maxFrameTime) {
-            frameTime = this.maxFrameTime;
+        // profiling metrics math
+        this.perfFrameCount++;
+        this.perfAccumulator += frameTime;
+        if (this.perfAccumulator >= 0.5) {
+            const fps = Math.round(this.perfFrameCount / this.perfAccumulator);
+            // Average frame duration in milliseconds
+            const ms = Math.round((this.perfAccumulator / this.perfFrameCount) * 1000);
+            
+            this.ui.updateStats(fps, ms);
+            
+            this.perfFrameCount = 0;
+            this.perfAccumulator = 0;
+        }
+
+        // Apply failsafe limits to physical simulation only
+        let clampedFrameTime = frameTime;
+        if (clampedFrameTime > this.maxFrameTime) {
+            clampedFrameTime = this.maxFrameTime;
         }
 
         if (!this.isPaused) {
-            this.accumulator += frameTime;
+            this.accumulator += clampedFrameTime;
 
             // Run fixed-step logical update sequences
             while (this.accumulator >= this.fixedTimeStep) {
@@ -108,10 +124,8 @@ export class Engine {
 
         // Calculate interpolation alpha (0.0 to 1.0)
         const alpha = this.isPaused ? 1.0 : this.accumulator / this.fixedTimeStep;
-
         // Feed pure state values + alpha directly to rendering pipeline
         this.renderer.render(this.logic, alpha);
-
         // update HUD display values
         if (!this.isPaused) {
             this.ui.updateHUD(this.logic.score, this.logic.shotsFired);

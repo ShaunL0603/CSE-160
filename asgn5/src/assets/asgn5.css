@@ -267,3 +267,11 @@ select {
 .menu-btn.danger:hover {
     background-color: #963b3b;
 }
+
+.stats-item {
+    font-size: 1.1rem;
+    color: #44aa88; /* Developer green */
+    font-family: monospace;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}

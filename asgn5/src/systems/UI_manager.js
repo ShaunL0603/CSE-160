@@ -5,11 +5,19 @@ export class UIManager {
 
         this.scoreVal = document.querySelector('#score-val');
         this.accuracyVal = document.querySelector('#accuracy-val');
+
+        this.fpsVal = document.querySelector('#fps-val');
+        this.msVal = document.querySelector('#ms-val');
         
         this._lastScore = -1;
         this._lastAccuracy = -1;
 
         this.initTabs();
+    }
+
+    updateStats(fps, ms) {
+        if (this.fpsVal) this.fpsVal.textContent = fps;
+        if (this.msVal) this.msVal.textContent = ms;
     }
 
     initTabs() {
