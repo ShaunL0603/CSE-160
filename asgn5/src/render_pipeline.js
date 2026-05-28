@@ -173,6 +173,12 @@ export class RenderPipeline {
                     const indexAttr = new THREE.BufferAttribute(chunk.indices, 1);
                     indexAttr.setUsage(THREE.DynamicDrawUsage);
                     geo.setIndex(indexAttr);
+                    
+                    // assign our pre-calculated static bounding box and sphere
+                    // fix clipping bugs
+                    geo.boundingBox = chunk.boundingBox.clone();
+                    geo.boundingSphere = new THREE.Sphere();
+                    geo.boundingBox.getBoundingSphere(geo.boundingSphere);
 
                     const mat = new THREE.MeshPhongMaterial({
                         vertexColors: true,

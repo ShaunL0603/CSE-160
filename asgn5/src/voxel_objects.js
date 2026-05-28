@@ -28,6 +28,33 @@ class VoxelChunk {
 
         this.exposedVertices = 0;
         this.exposedIndices = 0;
+
+        this.boundingBox = new THREE.Box3();
+        this.calculateAABB();
+    }
+
+    // calculate exact local bounding box of a chunk relative to master object center
+    calculateAABB() {
+        const s = this.parent.voxelScale;
+        const { x: pw, y: ph, z: pd } = this.parent.dimensions;
+        const { x: w, y: h, z: d } = this.dimensions;
+
+        const minGx = this.cx * CHUNK_SIZE;
+        const maxGx = this.cx * CHUNK_SIZE + w - 1;
+        const minGy = this.cy * CHUNK_SIZE;
+        const maxGy = this.cy * CHUNK_SIZE + h - 1;
+        const minGz = this.cz * CHUNK_SIZE;
+        const maxGz = this.cz * CHUNK_SIZE + d - 1;
+
+        const minLx = (minGx - (pw - 1) * 0.5) * s - s * 0.5;
+        const maxLx = (maxGx - (pw - 1) * 0.5) * s + s * 0.5;
+        const minLy = (minGy - (ph - 1) * 0.5) * s - s * 0.5;
+        const maxLy = (maxGy - (ph - 1) * 0.5) * s + s * 0.5;
+        const minLz = (minGz - (pd - 1) * 0.5) * s - s * 0.5;
+        const maxLz = (maxGz - (pd - 1) * 0.5) * s + s * 0.5;
+
+        this.boundingBox.min.set(minLx, minLy, minLz);
+        this.boundingBox.max.set(maxLx, maxLy, maxLz);
     }
 
     getIndex(lx, ly, lz) {
