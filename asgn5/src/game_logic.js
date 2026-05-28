@@ -119,8 +119,15 @@ export class GameLogic {
                 // Broad-phase: find closest voxel master bounding box intersected
                 for (let i = 0; i < voxelObjects.length; i++) {
                     const voxelObj = voxelObjects[i];
+
+                    if (voxelObj.boundingBox.containsPoint(this._tempVector)) {
+                        closestVoxelObj = voxelObj;
+                        closestDist = 0;
+                        this._marchPos.copy(this._tempVector);
+                        break;
+                    }
+
                     const intersectPoint = this._ray.intersectBox(voxelObj.boundingBox, this._tempIntersect);
-                    
                     if (intersectPoint !== null) {
                         const dist = this._tempVector.distanceTo(intersectPoint);
                         if (dist < closestDist) {
