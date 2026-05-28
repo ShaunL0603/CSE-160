@@ -46,9 +46,30 @@ export class RenderPipeline {
         this.scene.add(ambient);
 
         const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-        dirLight.position.set(5, 10, 7);
+        dirLight.position.set(10, 12, 3);
+        dirLight.target.position.set(0, 0, -5);
         dirLight.castShadow = true;
+        // Access the underlying orthographic camera
+        const cam = dirLight.shadow.camera;
+        // Define the boundaries of the shadow's orthographic view volume
+        cam.left = -20;
+        cam.right = 20;
+        cam.top = 15;
+        cam.bottom = -5;
+        // Set near and far clipping planes for the shadow
+        cam.near = 0.5;
+        cam.far = 30;
+        // // Optional: visualize the shadow camera boundaries in your scene
+        // const helper = new THREE.CameraHelper(cam);
+        // this.scene.add(helper);
         this.scene.add(dirLight);
+        this.scene.add(dirLight.target);
+        const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        const dirLightCube = new THREE.Mesh( geometry, material );
+        dirLightCube.position.set(10, 12, 3);
+        dirLightCube.scale.set(0.5, 0.5, 0.5);
+        this.scene.add( dirLightCube );
 
         // --- Map 1: Moving Targets (Grid) ---
         this.mapMoving = new THREE.Group();

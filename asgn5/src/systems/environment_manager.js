@@ -19,6 +19,7 @@ export class EnvironmentManager {
             // Static Target Map: Solid floor with two tall pillars (temp)
             this.addVoxelObject('voxel_pillar_left', new THREE.Vector3(-6, 4, -10), new THREE.Vector3(4, 16, 4), 0.5, true);
             this.addVoxelObject('voxel_pillar_right', new THREE.Vector3(6, 4, -10), new THREE.Vector3(4, 16, 4), 0.5, true);
+            this.addWall('wall_back', new THREE.Vector3(0, 0, -16), new THREE.Vector3(24, 15, 1), false);
         } else if (mapType === 'moving') {
             // Moving Target Map: Grid with a central block obstacle to navigate around (temp)
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 6, -10), new THREE.Vector3(16, 24, 16), 0.5, true);
@@ -42,9 +43,9 @@ export class EnvironmentManager {
         });
     }
 
-    addWall(id, position, size, isDestructible = false) {
+    addWall(id, position, dimensions, isDestructible = false) {
         // Build the physical bounding box
-        const halfSize = size.clone().multiplyScalar(0.5);
+        const halfSize = dimensions.clone().multiplyScalar(0.5);
         const min = position.clone().sub(halfSize);
         const max = position.clone().add(halfSize);
         const box = new THREE.Box3(min, max);
@@ -54,7 +55,7 @@ export class EnvironmentManager {
             id,
             boundingBox: box,
             position: position.clone(), 
-            size: size.clone(), 
+            size: dimensions.clone(), 
             colliderType: 'AABB',       // Physics routing instruction
             isDestructible              // Destruction tag
         });
