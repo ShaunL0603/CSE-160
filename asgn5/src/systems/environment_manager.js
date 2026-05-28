@@ -23,6 +23,7 @@ export class EnvironmentManager {
         } else if (mapType === 'moving') {
             // Moving Target Map: Grid with a central block obstacle to navigate around (temp)
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 6, -10), new THREE.Vector3(16, 24, 16), 0.5, true);
+            // this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 12, -10), new THREE.Vector3(64, 96, 64), 0.25, true);
         }
     }
 

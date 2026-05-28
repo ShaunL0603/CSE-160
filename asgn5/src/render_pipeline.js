@@ -149,71 +149,77 @@ export class RenderPipeline {
                 }
             });
 
-            // Initialize custom bufferGeometry meshes for voxel objects
+            // Initialize Chunk Meshes
             const voxelObjects = logic.environment.voxelObjects;
             voxelObjects.forEach(voxelObj => {
-                const geo = new THREE.BufferGeometry();
+                voxelObj.chunks.forEach(chunk => {
+                    const geo = new THREE.BufferGeometry();
 
-                // Bind arrays directly to WebGL attributes
-                const posAttr = new THREE.BufferAttribute(voxelObj.positions, 3);
-                const normAttr = new THREE.BufferAttribute(voxelObj.normals, 3);
-                const colorAttr = new THREE.BufferAttribute(voxelObj.colors, 3);
-                const uvAttr = new THREE.BufferAttribute(voxelObj.uvs, 2);
+                    const posAttr = new THREE.BufferAttribute(chunk.positions, 3);
+                    const normAttr = new THREE.BufferAttribute(chunk.normals, 3);
+                    const colorAttr = new THREE.BufferAttribute(chunk.colors, 3);
+                    const uvAttr = new THREE.BufferAttribute(chunk.uvs, 2);
 
-                // Set dynamic usage to optimize GPU memory transfers
-                posAttr.setUsage(THREE.DynamicDrawUsage);
-                normAttr.setUsage(THREE.DynamicDrawUsage);
-                colorAttr.setUsage(THREE.DynamicDrawUsage);
-                uvAttr.setUsage(THREE.DynamicDrawUsage);
+                    posAttr.setUsage(THREE.DynamicDrawUsage);
+                    normAttr.setUsage(THREE.DynamicDrawUsage);
+                    colorAttr.setUsage(THREE.DynamicDrawUsage);
+                    uvAttr.setUsage(THREE.DynamicDrawUsage);
 
-                geo.setAttribute('position', posAttr);
-                geo.setAttribute('normal', normAttr);
-                geo.setAttribute('color', colorAttr);
-                geo.setAttribute('uv', uvAttr);
+                    geo.setAttribute('position', posAttr);
+                    geo.setAttribute('normal', normAttr);
+                    geo.setAttribute('color', colorAttr);
+                    geo.setAttribute('uv', uvAttr);
 
-                // Set index buffer
-                const indexAttr = new THREE.BufferAttribute(voxelObj.indices, 1);
-                indexAttr.setUsage(THREE.DynamicDrawUsage);
-                geo.setIndex(indexAttr);
+                    const indexAttr = new THREE.BufferAttribute(chunk.indices, 1);
+                    indexAttr.setUsage(THREE.DynamicDrawUsage);
+                    geo.setIndex(indexAttr);
 
-                // Material supports both vertex colors and textures
-                const mat = new THREE.MeshPhongMaterial({
-                    vertexColors: true,
-                    shininess: 30,
-                    flatShading: true
+                    const mat = new THREE.MeshPhongMaterial({
+                        vertexColors: true,
+                        shininess: 30,
+                        flatShading: true
+                    });
+
+                    const mesh = new THREE.Mesh(geo, mat);
+                    mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+                    
+                    // All chunks share the master object's world position!
+                    mesh.position.copy(voxelObj.position);
+
+                    this.voxelMeshesGroup.add(mesh);
+                    
+                    // Cache using a unique composite ID
+                    const chunkId = `${voxelObj.id}_${chunk.cx}_${chunk.cy}_${chunk.cz}`;
+                    this.voxelMeshMap.set(chunkId, mesh);
+
+                    chunk.dirty = true; // Force initial upload
                 });
-
-                const mesh = new THREE.Mesh(geo, mat);
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-
-                this.voxelMeshesGroup.add(mesh);
-                this.voxelMeshMap.set(voxelObj.id, mesh); // Cache reference
-
-                voxelObj.dirty = true; // Force initial buffer upload
             });
         }
 
-        // Update dynamic buffers
+        // Update Dirty Chunks (Runs every frame)
         const voxelObjects = logic.environment.voxelObjects;
         voxelObjects.forEach(voxelObj => {
-            if (voxelObj.dirty) {
-                const mesh = this.voxelMeshMap.get(voxelObj.id);
-                if (!mesh) return;
+            voxelObj.chunks.forEach(chunk => {
+                if (chunk.dirty) {
+                    const chunkId = `${voxelObj.id}_${chunk.cx}_${chunk.cy}_${chunk.cz}`;
+                    const mesh = this.voxelMeshMap.get(chunkId);
+                    if (!mesh) return;
 
-                const geo = mesh.geometry;
+                    const geo = mesh.geometry;
 
-                // Notify WebGL that the buffers have been updated on the CPU
-                geo.attributes.position.needsUpdate = true;
-                geo.attributes.normal.needsUpdate = true;
-                geo.attributes.color.needsUpdate = true;
-                geo.attributes.uv.needsUpdate = true;
-                geo.index.needsUpdate = true;
+                    geo.attributes.position.needsUpdate = true;
+                    geo.attributes.normal.needsUpdate = true;
+                    geo.attributes.color.needsUpdate = true;
+                    geo.attributes.uv.needsUpdate = true;
+                    geo.index.needsUpdate = true;
 
-                // Update the active draw range to render only the exposed faces
-                geo.setDrawRange(0, voxelObj.exposedIndices);
-                voxelObj.dirty = false;
-            }
+                    geo.setDrawRange(0, chunk.exposedIndices);
+
+                    chunk.dirty = false;
+                }
+            });
         });
     }
 
