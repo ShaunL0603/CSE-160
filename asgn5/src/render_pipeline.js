@@ -4,7 +4,6 @@ export class RenderPipeline {
     constructor(canvas) {
         this.canvas = canvas;
         
-        // Standard high-performance WebGL context initialization
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.canvas,
             antialias: true,
@@ -14,7 +13,7 @@ export class RenderPipeline {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight, false);
         this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFShadowMap; // Optimized PCF
+        this.renderer.shadowMap.type = THREE.PCFShadowMap;
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
 
         this.scene = new THREE.Scene();
@@ -26,13 +25,11 @@ export class RenderPipeline {
         const near = 0.1;
         const far = 1000;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-
         this.camera.rotation.order = 'YXZ';
 
-        // Pre-allocated variables for instanced mesh matrix generation
         this._pos = new THREE.Vector3();
         this._scale = new THREE.Vector3();
-        this._quat = new THREE.Quaternion(); // Identity rotation (no rtoation for spheres)
+        this._quat = new THREE.Quaternion();
         this._matrix = new THREE.Matrix4();
         this._zeroScale = new THREE.Vector3(0, 0, 0); // hide inactive targets
 
@@ -92,11 +89,10 @@ export class RenderPipeline {
 
         this.wallMeshesGroup = new THREE.Group();
         this.scene.add(this.wallMeshesGroup);
-
         this.voxelMeshesGroup = new THREE.Group();
         this.scene.add(this.voxelMeshesGroup);
-        this.currentVisualMap = '';
         this.voxelMeshMap = new Map();
+        this.currentVisualMap = '';
 
         // InstancedMesh Setup (Shared across maps)
         const targetGeometry = new THREE.SphereGeometry(0.5, 16, 16);
@@ -153,75 +149,70 @@ export class RenderPipeline {
                 }
             });
 
-            // Initialize Voxel InstancedMeshes
+            // Initialize custom bufferGeometry meshes for voxel objects
             const voxelObjects = logic.environment.voxelObjects;
             voxelObjects.forEach(voxelObj => {
-                const s = voxelObj.voxelScale;
-                const geo = new THREE.BoxGeometry(1, 1, 1);
-                const mat = new THREE.MeshPhongMaterial({ shininess: 30, flatShading: true });
-                
-                const count = voxelObj.totalVoxels;
-                const instMesh = new THREE.InstancedMesh(geo, mat, count);
-                instMesh.castShadow = true;
-                instMesh.receiveShadow = true;
+                const geo = new THREE.BufferGeometry();
 
-                this.voxelMeshesGroup.add(instMesh);
-                this.voxelMeshMap.set(voxelObj.id, instMesh); // Cache it for fast updates
+                // Bind arrays directly to WebGL attributes
+                const posAttr = new THREE.BufferAttribute(voxelObj.positions, 3);
+                const normAttr = new THREE.BufferAttribute(voxelObj.normals, 3);
+                const colorAttr = new THREE.BufferAttribute(voxelObj.colors, 3);
+                const uvAttr = new THREE.BufferAttribute(voxelObj.uvs, 2);
 
-                voxelObj.dirty = true; // Force an initial matrix build
+                // Set dynamic usage to optimize GPU memory transfers
+                posAttr.setUsage(THREE.DynamicDrawUsage);
+                normAttr.setUsage(THREE.DynamicDrawUsage);
+                colorAttr.setUsage(THREE.DynamicDrawUsage);
+                uvAttr.setUsage(THREE.DynamicDrawUsage);
+
+                geo.setAttribute('position', posAttr);
+                geo.setAttribute('normal', normAttr);
+                geo.setAttribute('color', colorAttr);
+                geo.setAttribute('uv', uvAttr);
+
+                // Set index buffer
+                const indexAttr = new THREE.BufferAttribute(voxelObj.indices, 1);
+                indexAttr.setUsage(THREE.DynamicDrawUsage);
+                geo.setIndex(indexAttr);
+
+                // Material supports both vertex colors and textures
+                const mat = new THREE.MeshPhongMaterial({
+                    vertexColors: true,
+                    shininess: 30,
+                    flatShading: true
+                });
+
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+
+                this.voxelMeshesGroup.add(mesh);
+                this.voxelMeshMap.set(voxelObj.id, mesh); // Cache reference
+
+                voxelObj.dirty = true; // Force initial buffer upload
             });
         }
 
-        // Instantiate and draw compiled VoxelObjects
+        // Update dynamic buffers
         const voxelObjects = logic.environment.voxelObjects;
         voxelObjects.forEach(voxelObj => {
-            // Only rebuild visual buffers if we load a new map, OR if explosion occurs
             if (voxelObj.dirty) {
-                const instMesh = this.voxelMeshMap.get(voxelObj.id);
-                if (!instMesh) return;
+                const mesh = this.voxelMeshMap.get(voxelObj.id);
+                if (!mesh) return;
 
-                const s = voxelObj.voxelScale;
-                const count = voxelObj.totalVoxels;
+                const geo = mesh.geometry;
 
-                // Apply colors
-                const colorArray = voxelObj.colors;
-                const tempColor = new THREE.Color();
-                for (let i = 0; i < count; i++) {
-                    tempColor.setRGB(colorArray[i * 3], colorArray[i * 3 + 1], colorArray[i * 3 + 2]);
-                    instMesh.setColorAt(i, tempColor);
-                }
-                if (instMesh.instanceColor) instMesh.instanceColor.needsUpdate = true;
+                // Notify WebGL that the buffers have been updated on the CPU
+                geo.attributes.position.needsUpdate = true;
+                geo.attributes.normal.needsUpdate = true;
+                geo.attributes.color.needsUpdate = true;
+                geo.attributes.uv.needsUpdate = true;
+                geo.index.needsUpdate = true;
 
-                // Update matrix scale transforms with interior culling
-                const { x: w, y: h, z: d } = voxelObj.dimensions;
-                const wp = voxelObj.position;
-
-                for (let x = 0; x < w; x++) {
-                    for (let y = 0; y < h; y++) {
-                        for (let z = 0; z < d; z++) {
-                            const idx = voxelObj.getIndex(x, y, z);
-
-                            const lx = (x - (w - 1) * 0.5) * s;
-                            const ly = (y - (h - 1) * 0.5) * s;
-                            const lz = (z - (d - 1) * 0.5) * s;
-
-                            this._pos.set(wp.x + lx, wp.y + ly, wp.z + lz);
-
-                            const vis = voxelObj.visibilityData[idx];
-                            if (vis === 1) {
-                                this._scale.set(s, s, s); // Surface (Visible)
-                            } else {
-                                this._scale.set(0, 0, 0); // Empty or Culled (Hidden)
-                            }
-
-                            this._matrix.compose(this._pos, this._quat, this._scale);
-                            instMesh.setMatrixAt(idx, this._matrix);
-                        }
-                    }
-                }
-
-                instMesh.instanceMatrix.needsUpdate = true;
-                voxelObj.dirty = false; // Reset dirty flag
+                // Update the active draw range to render only the exposed faces
+                geo.setDrawRange(0, voxelObj.exposedIndices);
+                voxelObj.dirty = false;
             }
         });
     }
