@@ -23,6 +23,28 @@ export class PhysicsSystem {
         this._tempSphere = new THREE.Sphere();
     }
 
+    resolveEntityCollisions(entity, radius, walls) {
+        for (let i = 0; i < walls.length; i++) {
+            const wall = walls[i];
+
+            if (wall.colliderType === 'AABB') {
+                this.resolveSphereAABBCollision(entity, wall.boundingBox, radius);
+            } 
+            else if (wall.colliderType === 'SLOPE') {
+                this._tempSphere.set(entity.position, radius);
+                if (wall.boundingBox.intersectsSphere(this._tempSphere)) {
+                    this.resolveSphereSlopeCollision(entity, wall, radius);
+                }
+            } 
+            else if (wall.colliderType === 'VOXEL_GRID') {
+                this._tempSphere.set(entity.position, radius);
+                if (wall.boundingBox.intersectsSphere(this._tempSphere)) {
+                    this.resolveSphereVoxelGrid(entity, wall.voxelRef, radius);
+                }
+            }
+        }
+    }
+
     resolveTargetCollisions(targets) {
         const len = targets.length;
 
@@ -80,30 +102,12 @@ export class PhysicsSystem {
 
     resolveWallCollisions(targets, walls) {
         const targetsLen = targets.length;
-        const wallsLen = walls.length;
-
         for (let i = 0; i < targetsLen; i++) {
             const target = targets[i];
             if (!target.active) continue;
 
             const radius = target.boundingRadius * target.scale;
-
-            for (let j = 0; j < wallsLen; j++) {
-                const wall = walls[j];
-
-                // Standard solid box collision
-                if (wall.colliderType === 'AABB') {
-                    this.resolveSphereAABBCollision(target, wall.boundingBox, radius);
-                } 
-                // Voxel Grid collision
-                else if (wall.colliderType === 'VOXEL_GRID') {
-                    this._tempSphere.set(target.position, radius);
-                    // Broad-Phase Filter: check if sphere intersects the voxel object's master bounding box
-                    if (wall.boundingBox.intersectsSphere(this._tempSphere)) {
-                        this.resolveSphereVoxelGrid(target, wall.voxelRef, radius);
-                    }
-                }
-            }
+            this.resolveEntityCollisions(target, radius, walls);
         }
     }
 
@@ -152,7 +156,58 @@ export class PhysicsSystem {
         }
     }
 
-    // Narrow-Phase Voxel resolution
+    resolveSphereSlopeCollision(entity, wall, radius) {
+        let inBounds = false;
+        let t = 0;
+        let range = 0;
+
+        // NEW: Dual-Axis parametric resolver [8]
+        if (wall.slopeAxis === 'X') {
+            const minZ = wall.boundingBox.min.z;
+            const maxZ = wall.boundingBox.max.z;
+            
+            // Check if entity is width-aligned with the X-axis ramp
+            if (entity.position.z >= minZ - radius && entity.position.z <= maxZ + radius) {
+                inBounds = true;
+                range = wall.xEnd - wall.xStart;
+                t = (entity.position.x - wall.xStart) / range;
+            }
+        } else { // Default 'Z'
+            const minX = wall.boundingBox.min.x;
+            const maxX = wall.boundingBox.max.x;
+            
+            // Check if entity is width-aligned with the Z-axis ramp
+            if (entity.position.x >= minX - radius && entity.position.x <= maxX + radius) {
+                inBounds = true;
+                range = wall.zEnd - wall.zStart;
+                t = (entity.position.z - wall.zStart) / range;
+            }
+        }
+
+        if (inBounds) {
+            // Clamp parametric bounds safely
+            t = Math.max(0, Math.min(1, t));
+
+            // Calculate precise vertical surface height [8]
+            const surfaceY = wall.yStart + t * (wall.yEnd - wall.yStart);
+
+            // Ground-Clamping and slope-climbing logic
+            if (entity.position.y >= surfaceY - 0.2) {
+                if (entity.position.y <= surfaceY + 0.05 || (entity.isGrounded && entity.position.y <= surfaceY + 0.3)) {
+                    entity.position.y = surfaceY;
+                    entity.velocity.y = 0;
+                    entity.isGrounded = true;
+                }
+            } else {
+                // Side wall collisions: treats the slope as solid AABB block if hit from below
+                this.resolveSphereAABBCollision(entity, wall.boundingBox, radius);
+            }
+        } else {
+            // Hitting side limits: treats the slope as standard solid block
+            this.resolveSphereAABBCollision(entity, wall.boundingBox, radius);
+        }
+    }
+
     resolveSphereVoxelGrid(target, voxelObj, radius) {
         const s = voxelObj.voxelScale;
         const { x: w, y: h, z: d } = voxelObj.dimensions;
@@ -175,7 +230,7 @@ export class PhysicsSystem {
         const minK = Math.max(0, Math.floor(this._localMin.z / s + offsetScalarZ));
         const maxK = Math.min(d - 1, Math.ceil(this._localMax.z / s + offsetScalarZ));
 
-        // Iterate strictly over the calculated tiny sub-grid [5]
+        // Iterate strictly over the calculated tiny sub-grid
         for (let x = minI; x <= maxI; x++) {
             for (let y = minJ; y <= maxJ; y++) {
                 for (let z = minK; z <= maxK; z++) {
@@ -186,8 +241,16 @@ export class PhysicsSystem {
                         const lz = (z - (d - 1) * 0.5) * s;
 
                         this._voxelCenter.set(c.x + lx, c.y + ly, c.z + lz);
-                        this._voxelMin.set(this._voxelCenter.x - s * 0.5, this._voxelCenter.y - s * 0.5, this._voxelCenter.z - s * 0.5);
-                        this._voxelMax.set(this._voxelCenter.x + s * 0.5, this._voxelCenter.y + s * 0.5, this._voxelCenter.z + s * 0.5);
+                        this._voxelMin.set(
+                            this._voxelCenter.x - s * 0.5, 
+                            this._voxelCenter.y - s * 0.5, 
+                            this._voxelCenter.z - s * 0.5
+                        );
+                        this._voxelMax.set(
+                            this._voxelCenter.x + s * 0.5, 
+                            this._voxelCenter.y + s * 0.5, 
+                            this._voxelCenter.z + s * 0.5
+                        );
                         this._voxelBox.set(this._voxelMin, this._voxelMax);
 
                         // Resolve collision against this specific voxel box

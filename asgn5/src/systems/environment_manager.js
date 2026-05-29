@@ -25,7 +25,7 @@ export class EnvironmentManager {
 
             this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.75, -10), new THREE.Vector3(20, 1, 20), 0.5, true);
 
-            this.addSlope('ramp_center', new THREE.Vector3(0, 2, -3), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4);
+            this.addSlope('ramp_center', new THREE.Vector3(0, 2, -3), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
 
         } else if (mapType === 'moving') {
             this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
@@ -73,23 +73,32 @@ export class EnvironmentManager {
         });
     }
 
-    addSlope(id, position, size, zStart, zEnd, yStart, yEnd) {
+    addSlope(id, position, size, startCoord, endCoord, yStart, yEnd, slopeAxis = 'Z') {
         const halfSize = size.clone().multiplyScalar(0.5);
         const min = position.clone().sub(halfSize);
         const max = position.clone().add(halfSize);
         const box = new THREE.Box3(min, max);
 
-        this.walls.push({
+        const slopeObject = {
             id,
             boundingBox: box,
             position: position.clone(),
             size: size.clone(),
             colliderType: 'SLOPE',
-            zStart,
-            zEnd,
             yStart,
             yEnd,
+            slopeAxis,
             isDestructible: false
-        });
+        };
+
+        if (slopeAxis === 'X') {
+            slopeObject.xStart = startCoord;
+            slopeObject.xEnd = endCoord;
+        } else {
+            slopeObject.zStart = startCoord;
+            slopeObject.zEnd = endCoord;
+        }
+
+        this.walls.push(slopeObject);
     }
 }
