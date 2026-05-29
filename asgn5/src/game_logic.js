@@ -126,12 +126,12 @@ export class GameLogic {
                     ++this.score;
                     this.targetManager.despawnTarget(hitTargetId);
                     this.targetManager.spawnTarget(this.config.gameplay, this.environment);
-                    console.log("hit target:", hitTargetId);
+                    // console.log("hit target:", hitTargetId);
                     const sfx = assets.sounds.get('hit');
                     if (sfx) audio.playSound(sfx);
                     else audio.synthesizeBeep(880, 0.08, 'triangle');
                 } else {
-                    console.log("missed");
+                    // console.log("missed");
                     const sfx = assets.sounds.get('miss');
                     if (sfx) audio.playSound(sfx);
                     else audio.synthesizeBeep(220, 0.1, 'sawtooth');
