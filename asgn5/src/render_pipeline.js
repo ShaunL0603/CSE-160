@@ -139,10 +139,42 @@ export class RenderPipeline {
             });
 
             walls.forEach(wall => {
-                if (wall.colliderType === 'AABB') {
+                if (wall.colliderType === 'AABB') { 
                     const geo = new THREE.BoxGeometry(wall.size.x, wall.size.y, wall.size.z);
                     const mesh = new THREE.Mesh(geo, wallMaterial);
                     mesh.position.copy(wall.position);
+                    mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+                    this.wallMeshesGroup.add(mesh);
+                }
+                else if (wall.colliderType === 'SLOPE') {
+                    const isXAxis = wall.slopeAxis === 'X';
+                    
+                    // Get rise and run along the active axis
+                    const run = isXAxis ? Math.abs(wall.xEnd - wall.xStart) : Math.abs(wall.zEnd - wall.zStart);
+                    const rise = Math.abs(wall.yEnd - wall.yStart);
+                    const length = Math.sqrt(run * run + rise * rise);
+                    const thickness = 0.2; 
+
+                    // Orient box dimensions to match the active direction axis
+                    const sizeX = isXAxis ? length : wall.size.x;
+                    const sizeZ = isXAxis ? wall.size.z : length;
+
+                    const geo = new THREE.BoxGeometry(sizeX, thickness, sizeZ);
+                    const mesh = new THREE.Mesh(geo, wallMaterial);
+                    mesh.position.copy(wall.position);
+
+                    const angle = Math.atan2(rise, run);
+                    
+                    // Apply correct visual rotations
+                    if (isXAxis) {
+                        const rotationDir = (wall.xEnd < wall.xStart) ? -1 : 1;
+                        mesh.rotation.z = angle * rotationDir; // Tilt left/right
+                    } else {
+                        const rotationDir = (wall.zEnd < wall.zStart) ? 1 : -1;
+                        mesh.rotation.x = angle * rotationDir; // Tilt front/back
+                    }
+
                     mesh.castShadow = true;
                     mesh.receiveShadow = true;
                     this.wallMeshesGroup.add(mesh);
