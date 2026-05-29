@@ -2,9 +2,10 @@ import * as THREE from 'three';
 
 export class PlayerController {
     constructor(baseFOV) {
+        this.radius = 0.6; // explicit collision radius
         // Player spatial properties, track feet on ground
-        this.position = new THREE.Vector3(0, 0, 5);
-        this.prevPosition = new THREE.Vector3(0, 0, 5);
+        this.position = new THREE.Vector3(0, 5.6, 5);
+        this.prevPosition = new THREE.Vector3(0, 5.6, 5);
         this.velocity = new THREE.Vector3(0, 0, 0);
 
         // eye-height
@@ -50,7 +51,7 @@ export class PlayerController {
 
     getEyePosition(outVector) {
         outVector.copy(this.position);
-        outVector.y += this.eyeHeight;
+        outVector.y += this.eyeHeight - this.radius;
     }
 
     getLookDirection(outVector) {
@@ -68,10 +69,10 @@ export class PlayerController {
             this.velocity.set(0, 0, 0); // Reset forces
         }
 
-        // Apply mouse looking
-        const mouseSensitivity = 0.002;
-        this.yaw -= input.mouseDelta.x * mouseSensitivity;
-        this.pitch -= input.mouseDelta.y * mouseSensitivity;
+        // // Apply mouse looking
+        // const mouseSensitivity = 0.002;
+        // this.yaw -= input.mouseDelta.x * mouseSensitivity;
+        // this.pitch -= input.mouseDelta.y * mouseSensitivity;
 
         // Clamp camera pitch looking up/down to avoid screen flipping (approx. 85 degrees)
         const pitchLimit = (Math.PI * 0.5) - 0.08;
@@ -162,6 +163,7 @@ export class PlayerController {
         this.velocity.z = this._wishDir.z * currentSpeed;
 
         // Apply environment gravity
+        // console.log("grounded:", this.isGrounded);
         if (!this.isGrounded) {
             this.velocity.y += this.gravity * dt;
         } else {
@@ -204,8 +206,8 @@ export class PlayerController {
     }
 
     reset(baseFOV) {
-        this.position.set(0, 0, 5);
-        this.prevPosition.set(0, 0, 5);
+        this.position.set(0, 5.6, 5);
+        this.prevPosition.set(0, 5.6, 5);
         this.velocity.set(0, 0, 0);
         
         this.pitch = 0;
@@ -220,6 +222,6 @@ export class PlayerController {
         this.isSprinting = false;
         this.isADS = false;
         this.isNoclip = false;
-        this.isGrounded = true;   
+        this.isGrounded = false;   
     }
 }

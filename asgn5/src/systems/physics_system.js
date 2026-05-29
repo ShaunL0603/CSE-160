@@ -142,30 +142,43 @@ export class PhysicsSystem {
                 else if (minPen === dMaxY) { this._normal.y = 1; entity.position.y = box.max.y + radius; }
                 else if (minPen === dMinZ) { this._normal.z = -1; entity.position.z = box.min.z - radius; }
                 else if (minPen === dMaxZ) { this._normal.z = 1; entity.position.z = box.max.z + radius; }
-
-                if (slide) {
-                    const dot = entity.velocity.dot(this._normal);
-                    if (dot < 0) {
-                        entity.velocity.addScaledVector(this._normal, -dot);
-                        entity.velocity.multiplyScalar(0.5); // 50% friction modifyer hen sliding
-                    }
-                } else {
-                    entity.velocity.reflect(this._normal);
-                }
             } else {
                 this._normal.copy(this._tempDir).divideScalar(dist);
-                const overlap = radius - dist;
-                entity.position.addScaledVector(this._normal, overlap);
+            }
 
-                if (slide) { 
-                    const dot = entity.velocity.dot(this._normal);
-                    if (dot < 0) {
-                        entity.velocity.addScaledVector(this._normal, -dot);
-                        entity.velocity.multiplyScalar(0.5);
-                    }
-                } else {
-                    entity.velocity.reflect(this._normal);
+            // STEP UP: if we collide with a vertical block face, 
+            // but the top face is just slightly above our feet (<= 0.45 units)
+            const feetY = entity.position.y - radius;
+            const stepHeight = 0.45; // Standard step-up height limit
+            const heightDiff = boundingBox.max.y - feetY;
+            
+            if (heightDiff > 0 && heightDiff <= stepHeight && this._normal.y < 0.5) {
+                entity.position.y = boundingBox.max.y + radius; // Snap feet to top surface
+                entity.isGrounded = true;
+                entity.velocity.y = 0;
+                return; // bypass horizontal push-back
+            }
+
+            // Standard collision response
+            const overlap = radius - dist;
+            if (dist > 0) {
+                entity.position.addScaledVector(this._normal, overlap);
+            }
+            // --- GROUND LOGIC ---
+            // If the push-out normal is mostly upwards, we're on a floor
+            if (this._normal.y > 0.707) {
+                entity.isGrounded = true;
+                entity.velocity.y = 0;
+            }
+
+            if (slide) {
+                const dot = entity.velocity.dot(this._normal);
+                if (dot < 0) {
+                    entity.velocity.addScaledVector(this._normal, -dot);
+                    // entity.velocity.multiplyScalar(0.5); // friction slow down
                 }
+            } else {
+                entity.velocity.reflect(this._normal);
             }
         }
     }
@@ -200,10 +213,11 @@ export class PhysicsSystem {
             t = Math.max(0, Math.min(1, t));
             // Calculate precise vertical surface height
             const surfaceY = wall.yStart + t * (wall.yEnd - wall.yStart);
+            const feetY = entity.position.y - radius;
             // Ground-Clamping and slope-climbing logic
             if (entity.position.y >= surfaceY - 0.2) {
-                if (entity.position.y <= surfaceY + 0.05 || (entity.isGrounded && entity.position.y <= surfaceY + 0.3)) {
-                    entity.position.y = surfaceY;
+                if (feetY <= surfaceY + 0.05 || (entity.isGrounded && feetY <= surfaceY + 0.3)) {
+                    entity.position.y = surfaceY + radius;
                     entity.velocity.y = 0;
                     entity.isGrounded = true;
                 }

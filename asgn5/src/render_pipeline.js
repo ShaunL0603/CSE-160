@@ -281,7 +281,7 @@ export class RenderPipeline {
 
         // interpolate visual eye height and apply vertical offset
         const currentEyeHeight = THREE.MathUtils.lerp(player.prevEyeHeight, player.prevEyeHeight, alpha);
-        this.camera.position.y += currentEyeHeight;
+        this.camera.position.y += (currentEyeHeight - player.radius);
 
         const currentYaw = THREE.MathUtils.lerp(player.prevYaw, player.yaw, alpha);
         const currentPitch = THREE.MathUtils.lerp(player.prevPitch, player.pitch, alpha);
