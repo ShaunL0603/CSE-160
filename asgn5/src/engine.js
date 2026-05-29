@@ -128,6 +128,7 @@ export class Engine {
         // update HUD display values
         if (!this.isPaused) {
             this.ui.updateHUD(this.logic.score, this.logic.shotsFired, this.logic.currentMode);
+            this.ui.updateHealth(this.logic.player.health);
         }
 
         this.rafId = requestAnimationFrame((time) => this.loop(time));
