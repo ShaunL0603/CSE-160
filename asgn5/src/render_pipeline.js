@@ -193,49 +193,61 @@ export class RenderPipeline {
                 }
             });
 
-            // Initialize Voxel Objects
+            // Initialize Chunk Meshes
             const voxelObjects = logic.environment.voxelObjects;
             voxelObjects.forEach(voxelObj => {
-                const s = voxelObj.voxelScale;
-                const geo = new THREE.BufferGeometry();
+                voxelObj.chunks.forEach(chunk => {
+                    const geo = new THREE.BufferGeometry();
 
-                const posAttr = new THREE.BufferAttribute(voxelObj.positions, 3);
-                const normAttr = new THREE.BufferAttribute(voxelObj.normals, 3);
-                const colorAttr = new THREE.BufferAttribute(voxelObj.colors, 3);
-                const uvAttr = new THREE.BufferAttribute(voxelObj.uvs, 2);
+                    const posAttr = new THREE.BufferAttribute(chunk.positions, 3);
+                    const normAttr = new THREE.BufferAttribute(chunk.normals, 3);
+                    const colorAttr = new THREE.BufferAttribute(chunk.colors, 3);
+                    const uvAttr = new THREE.BufferAttribute(chunk.uvs, 2);
 
-                posAttr.setUsage(THREE.DynamicDrawUsage);
-                normAttr.setUsage(THREE.DynamicDrawUsage);
-                colorAttr.setUsage(THREE.DynamicDrawUsage);
-                uvAttr.setUsage(THREE.DynamicDrawUsage);
+                    posAttr.setUsage(THREE.DynamicDrawUsage);
+                    normAttr.setUsage(THREE.DynamicDrawUsage);
+                    colorAttr.setUsage(THREE.DynamicDrawUsage);
+                    uvAttr.setUsage(THREE.DynamicDrawUsage);
 
-                geo.setAttribute('position', posAttr);
-                geo.setAttribute('normal', normAttr);
-                geo.setAttribute('color', colorAttr);
-                geo.setAttribute('uv', uvAttr);
+                    geo.setAttribute('position', posAttr);
+                    geo.setAttribute('normal', normAttr);
+                    geo.setAttribute('color', colorAttr);
+                    geo.setAttribute('uv', uvAttr);
 
-                const indexAttr = new THREE.BufferAttribute(voxelObj.indices, 1);
-                indexAttr.setUsage(THREE.DynamicDrawUsage);
-                geo.setIndex(indexAttr);
+                    const indexAttr = new THREE.BufferAttribute(chunk.indices, 1);
+                    indexAttr.setUsage(THREE.DynamicDrawUsage);
+                    geo.setIndex(indexAttr);
+                    
+                    // assign our pre-calculated static bounding box and sphere
+                    // fix clipping bugs
+                    geo.boundingBox = chunk.boundingBox.clone();
+                    geo.boundingSphere = new THREE.Sphere();
+                    geo.boundingBox.getBoundingSphere(geo.boundingSphere);
 
-                const mat = new THREE.MeshPhongMaterial({
-                    vertexColors: true,
-                    shininess: 30,
-                    flatShading: true
+                    const mat = new THREE.MeshPhongMaterial({
+                        vertexColors: true,
+                        shininess: 30,
+                        flatShading: true
+                    });
+
+                    const mesh = new THREE.Mesh(geo, mat);
+                    mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+                    
+                    // All chunks share the master object's world position!
+                    mesh.position.copy(voxelObj.position);
+
+                    this.voxelMeshesGroup.add(mesh);
+                    
+                    // Cache using a unique composite ID
+                    const chunkId = `${voxelObj.id}_${chunk.cx}_${chunk.cy}_${chunk.cz}`;
+                    this.voxelMeshMap.set(chunkId, mesh);
+
+                    chunk.dirty = true; // Force initial upload
                 });
-
-                const mesh = new THREE.Mesh(geo, mat);
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-                mesh.position.copy(voxelObj.position);
-
-                this.voxelMeshesGroup.add(mesh);
-                this.voxelMeshMap.set(voxelObj.id, mesh);
-
-                voxelObj.dirty = true; 
             });
 
-            // meshes for active AI Enemies
+            // buidling enemy active meshes
             const enemies = logic.enemies;
             const enemyGeometry = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 16);
             const enemyMaterial = new THREE.MeshPhongMaterial({ color: 0xffee00, shininess: 80 }); // yellow enemies
@@ -318,21 +330,25 @@ export class RenderPipeline {
         // sync visual meshes dynamically
         this.syncVisualEnvironment(logic);
 
+        // synchronizing enemies and interpolating their visual meshes
         const enemies = logic.enemies;
         for (let i = 0; i < enemies.length; i++) {
             const enemy = enemies[i];
             const mesh = this.enemyMeshes[i];
             if (mesh) {
-                // Interpolate spatial position
+                // Interpolate spatial position [1]
                 mesh.position.lerpVectors(enemy.prevPosition, enemy.position, alpha);
-                // Interpolate head rotation yaw
+                
+                // Interpolate head rotation yaw [1]
                 const currentEnemyYaw = THREE.MathUtils.lerp(enemy.prevYaw, enemy.yaw, alpha);
                 mesh.rotation.y = currentEnemyYaw;
+                
                 // Toggle visibility based on active status
                 mesh.visible = enemy.active;
             }
         }
 
+        // synchronizeand interpolate targets
         const targets = logic.targetManager.targets;
         for (let i = 0; i < targets.length; ++i) {
             const target = targets[i];
