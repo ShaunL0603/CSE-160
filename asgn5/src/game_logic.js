@@ -24,7 +24,7 @@ export class GameLogic {
                 targetSize: 0.5,
                 targetCount: 10,
                 mapType: 'moving',
-                destructionRadius: 2.0
+                destructionRadius: 1.0
             }
         };
 

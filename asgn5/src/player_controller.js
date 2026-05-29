@@ -32,7 +32,7 @@ export class PlayerController {
         this.moveSpeed = 6.0;
         this.noclipSpeed = 12.0;
         this.gravity = -24.0;
-        this.jumpImpulse = 8.5;
+        this.jumpImpulse = 13;
 
         // Pre-allocated Vector3s
         this._forward = new THREE.Vector3();
@@ -160,6 +160,7 @@ export class PlayerController {
             currentSpeed = this.moveSpeed * 1.5;
         }
         this.velocity.x = this._wishDir.x * currentSpeed;
+        this.velocity.y += this.gravity * dt;
         this.velocity.z = this._wishDir.z * currentSpeed;
 
         // Apply environment gravity
@@ -176,8 +177,6 @@ export class PlayerController {
         // Apply physical delta translations
         this._temp.copy(this.velocity).multiplyScalar(dt);
         this.position.add(this._temp);
-
-        this.isGrounded = false; // reset every tick, physics_system re-sets to true
     }
 
     applyNoclipMovement(dt, input) {

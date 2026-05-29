@@ -23,9 +23,9 @@ export class EnvironmentManager {
             this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false);
             this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
 
-            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 1, -10), new THREE.Vector3(20, 1, 20), 0.5, true);
+            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.75, -10), new THREE.Vector3(40, 2, 40), 0.25, true);
 
-            this.addSlope('ramp_center', new THREE.Vector3(0, 2, -3), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
+            this.addSlope('ramp_center', new THREE.Vector3(0, 1.9, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
 
         } else if (mapType === 'moving') {
             this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
