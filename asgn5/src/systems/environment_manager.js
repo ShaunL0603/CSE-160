@@ -16,14 +16,25 @@ export class EnvironmentManager {
         this.voxelObjects = [];
         
         if (mapType === 'static') {
-            // Static Target Map: Solid floor with two tall pillars (temp)
-            this.addVoxelObject('voxel_pillar_left', new THREE.Vector3(-6, 4, -10), new THREE.Vector3(4, 16, 4), 0.5, true);
-            this.addVoxelObject('voxel_pillar_right', new THREE.Vector3(6, 4, -10), new THREE.Vector3(4, 16, 4), 0.5, true);
-            this.addWall('wall_back', new THREE.Vector3(0, 0, -16), new THREE.Vector3(24, 15, 1), false);
+            this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
+
+            this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false);
+            this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false);
+            this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false);
+            this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
+
+            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.75, -10), new THREE.Vector3(20, 1, 20), 0.5, true);
+
+            this.addSlope('ramp_center', new THREE.Vector3(0, 2, -3), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4);
+
         } else if (mapType === 'moving') {
-            // Moving Target Map: Grid with a central block obstacle to navigate around (temp)
-            this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 6, -10), new THREE.Vector3(16, 24, 16), 0.5, true);
-            // this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 12, -10), new THREE.Vector3(64, 96, 64), 0.25, true);
+            this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
+            this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false);
+            this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false);
+            this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false);
+            this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
+
+            this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(8, 12, 8), 0.5, true);
         }
     }
 
@@ -59,6 +70,26 @@ export class EnvironmentManager {
             size: dimensions.clone(), 
             colliderType: 'AABB',       // Physics routing instruction
             isDestructible              // Destruction tag
+        });
+    }
+
+    addSlope(id, position, size, zStart, zEnd, yStart, yEnd) {
+        const halfSize = size.clone().multiplyScalar(0.5);
+        const min = position.clone().sub(halfSize);
+        const max = position.clone().add(halfSize);
+        const box = new THREE.Box3(min, max);
+
+        this.walls.push({
+            id,
+            boundingBox: box,
+            position: position.clone(),
+            size: size.clone(),
+            colliderType: 'SLOPE',
+            zStart,
+            zEnd,
+            yStart,
+            yEnd,
+            isDestructible: false
         });
     }
 }
