@@ -7,12 +7,16 @@ export class UIManager {
         this.accuracyVal = document.querySelector('#accuracy-val');
         this.modeVal = document.querySelector('#mode-val');
 
+        this.healthText = document.querySelector('#health-text');
+        this.healthFill = document.querySelector('#health-fill');
+
         this.fpsVal = document.querySelector('#fps-val');
         this.msVal = document.querySelector('#ms-val');
         
         this._lastScore = -1;
         this._lastAccuracy = -1;
         this._lastMode = '';
+        this._lastHealth = -1;
 
         this.initTabs();
     }
@@ -179,6 +183,14 @@ export class UIManager {
                 this.modeVal.style.color = mode === 'SHOOT' ? '#ffaa44' : '#aa44ff';
             }
             this._lastMode = mode;
+        }
+    }
+
+    updateHealth(health, force = false) {
+        if (health !== this._lastHealth || force) {
+            if (this.healthText) this.healthText.textContent = health;
+            if (this.healthFill) this.healthFill.style.width = `${health}%`;
+            this._lastHealth = health;
         }
     }
 }
