@@ -23,12 +23,12 @@ export class PhysicsSystem {
         this._tempSphere = new THREE.Sphere();
     }
 
-    resolveEntityCollisions(entity, radius, walls) {
+    resolveEntityCollisions(entity, radius, walls, slide = false) {
         for (let i = 0; i < walls.length; i++) {
             const wall = walls[i];
 
             if (wall.colliderType === 'AABB') {
-                this.resolveSphereAABBCollision(entity, wall.boundingBox, radius);
+                this.resolveSphereAABBCollision(entity, wall.boundingBox, radius, slide);
             } 
             else if (wall.colliderType === 'SLOPE') {
                 this._tempSphere.set(entity.position, radius);
@@ -39,7 +39,7 @@ export class PhysicsSystem {
             else if (wall.colliderType === 'VOXEL_GRID') {
                 this._tempSphere.set(entity.position, radius);
                 if (wall.boundingBox.intersectsSphere(this._tempSphere)) {
-                    this.resolveSphereVoxelGrid(entity, wall.voxelRef, radius);
+                    this.resolveSphereVoxelGrid(entity, wall.voxelRef, radius, slide);
                 }
             }
         }
@@ -107,15 +107,15 @@ export class PhysicsSystem {
             if (!target.active) continue;
 
             const radius = target.boundingRadius * target.scale;
-            this.resolveEntityCollisions(target, radius, walls);
+            this.resolveEntityCollisions(target, radius, walls, false);
         }
     }
 
     // Sphere-to-AABB math
-    resolveSphereAABBCollision(target, boundingBox, radius) {
+    resolveSphereAABBCollision(entity, boundingBox, radius, slide = false) {
         // Find the closest point on the bounding box to the target sphere
-        this._closestPoint.copy(target.position).clamp(boundingBox.min, boundingBox.max);
-        this._tempDir.copy(target.position).sub(this._closestPoint);
+        this._closestPoint.copy(entity.position).clamp(boundingBox.min, boundingBox.max);
+        this._tempDir.copy(entity.position).sub(this._closestPoint);
         const distSq = this._tempDir.lengthSq();
 
         if (distSq < radius * radius) {
@@ -124,7 +124,7 @@ export class PhysicsSystem {
             if (dist === 0) {
                 // Sphere center is completely inside the box
                 const box = boundingBox;
-                const p = target.position;
+                const p = entity.position;
                 
                 const dMinX = p.x - box.min.x;
                 const dMaxX = box.max.x - p.x;
@@ -136,22 +136,36 @@ export class PhysicsSystem {
                 const minPen = Math.min(dMinX, dMaxX, dMinY, dMaxY, dMinZ, dMaxZ);
                 this._normal.set(0, 0, 0);
 
-                if (minPen === dMinX) { this._normal.x = -1; target.position.x = box.min.x - radius; }
-                else if (minPen === dMaxX) { this._normal.x = 1; target.position.x = box.max.x + radius; }
-                else if (minPen === dMinY) { this._normal.y = -1; target.position.y = box.min.y - radius; }
-                else if (minPen === dMaxY) { this._normal.y = 1; target.position.y = box.max.y + radius; }
-                else if (minPen === dMinZ) { this._normal.z = -1; target.position.z = box.min.z - radius; }
-                else if (minPen === dMaxZ) { this._normal.z = 1; target.position.z = box.max.z + radius; }
+                if (minPen === dMinX) { this._normal.x = -1; entity.position.x = box.min.x - radius; }
+                else if (minPen === dMaxX) { this._normal.x = 1; entity.position.x = box.max.x + radius; }
+                else if (minPen === dMinY) { this._normal.y = -1; entity.position.y = box.min.y - radius; }
+                else if (minPen === dMaxY) { this._normal.y = 1; entity.position.y = box.max.y + radius; }
+                else if (minPen === dMinZ) { this._normal.z = -1; entity.position.z = box.min.z - radius; }
+                else if (minPen === dMaxZ) { this._normal.z = 1; entity.position.z = box.max.z + radius; }
 
-                target.velocity.reflect(this._normal);
+                if (slide) {
+                    const dot = entity.velocity.dot(this._normal);
+                    if (dot < 0) {
+                        entity.velocity.addScaledVector(this._normal, -dot);
+                        entity.velocity.multiplyScalar(0.5); // 50% friction modifyer hen sliding
+                    }
+                } else {
+                    entity.velocity.reflect(this._normal);
+                }
             } else {
-                // Standard penetration: calculate collision normal
                 this._normal.copy(this._tempDir).divideScalar(dist);
                 const overlap = radius - dist;
-                // Positional correction: push out of wall
-                target.position.addScaledVector(this._normal, overlap);
-                // Bounce: reflect velocity vector
-                target.velocity.reflect(this._normal);
+                entity.position.addScaledVector(this._normal, overlap);
+
+                if (slide) { 
+                    const dot = entity.velocity.dot(this._normal);
+                    if (dot < 0) {
+                        entity.velocity.addScaledVector(this._normal, -dot);
+                        entity.velocity.multiplyScalar(0.5);
+                    }
+                } else {
+                    entity.velocity.reflect(this._normal);
+                }
             }
         }
     }
@@ -161,22 +175,19 @@ export class PhysicsSystem {
         let t = 0;
         let range = 0;
 
-        // NEW: Dual-Axis parametric resolver [8]
         if (wall.slopeAxis === 'X') {
             const minZ = wall.boundingBox.min.z;
             const maxZ = wall.boundingBox.max.z;
-            
-            // Check if entity is width-aligned with the X-axis ramp
+            // Check if entity is width-aligned with a X-axis ramp
             if (entity.position.z >= minZ - radius && entity.position.z <= maxZ + radius) {
                 inBounds = true;
                 range = wall.xEnd - wall.xStart;
                 t = (entity.position.x - wall.xStart) / range;
             }
-        } else { // Default 'Z'
+        } else {
             const minX = wall.boundingBox.min.x;
             const maxX = wall.boundingBox.max.x;
-            
-            // Check if entity is width-aligned with the Z-axis ramp
+            // Check if entity is width-aligned with a Z-axis ramp
             if (entity.position.x >= minX - radius && entity.position.x <= maxX + radius) {
                 inBounds = true;
                 range = wall.zEnd - wall.zStart;
@@ -187,10 +198,8 @@ export class PhysicsSystem {
         if (inBounds) {
             // Clamp parametric bounds safely
             t = Math.max(0, Math.min(1, t));
-
-            // Calculate precise vertical surface height [8]
+            // Calculate precise vertical surface height
             const surfaceY = wall.yStart + t * (wall.yEnd - wall.yStart);
-
             // Ground-Clamping and slope-climbing logic
             if (entity.position.y >= surfaceY - 0.2) {
                 if (entity.position.y <= surfaceY + 0.05 || (entity.isGrounded && entity.position.y <= surfaceY + 0.3)) {
@@ -199,16 +208,14 @@ export class PhysicsSystem {
                     entity.isGrounded = true;
                 }
             } else {
-                // Side wall collisions: treats the slope as solid AABB block if hit from below
-                this.resolveSphereAABBCollision(entity, wall.boundingBox, radius);
+                this.resolveSphereAABBCollision(entity, wall.boundingBox, radius, true);
             }
         } else {
-            // Hitting side limits: treats the slope as standard solid block
-            this.resolveSphereAABBCollision(entity, wall.boundingBox, radius);
+            this.resolveSphereAABBCollision(entity, wall.boundingBox, radius, true);
         }
     }
 
-    resolveSphereVoxelGrid(target, voxelObj, radius) {
+    resolveSphereVoxelGrid(target, voxelObj, radius, slide = false) {
         const s = voxelObj.voxelScale;
         const { x: w, y: h, z: d } = voxelObj.dimensions;
         const c = voxelObj.position;
@@ -254,7 +261,7 @@ export class PhysicsSystem {
                         this._voxelBox.set(this._voxelMin, this._voxelMax);
 
                         // Resolve collision against this specific voxel box
-                        this.resolveSphereAABBCollision(target, this._voxelBox, radius);
+                        this.resolveSphereAABBCollision(target, this._voxelBox, radius, slide);
                     }
                 }
             }
