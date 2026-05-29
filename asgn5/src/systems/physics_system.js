@@ -283,4 +283,25 @@ export class PhysicsSystem {
             }
         }
     }
+
+    resolvePlayerEnemyCollision(player, enemy, radius) {
+        this._tempDir.copy(player.position).sub(enemy.position);
+        const minDist = radius + enemy.radius;
+        const distSq = this._tempDir.lengthSq();
+
+        // If overlapping horizontally, resolve with vector-projection sliding
+        if (distSq < minDist * minDist) {
+            const dist = Math.sqrt(distSq);
+            this._normal.copy(this._tempDir).divideScalar(dist);
+            const overlap = minDist - dist;
+
+            // Push player out of enemy cylinder space
+            player.position.addScaledVector(this._normal, overlap);
+
+            const dot = player.velocity.dot(this._normal);
+            if (dot < 0) {
+                player.velocity.addScaledVector(this._normal, -dot);
+            }
+        }
+    }
 }
