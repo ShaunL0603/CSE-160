@@ -4,6 +4,7 @@ import { TargetManager } from './systems/target_manager.js';
 import { HitDetectionSystem } from './systems/hit_detection_system.js';
 import { EnvironmentManager } from './systems/environment_manager.js';
 import { PhysicsSystem } from './systems/physics_system.js';
+import { Enemy } from './systems/enemy.js';
 
 export class GameLogic {
     constructor() {
@@ -37,7 +38,19 @@ export class GameLogic {
         this.physics = new PhysicsSystem();
 
         this.environment.loadMap(this.config.gameplay.mapType);
-        this.targetManager.spawnInitial(this.config.gameplay.targetCount, this.config.gameplay, this.environment);
+        this.targetManager.spawnInitial(
+            this.config.gameplay.targetCount, 
+            this.config.gameplay, 
+            this.environment
+        );
+
+        // new enemies
+        this.enemies = [
+            new Enemy('patrol_guard', new THREE.Vector3(0, 4.6, -10), [
+                new THREE.Vector3(3, 4.6, -12),
+                new THREE.Vector3(-3, 4.6, -12)
+            ])
+        ];
 
         this._lookDir = new THREE.Vector3();
         this._tempVector = new THREE.Vector3();
@@ -60,6 +73,9 @@ export class GameLogic {
     savePreviousState() {
         this.player.savePreviousState();
         this.targetManager.savePreviousStates();
+        for (let i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i].active) this.enemies[i].savePreviousState();
+        }
     }
 
     // Executed at a predictable, fixed interval of 60Hz
@@ -70,6 +86,19 @@ export class GameLogic {
         this.targetManager.update(dt);
         // resolve collisions
         this.physics.resolveEntityCollisions(this.player, 0.6, this.environment.walls, true);
+
+        // Update and Resolve Enemies
+        for (let i = 0; i < this.enemies.length; i++) {
+            const enemy = this.enemies[i];
+            if (!enemy.active) continue;
+            // Execute AI decision tree FSM and sensory updates
+            enemy.update(dt, this.player, this.environment, this.hitDetection, audio, assets);
+            // Resolve enemy collisions against walls, slopes, and voxel blocks
+            this.physics.resolveEntityCollisions(enemy, enemy.radius, this.environment.walls, false);
+            // Resolve player-to-enemy collisions (Allows sliding against active enemies) [9]
+            this.physics.resolvePlayerEnemyCollision(this.player, enemy, this.player.radius);
+        }
+
         this.physics.resolveTargetCollisions(this.targetManager.targets);
         this.physics.resolveWallCollisions(this.targetManager.targets, this.environment.walls);
 
@@ -189,5 +218,8 @@ export class GameLogic {
         this.shotsFired = 0;
         this.player.reset(this.config.camera.baseFOV);
         this.targetManager.reset(this.config.gameplay, this.environment);
+        for (let i = 0; i < this.enemies.length; i++) {
+            this.enemies[i].reset(this.config.camera.baseFOV);
+        }
     }
 }
