@@ -24,7 +24,7 @@ export class PlayerController {
         this.isCrouched = false;
         this.isSprinting = false;
         this.isADS = false;
-        this.isGrounded = true;
+        this.isGrounded = false;
         this.isNoclip = false;
 
         // Kinematics Configuration
@@ -32,12 +32,6 @@ export class PlayerController {
         this.noclipSpeed = 12.0;
         this.gravity = -24.0;
         this.jumpImpulse = 8.5;
-
-        this.bounds = {
-            floorY: 0.0,
-            limitXZ: 24.0
-        };
-
 
         // Pre-allocated Vector3s
         this._forward = new THREE.Vector3();
@@ -74,6 +68,15 @@ export class PlayerController {
             this.velocity.set(0, 0, 0); // Reset forces
         }
 
+        // Apply mouse looking
+        const mouseSensitivity = 0.002;
+        this.yaw -= input.mouseDelta.x * mouseSensitivity;
+        this.pitch -= input.mouseDelta.y * mouseSensitivity;
+
+        // Clamp camera pitch looking up/down to avoid screen flipping (approx. 85 degrees)
+        const pitchLimit = (Math.PI * 0.5) - 0.08;
+        this.pitch = Math.max(-pitchLimit, Math.min(pitchLimit, this.pitch));
+
         // toggles or holding button
         if (config.controls.toggleCrouch) {
             if (input.triggers.crouch) this.isCrouched = !this.isCrouched;
@@ -85,8 +88,8 @@ export class PlayerController {
         } else {
             this.isSprinting = input.state.sprint;
         }
-
         this.isADS = input.state.ads;
+
         // FOV zoom
         const targetFOV = this.isADS ? config.camera.baseFOV / 1.5 : config.camera.baseFOV;
         const zoomSpeed = 15.0;
@@ -107,13 +110,23 @@ export class PlayerController {
         this.yaw -= input.mouseDelta.x * currentSensX * 0.005;
         this.pitch -= input.mouseDelta.y * currentSensY * 0.005;
 
-        // Clamp camera pitch looking up/down to avoid screen flipping (approx. 85 degrees)
-        const pitchLimit = (Math.PI * 0.5) - 0.08;
-        this.pitch = Math.max(-pitchLimit, Math.min(pitchLimit, this.pitch));
-
         const targetEyeHeight = this.isCrouched ? 0.8 : 1.6;
-        const croutchTransitionSpeed = 14.0;
-        this.eyeHeight = THREE.MathUtils.lerp(this.eyeHeight, targetEyeHeight, croutchTransitionSpeed * dt);
+        const heightDifference = this.eyeHeight - targetEyeHeight;
+
+        if (!this.isGrounded && heightDifference > 0 && !this.isNoclip) {
+            // Pull the physical feet up instantly to gain vertical obstacle clearance
+            this.position.y += heightDifference;
+            this.eyeHeight = targetEyeHeight; // Snap eyeheight instantly
+        } else {
+            // smooth head-bob crouch on ground
+            const crouchTransitionSpeed = 14.0;
+            this.eyeHeight = THREE.MathUtils.lerp(this.eyeHeight, targetEyeHeight, crouchTransitionSpeed * dt);
+        }
+
+        // Void Fall reset failsafe
+        // if (this.position.y < -30.0) {
+        //     this.reset(config.camera.baseFOV);
+        // }
 
         // Select Kinematic Mode
         if (this.isNoclip) {
@@ -152,8 +165,6 @@ export class PlayerController {
         if (!this.isGrounded) {
             this.velocity.y += this.gravity * dt;
         } else {
-            this.velocity.y = 0;
-            // Jump execution
             if (input.state.jump) {
                 this.velocity.y = this.jumpImpulse;
                 this.isGrounded = false;
@@ -164,16 +175,7 @@ export class PlayerController {
         this._temp.copy(this.velocity).multiplyScalar(dt);
         this.position.add(this._temp);
 
-        // Simple world boundary collisions
-        if (this.position.y <= this.bounds.floorY) {
-            this.position.y = this.bounds.floorY;
-            this.velocity.y = 0;
-            this.isGrounded = true;
-        }
-
-        // Level boundary clamps (stop player from falling off platform)
-        this.position.x = Math.max(-this.bounds.limitXZ, Math.min(this.bounds.limitXZ, this.position.x));
-        this.position.z = Math.max(-this.bounds.limitXZ, Math.min(this.bounds.limitXZ, this.position.z));
+        this.isGrounded = false; // reset every tick, physics_system re-sets to true
     }
 
     applyNoclipMovement(dt, input) {
