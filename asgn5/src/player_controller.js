@@ -21,6 +21,9 @@ export class PlayerController {
         this.fov = baseFOV;
         this.prevFOV = baseFOV;
 
+        this.health = 100;
+        this.damageCooldown = 0;
+
         // logic states
         this.isCrouched = false;
         this.isSprinting = false;
@@ -68,11 +71,10 @@ export class PlayerController {
             this.isNoclip = !this.isNoclip;
             this.velocity.set(0, 0, 0); // Reset forces
         }
-
-        // // Apply mouse looking
-        // const mouseSensitivity = 0.002;
-        // this.yaw -= input.mouseDelta.x * mouseSensitivity;
-        // this.pitch -= input.mouseDelta.y * mouseSensitivity;
+        // Tick damage immunity cooldown
+        if (this.damageCooldown > 0) {
+            this.damageCooldown -= dt;
+        }
 
         // Clamp camera pitch looking up/down to avoid screen flipping (approx. 85 degrees)
         const pitchLimit = (Math.PI * 0.5) - 0.08;
@@ -216,6 +218,9 @@ export class PlayerController {
 
         this.fov = baseFOV;
         this.prevFOV = baseFOV;
+
+        this.health = 100;
+        this.damageCooldown = 0;
 
         this.isCrouched = false;
         this.isSprinting = false;
