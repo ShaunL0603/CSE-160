@@ -195,7 +195,7 @@ export class UIManager {
 
         if (mode !== this._lastMode || force) {
             if (this.modeVal) {
-                this.modeVal.textContent = mode === 'SHOOT' ? 'SHOOTING' : 'DESTRUCTION';
+                this.modeVal.textContent = mode === 'SHOOT' ? 'FPS' : 'DESTRUCTION';
                 this.modeVal.style.color = mode === 'SHOOT' ? '#ffaa44' : '#aa44ff';
             }
             this._lastMode = mode;
