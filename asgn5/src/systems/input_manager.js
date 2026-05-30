@@ -126,7 +126,7 @@ export class InputManager {
             case 'KeyA': case 'ArrowLeft':  this.state.left = true; break;
             case 'KeyD': case 'ArrowRight': this.state.right = true; break;
             case 'Space':                   this.state.jump = true; break;
-            case 'KeyC': case 'ControlLeft':
+            case 'KeyC':
                 this.state.crouch = true;
                 if (!e.repeat) this.triggers.crouch = true;
                 break;
@@ -150,7 +150,7 @@ export class InputManager {
             case 'KeyA': case 'ArrowLeft':   this.state.left = false; break;
             case 'KeyD': case 'ArrowRight':  this.state.right = false; break;
             case 'Space':                    this.state.jump = false; break;
-            case 'KeyC': case 'ControlLeft': this.state.crouch = false; break;
+            case 'KeyC':                     this.state.crouch = false; break;
             case 'ShiftLeft':                this.state.sprint = false; break;
         }
     }

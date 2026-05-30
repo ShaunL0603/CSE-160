@@ -25,7 +25,7 @@ export class EnvironmentManager {
 
             this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.75, -10), new THREE.Vector3(40, 2, 40), 0.25, true);
 
-            this.addSlope('ramp_center', new THREE.Vector3(0, 1.9, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
+            this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
 
         } else if (mapType === 'moving') {
             this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
@@ -34,7 +34,7 @@ export class EnvironmentManager {
             this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false);
             this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
 
-            this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(8, 12, 8), 0.5, true);
+            this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(16, 24, 16), 0.25, true);
         }
     }
 
@@ -79,14 +79,19 @@ export class EnvironmentManager {
         const max = position.clone().add(halfSize);
         const box = new THREE.Box3(min, max);
 
+        // correct bounding box to sync with visual slope
+        const isUpwards = yEnd >= yStart;
+        const physicalYStart = isUpwards ? min.y : max.y;
+        const physicalYEnd = isUpwards ? max.y : min.y;
+
         const slopeObject = {
             id,
             boundingBox: box,
             position: position.clone(),
             size: size.clone(),
             colliderType: 'SLOPE',
-            yStart,
-            yEnd,
+            yStart: physicalYStart + 0.25,
+            yEnd: physicalYEnd + 0.25,
             slopeAxis,
             isDestructible: false
         };

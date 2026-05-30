@@ -152,7 +152,7 @@ export class PhysicsSystem {
             // STEP UP: if we collide with a vertical block face, 
             // but the top face is just slightly above our feet (<= 0.45 units)
             const feetY = entity.position.y - radius;
-            const stepHeight = 1.0; // Standard step-up height limit
+            const stepHeight = 0.25; // Standard step-up height limit
             const heightDiff = boundingBox.max.y - feetY;
             
             if (heightDiff > 0 && heightDiff <= stepHeight && this._normal.y < 0.5) {
