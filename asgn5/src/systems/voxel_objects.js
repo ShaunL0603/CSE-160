@@ -14,7 +14,6 @@ class VoxelChunk {
         this.dirty = true;
 
         this.data = new Uint8Array(this.totalVoxels).fill(1);
-        this.visibilityData = new Uint8Array(this.totalVoxels);
         this.voxelColors = new Float32Array(this.totalVoxels * 3);
 
         const maxVertices = this.totalVoxels * 24;
@@ -70,14 +69,15 @@ class VoxelChunk {
         let vCount = 0;
         let iCount = 0;
 
-        // halfS to build the cuber around the (0,0,0) center
+        // halfS to build the cube around the (0,0,0) center
         const faces = [
-            { dir: [-1, 0, 0], norm: [-1, 0, 0], verts: [[-halfS, -halfS, -halfS], [-halfS, -halfS, halfS], [-halfS, halfS, halfS], [-halfS, halfS, -halfS]] },
-            { dir: [1, 0, 0], norm: [1, 0, 0], verts: [[halfS, -halfS, halfS], [halfS, -halfS, -halfS], [halfS, halfS, -halfS], [halfS, halfS, halfS]] },
-            { dir: [0, -1, 0], norm: [0, -1, 0], verts: [[-halfS, -halfS, -halfS], [halfS, -halfS, -halfS], [halfS, -halfS, halfS], [-halfS, -halfS, halfS]] },
-            { dir: [0, 1, 0], norm: [0, 1, 0], verts: [[-halfS, halfS, halfS], [halfS, halfS, halfS], [halfS, halfS, -halfS], [-halfS, halfS, -halfS]] },
-            { dir: [0, 0, -1], norm: [0, 0, -1], verts: [[halfS, -halfS, -halfS], [-halfS, -halfS, -halfS], [-halfS, halfS, -halfS], [halfS, halfS, -halfS]] },
-            { dir: [0, 0, 1], norm: [0, 0, 1], verts: [[-halfS, -halfS, halfS], [halfS, -halfS, halfS], [halfS, halfS, halfS], [-halfS, halfS, halfS]] }
+            { dir: [-1, 0, 0], norm: [-1, 0, 0], verts: [[-halfS, -halfS, -halfS], [-halfS, -halfS,  halfS], [-halfS,  halfS,  halfS], [-halfS,  halfS, -halfS]] },
+            { dir: [1, 0, 0], norm: [1, 0, 0], verts: [[ halfS, -halfS,  halfS], [ halfS, -halfS, -halfS], [ halfS,  halfS, -halfS], [ halfS,  halfS,  halfS]] },
+            { dir: [0, -1, 0], norm: [0, -1, 0], verts: [[-halfS, -halfS, -halfS], [ halfS, -halfS, -halfS], [ halfS, -halfS,  halfS], [-halfS, -halfS,  halfS]] },
+            { dir: [0, 1, 0], norm: [0, 1, 0], verts: [[-halfS,  halfS,  halfS], [ halfS,  halfS,  halfS], [ halfS,  halfS, -halfS], [-halfS,  halfS, -halfS]] },
+            // FIX: Corrected Back Face (-Z) to be Counter-Clockwise from the outside
+            { dir: [0, 0, -1], norm: [0, 0, -1], verts: [[ halfS, -halfS, -halfS], [-halfS, -halfS, -halfS], [-halfS,  halfS, -halfS], [ halfS,  halfS, -halfS]] },
+            { dir: [0, 0, 1], norm: [0, 0, 1], verts: [[-halfS, -halfS,  halfS], [ halfS, -halfS,  halfS], [ halfS,  halfS,  halfS], [-halfS,  halfS,  halfS]] }
         ];
 
         for (let lx = 0; lx < w; lx++) {
@@ -91,7 +91,7 @@ class VoxelChunk {
                     const gy = this.cy * CHUNK_SIZE + ly;
                     const gz = this.cz * CHUNK_SIZE + lz;
 
-                    // Bake local offsets relative to the MASTER object's center
+                    // Bake local offsets relative to the master object's center
                     const offsetX = (gx - (pw - 1) * 0.5) * s;
                     const offsetY = (gy - (ph - 1) * 0.5) * s;
                     const offsetZ = (gz - (pd - 1) * 0.5) * s;
@@ -106,7 +106,7 @@ class VoxelChunk {
                         // Ask parent if neighbor is solid and handle cross-chunk boundaries
                         if (!this.parent.isSolid(gx + face.dir[0], gy + face.dir[1], gz + face.dir[2])) {
                             const vStart = vCount;
-                            // gneratng 4 vertices for the exposed face
+                            // generating 4 vertices for the exposed face
                             for (let v = 0; v < 4; v++) {
                                 const vIdx = (vStart + v) * 3;
                                 const uvIdx = (vStart + v) * 2;
@@ -144,8 +144,6 @@ class VoxelChunk {
                 }
             }
         }
-        // save our finall vertex and indice count since our arrays could
-        // be larger than we actually used. Tell BufferGeometry where to stop
         this.exposedVertices = vCount;
         this.exposedIndices = iCount;
     }
@@ -182,7 +180,7 @@ export class VoxelObject {
         this.boundingBox = new THREE.Box3();
 
         this.initColors();
-        this.computeVisibility();
+        this.buildInitialMeshes(); // Streamlined mesh buffer initialization
         this.calculateAABB();
     }
 
@@ -215,38 +213,8 @@ export class VoxelObject {
         }
     }
 
-    isSurrounded(gx, gy, gz) {
-        if (gx === 0 || gx === this.dimensions.x - 1 || 
-            gy === 0 || gy === this.dimensions.y - 1 || 
-            gz === 0 || gz === this.dimensions.z - 1) {
-            return false;
-        }
-        return (
-            this.isSolid(gx - 1, gy, gz) && this.isSolid(gx + 1, gy, gz) &&
-            this.isSolid(gx, gy - 1, gz) && this.isSolid(gx, gy + 1, gz) &&
-            this.isSolid(gx, gy, gz - 1) && this.isSolid(gx, gy, gz + 1)
-        );
-    }
-
-    computeVisibility() {
-        for (let gx = 0; gx < this.dimensions.x; gx++) {
-            for (let gy = 0; gy < this.dimensions.y; gy++) {
-                for (let gz = 0; gz < this.dimensions.z; gz++) {
-                    const chunk = this.getChunk(gx, gy, gz);
-                    const lx = gx % CHUNK_SIZE;
-                    const ly = gy % CHUNK_SIZE;
-                    const lz = gz % CHUNK_SIZE;
-                    const idx = chunk.getIndex(lx, ly, lz);
-
-                    if (chunk.data[idx] === 0) {
-                        chunk.visibilityData[idx] = 0;
-                    } else {
-                        chunk.visibilityData[idx] = this.isSurrounded(gx, gy, gz) ? 2 : 1;
-                    }
-                }
-            }
-        }
-        // Build initial meshes
+    // Build initial chunk meshes directly
+    buildInitialMeshes() {
         for (let i = 0; i < this.chunks.length; i++) {
             this.chunks[i].rebuildMeshBuffers();
         }
@@ -262,17 +230,11 @@ export class VoxelObject {
         this.boundingBox.set(min, max);
     }
 
+    // edge exposure check
     exposeNeighbor(gx, gy, gz) {
         const chunk = this.getChunk(gx, gy, gz);
-        if (!chunk) return;
-        const lx = gx % CHUNK_SIZE;
-        const ly = gy % CHUNK_SIZE;
-        const lz = gz % CHUNK_SIZE;
-        const idx = chunk.getIndex(lx, ly, lz);
-        
-        if (chunk.visibilityData[idx] === 2) {
-            chunk.visibilityData[idx] = 1;
-            chunk.dirty = true; // Mark this specific chunk for a rebuild
+        if (chunk) {
+            chunk.dirty = true; // Any neighboring solid block rebuilds its faces
         }
     }
 
@@ -323,11 +285,10 @@ export class VoxelObject {
 
                     if (distSq <= radiusSq) {
                         chunk.data[idx] = 0;
-                        chunk.visibilityData[idx] = 0;
                         chunk.dirty = true;
                         destroyedAny = true;
 
-                        // Expose neighbors (automatically crosses chunk boundaries!)
+                        // Expose neighbors across any chunk boundaries
                         this.exposeNeighbor(gx - 1, gy, gz);
                         this.exposeNeighbor(gx + 1, gy, gz);
                         this.exposeNeighbor(gx, gy - 1, gz);
@@ -340,7 +301,7 @@ export class VoxelObject {
         }
 
         if (destroyedAny) {
-            // Only rebuild the chunks that were actually affected by the blast
+            // Rebuild only the affected chunks
             for (let i = 0; i < this.chunks.length; i++) {
                 if (this.chunks[i].dirty) {
                     this.chunks[i].rebuildMeshBuffers();
