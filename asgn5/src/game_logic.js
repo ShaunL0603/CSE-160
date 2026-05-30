@@ -26,6 +26,10 @@ export class GameLogic {
                 targetCount: 10,
                 mapType: 'moving',
                 destructionRadius: 1.0
+            },
+            debug: {
+                showVisionCone: false,
+                showPathNodes: false
             }
         };
 
