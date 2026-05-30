@@ -19,10 +19,6 @@ export class PlayerController {
         this.fov = baseFOV;
         this.prevFOV = baseFOV;
 
-        this.health = 100;
-        this.damageCooldown = 0;
-        this.combatHitbox = new THREE.Box3();
-
         // logic states
         this.isCrouched = false;
         this.isSprinting = false;
@@ -41,14 +37,6 @@ export class PlayerController {
         this._right = new THREE.Vector3();
         this._wishDir = new THREE.Vector3();
         this._temp = new THREE.Vector3();
-    }
-
-    updateCombatHitbox() {
-        const height = this.isCrouched ? 1.0 : 1.6;
-        const feetY = this.position.y - this.radius;
-        // Centered around the player's position, extending vertically from feet up to eye heights
-        this.combatHitbox.min.set(this.position.x - 0.4, feetY, this.position.z - 0.4);
-        this.combatHitbox.max.set(this.position.x + 0.4, feetY + height, this.position.z + 0.4);
     }
 
     savePreviousState() {
@@ -77,10 +65,6 @@ export class PlayerController {
         if (input.triggers.noclip) {
             this.isNoclip = !this.isNoclip;
             this.velocity.set(0, 0, 0); // Reset forces
-        }
-        // Tick damage immunity cooldown
-        if (this.damageCooldown > 0) {
-            this.damageCooldown -= dt;
         }
 
         // Clamp camera pitch looking up/down to avoid screen flipping (approx. 85 degrees)
@@ -144,7 +128,6 @@ export class PlayerController {
         } else {
             this.applyNormalMovement(dt, input);
         }
-        this.updateCombatHitbox();
     }
 
     applyNormalMovement(dt, input) {
@@ -225,10 +208,6 @@ export class PlayerController {
         this.prevYaw = 0;
         this.fov = baseFOV;
         this.prevFOV = baseFOV;
-
-        this.health = 100;
-        this.damageCooldown = 0;
-        this.updateCombatHitbox();
 
         this.isCrouched = false;
         this.isSprinting = false;

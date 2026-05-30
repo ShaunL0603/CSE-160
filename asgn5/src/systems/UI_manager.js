@@ -7,16 +7,12 @@ export class UIManager {
         this.accuracyVal = document.querySelector('#accuracy-val');
         this.modeVal = document.querySelector('#mode-val');
 
-        this.healthText = document.querySelector('#health-text');
-        this.healthFill = document.querySelector('#health-fill');
-
         this.fpsVal = document.querySelector('#fps-val');
         this.msVal = document.querySelector('#ms-val');
         
         this._lastScore = -1;
         this._lastAccuracy = -1;
         this._lastMode = '';
-        this._lastHealth = -1;
 
         this.initTabs();
     }
@@ -117,9 +113,6 @@ export class UIManager {
         bindSlider('slider-count', 'gameplay.targetCount', 'count-val', false);
         bindSlider('slider-radius', 'gameplay.destructionRadius', 'radius-val', true);
 
-        bindCheckbox('toggle-debug-vision', 'debug.showVisionCone');
-        bindCheckbox('toggle-debug-path', 'debug.showPathNodes');
-
         // Map Selection
         document.getElementById('select-map').addEventListener('change', (e) => {
             logic.config.gameplay.mapType = e.target.value;
@@ -163,9 +156,6 @@ export class UIManager {
         syncSlider('slider-count', logic.config.gameplay.targetCount, 'count-val', false);
         syncSlider('slider-radius', logic.config.gameplay.destructionRadius, 'radius-val');
 
-        syncCheckbox('toggle-debug-vision', logic.config.debug.showVisionCone);
-        syncCheckbox('toggle-debug-path', logic.config.debug.showPathNodes);
-
         const mapSelect = document.getElementById('select-map');
         if (mapSelect) mapSelect.value = logic.config.gameplay.mapType;
     }
@@ -189,14 +179,6 @@ export class UIManager {
                 this.modeVal.style.color = mode === 'SHOOT' ? '#ffaa44' : '#aa44ff';
             }
             this._lastMode = mode;
-        }
-    }
-
-    updateHealth(health, force = false) {
-        if (health !== this._lastHealth || force) {
-            if (this.healthText) this.healthText.textContent = health;
-            if (this.healthFill) this.healthFill.style.width = `${health}%`;
-            this._lastHealth = health;
         }
     }
 }

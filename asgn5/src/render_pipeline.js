@@ -32,9 +32,6 @@ export class RenderPipeline {
         this._quat = new THREE.Quaternion();
         this._matrix = new THREE.Matrix4();
         this._zeroScale = new THREE.Vector3(0, 0, 0); // hide inactive targets
-        // pre-allocate array for debug
-        this.enemyVisionCones = [];
-        this.enemyPathMeshes = [];
 
         this.initEnvironment();
         this.initResizeHandler();
@@ -71,7 +68,7 @@ export class RenderPipeline {
         dirLightCube.scale.set(0.5, 0.5, 0.5);
         this.scene.add( dirLightCube );
 
-        // --- Map 1: Moving Targets (Grid) ---
+        // --- Map 1: Moving Targets ---
         this.mapMoving = new THREE.Group();
         const grid = new THREE.GridHelper(50, 50, 0x44aa88, 0x222228);
         grid.position.y = -0.01; 
@@ -79,7 +76,7 @@ export class RenderPipeline {
         this.mapMoving.visible = true;
         this.scene.add(this.mapMoving);
 
-        // --- Map 2: Static Targets (color cube floor) ---
+        // --- Map 2: Static Targets ---
         this.mapStatic = new THREE.Group();
         const floorGeo = new THREE.BoxGeometry(50, 1, 50);
         const floorMat = new THREE.MeshPhongMaterial({ color: 0x2a2a35 });
@@ -94,20 +91,6 @@ export class RenderPipeline {
         this.scene.add(this.wallMeshesGroup);
         this.voxelMeshesGroup = new THREE.Group();
         this.scene.add(this.voxelMeshesGroup);
-        
-        this.enemyMeshesGroup = new THREE.Group();
-        this.scene.add(this.enemyMeshesGroup);
-        this.enemyMeshes = [];
-        // debug group
-        this.debugVisionConesGroup = new THREE.Group();
-        this.scene.add(this.debugVisionConesGroup);
-
-        this.debugPathsGroup = new THREE.Group();
-        this.scene.add(this.debugPathsGroup);
-
-        this.voxelMeshMap = new Map();
-        this.currentVisualMap = '';
-
         this.voxelMeshMap = new Map();
         this.currentVisualMap = '';
 
@@ -147,33 +130,6 @@ export class RenderPipeline {
             });
             this.voxelMeshesGroup.clear();
             this.voxelMeshMap.clear();
-
-            this.enemyMeshesGroup.children.forEach(child => {
-                if (child.geometry) child.geometry.dispose();
-                if (child.material) child.material.dispose();
-            });
-            this.enemyMeshesGroup.clear();
-            this.enemyMeshes = [];
-
-
-            // dispose old vision cones
-            this.debugVisionConesGroup.children.forEach(child => {
-                if (child.geometry) child.geometry.dispose();
-                if (child.material) child.material.dispose();
-            });
-            this.debugVisionConesGroup.clear();
-            this.enemyVisionCones = [];
-
-            // Dispose old Path Helpers
-            this.debugPathsGroup.children.forEach(child => {
-                child.traverse(node => {
-                    if (node.geometry) node.geometry.dispose();
-                    if (node.material) node.material.dispose();
-                });
-            });
-            this.debugPathsGroup.clear();
-            this.enemyPathMeshes = [];
-
 
             // Build structural meshes directly from current math constraints
             const walls = logic.environment.walls;
@@ -278,70 +234,6 @@ export class RenderPipeline {
                     chunk.dirty = true; // Force initial upload
                 });
             });
-
-            // buidling enemy active meshes
-            if (logic.config.gameplay.mapType === 'static') {
-                const enemies = logic.enemies;
-                const enemyGeometry = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 16);
-                const enemyMaterial = new THREE.MeshPhongMaterial({ color: 0xffee00, shininess: 80 }); // yellow enemies
-                // debug for enemies
-                const debugConeMaterial = new THREE.MeshBasicMaterial({
-                    color: 0x00ffff,
-                    wireframe: true,
-                    transparent: true,
-                    opacity: 0.35
-                });
-                const debugPathNodeMaterial = new THREE.MeshBasicMaterial({ color: 0x44aa88, wireframe: true });
-                const debugPathNodeGeometry = new THREE.SphereGeometry(0.15, 8, 8);
-
-                enemies.forEach(enemy => {
-                    // Draw physical enemy cylinder
-                    const mesh = new THREE.Mesh(enemyGeometry, enemyMaterial);
-                    mesh.castShadow = true;
-                    mesh.receiveShadow = true;
-                    this.enemyMeshesGroup.add(mesh);
-                    this.enemyMeshes.push(mesh);
-
-                    // Draw wireframe vision cone [10]
-                    const height = enemy.maxVisionDist;
-                    const halfConeAngle = Math.acos(enemy.visionConeCos);
-                    const radius = Math.tan(halfConeAngle) * height;
-
-                    const coneGeo = new THREE.ConeGeometry(radius, height, 16, 1);
-                    coneGeo.translate(0, -height * 0.5, 0); // Translate origin to TIP
-                    coneGeo.rotateX(Math.PI * 0.5);         // Rotate to point forward (-Z)
-
-                    const coneMesh = new THREE.Mesh(coneGeo, debugConeMaterial);
-                    this.debugVisionConesGroup.add(coneMesh);
-                    this.enemyVisionCones.push(coneMesh);
-
-                    // Draw path node lines
-                    const pathGroup = new THREE.Group();
-                    if (enemy.path && enemy.path.length > 0) {
-                        // Draw waypoints (spheres)
-                        enemy.path.forEach(node => {
-                            const sphere = new THREE.Mesh(debugPathNodeGeometry, debugPathNodeMaterial);
-                            sphere.position.copy(node);
-                            pathGroup.add(sphere);
-                        });
-
-                        // Draw connecting lines
-                        const points = [];
-                        enemy.path.forEach(node => points.push(node.clone()));
-                        if (enemy.path.length > 2) {
-                            points.push(enemy.path[0].clone()); // Close loop
-                        }
-
-                        const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-                        const lineMat = new THREE.LineBasicMaterial({ color: 0x228866 });
-                        const line = new THREE.Line(lineGeo, lineMat);
-                        pathGroup.add(line);
-                    }
-
-                    this.debugPathsGroup.add(pathGroup);
-                    this.enemyPathMeshes.push(pathGroup);
-                });
-            }
         }
 
         // Update Dirty Chunks (Runs every frame)
@@ -411,39 +303,6 @@ export class RenderPipeline {
 
         // sync visual meshes dynamically
         this.syncVisualEnvironment(logic);
-
-        // toggle debug group visibility
-        this.debugVisionConesGroup.visible = logic.config.debug.showVisionCone;
-        this.debugPathsGroup.visible = logic.config.debug.showPathNodes;
-
-        // synchronizing enemies and interpolating their visual meshes
-        const enemies = logic.enemies;
-        for (let i = 0; i < enemies.length; i++) {
-            const enemy = enemies[i];
-            const mesh = this.enemyMeshes[i];
-            const cone = this.enemyVisionCones[i];
-            const pathMesh = this.enemyPathMeshes[i];
-            if (mesh) {
-                // Interpolate spatial position
-                mesh.position.lerpVectors(enemy.prevPosition, enemy.position, alpha);
-                // Interpolate head rotation yaw
-                const currentEnemyYaw = THREE.MathUtils.lerp(enemy.prevYaw, enemy.yaw, alpha);
-                mesh.rotation.y = currentEnemyYaw;
-                // Toggle visibility based on active status
-                mesh.visible = enemy.active;
-                // Synchronize Vision Cone position & rotation
-                if (cone && logic.config.debug.showVisionCone) {
-                    cone.position.copy(mesh.position);
-                    cone.position.y += enemy.collisionOffsetY; // Align exactly at eyes
-                    cone.rotation.y = currentEnemyYaw;
-                    cone.visible = enemy.active;
-                }
-                // Sync Path Helper visibility
-                if (pathMesh) {
-                    pathMesh.visible = enemy.active && logic.config.debug.showPathNodes;
-                }
-            }
-        }
 
         // synchronize and interpolate targets
         const targets = logic.targetManager.targets;
