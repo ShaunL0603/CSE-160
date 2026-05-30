@@ -56,7 +56,7 @@ export class RenderPipeline {
         // Set near and far clipping planes for the shadow
         cam.near = 0.5;
         cam.far = 30;
-        // // Optional: visualize the shadow camera boundaries in your scene
+        // visualize the shadow camera boundaries in scene
         // const helper = new THREE.CameraHelper(cam);
         // this.scene.add(helper);
         this.scene.add(dirLight);
@@ -248,18 +248,20 @@ export class RenderPipeline {
             });
 
             // buidling enemy active meshes
-            const enemies = logic.enemies;
-            const enemyGeometry = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 16);
-            const enemyMaterial = new THREE.MeshPhongMaterial({ color: 0xffee00, shininess: 80 }); // yellow enemies
+            if (logic.config.gameplay.mapType === 'static') {
+                const enemies = logic.enemies;
+                const enemyGeometry = new THREE.CylinderGeometry(0.4, 0.4, 1.2, 16);
+                const enemyMaterial = new THREE.MeshPhongMaterial({ color: 0xffee00, shininess: 80 }); // yellow enemies
 
-            enemies.forEach(enemy => {
-                const mesh = new THREE.Mesh(enemyGeometry, enemyMaterial);
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-                
-                this.enemyMeshesGroup.add(mesh);
-                this.enemyMeshes.push(mesh);
-            });
+                enemies.forEach(enemy => {
+                    const mesh = new THREE.Mesh(enemyGeometry, enemyMaterial);
+                    mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+                    
+                    this.enemyMeshesGroup.add(mesh);
+                    this.enemyMeshes.push(mesh);
+                });
+            }
         }
 
         // Update Dirty Chunks (Runs every frame)
