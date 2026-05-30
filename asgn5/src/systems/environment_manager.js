@@ -18,30 +18,30 @@ export class EnvironmentManager {
         this.targetSpawnZones = [];
         
         if (mapType === 'static') {
+            // bounding objects
             this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
-
             this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false);
             this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false);
             this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false);
             this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
 
+            // map objects
             this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.75, -10), new THREE.Vector3(40, 2, 40), 0.25, true);
-
             this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
+
             // Spawning Regions
-            // left zone: Limit 7 targets
             this.addTargetSpawnZone(new THREE.Vector3(-10, 0, -15), new THREE.Vector3(-4, 3, -5), 7);
-            // right zone: Limit 7 targets
             this.addTargetSpawnZone(new THREE.Vector3(4, 0, -15), new THREE.Vector3(10, 3, -5), 7);
-            // on top of voxel platform Limit 6 targets
             this.addTargetSpawnZone(new THREE.Vector3(-4, 4, -14), new THREE.Vector3(4, 7, -6), 6);
         } else if (mapType === 'moving') {
+            // map bounds
             this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
             this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false);
             this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false);
             this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false);
             this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
 
+            // map objects
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(16, 24, 16), 0.25, true);
         }
     }

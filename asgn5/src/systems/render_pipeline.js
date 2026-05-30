@@ -70,9 +70,9 @@ export class RenderPipeline {
 
         // --- Map 1: Moving Targets ---
         this.mapMoving = new THREE.Group();
-        const grid = new THREE.GridHelper(50, 50, 0x44aa88, 0x222228);
-        grid.position.y = -0.01; 
-        this.mapMoving.add(grid);
+        // const grid = new THREE.GridHelper(50, 50, 0x44aa88, 0x222228);
+        // grid.position.y = -0.01; 
+        // this.mapMoving.add(grid);
         this.mapMoving.visible = true;
         this.scene.add(this.mapMoving);
 
@@ -95,6 +95,8 @@ export class RenderPipeline {
         // debug stuff
         this.debugSpawnZonesGroup = new THREE.Group();
         this.scene.add(this.debugSpawnZonesGroup);
+        this.debugVoxelChunksGroup = new THREE.Group();
+        this.scene.add(this.debugVoxelChunksGroup);
 
         this.voxelMeshMap = new Map();
         this.currentVisualMap = '';
@@ -135,8 +137,9 @@ export class RenderPipeline {
             });
             this.voxelMeshesGroup.clear();
             this.voxelMeshMap.clear();
-            // dispose old spawn zone debug wireframes
+            // debug wireframe disposals
             this.debugSpawnZonesGroup.clear();
+            this.debugVoxelChunksGroup.clear();
 
             // Build structural meshes directly from current math constraints
             const walls = logic.environment.walls;
@@ -239,6 +242,12 @@ export class RenderPipeline {
                     this.voxelMeshMap.set(chunkId, mesh);
 
                     chunk.dirty = true; // Force initial upload
+
+                    // White wireframe for chunk
+                    // Translate the Box3 into world space before creating helper
+                    const worldBox = chunk.boundingBox.clone().translate(voxelObj.position);
+                    const helper = new THREE.Box3Helper(worldBox, 0xffffff);
+                    this.debugVoxelChunksGroup.add(helper);
                 });
             });
 
@@ -318,8 +327,9 @@ export class RenderPipeline {
         // sync visual meshes dynamically
         this.syncVisualEnvironment(logic);
         
-        // Toggle Spawn Zone wireframes
+        // Toggle debug wireframes
         this.debugSpawnZonesGroup.visible = logic.config.debug.showSpawnZones;
+        this.debugVoxelChunksGroup.visible = logic.config.debug.showVoxelChunks;
 
         // synchronize and interpolate targets
         const targets = logic.targetManager.targets;

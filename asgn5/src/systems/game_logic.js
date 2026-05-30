@@ -27,7 +27,8 @@ export class GameLogic {
                 destructionRadius: 1.0
             },
             debug: {
-                showSpawnZones: false
+                showSpawnZones: false,
+                showVoxelChunks: false
             }
         };
 

@@ -114,7 +114,8 @@ export class UIManager {
         bindSlider('slider-radius', 'gameplay.destructionRadius', 'radius-val', true);
 
         // Debugger
-        bindCheckbox('toggle-debug-zones', 'debug.showSpawnZones'); // Bind Spawn Zones
+        bindCheckbox('toggle-debug-zones', 'debug.showSpawnZones');
+        bindCheckbox('toggle-debug-chunks', 'debug.showVoxelChunks');    
 
         // Map Selection
         document.getElementById('select-map').addEventListener('change', (e) => {
@@ -173,6 +174,7 @@ export class UIManager {
 
         // Debugger syncs
         syncCheckbox('toggle-debug-zones', logic.config.debug.showSpawnZones);
+        syncCheckbox('toggle-debug-chunks', logic.config.debug.showVoxelChunks);
 
         const mapSelect = document.getElementById('select-map');
         if (mapSelect) mapSelect.value = logic.config.gameplay.mapType;
