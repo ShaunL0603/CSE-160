@@ -117,6 +117,9 @@ export class UIManager {
         bindSlider('slider-count', 'gameplay.targetCount', 'count-val', false);
         bindSlider('slider-radius', 'gameplay.destructionRadius', 'radius-val', true);
 
+        bindCheckbox('toggle-debug-vision', 'debug.showVisionCone');
+        bindCheckbox('toggle-debug-path', 'debug.showPathNodes');
+
         // Map Selection
         document.getElementById('select-map').addEventListener('change', (e) => {
             logic.config.gameplay.mapType = e.target.value;
@@ -159,6 +162,9 @@ export class UIManager {
         syncSlider('slider-size', logic.config.gameplay.targetSize, 'size-val');
         syncSlider('slider-count', logic.config.gameplay.targetCount, 'count-val', false);
         syncSlider('slider-radius', logic.config.gameplay.destructionRadius, 'radius-val');
+
+        syncCheckbox('toggle-debug-vision', logic.config.debug.showVisionCone);
+        syncCheckbox('toggle-debug-path', logic.config.debug.showPathNodes);
 
         const mapSelect = document.getElementById('select-map');
         if (mapSelect) mapSelect.value = logic.config.gameplay.mapType;
