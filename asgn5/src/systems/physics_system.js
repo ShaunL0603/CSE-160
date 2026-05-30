@@ -234,14 +234,22 @@ export class PhysicsSystem {
         }
     }
 
-    resolveSphereVoxelGrid(target, voxelObj, radius, slide = false) {
+    resolveSphereVoxelGrid(entity, voxelObj, radius, slide = false) {
         const s = voxelObj.voxelScale;
         const { x: w, y: h, z: d } = voxelObj.dimensions;
         const c = voxelObj.position;
 
         // Convert world sphere boundaries to local coordinates relative to the voxel center
-        this._localMin.copy(target.position).addScaledVector(this._unitNegative, radius).sub(c);
-        this._localMax.copy(target.position).addScaledVector(this._unitPositive, radius).sub(c);
+        this._localMin.copy(entity.position).addScaledVector(this._unitNegative, radius).sub(c);
+        this._localMax.copy(entity.position).addScaledVector(this._unitPositive, radius).sub(c);
+
+        // If sliding, we flatten the Y-bounds to only check voxels at the exact center height
+        // eliminates vertical seams and prevents elevator bug.
+        if (slide) {
+            const centerY = entity.position.y - c.y;
+            this._localMin.y = centerY;
+            this._localMax.y = centerY;
+        }
 
         // Map local coordinate bounds to grid indices
         const offsetScalarX = (w - 1) * 0.5;
@@ -279,9 +287,50 @@ export class PhysicsSystem {
                         );
                         this._voxelBox.set(this._voxelMin, this._voxelMax);
 
-                        // Resolve collision against this specific voxel box
-                        this.resolveSphereAABBCollision(target, this._voxelBox, radius, slide);
+                        // Force the collision to be strictly horizontal by flattening the target's Y relative to the box
+                        const originalY = entity.position.y;
+                        if (slide) entity.position.y = this._voxelCenter.y;                        
+                        this.resolveSphereAABBCollision(entity, this._voxelBox, radius, slide);
+                        if (slide) entity.position.y = originalY; // Restore true height
                     }
+                }
+            }
+        }
+
+        // Resolve Vertical Floor/Ceiling Collisions
+        // separate, single check directly above and below the player to handle grounding and head-bonks
+        if (slide) {
+            const feetY = entity.position.y - radius;
+            const headY = entity.position.y + radius;
+            // Check Floor
+            const floorLy = (feetY - c.y) / s + (h - 1) * 0.5;
+            const floorYIdx = Math.floor(floorLy);
+            // Check Ceiling
+            const ceilLy = (headY - c.y) / s + (h - 1) * 0.5;
+            const ceilYIdx = Math.floor(ceilLy);
+
+            const centerLx = (entity.position.x - c.x) / s + (w - 1) * 0.5;
+            const centerLz = (entity.position.z - c.z) / s + (d - 1) * 0.5;
+            const cxIdx = Math.round(centerLx);
+            const czIdx = Math.round(centerLz);
+
+            // Grounding Check
+            if (voxelObj.isSolid(cxIdx, floorYIdx, czIdx)) {
+                const voxelTopY = c.y + (floorYIdx - (h - 1) * 0.5) * s + s * 0.5;
+                if (feetY <= voxelTopY && feetY >= voxelTopY - 0.3) {
+                    entity.position.y = voxelTopY + radius;
+                    entity.velocity.y = 0;
+                    entity.isGrounded = true;
+                    entity.groundCollider = voxelObj;
+                }
+            }
+
+            // Ceiling Check
+            if (voxelObj.isSolid(cxIdx, ceilYIdx, czIdx)) {
+                const voxelBottomY = c.y + (ceilYIdx - (h - 1) * 0.5) * s - s * 0.5;
+                if (headY >= voxelBottomY) {
+                    entity.position.y = voxelBottomY - radius;
+                    if (entity.velocity.y > 0) entity.velocity.y = 0;
                 }
             }
         }
