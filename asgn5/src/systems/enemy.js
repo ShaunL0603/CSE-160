@@ -38,6 +38,7 @@ export class Enemy {
         this.hasLoS = false;
         this.lastKnownPlayerPos = new THREE.Vector3();
         
+        // Zero-GC preallocated math helpers
         this._temp = new THREE.Vector3();
         this._lookDir = new THREE.Vector3();
         this._nextPos = new THREE.Vector3();
@@ -45,7 +46,6 @@ export class Enemy {
         this._ray = new THREE.Ray();
         this._closestPoint = new THREE.Vector3();
         this._toPlayer = new THREE.Vector3();
-        this._tempSphere = new THREE.Sphere();
         this._localHitPoint = new THREE.Vector3();
         this._marchPos = new THREE.Vector3();
     }
@@ -55,10 +55,29 @@ export class Enemy {
         this.prevYaw = this.yaw;
     }
 
+    reset(baseFOV) {
+        if (this.path && this.path.length > 0) {
+            this.position.copy(this.path[0]);
+            this.prevPosition.copy(this.path[0]);
+        }
+        this.velocity.set(0, 0, 0);
+        this.state = 'PATROL';
+        this.currentWaypointIdx = 0;
+        this.yaw = 0;
+        this.prevYaw = 0;
+        this.targetYaw = 0;
+        this.isGrounded = false;
+        this.groundCollider = null;
+        this.searchTimer = 0;
+        this.lookAroundTimer = 0;
+        this.shootCooldown = 0;
+        this.hasLoS = false;
+    }
+
     update(dt, player, environment, hitDetection, audio, assets) {
         this.savePreviousState();
 
-        // Throttled Vision checks 
+        // Throttled Vision checks (10Hz / every 6 frames)
         const playerSpotted = this.checkVision(player, environment);
 
         // FSM State Transitions
@@ -66,7 +85,7 @@ export class Enemy {
             this.state = 'CHASE';
             this.searchTimer = 0;
         } else if (this.state === 'CHASE') {
-            this.state = 'SEARCH'; // search last known position
+            this.state = 'SEARCH'; // Search last known position
             this.searchTimer = 0;
             this.lookAroundTimer = 0;
         }
@@ -82,7 +101,7 @@ export class Enemy {
             this.goToNearestWaypoint(dt);
         }
 
-        // check voxel floor to avoid holes
+        // Check voxel floor to avoid holes
         const isStandingOnVoxels = this.groundCollider && this.groundCollider.colliderType === 'VOXEL_GRID';
         if (isStandingOnVoxels) {
             this.avoidHoles(dt, environment);
@@ -213,14 +232,13 @@ export class Enemy {
 
         this._wishDir.normalize();
 
-        // Keep minimum distance from player
+        // Keep dynamic minimum distance (3-5 units)
         const minDistance = 4.0;
         if (dist > minDistance) {
             this.velocity.x = this._wishDir.x * this.chaseSpeed;
             this.velocity.z = this._wishDir.z * this.chaseSpeed;
         } else {
-            // Halt horizontal movement and look directly at player
-            this.velocity.set(0, 0, 0);
+            this.velocity.set(0, 0, 0); // Halt and track player
         }
 
         this.velocity.y += -24.0 * dt;
@@ -228,12 +246,11 @@ export class Enemy {
         this.targetYaw = Math.atan2(-this._wishDir.x, -this._wishDir.z);
         this.interpolateYaw(dt);
 
-        // Shoot at player
         if (this.shootCooldown > 0) {
             this.shootCooldown -= dt;
         } else {
             this.shoot(player, audio, assets);
-            this.shootCooldown = 0.8; // Firing rate cooldown
+            this.shootCooldown = 0.8; 
         }
     }
 
@@ -249,13 +266,13 @@ export class Enemy {
             this.targetYaw = Math.atan2(-this._wishDir.x, -this._wishDir.z);
             this.interpolateYaw(dt);
         } else {
-            // Reached last known player position. search
+            // Reached last known position, look around slowly
             this.velocity.set(0, 0, 0);
 
             this.lookAroundTimer += dt;
             if (this.lookAroundTimer >= 1.5) {
                 this.lookAroundTimer = 0;
-                this.targetYaw = this.yaw + (Math.random() - 0.5) * Math.PI; // Slow down looking
+                this.targetYaw = this.yaw + (Math.random() - 0.5) * Math.PI; 
             }
             this.interpolateYaw(dt);
         }
@@ -302,12 +319,12 @@ export class Enemy {
     }
 
     interpolateYaw(dt) {
-        // Safe angular wrapping to prevent 360 flip jitters
         let diff = this.targetYaw - this.yaw;
         diff = Math.atan2(Math.sin(diff), Math.cos(diff));
         this.yaw += diff * Math.min(1.0, this.rotationSpeed * dt);
     }
 
+    // checks for holes in a voxel floor
     avoidHoles(dt, environment) {
         if (!this.isGrounded) return;
         this._nextPos.copy(this.position).addScaledVector(this.velocity, dt);
@@ -329,9 +346,8 @@ export class Enemy {
         const z = Math.round(lz / s + offsetScalarZ);
 
         if (x >= 0 && x < w && z >= 0 && z < d) {
-            // If next step is empty air, stop and reverse direction
             if (!voxelObj.isSolid(x, y, z)) {
-                this.velocity.set(0, 0, 0);
+                this.velocity.set(0, 0, 0); // Halt forward momentum
                 if (this.state === 'PATROL') {
                     this.currentWaypointIdx = (this.currentWaypointIdx + 1) % this.path.length;
                 } else {
@@ -362,11 +378,11 @@ export class Enemy {
         audio.synthesizeBeep(330, 0.05, 'triangle');
 
         this._ray.set(eyePos, this._lookDir);
-        this._tempSphere.set(player.position, player.radius);
 
-        if (this._ray.intersectsSphere(this._tempSphere)) {
+        // Check hitscan intersection directly against the player's dynamic Combat Hitbox
+        if (this._ray.intersectsBox(player.combatHitbox)) {
             if (player.damageCooldown <= 0) {
-                player.health = Math.max(0, player.health - 10); // Take 10 damage
+                player.health = Math.max(0, player.health - 5); // take damage
                 player.damageCooldown = 0.2; // 200ms damage immunity
                 audio.synthesizeBeep(100, 0.1, 'sawtooth'); // Pain sound
             }

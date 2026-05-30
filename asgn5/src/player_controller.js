@@ -11,18 +11,17 @@ export class PlayerController {
         // eye-height
         this.eyeHeight = 1.6;
         this.prevEyeHeight = 1.6;
-
         // Angle states in Radians (Camera orientation tracker)
         this.pitch = 0; // Look up/down
         this.prevPitch = 0;
         this.yaw = 0;   // Look left/right
         this.prevYaw = 0;
-
         this.fov = baseFOV;
         this.prevFOV = baseFOV;
 
         this.health = 100;
         this.damageCooldown = 0;
+        this.combatHitbox = new THREE.Box3();
 
         // logic states
         this.isCrouched = false;
@@ -42,6 +41,14 @@ export class PlayerController {
         this._right = new THREE.Vector3();
         this._wishDir = new THREE.Vector3();
         this._temp = new THREE.Vector3();
+    }
+
+    updateCombatHitbox() {
+        const height = this.isCrouched ? 1.0 : 1.6;
+        const feetY = this.position.y - this.radius;
+        // Centered around the player's position, extending vertically from feet up to eye heights
+        this.combatHitbox.min.set(this.position.x - 0.4, feetY, this.position.z - 0.4);
+        this.combatHitbox.max.set(this.position.x + 0.4, feetY + height, this.position.z + 0.4);
     }
 
     savePreviousState() {
@@ -137,6 +144,7 @@ export class PlayerController {
         } else {
             this.applyNormalMovement(dt, input);
         }
+        this.updateCombatHitbox();
     }
 
     applyNormalMovement(dt, input) {
@@ -215,12 +223,12 @@ export class PlayerController {
         this.prevPitch = 0;
         this.yaw = 0;
         this.prevYaw = 0;
-
         this.fov = baseFOV;
         this.prevFOV = baseFOV;
 
         this.health = 100;
         this.damageCooldown = 0;
+        this.updateCombatHitbox();
 
         this.isCrouched = false;
         this.isSprinting = false;

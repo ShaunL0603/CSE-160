@@ -25,6 +25,7 @@ export class PhysicsSystem {
 
     resolveEntityCollisions(entity, radius, walls, slide = false) {
         entity.isGrounded = false;
+        entity.groundCollider = null; // Clear active ground reference
         
         for (let i = 0; i < walls.length; i++) {
             const wall = walls[i];
@@ -171,6 +172,7 @@ export class PhysicsSystem {
             if (this._normal.y > 0.707) {
                 entity.isGrounded = true;
                 entity.velocity.y = 0;
+                entity.groundCollider = boundingBox; // Cache the floor we are standing on
             }
 
             if (slide) {
@@ -222,6 +224,7 @@ export class PhysicsSystem {
                     entity.position.y = surfaceY + radius;
                     entity.velocity.y = 0;
                     entity.isGrounded = true;
+                    entity.groundCollider = wall; // Cache the slope
                 }
             } else {
                 this.resolveSphereAABBCollision(entity, wall.boundingBox, radius, true);
@@ -300,7 +303,7 @@ export class PhysicsSystem {
 
             const dot = player.velocity.dot(this._normal);
             if (dot < 0) {
-                player.velocity.addScaledVector(this._normal, -dot);
+                player.velocity.addScaledVector(this._normal, -dot); 
             }
         }
     }
