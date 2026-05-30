@@ -42,48 +42,43 @@ export class RenderPipeline {
         const ambient = new THREE.AmbientLight(0xffffff, 0.4);
         this.scene.add(ambient);
 
+        let dirLightX = 25;
+        let dirLightY = 20;
+        let dirLightZ = 25;
         const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-        dirLight.position.set(10, 12, 3);
+        dirLight.position.set(dirLightX, dirLightY, dirLightZ);
         dirLight.target.position.set(0, 0, -5);
         dirLight.castShadow = true;
         // Access the underlying orthographic camera
         const cam = dirLight.shadow.camera;
         // Define the boundaries of the shadow's orthographic view volume
-        cam.left = -20;
-        cam.right = 20;
-        cam.top = 15;
-        cam.bottom = -5;
+        cam.left = -40;
+        cam.right = 40;
+        cam.top = 20;
+        cam.bottom = -20;
         // Set near and far clipping planes for the shadow
         cam.near = 0.5;
-        cam.far = 30;
+        cam.far = 70;
         // visualize the shadow camera boundaries in scene
         // const helper = new THREE.CameraHelper(cam);
         // this.scene.add(helper);
         this.scene.add(dirLight);
         this.scene.add(dirLight.target);
+
         const geometry = new THREE.BoxGeometry( 1, 1, 1 );
         const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
         const dirLightCube = new THREE.Mesh( geometry, material );
-        dirLightCube.position.set(10, 12, 3);
+        dirLightCube.position.set(dirLightX, dirLightY, dirLightZ);
         dirLightCube.scale.set(0.5, 0.5, 0.5);
         this.scene.add( dirLightCube );
 
         // --- Map 1: Moving Targets ---
         this.mapMoving = new THREE.Group();
-        // const grid = new THREE.GridHelper(50, 50, 0x44aa88, 0x222228);
-        // grid.position.y = -0.01; 
-        // this.mapMoving.add(grid);
         this.mapMoving.visible = true;
         this.scene.add(this.mapMoving);
 
         // --- Map 2: Static Targets ---
         this.mapStatic = new THREE.Group();
-        const floorGeo = new THREE.BoxGeometry(50, 1, 50);
-        const floorMat = new THREE.MeshPhongMaterial({ color: 0x2a2a35 });
-        const solidFloor = new THREE.Mesh(floorGeo, floorMat);
-        solidFloor.position.y = -0.51;
-        solidFloor.receiveShadow = true;
-        this.mapStatic.add(solidFloor);
         this.mapStatic.visible = false;
         this.scene.add(this.mapStatic);
 
