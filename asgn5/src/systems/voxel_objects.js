@@ -75,7 +75,6 @@ class VoxelChunk {
             { dir: [1, 0, 0], norm: [1, 0, 0], verts: [[ halfS, -halfS,  halfS], [ halfS, -halfS, -halfS], [ halfS,  halfS, -halfS], [ halfS,  halfS,  halfS]] },
             { dir: [0, -1, 0], norm: [0, -1, 0], verts: [[-halfS, -halfS, -halfS], [ halfS, -halfS, -halfS], [ halfS, -halfS,  halfS], [-halfS, -halfS,  halfS]] },
             { dir: [0, 1, 0], norm: [0, 1, 0], verts: [[-halfS,  halfS,  halfS], [ halfS,  halfS,  halfS], [ halfS,  halfS, -halfS], [-halfS,  halfS, -halfS]] },
-            // FIX: Corrected Back Face (-Z) to be Counter-Clockwise from the outside
             { dir: [0, 0, -1], norm: [0, 0, -1], verts: [[ halfS, -halfS, -halfS], [-halfS, -halfS, -halfS], [-halfS,  halfS, -halfS], [ halfS,  halfS, -halfS]] },
             { dir: [0, 0, 1], norm: [0, 0, 1], verts: [[-halfS, -halfS,  halfS], [ halfS, -halfS,  halfS], [ halfS,  halfS,  halfS], [-halfS,  halfS,  halfS]] }
         ];
