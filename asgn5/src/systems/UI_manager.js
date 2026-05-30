@@ -113,9 +113,19 @@ export class UIManager {
         bindSlider('slider-count', 'gameplay.targetCount', 'count-val', false);
         bindSlider('slider-radius', 'gameplay.destructionRadius', 'radius-val', true);
 
+        // Debugger
+        bindCheckbox('toggle-debug-zones', 'debug.showSpawnZones'); // Bind Spawn Zones
+
         // Map Selection
         document.getElementById('select-map').addEventListener('change', (e) => {
-            logic.config.gameplay.mapType = e.target.value;
+            const mapType = e.target.value;
+            logic.config.gameplay.mapType = mapType;
+            
+            const isStatic = (mapType === 'static');
+            const slider = document.getElementById('slider-count');
+            if (slider) {
+                slider.disabled = isStatic; // Disable slider on static map
+            }
         });
 
         // Reset Button
@@ -155,6 +165,14 @@ export class UIManager {
         syncSlider('slider-size', logic.config.gameplay.targetSize, 'size-val');
         syncSlider('slider-count', logic.config.gameplay.targetCount, 'count-val', false);
         syncSlider('slider-radius', logic.config.gameplay.destructionRadius, 'radius-val');
+
+        // Force disable state sync for the target count slider
+        const isStatic = (logic.config.gameplay.mapType === 'static');
+        const slider = document.getElementById('slider-count');
+        if (slider) slider.disabled = isStatic;
+
+        // Debugger syncs
+        syncCheckbox('toggle-debug-zones', logic.config.debug.showSpawnZones);
 
         const mapSelect = document.getElementById('select-map');
         if (mapSelect) mapSelect.value = logic.config.gameplay.mapType;

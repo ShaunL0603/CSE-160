@@ -91,6 +91,11 @@ export class RenderPipeline {
         this.scene.add(this.wallMeshesGroup);
         this.voxelMeshesGroup = new THREE.Group();
         this.scene.add(this.voxelMeshesGroup);
+
+        // debug stuff
+        this.debugSpawnZonesGroup = new THREE.Group();
+        this.scene.add(this.debugSpawnZonesGroup);
+
         this.voxelMeshMap = new Map();
         this.currentVisualMap = '';
 
@@ -130,6 +135,8 @@ export class RenderPipeline {
             });
             this.voxelMeshesGroup.clear();
             this.voxelMeshMap.clear();
+            // dispose old spawn zone debug wireframes
+            this.debugSpawnZonesGroup.clear();
 
             // Build structural meshes directly from current math constraints
             const walls = logic.environment.walls;
@@ -234,6 +241,13 @@ export class RenderPipeline {
                     chunk.dirty = true; // Force initial upload
                 });
             });
+
+            // Build green wireframe Box3Helpers for all active target spawn zones
+            const zones = logic.environment.targetSpawnZones;
+            zones.forEach(zone => {
+                const helper = new THREE.Box3Helper(zone.boundingBox, 0x00ff00);
+                this.debugSpawnZonesGroup.add(helper);
+            });
         }
 
         // Update Dirty Chunks (Runs every frame)
@@ -303,6 +317,9 @@ export class RenderPipeline {
 
         // sync visual meshes dynamically
         this.syncVisualEnvironment(logic);
+        
+        // Toggle Spawn Zone wireframes
+        this.debugSpawnZonesGroup.visible = logic.config.debug.showSpawnZones;
 
         // synchronize and interpolate targets
         const targets = logic.targetManager.targets;

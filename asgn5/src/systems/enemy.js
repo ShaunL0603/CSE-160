@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+// no longer using
+
 export class Enemy {
     constructor(id, initialPosition, path) {
         this.id = id;

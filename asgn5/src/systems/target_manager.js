@@ -42,22 +42,61 @@ export class TargetManager {
         }
     }
 
+    // Weighted lottery algorithm, distribute targets evenly based on zone sizes
+    selectSpawnZone(environment) {
+        const zones = environment.targetSpawnZones;
+        if (zones.length === 0) return null;
+
+        // Build simple lottery ticket array
+        const lottery = [];
+        for (let i = 0; i < zones.length; i++) {
+            const limit = zones[i].maxTargets;
+            for (let j = 0; j < limit; j++) {
+                lottery.push(i); // Push zone index "limit" times
+            }
+        }
+
+        if (lottery.length === 0) return null;
+        const selectedIdx = lottery[Math.floor(Math.random() * lottery.length)];
+        return zones[selectedIdx].boundingBox;
+    }
+
     spawnTarget(config, environment) {
         // Find the first available inactive target in the pool
         const target = this.targets.find(t => !t.active);
         if (!target) return; // Pool exhausted (safety fallback)
 
-        const min = this.spawnBounds.min;
+        const isStatic = (config.mapType === 'static');
+        const zones = environment.targetSpawnZones;
         let spawnSuccess = false;
         const maxAttempts = 20;
 
         for (let attempt = 0; attempt < maxAttempts; ++attempt) {
-            // Position target randomly within spawn bounding region
-            this._tempVector.set(
-                min.x + Math.random() * this._boundsSize.x,
-                min.y + Math.random() * this._boundsSize.y,
-                min.z + Math.random() * this._boundsSize.z
-            );
+            let targetY = 0;
+
+            if (isStatic && zones.length > 0) {
+                // Multi-zone spawning logic
+                const zoneBox = this.selectSpawnZone(environment);
+                const sizeX = zoneBox.max.x - zoneBox.min.x;
+                const sizeZ = zoneBox.max.z - zoneBox.min.z;
+                this._tempVector.set(
+                    zoneBox.min.x + Math.random() * sizeX,
+                    0,
+                    zoneBox.min.z + Math.random() * sizeZ
+                );
+                // Position sphere center exactly at ye Level
+                targetY = zoneBox.min.y + 1.6; 
+                this._tempVector.y = targetY;
+            } else {
+                // Standard moving map bounding box spawning
+                // Position target randomly within spawn bounding region
+                const min = this.spawnBounds.min;
+                this._tempVector.set(
+                    min.x + Math.random() * this._boundsSize.x,
+                    min.y + Math.random() * this._boundsSize.y,
+                    min.z + Math.random() * this._boundsSize.z
+                );
+            }
 
             const candidateRadius = target.boundingRadius * config.targetSize;
             let collided = false;
@@ -104,7 +143,7 @@ export class TargetManager {
         }
 
         // map logic
-        if (config.mapType === 'static') {
+        if (isStatic) {
             target.velocity.set(0, 0, 0);
         } else {
             // Assign random direction vector and scale by configured velocity
