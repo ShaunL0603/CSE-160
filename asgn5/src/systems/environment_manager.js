@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { VoxelObject } from '../voxel_objects.js';
+import { VoxelObject } from './voxel_objects.js';
 
 export class EnvironmentManager {
     constructor() {

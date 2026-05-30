@@ -1,9 +1,9 @@
 import { GameLogic } from './game_logic.js';
 import { RenderPipeline } from './render_pipeline.js';
-import { InputManager } from './systems/input_manager.js';
-import { AudioManager } from './systems/audio_manager.js';
-import { AssetManager } from './systems/asset_manager.js';
-import { UIManager } from './systems/UI_manager.js';
+import { InputManager } from './input_manager.js';
+import { AudioManager } from './audio_manager.js';
+import { AssetManager } from './asset_manager.js';
+import { UIManager } from './UI_manager.js';
 
 export class Engine {
     constructor(canvas) {
