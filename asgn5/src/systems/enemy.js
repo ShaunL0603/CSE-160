@@ -368,7 +368,7 @@ export class Enemy {
         this._lookDir.subVectors(playerEye, eyePos).normalize();
 
         // Inaccurate hitscan: apply 12% random spherical offset
-        const spread = 0.12; 
+        const spread = 0.40; 
         this._lookDir.x += (Math.random() - 0.5) * spread;
         this._lookDir.y += (Math.random() - 0.5) * spread;
         this._lookDir.z += (Math.random() - 0.5) * spread;
