@@ -20,7 +20,7 @@ export class GameLogic {
                 baseFOV: 90
             },
             gameplay: {
-                targetSpeed: 3.5,
+                targetSpeed: 1.5,
                 targetSize: 0.5,
                 targetCount: 20,
                 mapType: 'moving',
