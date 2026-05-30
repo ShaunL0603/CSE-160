@@ -39,13 +39,13 @@ export class RenderPipeline {
 
     initEnvironment() {
         // Lighting
-        const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+        const ambient = new THREE.AmbientLight(0xffffff, 0.3);
         this.scene.add(ambient);
 
         let dirLightX = 25;
         let dirLightY = 20;
         let dirLightZ = 25;
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
         dirLight.position.set(dirLightX, dirLightY, dirLightZ);
         dirLight.target.position.set(0, 0, -5);
         dirLight.castShadow = true;
