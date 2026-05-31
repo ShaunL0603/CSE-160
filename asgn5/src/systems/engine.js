@@ -40,7 +40,10 @@ export class Engine {
         await this.assets.loadAll(this.audio.context);
         this.ui.hideLoading();
 
-        this.ui.bindSettings(this.logic);
+        // map loads when assets are fully downloaded
+        this.logic.applyConfigChanges(this.assets);
+
+        this.ui.bindSettings(this.logic, this.assets);
         this.setupLockHandlers();
 
         this.isRunning = true; 
@@ -60,7 +63,7 @@ export class Engine {
 
             if (locked) {
                 this.ui.showSettings(false);
-                this.logic.applyConfigChanges();
+                this.logic.applyConfigChanges(this.assets);
                 this.isPaused = false;
                 // reset lastTime to current instance
                 this.lastTime = performance.now() * 0.001;
@@ -124,7 +127,7 @@ export class Engine {
         // Calculate interpolation alpha (0.0 to 1.0)
         const alpha = this.isPaused ? 1.0 : this.accumulator / this.fixedTimeStep;
         // Feed pure state values + alpha directly to rendering pipeline
-        this.renderer.render(this.logic, alpha);
+        this.renderer.render(this.logic, alpha, this.assets);
         // update HUD display values
         if (!this.isPaused) {
             this.ui.updateHUD(this.logic.score, this.logic.shotsFired, this.logic.currentMode);

@@ -65,7 +65,7 @@ export class UIManager {
     }
 
     // Binds DOM slider values directly to config states
-    bindSettings(logic) {
+    bindSettings(logic, assets) {
         const bindSlider = (id, configPath, labelId, isFloat = true) => {
             const slider = document.getElementById(id);
             const label = document.getElementById(labelId);
@@ -131,7 +131,7 @@ export class UIManager {
 
         // Reset Button
         document.getElementById('btn-reset').addEventListener('click', () => {
-            logic.reset();
+            logic.reset(assets);
             // Force HUD update immediately
             this.updateHUD(logic.score, logic.shotsFired, logic.currentMode, true);
         });

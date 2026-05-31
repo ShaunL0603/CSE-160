@@ -87,6 +87,10 @@ export class RenderPipeline {
         this.voxelMeshesGroup = new THREE.Group();
         this.scene.add(this.voxelMeshesGroup);
 
+        // 3D models
+        this.modelMeshesGroup = new THREE.Group();
+        this.scene.add(this.modelMeshesGroup);
+
         // debug stuff
         this.debugSpawnZonesGroup = new THREE.Group();
         this.scene.add(this.debugSpawnZonesGroup);
@@ -109,7 +113,7 @@ export class RenderPipeline {
         this.scene.add(this.targetMeshInstances);
     }
 
-    syncVisualEnvironment(logic) {
+    syncVisualEnvironment(logic, assets) {
         const mapType = logic.environment.currentMap;
         const mapChanged = this.currentVisualMap !== mapType;
 
@@ -125,13 +129,21 @@ export class RenderPipeline {
                 }
             });
             this.wallMeshesGroup.clear();
-
+            // Disopse old voxel objects
             this.voxelMeshesGroup.children.forEach(child => {
                 if (child.geometry) child.geometry.dispose();
                 if (child.material) child.material.dispose();
             });
             this.voxelMeshesGroup.clear();
             this.voxelMeshMap.clear();
+            // Dispose old models
+            this.modelMeshesGroup.children.forEach(child => {
+                // We don't dispose the geometry/material here because they are shared 
+                // from the AssetManager cache! We just remove them from the scene.
+                this.modelMeshesGroup.remove(child);
+            });
+            this.modelMeshesGroup.clear();
+
             // debug wireframe disposals
             this.debugSpawnZonesGroup.clear();
             this.debugVoxelChunksGroup.clear();
@@ -144,7 +156,7 @@ export class RenderPipeline {
             });
 
             walls.forEach(wall => {
-                if (wall.colliderType === 'AABB') { 
+                if (wall.colliderType === 'AABB' &&  wall.isVisible !== false) { 
                     const geo = new THREE.BoxGeometry(wall.size.x, wall.size.y, wall.size.z);
                     const mesh = new THREE.Mesh(geo, wallMaterial);
                     mesh.position.copy(wall.position);
@@ -252,6 +264,26 @@ export class RenderPipeline {
                 const helper = new THREE.Box3Helper(zone.boundingBox, 0x00ff00);
                 this.debugSpawnZonesGroup.add(helper);
             });
+
+            // initializing model meshes
+            const models = logic.environment.models;
+            models.forEach(modelDef => {
+                // Fetch the pre-loaded model from the AssetManager cache
+                const cachedModel = assets.models.get(modelDef.assetKey);
+                
+                if (cachedModel) {
+                    // Clone the model so we can place multiple copies of the same asset
+                    const mesh = cachedModel.clone();
+                    
+                    mesh.position.copy(modelDef.position);
+                    mesh.scale.copy(modelDef.scale);
+                    mesh.rotation.copy(modelDef.rotation);
+                    
+                    this.modelMeshesGroup.add(mesh);
+                } else {
+                    console.warn(`Model asset key '${modelDef.assetKey}' not found in cache.`);
+                }
+            });
         }
 
         // Update Dirty Chunks (Runs every frame)
@@ -292,7 +324,7 @@ export class RenderPipeline {
     }
 
     // Renders the visual frame, interpolating the logic states via the calculated alpha
-    render(logic, alpha) {
+    render(logic, alpha, assets) {
         const player = logic.player;
         // ensure stable camera (no stuttering), interpolate
         this.camera.position.lerpVectors(player.prevPosition, player.position, alpha);
@@ -320,7 +352,7 @@ export class RenderPipeline {
         this.mapMoving.visible = !isStaticMap;
 
         // sync visual meshes dynamically
-        this.syncVisualEnvironment(logic);
+        this.syncVisualEnvironment(logic, assets);
         
         // Toggle debug wireframes
         this.debugSpawnZonesGroup.visible = logic.config.debug.showSpawnZones;
