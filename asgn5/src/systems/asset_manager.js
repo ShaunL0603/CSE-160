@@ -5,8 +5,10 @@ export class AssetManager {
     constructor() {
         this.sounds = new Map();
         this.models = new Map();
+        this.textures = new Map();
         this.loadingManager = new THREE.LoadingManager();
         this.gltfLoader = new GLTFLoader(this.loadingManager);
+        this.textureLoader = new THREE.TextureLoader(this.loadingManager);
     }
 
     async loadAll(audioContext) {
@@ -25,6 +27,10 @@ export class AssetManager {
             miss: './assets/sounds/miss.mp3'
         };
 
+        const textureAssets = {
+            "sky_texture": './assets/imgs/sky_cloud.jpg'
+        };
+
         const modelAssets = {
             'witch_glb': './assets/Witch.glb'
         };
@@ -40,6 +46,16 @@ export class AssetManager {
             }
         });
 
+        // Load textures
+        const texturePromises = Object.entries(textureAssets).map(async ([key, path]) => {
+            try {
+                const texture = await this.loadTexture(path);
+                this.textures.set(key, texture);
+            } catch (e) {
+                console.error(`Failed to load model: ${path}`, e);
+            }
+        });
+
         // Load models
         const modelPromises = Object.entries(modelAssets).map(async ([key, path]) => {
             try {
@@ -50,7 +66,7 @@ export class AssetManager {
             }
         });
 
-        await Promise.all([...audioPromises, ...modelPromises]);
+        await Promise.all([...audioPromises, ...texturePromises, ...modelPromises]);
         
         // Artificial brief delay for loading screens transitions
         await new Promise(r => setTimeout(r, 400));
@@ -63,10 +79,28 @@ export class AssetManager {
         return await audioContext.decodeAudioData(arrayBuffer);
     }
 
-    loadGLTFModel(url) {
+    loadTexture(src) {
+        return new Promise((resolve, reject) => {
+            this.textureLoader.load(
+                src,
+                (texture) => {
+                    texture.colorSpace = THREE.SRGBColorSpace;
+                    // Set up repeat wrapping for scaling/tiling
+                    texture.wrapS = THREE.RepeatWrapping;
+                    texture.wrapT = THREE.RepeatWrapping;
+                    
+                    resolve(texture);
+                },
+                undefined,
+                (error) => reject(error)
+            );
+        });
+    }
+
+    loadGLTFModel(src) {
         return new Promise((resolve, reject) => {
             this.gltfLoader.load(
-                url,
+                src,
                 (gltf) => {
                     const model = gltf.scene;
                     // Traverse the model to enable shadows on all sub-meshes
