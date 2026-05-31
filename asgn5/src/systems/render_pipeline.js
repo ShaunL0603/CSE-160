@@ -52,7 +52,7 @@ export class RenderPipeline {
         this.dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
         this.dirLight.position.set(dirLightX, dirLightY, dirLightZ);
         this.dirLight.target.position.set(0, 0, -5);
-        this.dirLight.shadow.intensity = 3.0;
+        this.dirLight.shadow.intensity = 1.0;
         this.dirLight.castShadow = true;
         // Access the underlying orthographic camera
         const cam = this.dirLight.shadow.camera;

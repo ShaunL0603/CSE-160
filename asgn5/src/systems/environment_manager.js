@@ -35,17 +35,32 @@ export class EnvironmentManager {
         this.addModel('forest', 'forest_glb', 
             new THREE.Vector3(0, 5, -50), new THREE.Vector3(20, 20, 20), 
             new THREE.Euler(0, 0, 0), assets,
-            new THREE.Vector3(0, 0, 0)
+            new THREE.Vector3(0, 0, 0), false
         );
         this.addModel('forest2', 'forest_glb', 
             new THREE.Vector3(50, 5, -30), new THREE.Vector3(20, 20, 20), 
             new THREE.Euler(0, 3 * Math.PI * 0.25, 0), assets,
-            new THREE.Vector3(0, 0, 0)
+            new THREE.Vector3(0, 0, 0), false
         );
         this.addModel('forest3', 'forest_glb', 
             new THREE.Vector3(-50, 5, -30), new THREE.Vector3(20, 20, 20), 
             new THREE.Euler(0, Math.PI * 0.25, 0), assets,
-            new THREE.Vector3(0, 0, 0)
+            new THREE.Vector3(0, 0, 0), false
+        );
+        this.addModel('forest4', 'forest_glb', 
+            new THREE.Vector3(0, 5, 50), new THREE.Vector3(20, 20, 20), 
+            new THREE.Euler(0, 0, 0), assets,
+            new THREE.Vector3(0, 0, 0), false
+        );
+        this.addModel('forest5', 'forest_glb', 
+            new THREE.Vector3(50, 5, 30), new THREE.Vector3(20, 20, 20), 
+            new THREE.Euler(0, 7 * Math.PI * 0.25, 0), assets,
+            new THREE.Vector3(0, 0, 0), false
+        );
+        this.addModel('forest6', 'forest_glb', 
+            new THREE.Vector3(-50, 5, 30), new THREE.Vector3(20, 20, 20), 
+            new THREE.Euler(0, 5 * Math.PI * 0.25, 0), assets,
+            new THREE.Vector3(0, 0, 0), false
         );
         
         if (mapType === 'static') {
@@ -151,7 +166,7 @@ export class EnvironmentManager {
 
     addModel(id, assetKey, position, 
         scale = new THREE.Vector3(1,1,1), rotation = new THREE.Euler(), assets,
-        visualOffset = new THREE.Vector3()
+        visualOffset = new THREE.Vector3(), hasCollision = true
     ) {
         if (!assets) {
             console.error("AssetManager must be passed to addModel to calculate physics bounds.");
@@ -175,26 +190,28 @@ export class EnvironmentManager {
 
         // Generate a hit box for model
         // Create a temporary clone to apply transforms without affecting the cached original
-        const tempObj = cachedModel.model.clone();
-        tempObj.position.copy(position);
-        tempObj.scale.copy(scale);
-        tempObj.rotation.copy(rotation);
-        // Force Three.js to compute the world matrices for the transformed object
-        tempObj.updateMatrixWorld(true);
-        // Automatically wrap a bounding box around the complex geometry
-        const box = new THREE.Box3().setFromObject(tempObj);
-        // Calculate the resulting size for reference
-        const size = new THREE.Vector3();
-        box.getSize(size);
-        // Register auto-calculated box as a solid wall in the physics engine
-        this.walls.push({
-            id: `${id}_physics`,
-            boundingBox: box,
-            position: position.clone(), 
-            size: size, 
-            colliderType: 'AABB',
-            isDestructible: false,
-            isVisible: false
-        });
+        if (hasCollision) {
+            const tempObj = cachedModel.model.clone();
+            tempObj.position.copy(position);
+            tempObj.scale.copy(scale);
+            tempObj.rotation.copy(rotation);
+            // Force Three.js to compute the world matrices for the transformed object
+            tempObj.updateMatrixWorld(true);
+            // Automatically wrap a bounding box around the complex geometry
+            const box = new THREE.Box3().setFromObject(tempObj);
+            // Calculate the resulting size for reference
+            const size = new THREE.Vector3();
+            box.getSize(size);
+            // Register auto-calculated box as a solid wall in the physics engine
+            this.walls.push({
+                id: `${id}_physics`,
+                boundingBox: box,
+                position: position.clone(), 
+                size: size, 
+                colliderType: 'AABB',
+                isDestructible: false,
+                isVisible: false
+            });
+        }
     }
 }
