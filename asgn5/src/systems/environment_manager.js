@@ -24,16 +24,9 @@ export class EnvironmentManager {
         this.targetSpawnZones = [];
         this.models = []
 
-        // bounding objects
-        this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false, 'terrain_texture');
-        this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false, 'wall_texture');
-        this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false, 'wall_texture');
-        this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false, 'wall_texture');
-        this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false, 'wall_texture');
-
         // Forest by Poly by Google [CC-BY] via Poly Pizza
         this.addModel('forest', 'forest_glb', 
-            new THREE.Vector3(0, 5, -50), new THREE.Vector3(20, 20, 20), 
+            new THREE.Vector3(0, 5, -70), new THREE.Vector3(20, 20, 20), 
             new THREE.Euler(0, 0, 0), assets,
             new THREE.Vector3(0, 0, 0), false
         );
@@ -48,7 +41,7 @@ export class EnvironmentManager {
             new THREE.Vector3(0, 0, 0), false
         );
         this.addModel('forest4', 'forest_glb', 
-            new THREE.Vector3(0, 5, 50), new THREE.Vector3(20, 20, 20), 
+            new THREE.Vector3(0, 5, 70), new THREE.Vector3(20, 20, 20), 
             new THREE.Euler(0, 0, 0), assets,
             new THREE.Vector3(0, 0, 0), false
         );
@@ -64,26 +57,52 @@ export class EnvironmentManager {
         );
         
         if (mapType === 'static') {
-            // map objects
-            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.5, -10), new THREE.Vector3(10, 1, 10), densityString, true, 'wood_floor_texture');
+            // bounding objects
+            this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 70), false, 'terrain_texture');
+            this.addWall('wall_north', new THREE.Vector3(0, 2, -35), new THREE.Vector3(50, 4, 1), false, 'wall_texture');
+            this.addWall('wall_south', new THREE.Vector3(0, 2, 35), new THREE.Vector3(50, 4, 1), false, 'wall_texture');
+            this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 70), false, 'wall_texture');
+            this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 70), false, 'wall_texture');
 
-            this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4);
-            this.addWall('ramp_center_wall_right', new THREE.Vector3(1.75, 2.0, -3.1), new THREE.Vector3(0.5, 3.99, 4));
-            this.addWall('ramp_center_wall_left', new THREE.Vector3(-1.75, 2.0, -3.1), new THREE.Vector3(0.5, 3.99, 4));
-            this.addWall('ramp_center_wall_back', new THREE.Vector3(0, 1.89, -5), new THREE.Vector3(4, 3.8, 0.5));
-            // this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4);
+            // map objects
+            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 4.5, -10), new THREE.Vector3(10, 1, 10), densityString, true,);
+            this.addVoxelObject('voxel_walkway_left', new THREE.Vector3(-15, 4.5, 0), new THREE.Vector3(4, 1, 30), densityString, true,);
+            this.addVoxelObject('voxel_wall_left', new THREE.Vector3(-17, 1, 0), new THREE.Vector3(0.5, 2, 10), densityString, true);
+            this.addWall('platform_left_connector', new THREE.Vector3(-9, 4.75, -10), new THREE.Vector3(8, 0.5, 4), false, 'wood_floor_texture');
+
+            this.addWall('platform_right_connector', new THREE.Vector3(9, 4.75, -10), new THREE.Vector3(8, 0.5, 4), false, 'wood_floor_texture');
+            this.addWall('platform_right', new THREE.Vector3(11, 4.6, -14.5), new THREE.Vector3(4.2, 1, 5.2), false, 'wood_floor_texture');
+            this.addWall('platform_top_north', new THREE.Vector3(0, 9.75, -19), new THREE.Vector3(36, 0.5, 4), false, 'wood_floor_texture');
+            this.addWall('platform_top_south', new THREE.Vector3(0, 9.75, 19), new THREE.Vector3(36, 0.5, 4), false, 'wood_floor_texture');
+            this.addWall('platform_top_east', new THREE.Vector3(16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
+            this.addWall('platform_top_west ', new THREE.Vector3(-16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
+
+            // ramps: coords so physical and collision match
+            // start and end Coord = position.z +- (size.z / 2)
+            // y start and end = position.y +- (size.y / 2)
+            this.addSlope('ramp_center', new THREE.Vector3(0, 2.5, -2.75), new THREE.Vector3(3, 5.0, 5.0), -0.5, -5, 0, 5.0);
+            this.addSlope('ramp_left', new THREE.Vector3(-15, 2.5, 17.5), new THREE.Vector3(3, 5.0, 5.0), 20, 15, 0, 5.0);
+            this.addSlope('ramp_second_floor', new THREE.Vector3(11, 7.5, -14.5), new THREE.Vector3(3, 5.0, 5.0), -12, -17, 3.5, 8.5);
 
             // Spawning Regions
             this.addTargetSpawnZone(new THREE.Vector3(-10, 0, -15), new THREE.Vector3(-4, 3, -5), 7);
             // this.addTargetSpawnZone(new THREE.Vector3(4, 0, -15), new THREE.Vector3(10, 3, -5), 7);
-            // this.addTargetSpawnZone(new THREE.Vector3(-4, 4, -14), new THREE.Vector3(4, 7, -6), 6);
+            this.addTargetSpawnZone(new THREE.Vector3(-4, 5.0, -14), new THREE.Vector3(4, 7, -6), 6);
         } else if (mapType === 'moving') {
+            // bounding objects
+            this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(30, 1, 35), false, 'terrain_texture');
+            this.addWall('wall_north', new THREE.Vector3(0, 2, -17), new THREE.Vector3(30, 4, 1), false, 'wall_texture');
+            this.addWall('wall_south', new THREE.Vector3(0, 2, 17), new THREE.Vector3(30, 4, 1), false, 'wall_texture');
+            this.addWall('wall_east', new THREE.Vector3(15.5, 2, 0), new THREE.Vector3(1, 4, 35), false, 'wall_texture');
+            this.addWall('wall_west', new THREE.Vector3(-15.5, 2, 0), new THREE.Vector3(1, 4, 35), false, 'wall_texture');
+
             // map objects
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(4, 6 ,4), densityString, true);
-            // this.addVoxelObject('voxel_block', new THREE.Vector3(0, 3, 5), new THREE.Vector3(4, 6, 4), densityString, true);
+            this.addSlope('ramp_center', new THREE.Vector3(0, 2.5, 10), new THREE.Vector3(3, 5.0, 5.0), 12.5, 7.5, 0, 5.0);
+            this.addVoxelObject('voxel_walkway_south', new THREE.Vector3(0, 4.5, 5.5), new THREE.Vector3(16, 1, 4), densityString, true);
             this.addModel('witch', 'witch_glb', 
-                new THREE.Vector3(0, 1, -1), new THREE.Vector3(1, 1, 1), 
-                new THREE.Euler(0, 0, 0), assets,
+                new THREE.Vector3(7, 6, 4.5), new THREE.Vector3(1, 1, 1), 
+                new THREE.Euler(0, -Math.PI * 0.5, 0), assets,
                 new THREE.Vector3(0, -1, 1)
             );
         }
@@ -161,6 +180,31 @@ export class EnvironmentManager {
         slopeObject.zEnd = endCoord;
 
         this.walls.push(slopeObject);
+
+        const wallThickness = 0.5;
+        // Left Wall
+        this.addWall(
+            `${id}_wall_left`, 
+            new THREE.Vector3(position.x - (size.x * 0.5 + wallThickness * 0.5), position.y - 0.01, position.z), 
+            new THREE.Vector3(wallThickness, size.y, size.z), 
+            false
+        );
+        // Right Wall
+        this.addWall(
+            `${id}_wall_right`, 
+            new THREE.Vector3(position.x + (size.x * 0.5 + wallThickness * 0.5), position.y - 0.01, position.z), 
+            new THREE.Vector3(wallThickness, size.y, size.z), 
+            false
+        );
+        // Back Wall
+        const highZ = min.z;
+        const offsetZ = wallThickness * 0.5;
+        this.addWall(
+            `${id}_wall_back`,
+            new THREE.Vector3(position.x, position.y - 0.7, highZ + offsetZ),
+            new THREE.Vector3(size.x + wallThickness * 2, size.y, wallThickness),
+            false
+        );
     }
 
     addModel(id, assetKey, position, 
