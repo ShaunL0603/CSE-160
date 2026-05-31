@@ -393,7 +393,7 @@ export class RenderPipeline {
             console.warn("this.dirLight not found");
             return;
         }
-        const size = quality === 'low' ? 512 : 2048; // Map resolution thresholds
+        const size = quality === 'low' ? 512 : 1024; // Map resolution thresholds
         
         // Prevent redundant WebGL context updates
         if (this.dirLight.shadow.mapSize.width === size) return;
