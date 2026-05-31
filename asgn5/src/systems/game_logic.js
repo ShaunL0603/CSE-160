@@ -214,7 +214,8 @@ export class GameLogic {
         this.score = 0;
         this.shotsFired = 0;
         this.player.reset(this.config.camera.baseFOV);
-        this.environment.loadMap(this.config.gameplay.mapType, assets, this.config.graphics.voxelDensity);
+        // .loadMap() -> true parameter to force a reload, regenerate voxel objects when clicking reset button
+        this.environment.loadMap(this.config.gameplay.mapType, assets, this.config.graphics.voxelDensity, true);
         // Reset target managers with correct count
         const activeConfig = {
             targetCount: this.config.gameplay.mapType === 'static' ? 20 : this.config.gameplay.targetCount,

@@ -12,9 +12,9 @@ export class EnvironmentManager {
         this.version = 0;
     }
 
-    loadMap(mapType, assets, densityString = 'normal') {
+    loadMap(mapType, assets, densityString = 'normal', force = false) {
         // Prevent map rebuilds if we are already in the correct map
-        if (this.currentMap === mapType && this.currentDensity === densityString) return;
+        if (!force && this.currentMap === mapType && this.currentDensity === densityString) return;
         this.currentMap = mapType;
         this.currentDensity = densityString;
         this.version++;
