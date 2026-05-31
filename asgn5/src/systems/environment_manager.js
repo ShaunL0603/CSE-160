@@ -66,7 +66,12 @@ export class EnvironmentManager {
         if (mapType === 'static') {
             // map objects
             this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.5, -10), new THREE.Vector3(10, 1, 10), densityString, true, 'wood_floor_texture');
+
             this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4);
+            this.addWall('ramp_center_wall_right', new THREE.Vector3(1.75, 2.0, -3.1), new THREE.Vector3(0.5, 3.99, 4));
+            this.addWall('ramp_center_wall_left', new THREE.Vector3(-1.75, 2.0, -3.1), new THREE.Vector3(0.5, 3.99, 4));
+            this.addWall('ramp_center_wall_back', new THREE.Vector3(0, 1.89, -5), new THREE.Vector3(4, 3.8, 0.5));
+            // this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4);
 
             // Spawning Regions
             this.addTargetSpawnZone(new THREE.Vector3(-10, 0, -15), new THREE.Vector3(-4, 3, -5), 7);

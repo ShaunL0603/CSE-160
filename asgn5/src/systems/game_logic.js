@@ -23,7 +23,7 @@ export class GameLogic {
                 targetSpeed: 1.5,
                 targetSize: 0.5,
                 targetCount: 20,
-                mapType: 'moving',
+                mapType: 'static',
                 destructionRadius: 1.0
             },
             graphics: {
