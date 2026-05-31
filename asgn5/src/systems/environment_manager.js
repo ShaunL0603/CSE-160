@@ -23,17 +23,17 @@ export class EnvironmentManager {
         this.voxelObjects = [];
         this.targetSpawnZones = [];
         this.models = []
+
+        // bounding objects
+        this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false, 'floor_texture');
+        this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false, 'wall_texture');
+        this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false, 'wall_texture');
+        this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false, 'wall_texture');
+        this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false, 'wall_texture');
         
         if (mapType === 'static') {
-            // bounding objects
-            this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
-            this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false);
-            this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false);
-            this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false);
-            this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
-
             // map objects
-            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.5, -10), new THREE.Vector3(10, 1, 10), densityString, true);
+            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.5, -10), new THREE.Vector3(10, 1, 10), densityString, true, 'wood_floor_texture');
             this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
 
             // Spawning Regions
@@ -41,13 +41,6 @@ export class EnvironmentManager {
             this.addTargetSpawnZone(new THREE.Vector3(4, 0, -15), new THREE.Vector3(10, 3, -5), 7);
             this.addTargetSpawnZone(new THREE.Vector3(-4, 4, -14), new THREE.Vector3(4, 7, -6), 6);
         } else if (mapType === 'moving') {
-            // map bounds
-            this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false);
-            this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false);
-            this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false);
-            this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false);
-            this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
-
             // map objects
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(4, 6 ,4), densityString, true);
             // this.addVoxelObject('voxel_block', new THREE.Vector3(0, 3, 5), new THREE.Vector3(4, 6, 4), densityString, true);
@@ -62,8 +55,8 @@ export class EnvironmentManager {
         });
     }
 
-    addVoxelObject(id, position, physicalSize, density, isDestructible = true) {
-        const voxelObj = new VoxelObject(id, position, physicalSize, density, isDestructible);
+    addVoxelObject(id, position, physicalSize, density, isDestructible = true, textureKey = null) {
+        const voxelObj = new VoxelObject(id, position, physicalSize, density, isDestructible, textureKey);
         this.voxelObjects.push(voxelObj);
 
         // Also register its broad-phase bounding box inside our physical walls list
@@ -76,11 +69,12 @@ export class EnvironmentManager {
             size: new THREE.Vector3(voxelObj.dimensions.x * realScale, voxelObj.dimensions.y * realScale, voxelObj.dimensions.z * realScale),
             colliderType: 'VOXEL_GRID',
             isDestructible,
-            voxelRef: voxelObj
+            voxelRef: voxelObj,
+            textureKey
         });
     }
 
-    addWall(id, position, dimensions, isDestructible = false) {
+    addWall(id, position, dimensions, isDestructible = false, textureKey = null) {
         // Build the physical bounding box
         const halfSize = dimensions.clone().multiplyScalar(0.5);
         const min = position.clone().sub(halfSize);
@@ -94,11 +88,12 @@ export class EnvironmentManager {
             position: position.clone(), 
             size: dimensions.clone(), 
             colliderType: 'AABB',       // Physics routing instruction
-            isDestructible              // Destruction tag
+            isDestructible,             // Destruction tag
+            textureKey
         });
     }
 
-    addSlope(id, position, size, startCoord, endCoord, yStart, yEnd, slopeAxis = 'Z') {
+    addSlope(id, position, size, startCoord, endCoord, yStart, yEnd, slopeAxis = 'Z', textureKey = null) {
         const halfSize = size.clone().multiplyScalar(0.5);
         const min = position.clone().sub(halfSize);
         const max = position.clone().add(halfSize);
@@ -118,7 +113,8 @@ export class EnvironmentManager {
             yStart: physicalYStart + 0.25,
             yEnd: physicalYEnd + 0.25,
             slopeAxis,
-            isDestructible: false
+            isDestructible: false,
+            textureKey
         };
 
         if (slopeAxis === 'X') {

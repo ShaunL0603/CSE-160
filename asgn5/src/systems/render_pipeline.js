@@ -156,15 +156,20 @@ export class RenderPipeline {
 
             // Build structural meshes directly from current math constraints
             const walls = logic.environment.walls;
-            const wallMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0x3e3e4f, 
-                shininess: 30
-            });
-
             walls.forEach(wall => {
                 if (wall.colliderType === 'AABB') { 
                     // Only draw visual walls if they are marked as visible
                     if (wall.isVisible !== false) {
+
+                        // bind texture if present
+                        const hasTexture = wall.textureKey && assets.textures.has(wall.textureKey);
+                        const wallMaterial = new THREE.MeshPhongMaterial({ 
+                            color: hasTexture ? 0xffffff : 0x3e3e4f, // Setting to white if textured, show map cleanly
+                            shininess: 30,
+                            map: hasTexture ? assets.textures.get(wall.textureKey) : null
+                        });
+
+
                         const geo = new THREE.BoxGeometry(wall.size.x, wall.size.y, wall.size.z);
                         const mesh = new THREE.Mesh(geo, wallMaterial);
                         mesh.position.copy(wall.position);
@@ -190,8 +195,18 @@ export class RenderPipeline {
                     const sizeX = isXAxis ? length : wall.size.x;
                     const sizeZ = isXAxis ? wall.size.z : length;
 
+
+                    // Bind texture map if present
+                    const hasTexture = wall.textureKey && assets.textures.has(wall.textureKey);
+                    const slopeMaterial = new THREE.MeshPhongMaterial({ 
+                        color: hasTexture ? 0xffffff : 0x3e3e4f,
+                        shininess: 30,
+                        map: hasTexture ? assets.textures.get(wall.textureKey) : null
+                    });
+
+
                     const geo = new THREE.BoxGeometry(sizeX, thickness, sizeZ);
-                    const mesh = new THREE.Mesh(geo, wallMaterial);
+                    const mesh = new THREE.Mesh(geo, slopeMaterial);
                     mesh.position.copy(wall.position);
 
                     const angle = Math.atan2(rise, run);
@@ -242,11 +257,18 @@ export class RenderPipeline {
                     geo.boundingSphere = new THREE.Sphere();
                     geo.boundingBox.getBoundingSphere(geo.boundingSphere);
 
+
+                    // binding texture map
+                    // disable vertex colors to prevent color tinting
+                    const hasTexture = voxelObj.textureKey && assets.textures.has(voxelObj.textureKey);
                     const mat = new THREE.MeshPhongMaterial({
-                        vertexColors: true,
+                        color: hasTexture ? 0xffffff : 0xffffff, // Baseline white
+                        vertexColors: !hasTexture, // Disable vertex colors if textured
                         shininess: 30,
-                        flatShading: true
+                        flatShading: true,
+                        map: hasTexture ? assets.textures.get(voxelObj.textureKey) : null
                     });
+
 
                     const mesh = new THREE.Mesh(geo, mat);
                     mesh.castShadow = true;

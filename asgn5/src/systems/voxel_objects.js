@@ -72,6 +72,11 @@ class VoxelChunk {
         const { x: w, y: h, z: d } = this.dimensions; // chunk dimensions
         const halfS = s * 0.5;
 
+        // get physical size dimensions of entire master VoxelObject
+        const pwPhysical = pw * s;
+        const phPhysical = ph * s;
+        const pdPhysical = pd * s;
+
         let vCount = 0;
         let iCount = 0;
 
@@ -116,6 +121,10 @@ class VoxelChunk {
                                 const vIdx = (vStart + v) * 3;
                                 const uvIdx = (vStart + v) * 2;
 
+                                const vx = offsetX + face.verts[v][0];
+                                const vy = offsetY + face.verts[v][1];
+                                const vz = offsetZ + face.verts[v][2];
+
                                 this.positions[vIdx] = offsetX + face.verts[v][0];
                                 this.positions[vIdx + 1] = offsetY + face.verts[v][1];
                                 this.positions[vIdx + 2] = offsetZ + face.verts[v][2];
@@ -128,10 +137,28 @@ class VoxelChunk {
                                 this.colors[vIdx + 1] = g;
                                 this.colors[vIdx + 2] = b;
 
-                                if (v === 0) { this.uvs[uvIdx] = 0; this.uvs[uvIdx + 1] = 0; }
-                                else if (v === 1) { this.uvs[uvIdx] = 1; this.uvs[uvIdx + 1] = 0; }
-                                else if (v === 2) { this.uvs[uvIdx] = 1; this.uvs[uvIdx + 1] = 1; }
-                                else if (v === 3) { this.uvs[uvIdx] = 0; this.uvs[uvIdx + 1] = 1; }
+                                // global planar projection uv calculation
+                                // Normalize local coordinates into [0, 1] bounds of the entire master object
+                                const normX = (vx + pwPhysical * 0.5) / pwPhysical;
+                                const normY = (vy + phPhysical * 0.5) / phPhysical;
+                                const normZ = (vz + pdPhysical * 0.5) / pdPhysical;
+
+                                let u = 0;
+                                let vCoord = 0;
+
+                                if (f === 0 || f === 1) { // Left (-X) or Right (+X)
+                                    u = normZ;
+                                    vCoord = normY;
+                                } else if (f === 2 || f === 3) { // Bottom (-Y) or Top (+Y)
+                                    u = normX;
+                                    vCoord = normZ;
+                                } else { // Back (-Z) or Front (+Z)
+                                    u = normX;
+                                    vCoord = normY;
+                                }
+
+                                this.uvs[uvIdx] = u;
+                                this.uvs[uvIdx + 1] = vCoord;
                             }
                             // draw triangles for our square
                             const iIdx = iCount;
@@ -155,11 +182,12 @@ class VoxelChunk {
 }
 
 export class VoxelObject {
-    constructor(id, position, physicalSize, density, isDestructible = true) {
+    constructor(id, position, physicalSize, density, isDestructible = true, textureKey = null) {
         this.id = id;
         this.position = position.clone();
         this.voxelScale = VOXEL_DENSITIES[density] || 0.25; // Map resolution string to scale
         this.isDestructible = isDestructible;
+        this.textureKey = textureKey;
         this.dirty = true;
 
         // Derive dimensions from physical size and scale

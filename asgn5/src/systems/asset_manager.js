@@ -28,7 +28,26 @@ export class AssetManager {
         };
 
         const textureAssets = {
-            "sky_texture": './assets/imgs/sky_cloud.jpg'
+            'sky_texture': {
+                src: './assets/imgs/sky_cloud.jpg',
+                repeat_horizontal: 10,
+                repeat_vertical: 1,
+            },
+            'floor_texture': {
+                src: './assets/imgs/asphalt_02_diff_4k.jpg',
+                repeat_horizontal: 10,
+                repeat_vertical: 10,
+            },
+            'wood_floor_texture': {
+                src: './assets/imgs/plank_flooring_04_diff_1k.jpg',
+                repeat_horizontal: 5,
+                repeat_vertical: 1,
+            },
+            'wall_texture': {
+                src: './assets/imgs/concrete_slab_wall_02_diff_4k.jpg',
+                repeat_horizontal: 10,
+                repeat_vertical: 1,
+            },
         };
 
         const modelAssets = {
@@ -47,12 +66,12 @@ export class AssetManager {
         });
 
         // Load textures
-        const texturePromises = Object.entries(textureAssets).map(async ([key, path]) => {
+        const texturePromises = Object.entries(textureAssets).map(async ([key, config]) => {
             try {
-                const texture = await this.loadTexture(path);
+                const texture = await this.loadTexture(config);
                 this.textures.set(key, texture);
             } catch (e) {
-                console.error(`Failed to load model: ${path}`, e);
+                console.error(`Failed to load model: ${config.src}`, e);
             }
         });
 
@@ -79,15 +98,17 @@ export class AssetManager {
         return await audioContext.decodeAudioData(arrayBuffer);
     }
 
-    loadTexture(src) {
+    loadTexture(config) {
         return new Promise((resolve, reject) => {
             this.textureLoader.load(
-                src,
+                config.src,
                 (texture) => {
                     texture.colorSpace = THREE.SRGBColorSpace;
                     // Set up repeat wrapping for scaling/tiling
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
+
+                    texture.repeat.set(config.repeat_horizontal, config.repeat_vertical);
                     
                     resolve(texture);
                 },
