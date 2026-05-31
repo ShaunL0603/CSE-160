@@ -96,6 +96,8 @@ export class RenderPipeline {
         this.scene.add(this.debugSpawnZonesGroup);
         this.debugVoxelChunksGroup = new THREE.Group();
         this.scene.add(this.debugVoxelChunksGroup);
+        this.debugHitboxesGroup = new THREE.Group();
+        this.scene.add(this.debugHitboxesGroup);
 
         this.voxelMeshMap = new Map();
         this.currentVisualMap = '';
@@ -147,6 +149,7 @@ export class RenderPipeline {
             // debug wireframe disposals
             this.debugSpawnZonesGroup.clear();
             this.debugVoxelChunksGroup.clear();
+            this.debugHitboxesGroup.clear();
 
             // Build structural meshes directly from current math constraints
             const walls = logic.environment.walls;
@@ -156,13 +159,20 @@ export class RenderPipeline {
             });
 
             walls.forEach(wall => {
-                if (wall.colliderType === 'AABB' &&  wall.isVisible !== false) { 
-                    const geo = new THREE.BoxGeometry(wall.size.x, wall.size.y, wall.size.z);
-                    const mesh = new THREE.Mesh(geo, wallMaterial);
-                    mesh.position.copy(wall.position);
-                    mesh.castShadow = true;
-                    mesh.receiveShadow = true;
-                    this.wallMeshesGroup.add(mesh);
+                if (wall.colliderType === 'AABB') { 
+                    // Only draw visual walls if they are marked as visible
+                    if (wall.isVisible !== false) {
+                        const geo = new THREE.BoxGeometry(wall.size.x, wall.size.y, wall.size.z);
+                        const mesh = new THREE.Mesh(geo, wallMaterial);
+                        mesh.position.copy(wall.position);
+                        mesh.castShadow = true;
+                        mesh.receiveShadow = true;
+                        this.wallMeshesGroup.add(mesh);
+                    } else {
+                        // Create a Box3Helper wireframe around our invisible model hitboxes
+                        const helper = new THREE.Box3Helper(wall.boundingBox, 0xff4444); // red
+                        this.debugHitboxesGroup.add(helper);
+                    }
                 }
                 else if (wall.colliderType === 'SLOPE') {
                     const isXAxis = wall.slopeAxis === 'X';
@@ -357,6 +367,7 @@ export class RenderPipeline {
         // Toggle debug wireframes
         this.debugSpawnZonesGroup.visible = logic.config.debug.showSpawnZones;
         this.debugVoxelChunksGroup.visible = logic.config.debug.showVoxelChunks;
+        this.debugHitboxesGroup.visible = logic.config.debug.showHitboxes;
 
         // synchronize and interpolate targets
         const targets = logic.targetManager.targets;

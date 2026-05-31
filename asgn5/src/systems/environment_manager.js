@@ -131,7 +131,6 @@ export class EnvironmentManager {
             console.error("AssetManager must be passed to addModel to calculate physics bounds.");
             return;
         }
-
         const cachedModel = assets.models.get(assetKey);
         if (!cachedModel) {
             console.warn(`Model '${assetKey}' not found in cache. Physics bounds cannot be generated.`);
@@ -166,9 +165,9 @@ export class EnvironmentManager {
             boundingBox: box,
             position: position.clone(), 
             size: size, 
-            colliderType: 'AABB',       
+            colliderType: 'AABB',
             isDestructible: false,
-            isVisible: false            
+            isVisible: false
         });
     }
 }

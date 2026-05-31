@@ -115,7 +115,8 @@ export class UIManager {
 
         // Debugger
         bindCheckbox('toggle-debug-zones', 'debug.showSpawnZones');
-        bindCheckbox('toggle-debug-chunks', 'debug.showVoxelChunks');    
+        bindCheckbox('toggle-debug-chunks', 'debug.showVoxelChunks');
+        bindCheckbox('toggle-debug-hitboxes', 'debug.showHitboxes');
 
         // Map Selection
         document.getElementById('select-map').addEventListener('change', (e) => {
@@ -175,6 +176,7 @@ export class UIManager {
         // Debugger syncs
         syncCheckbox('toggle-debug-zones', logic.config.debug.showSpawnZones);
         syncCheckbox('toggle-debug-chunks', logic.config.debug.showVoxelChunks);
+        syncCheckbox('toggle-debug-hitboxes', logic.config.debug.showHitboxes);
 
         const mapSelect = document.getElementById('select-map');
         if (mapSelect) mapSelect.value = logic.config.gameplay.mapType;

@@ -28,7 +28,8 @@ export class GameLogic {
             },
             debug: {
                 showSpawnZones: false,
-                showVoxelChunks: false
+                showVoxelChunks: false,
+                showHitboxes: false
             }
         };
 
