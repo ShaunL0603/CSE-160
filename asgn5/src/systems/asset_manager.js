@@ -160,7 +160,10 @@ export class AssetManager {
                             child.receiveShadow = true;
                         }
                     });
-                    resolve(model);
+                    resolve({
+                        model: model,
+                        animations: gltf.animations
+                    });
                 },
                 undefined, // Progress is handled globally by loading manager
                 (error) => reject(error)

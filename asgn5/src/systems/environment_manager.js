@@ -150,7 +150,7 @@ export class EnvironmentManager {
 
         // Generate a hit box for model
         // Create a temporary clone to apply transforms without affecting the cached original
-        const tempObj = cachedModel.clone();
+        const tempObj = cachedModel.model.clone();
         tempObj.position.copy(position);
         tempObj.scale.copy(scale);
         tempObj.rotation.copy(rotation);

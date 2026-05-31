@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
 export class RenderPipeline {
     constructor(canvas) {
@@ -18,6 +19,8 @@ export class RenderPipeline {
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x0a0a0e);
+
+        this.animationMixers = [];
 
         // Perspective camera configuration
         const fov = 75;
@@ -158,6 +161,7 @@ export class RenderPipeline {
                 this.modelMeshesGroup.remove(child);
             });
             this.modelMeshesGroup.clear();
+            this.animationMixers = [];
 
             // debug wireframe disposals
             this.debugSpawnZonesGroup.clear();
@@ -318,13 +322,22 @@ export class RenderPipeline {
                 
                 if (cachedModel) {
                     // Clone the model so we can place multiple copies of the same asset
-                    const mesh = cachedModel.clone();
+                    const mesh = SkeletonUtils.clone(cachedModel.model);
                     
                     mesh.position.copy(modelDef.position);
                     mesh.scale.copy(modelDef.scale);
                     mesh.rotation.copy(modelDef.rotation);
-                    
                     this.modelMeshesGroup.add(mesh);
+
+                    // Setup Animation Mixer if the model has animations
+                    if (cachedModel.animations && cachedModel.animations.length > 0) {
+                        const mixer = new THREE.AnimationMixer(mesh);
+                        // Play the first animation clip in the file by default
+                        const action = mixer.clipAction(cachedModel.animations[23]);
+                        action.play();
+                        
+                        this.animationMixers.push(mixer);
+                    }
                 } else {
                     console.warn(`Model asset key '${modelDef.assetKey}' not found in cache.`);
                 }
@@ -389,7 +402,7 @@ export class RenderPipeline {
     }
 
     // Renders the visual frame, interpolating the logic states via the calculated alpha
-    render(logic, alpha, assets) {
+    render(logic, alpha, assets, dt) {
         const player = logic.player;
         // ensure stable camera (no stuttering), interpolate
         this.camera.position.lerpVectors(player.prevPosition, player.position, alpha);
@@ -441,6 +454,12 @@ export class RenderPipeline {
             }
 
             this.targetMeshInstances.setMatrixAt(i, this._matrix);
+        }
+
+        if (!logic.isPaused && dt > 0) {
+            for (let i = 0; i < this.animationMixers.length; i++) {
+                this.animationMixers[i].update(dt);
+            }
         }
 
         // notify WebGL that instance matrix positions must be sent to GPU
