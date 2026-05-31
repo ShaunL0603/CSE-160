@@ -101,7 +101,7 @@ export class RenderPipeline {
         this.scene.add(this.debugHitboxesGroup);
 
         this.voxelMeshMap = new Map();
-        this.currentVisualMap = '';
+        this.currentEnvVersion = -1;
 
         // InstancedMesh Setup (Shared across maps)
         const targetGeometry = new THREE.SphereGeometry(0.5, 16, 16);
@@ -118,14 +118,12 @@ export class RenderPipeline {
 
     syncVisualEnvironment(logic, assets) {
         this.updateShadows(logic.config.graphics.shadowQuality); // update shadows before visual frame
-        const mapType = logic.environment.currentMap;
-        const density = logic.config.graphics.voxelDensity;
+        const envVersion = logic.environment.version;
         // rebuild map if map change or envent change
-        const envChanged = (this.currentVisualMap !== mapType) || (this.currentVisualDensity !== density);
+        const envChanged = (this.currentEnvVersion !== envVersion);
 
         if (envChanged) {
-            this.currentVisualMap = mapType;
-            this.currentVisualDensity = density;
+            this.currentEnvVersion = envVersion;
 
             // Dispose existing wall geometry to avoid memory leaks
             this.wallMeshesGroup.children.forEach(child => {

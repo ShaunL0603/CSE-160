@@ -9,6 +9,7 @@ export class EnvironmentManager {
         this.models = [];
         this.currentMap = '';
         this.currentDensity = '';
+        this.version = 0;
     }
 
     loadMap(mapType, assets, densityString = 'normal') {
@@ -16,6 +17,7 @@ export class EnvironmentManager {
         if (this.currentMap === mapType && this.currentDensity === densityString) return;
         this.currentMap = mapType;
         this.currentDensity = densityString;
+        this.version++;
         // clearing old objects
         this.walls = [];
         this.voxelObjects = [];
