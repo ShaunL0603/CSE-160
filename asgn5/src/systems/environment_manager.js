@@ -25,11 +25,28 @@ export class EnvironmentManager {
         this.models = []
 
         // bounding objects
-        this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false, 'floor_texture');
+        this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(50, 1, 50), false, 'terrain_texture');
         this.addWall('wall_north', new THREE.Vector3(0, 2, -25), new THREE.Vector3(50, 4, 1), false, 'wall_texture');
         this.addWall('wall_south', new THREE.Vector3(0, 2, 25), new THREE.Vector3(50, 4, 1), false, 'wall_texture');
         this.addWall('wall_east', new THREE.Vector3(25, 2, 0), new THREE.Vector3(1, 4, 50), false, 'wall_texture');
         this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false, 'wall_texture');
+
+        // Forest by Poly by Google [CC-BY] via Poly Pizza
+        this.addModel('forest', 'forest_glb', 
+            new THREE.Vector3(0, 5, -50), new THREE.Vector3(20, 20, 20), 
+            new THREE.Euler(0, 0, 0), assets,
+            new THREE.Vector3(0, 0, 0)
+        );
+        this.addModel('forest2', 'forest_glb', 
+            new THREE.Vector3(50, 5, -30), new THREE.Vector3(20, 20, 20), 
+            new THREE.Euler(0, 3 * Math.PI * 0.25, 0), assets,
+            new THREE.Vector3(0, 0, 0)
+        );
+        this.addModel('forest3', 'forest_glb', 
+            new THREE.Vector3(-50, 5, -30), new THREE.Vector3(20, 20, 20), 
+            new THREE.Euler(0, Math.PI * 0.25, 0), assets,
+            new THREE.Vector3(0, 0, 0)
+        );
         
         if (mapType === 'static') {
             // map objects

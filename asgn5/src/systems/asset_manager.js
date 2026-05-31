@@ -30,10 +30,15 @@ export class AssetManager {
         };
 
         const textureAssets = {
-            'floor_texture': {
+            'asphalt_floor_texture': {
                 src: './assets/imgs/asphalt_02_diff_4k.jpg',
                 repeat_horizontal: 10,
                 repeat_vertical: 10,
+            },
+            'terrain_texture': {
+                src: './assets/imgs/rocky_terrain_02_diff_1k.jpg',
+                repeat_horizontal: 6,
+                repeat_vertical: 6,
             },
             'wood_floor_texture': {
                 src: './assets/imgs/plank_flooring_04_diff_1k.jpg',
@@ -52,7 +57,8 @@ export class AssetManager {
         }
 
         const modelAssets = {
-            'witch_glb': './assets/Witch.glb'
+            'witch_glb': './assets/models/Witch.glb',
+            'forest_glb': './assets/models/Forest.glb'
         };
 
         // Load audio
