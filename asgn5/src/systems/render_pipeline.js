@@ -130,6 +130,8 @@ export class RenderPipeline {
         if (cachedEXR) {
             this.scene.background = cachedEXR; 
             this.scene.environment = cachedEXR; 
+            this.scene.environmentIntensity = 0.5; // Dims the skybox light on meshes
+            this.scene.backgroundIntensity = 0.5;  // Keeps the visual skybox bright and crisp
         } else {
             this.scene.background = new THREE.Color(0x0a0a0e);
             this.scene.environment = null;
