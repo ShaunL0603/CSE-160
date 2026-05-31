@@ -198,18 +198,16 @@ export class RenderPipeline {
                         this.debugHitboxesGroup.add(helper);
                     }
                 }
-                else if (wall.colliderType === 'SLOPE') {
-                    const isXAxis = wall.slopeAxis === 'X';
-                    
+                else if (wall.colliderType === 'SLOPE') {                    
                     // Get rise and run along the active axis
-                    const run = isXAxis ? Math.abs(wall.xEnd - wall.xStart) : Math.abs(wall.zEnd - wall.zStart);
+                    const run = Math.abs(wall.zEnd - wall.zStart);
                     const rise = Math.abs(wall.yEnd - wall.yStart);
                     const length = Math.sqrt(run * run + rise * rise);
                     const thickness = 0.2; 
 
                     // Orient box dimensions to match the active direction axis
-                    const sizeX = isXAxis ? length : wall.size.x;
-                    const sizeZ = isXAxis ? wall.size.z : length;
+                    const sizeX = wall.size.x;
+                    const sizeZ = length;
 
 
                     // Bind texture map if present
@@ -227,14 +225,8 @@ export class RenderPipeline {
 
                     const angle = Math.atan2(rise, run);
                     
-                    // Apply correct visual rotations
-                    if (isXAxis) {
-                        const rotationDir = (wall.xEnd < wall.xStart) ? -1 : 1;
-                        mesh.rotation.z = angle * rotationDir; // Tilt left/right
-                    } else {
-                        const rotationDir = (wall.zEnd < wall.zStart) ? 1 : -1;
-                        mesh.rotation.x = angle * rotationDir; // Tilt front/back
-                    }
+                    const rotationDir = (wall.zEnd < wall.zStart) ? 1 : -1;
+                    mesh.rotation.x = angle * rotationDir; // Tilt front/back
 
                     mesh.castShadow = true;
                     mesh.receiveShadow = true;

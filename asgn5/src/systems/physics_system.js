@@ -191,25 +191,14 @@ export class PhysicsSystem {
         let inBounds = false;
         let t = 0;
         let range = 0;
-
-        if (wall.slopeAxis === 'X') {
-            const minZ = wall.boundingBox.min.z;
-            const maxZ = wall.boundingBox.max.z;
-            // Check if entity is width-aligned with a X-axis ramp
-            if (entity.position.z >= minZ - radius && entity.position.z <= maxZ + radius) {
-                inBounds = true;
-                range = wall.xEnd - wall.xStart;
-                t = (entity.position.x - wall.xStart) / range;
-            }
-        } else {
-            const minX = wall.boundingBox.min.x;
-            const maxX = wall.boundingBox.max.x;
-            // Check if entity is width-aligned with a Z-axis ramp
-            if (entity.position.x >= minX - radius && entity.position.x <= maxX + radius) {
-                inBounds = true;
-                range = wall.zEnd - wall.zStart;
-                t = (entity.position.z - wall.zStart) / range;
-            }
+        
+        const minX = wall.boundingBox.min.x;
+        const maxX = wall.boundingBox.max.x;
+        // Check if entity is width-aligned with a Z-axis ramp
+        if (entity.position.x >= minX - radius && entity.position.x <= maxX + radius) {
+            inBounds = true;
+            range = wall.zEnd - wall.zStart;
+            t = (entity.position.z - wall.zStart) / range;
         }
 
         if (inBounds) {

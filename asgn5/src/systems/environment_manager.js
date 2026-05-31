@@ -66,12 +66,12 @@ export class EnvironmentManager {
         if (mapType === 'static') {
             // map objects
             this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.5, -10), new THREE.Vector3(10, 1, 10), densityString, true, 'wood_floor_texture');
-            this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
+            this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4);
 
             // Spawning Regions
             this.addTargetSpawnZone(new THREE.Vector3(-10, 0, -15), new THREE.Vector3(-4, 3, -5), 7);
-            this.addTargetSpawnZone(new THREE.Vector3(4, 0, -15), new THREE.Vector3(10, 3, -5), 7);
-            this.addTargetSpawnZone(new THREE.Vector3(-4, 4, -14), new THREE.Vector3(4, 7, -6), 6);
+            // this.addTargetSpawnZone(new THREE.Vector3(4, 0, -15), new THREE.Vector3(10, 3, -5), 7);
+            // this.addTargetSpawnZone(new THREE.Vector3(-4, 4, -14), new THREE.Vector3(4, 7, -6), 6);
         } else if (mapType === 'moving') {
             // map objects
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(4, 6 ,4), densityString, true);
@@ -129,7 +129,7 @@ export class EnvironmentManager {
         });
     }
 
-    addSlope(id, position, size, startCoord, endCoord, yStart, yEnd, slopeAxis = 'Z', textureKey = null) {
+    addSlope(id, position, size, startCoord, endCoord, yStart, yEnd, textureKey = null) {
         const halfSize = size.clone().multiplyScalar(0.5);
         const min = position.clone().sub(halfSize);
         const max = position.clone().add(halfSize);
@@ -148,18 +148,12 @@ export class EnvironmentManager {
             colliderType: 'SLOPE',
             yStart: physicalYStart + 0.25,
             yEnd: physicalYEnd + 0.25,
-            slopeAxis,
             isDestructible: false,
             textureKey
         };
 
-        if (slopeAxis === 'X') {
-            slopeObject.xStart = startCoord;
-            slopeObject.xEnd = endCoord;
-        } else {
-            slopeObject.zStart = startCoord;
-            slopeObject.zEnd = endCoord;
-        }
+        slopeObject.zStart = startCoord;
+        slopeObject.zEnd = endCoord;
 
         this.walls.push(slopeObject);
     }
