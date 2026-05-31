@@ -160,6 +160,7 @@ html, body {
     font-weight: bold;
     cursor: pointer;
     margin-top: 20px;
+    margin-bottom: 20px;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
