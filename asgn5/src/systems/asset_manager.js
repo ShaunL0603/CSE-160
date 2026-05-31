@@ -53,7 +53,8 @@ export class AssetManager {
         };
 
         const exrAssets = {
-            "sky_texture": './assets/imgs/citrus_orchard_road_puresky_2k.exr'
+            "sky_texture": './assets/citrus_orchard_road_puresky_2k.exr',
+            "sky_night_texture": './assets/kloppenheim_02_puresky_2k.exr'
         }
 
         const modelAssets = {
