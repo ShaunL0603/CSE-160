@@ -323,16 +323,21 @@ export class RenderPipeline {
                 if (cachedModel) {
                     // Clone the model so we can place multiple copies of the same asset
                     const mesh = SkeletonUtils.clone(cachedModel.model);
-                    
-                    mesh.position.copy(modelDef.position);
+
+                    mesh.position.copy(modelDef.position).add(modelDef.visualOffset);
                     mesh.scale.copy(modelDef.scale);
                     mesh.rotation.copy(modelDef.rotation);
+                    
+                    // mesh.position.copy(modelDef.position);
+                    // mesh.scale.copy(modelDef.scale);
+                    // mesh.rotation.copy(modelDef.rotation);
                     this.modelMeshesGroup.add(mesh);
 
                     // Setup Animation Mixer if the model has animations
                     if (cachedModel.animations && cachedModel.animations.length > 0) {
                         const mixer = new THREE.AnimationMixer(mesh);
                         // Play the first animation clip in the file by default
+                        // 0 - 23 animations
                         const action = mixer.clipAction(cachedModel.animations[23]);
                         action.play();
                         

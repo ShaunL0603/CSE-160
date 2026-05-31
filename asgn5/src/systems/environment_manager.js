@@ -44,7 +44,11 @@ export class EnvironmentManager {
             // map objects
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(4, 6 ,4), densityString, true);
             // this.addVoxelObject('voxel_block', new THREE.Vector3(0, 3, 5), new THREE.Vector3(4, 6, 4), densityString, true);
-            this.addModel('witch', 'witch_glb', new THREE.Vector3(0, 1, -1), new THREE.Vector3(1, 1, 1), new THREE.Euler(0, Math.PI * 0.25, 0), assets);
+            this.addModel('witch', 'witch_glb', 
+                new THREE.Vector3(0, 1, -1), new THREE.Vector3(1, 1, 1), 
+                new THREE.Euler(0, 0, 0), assets,
+                new THREE.Vector3(0, -1, 1)
+            );
         }
     }
 
@@ -128,7 +132,10 @@ export class EnvironmentManager {
         this.walls.push(slopeObject);
     }
 
-    addModel(id, assetKey, position, scale = new THREE.Vector3(1,1,1), rotation = new THREE.Euler(), assets) {
+    addModel(id, assetKey, position, 
+        scale = new THREE.Vector3(1,1,1), rotation = new THREE.Euler(), assets,
+        visualOffset = new THREE.Vector3()
+    ) {
         if (!assets) {
             console.error("AssetManager must be passed to addModel to calculate physics bounds.");
             return;
@@ -145,7 +152,8 @@ export class EnvironmentManager {
             assetKey,
             position: position.clone(),
             scale: scale.clone(),
-            rotation: rotation.clone()
+            rotation: rotation.clone(),
+            visualOffset: visualOffset.clone()
         });
 
         // Generate a hit box for model
