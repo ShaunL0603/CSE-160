@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
 
 export class AssetManager {
     constructor() {
@@ -9,6 +10,7 @@ export class AssetManager {
         this.loadingManager = new THREE.LoadingManager();
         this.gltfLoader = new GLTFLoader(this.loadingManager);
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
+        this.exrLoader = new EXRLoader(this.loadingManager);
     }
 
     async loadAll(audioContext) {
@@ -28,11 +30,6 @@ export class AssetManager {
         };
 
         const textureAssets = {
-            'sky_texture': {
-                src: './assets/imgs/sky_cloud.jpg',
-                repeat_horizontal: 10,
-                repeat_vertical: 1,
-            },
             'floor_texture': {
                 src: './assets/imgs/asphalt_02_diff_4k.jpg',
                 repeat_horizontal: 10,
@@ -50,6 +47,10 @@ export class AssetManager {
             },
         };
 
+        const exrAssets = {
+            "sky_texture": './assets/imgs/citrus_orchard_road_puresky_2k.exr'
+        }
+
         const modelAssets = {
             'witch_glb': './assets/Witch.glb'
         };
@@ -62,6 +63,16 @@ export class AssetManager {
             } catch (e) {
                 console.warn(`Could not load audio file: ${path}. Synthesizing dynamic fallbacks.`);
                 this.sounds.set(key, null); // Marked for runtime synthesis
+            }
+        });
+
+        // load sky box texture
+        const exrPromises = Object.entries(exrAssets).map(async ([key, path]) => {
+            try {
+                const exrTexture = await this.loadEXRTexture(path);
+                this.textures.set(key, exrTexture); // Cache in textures Map
+            } catch (e) {
+                console.error(`Failed to load EXR environment: ${path}`, e);
             }
         });
 
@@ -109,6 +120,24 @@ export class AssetManager {
                     texture.wrapT = THREE.RepeatWrapping;
 
                     texture.repeat.set(config.repeat_horizontal, config.repeat_vertical);
+                    
+                    resolve(texture);
+                },
+                undefined,
+                (error) => reject(error)
+            );
+        });
+    }
+
+    loadEXRTexture(src) {
+        return new Promise((resolve, reject) => {
+            this.exrLoader.load(
+                src,
+                (texture) => {
+                    // Map equirectangular projection coordinate wrapper
+                    texture.mapping = THREE.EquirectangularReflectionMapping;
+                    // Apply linear color space so WebGL processes the HDR exposures correctly
+                    texture.colorSpace = THREE.LinearSRGBColorSpace;
                     
                     resolve(texture);
                 },

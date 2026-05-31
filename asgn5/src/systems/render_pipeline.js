@@ -39,7 +39,7 @@ export class RenderPipeline {
 
     initEnvironment() {
         // Lighting
-        const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+        const ambient = new THREE.AmbientLight(0xffffff, 0.1);
         this.scene.add(ambient);
 
         let dirLightX = 25;
@@ -49,6 +49,7 @@ export class RenderPipeline {
         this.dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
         this.dirLight.position.set(dirLightX, dirLightY, dirLightZ);
         this.dirLight.target.position.set(0, 0, -5);
+        this.dirLight.shadow.intensity = 3.0;
         this.dirLight.castShadow = true;
         // Access the underlying orthographic camera
         const cam = this.dirLight.shadow.camera;
@@ -122,9 +123,18 @@ export class RenderPipeline {
         // rebuild map if map change or envent change
         const envChanged = (this.currentEnvVersion !== envVersion);
 
+        const cachedEXR = assets.textures.get('sky_texture');
+        if (cachedEXR) {
+            this.scene.background = cachedEXR; 
+            this.scene.environment = cachedEXR; 
+        } else {
+            this.scene.background = new THREE.Color(0x0a0a0e);
+            this.scene.environment = null;
+        }
+
         if (envChanged) {
             this.currentEnvVersion = envVersion;
-
+            
             // Dispose existing wall geometry to avoid memory leaks
             this.wallMeshesGroup.children.forEach(child => {
                 if (child.geometry) child.geometry.dispose();
