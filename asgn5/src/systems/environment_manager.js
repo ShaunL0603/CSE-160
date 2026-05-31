@@ -8,12 +8,14 @@ export class EnvironmentManager {
         this.targetSpawnZones = [];
         this.models = [];
         this.currentMap = '';
+        this.currentDensity = '';
     }
 
-    loadMap(mapType, assets) {
+    loadMap(mapType, assets, densityString = 'normal') {
         // Prevent map rebuilds if we are already in the correct map
-        if (this.currentMap === mapType) return;
+        if (this.currentMap === mapType && this.currentDensity === densityString) return;
         this.currentMap = mapType;
+        this.currentDensity = densityString;
         // clearing old objects
         this.walls = [];
         this.voxelObjects = [];
@@ -29,7 +31,7 @@ export class EnvironmentManager {
             this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
 
             // map objects
-            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.75, -10), new THREE.Vector3(40, 2, 40), 0.25, true);
+            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 3.5, -10), new THREE.Vector3(10, 1, 10), densityString, true);
             this.addSlope('ramp_center', new THREE.Vector3(0, 2.0, -3.1), new THREE.Vector3(3, 4, 4), -1, -5, 0, 4, 'Z');
 
             // Spawning Regions
@@ -45,8 +47,8 @@ export class EnvironmentManager {
             this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 50), false);
 
             // map objects
-            this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(16, 24, 16), 0.25, true);
-            // this.addVoxelObject('voxel_block', new THREE.Vector3(0, 6, 5), new THREE.Vector3(32, 48, 32), 0.25, true);
+            this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(4, 6 ,4), densityString, true);
+            // this.addVoxelObject('voxel_block', new THREE.Vector3(0, 6, 5), new THREE.Vector3(4, 6, 4), densityString, true);
             this.addModel('witch', 'witch_glb', new THREE.Vector3(0, 1, -1), new THREE.Vector3(1, 1, 1), new THREE.Euler(0, Math.PI * 0.25, 0), assets);
         }
     }
@@ -58,17 +60,18 @@ export class EnvironmentManager {
         });
     }
 
-    addVoxelObject(id, position, dimensions, voxelScale = 0.5, isDestructible = true) {
-        const voxelObj = new VoxelObject(id, position, dimensions, voxelScale, isDestructible);
+    addVoxelObject(id, position, physicalSize, density, isDestructible = true) {
+        const voxelObj = new VoxelObject(id, position, physicalSize, density, isDestructible);
         this.voxelObjects.push(voxelObj);
 
         // Also register its broad-phase bounding box inside our physical walls list
         // keep target spawing overlap checks
+        const realScale = voxelObj.voxelScale;
         this.walls.push({
             id,
             boundingBox: voxelObj.boundingBox,
             position: position.clone(),
-            size: new THREE.Vector3(dimensions.x * voxelScale, dimensions.y * voxelScale, dimensions.z * voxelScale),
+            size: new THREE.Vector3(voxelObj.dimensions.x * realScale, voxelObj.dimensions.y * realScale, voxelObj.dimensions.z * realScale),
             colliderType: 'VOXEL_GRID',
             isDestructible,
             voxelRef: voxelObj

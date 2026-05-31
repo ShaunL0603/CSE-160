@@ -39,7 +39,30 @@
                 <!-- Tab Navigation -->
                 <div class="tabs">
                     <button class="tab-btn active" data-target="tab-settings">Settings</button>
+                    <button class="tab-btn" data-target="tab-graphics">Graphics</button>
                     <button class="tab-btn" data-target="tab-maps">Maps</button>
+                </div>
+
+                <!-- Graphical Settings -->
+                 <div id="tab-graphics" class="tab-pane">
+                    <fieldset>
+                        <legend>Graphics Settings</legend>
+                        <div class="setting-row">
+                            <label for="select-shadows">Shadow Quality:</label>
+                            <select id="select-shadows">
+                                <option value="low">Low</option>
+                                <option value="normal" selected>Normal</option>
+                            </select>
+                        </div>
+                        <div class="setting-row">
+                            <label for="select-voxel-density">Voxel Density:</label>
+                            <select id="select-voxel-density">
+                                <option value="low">Low</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </fieldset>
                 </div>
 
                 <!-- Settings Tab -->

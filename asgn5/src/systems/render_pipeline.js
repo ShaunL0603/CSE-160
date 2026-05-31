@@ -45,12 +45,13 @@ export class RenderPipeline {
         let dirLightX = 25;
         let dirLightY = 20;
         let dirLightZ = 25;
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
-        dirLight.position.set(dirLightX, dirLightY, dirLightZ);
-        dirLight.target.position.set(0, 0, -5);
-        dirLight.castShadow = true;
+        // temporary, this.dirLight
+        this.dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
+        this.dirLight.position.set(dirLightX, dirLightY, dirLightZ);
+        this.dirLight.target.position.set(0, 0, -5);
+        this.dirLight.castShadow = true;
         // Access the underlying orthographic camera
-        const cam = dirLight.shadow.camera;
+        const cam = this.dirLight.shadow.camera;
         // Define the boundaries of the shadow's orthographic view volume
         cam.left = -40;
         cam.right = 40;
@@ -62,8 +63,8 @@ export class RenderPipeline {
         // visualize the shadow camera boundaries in scene
         // const helper = new THREE.CameraHelper(cam);
         // this.scene.add(helper);
-        this.scene.add(dirLight);
-        this.scene.add(dirLight.target);
+        this.scene.add(this.dirLight);
+        this.scene.add(this.dirLight.target);
 
         const geometry = new THREE.BoxGeometry( 1, 1, 1 );
         const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -116,11 +117,15 @@ export class RenderPipeline {
     }
 
     syncVisualEnvironment(logic, assets) {
+        this.updateShadows(logic.config.graphics.shadowQuality); // update shadows before visual frame
         const mapType = logic.environment.currentMap;
-        const mapChanged = this.currentVisualMap !== mapType;
+        const density = logic.config.graphics.voxelDensity;
+        // rebuild map if map change or envent change
+        const envChanged = (this.currentVisualMap !== mapType) || (this.currentVisualDensity !== density);
 
-        if (mapChanged) {
+        if (envChanged) {
             this.currentVisualMap = mapType;
+            this.currentVisualDensity = density;
 
             // Dispose existing wall geometry to avoid memory leaks
             this.wallMeshesGroup.children.forEach(child => {
@@ -331,6 +336,26 @@ export class RenderPipeline {
 
             this.renderer.setSize(width, height);
         });
+    }
+
+    updateShadows(quality) {
+        if (!this.dirLight) {
+            console.warn("this.dirLight not found");
+            return;
+        }
+        const size = quality === 'low' ? 512 : 2048; // Map resolution thresholds
+        
+        // Prevent redundant WebGL context updates
+        if (this.dirLight.shadow.mapSize.width === size) return;
+
+        this.dirLight.shadow.mapSize.width = size;
+        this.dirLight.shadow.mapSize.height = size;
+
+        // Dispose old shadow map so WebGL cleanly regenerates it at new resolution
+        if (this.dirLight.shadow.map) {
+            this.dirLight.shadow.map.dispose();
+            this.dirLight.shadow.map = null;
+        }
     }
 
     // Renders the visual frame, interpolating the logic states via the calculated alpha

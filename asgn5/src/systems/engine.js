@@ -62,11 +62,17 @@ export class Engine {
             this.input.isLocked = locked;
 
             if (locked) {
+                // hide render first when graphics are changed
+                this.ui.showLoading(true);
                 this.ui.showSettings(false);
-                this.logic.applyConfigChanges(this.assets);
-                this.isPaused = false;
-                // reset lastTime to current instance
-                this.lastTime = performance.now() * 0.001;
+                
+                setTimeout(() => {
+                    this.logic.applyConfigChanges(this.assets);
+                    this.isPaused = false;
+                    // reset lastTime to current instance
+                    this.lastTime = performance.now() * 0.001;
+                    this.ui.showLoading(false); // Hide loading screen
+                }, 50);
             } else {
                 this.input.resetKeys();
                 this.ui.showSettings(true);

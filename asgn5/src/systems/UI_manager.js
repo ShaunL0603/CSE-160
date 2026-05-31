@@ -118,6 +118,14 @@ export class UIManager {
         bindCheckbox('toggle-debug-chunks', 'debug.showVoxelChunks');
         bindCheckbox('toggle-debug-hitboxes', 'debug.showHitboxes');
 
+        // Graphics binding
+        document.getElementById('select-shadows').addEventListener('change', (e) => {
+            logic.config.graphics.shadowQuality = e.target.value;
+        });
+        document.getElementById('select-voxel-density').addEventListener('change', (e) => {
+            logic.config.graphics.voxelDensity = e.target.value;
+        });
+
         // Map Selection
         document.getElementById('select-map').addEventListener('change', (e) => {
             const mapType = e.target.value;
@@ -173,6 +181,12 @@ export class UIManager {
         const slider = document.getElementById('slider-count');
         if (slider) slider.disabled = isStatic;
 
+        // Graphics sync
+        const shadowSelect = document.getElementById('select-shadows');
+        if (shadowSelect) shadowSelect.value = logic.config.graphics.shadowQuality;
+        const densitySelect = document.getElementById('select-voxel-density');
+        if (densitySelect) densitySelect.value = logic.config.graphics.voxelDensity;
+
         // Debugger syncs
         syncCheckbox('toggle-debug-zones', logic.config.debug.showSpawnZones);
         syncCheckbox('toggle-debug-chunks', logic.config.debug.showVoxelChunks);
@@ -201,6 +215,18 @@ export class UIManager {
                 this.modeVal.style.color = mode === 'SHOOT' ? '#ffaa44' : '#aa44ff';
             }
             this._lastMode = mode;
+        }
+    }
+
+    showLoading(visible) {
+        if (visible) {
+            this.loadingScreen.classList.remove('hidden');
+            const progress = this.loadingScreen.querySelector('.progressbar');
+            if (progress) {
+                progress.style.transform = 'scaleX(1)'; // Set progress bar flat to 100%
+            }
+        } else {
+            this.loadingScreen.classList.add('hidden');
         }
     }
 }

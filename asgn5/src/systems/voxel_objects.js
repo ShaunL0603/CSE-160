@@ -1,6 +1,12 @@
 import * as THREE from 'three';
 
 const CHUNK_SIZE = 16; // 16x16x16 voxels per chunk
+// density graphics settings
+const VOXEL_DENSITIES = {
+    'low': 0.5,
+    'normal': 0.25,
+    'high': 0.125
+};
 
 class VoxelChunk {
     constructor(parent, cx, cy, cz, width, height, depth) {
@@ -149,12 +155,21 @@ class VoxelChunk {
 }
 
 export class VoxelObject {
-    constructor(id, position, dimensions, voxelScale = 0.5, isDestructible = true) {
+    constructor(id, position, physicalSize, density, isDestructible = true) {
         this.id = id;
         this.position = position.clone();
-        this.dimensions = dimensions.clone();
-        this.voxelScale = voxelScale;
+        this.voxelScale = VOXEL_DENSITIES[density] || 0.25; // Map resolution string to scale
         this.isDestructible = isDestructible;
+        this.dirty = true;
+
+        // Derive dimensions from physical size and scale
+        this.dimensions = new THREE.Vector3(
+            Math.round(physicalSize.x / this.voxelScale),
+            Math.round(physicalSize.y / this.voxelScale),
+            Math.round(physicalSize.z / this.voxelScale)
+        );
+
+        this.totalVoxels = this.dimensions.x * this.dimensions.y * this.dimensions.z;
 
         this.chunks = [];
         this.chunkDims = {
@@ -162,7 +177,6 @@ export class VoxelObject {
             y: Math.ceil(this.dimensions.y / CHUNK_SIZE),
             z: Math.ceil(this.dimensions.z / CHUNK_SIZE)
         };
-
         // Instantiate Chunks
         for (let cz = 0; cz < this.chunkDims.z; cz++) {
             for (let cy = 0; cy < this.chunkDims.y; cy++) {
@@ -179,7 +193,7 @@ export class VoxelObject {
         this.boundingBox = new THREE.Box3();
 
         this.initColors();
-        this.buildInitialMeshes(); // Streamlined mesh buffer initialization
+        this.buildInitialMeshes(); 
         this.calculateAABB();
     }
 

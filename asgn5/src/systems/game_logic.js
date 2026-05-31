@@ -26,6 +26,10 @@ export class GameLogic {
                 mapType: 'moving',
                 destructionRadius: 1.0
             },
+            graphics: {
+                shadowQuality: 'normal', // 'low' | 'normal'
+                voxelDensity: 'normal'   // 'low' | 'normal' | 'high'
+            },
             debug: {
                 showSpawnZones: false,
                 showVoxelChunks: false,
@@ -41,7 +45,7 @@ export class GameLogic {
         this.environment = new EnvironmentManager();
         this.physics = new PhysicsSystem();
 
-        // this.environment.loadMap(this.config.gameplay.mapType);
+        // this.environment.loadMap(this.config.gameplay.mapType, null, this.config.graphics.voxelDensity);
         // Calculate initial spawns: Static map gets exactly 20 targets, Moving map gets slider count
         const initialCount = this.config.gameplay.mapType === 'static' ? 20 : this.config.gameplay.targetCount;
         this.targetManager.spawnInitial(
@@ -63,7 +67,7 @@ export class GameLogic {
     }
 
     applyConfigChanges(assets) {
-        this.environment.loadMap(this.config.gameplay.mapType, assets);
+        this.environment.loadMap(this.config.gameplay.mapType, assets, this.config.graphics.voxelDensity);
         if (this.config.gameplay.mapType === 'static') {
             // Despawn and cleanly reset all targets to exactly 20 for the Static Map
             this.targetManager.reset({
@@ -210,7 +214,7 @@ export class GameLogic {
         this.score = 0;
         this.shotsFired = 0;
         this.player.reset(this.config.camera.baseFOV);
-        this.environment.loadMap(this.config.gameplay.mapType, assets);
+        this.environment.loadMap(this.config.gameplay.mapType, assets, this.config.graphics.voxelDensity);
         // Reset target managers with correct count
         const activeConfig = {
             targetCount: this.config.gameplay.mapType === 'static' ? 20 : this.config.gameplay.targetCount,
