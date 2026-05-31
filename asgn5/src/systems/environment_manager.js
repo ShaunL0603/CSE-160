@@ -46,6 +46,7 @@ export class EnvironmentManager {
 
             // map objects
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(16, 24, 16), 0.25, true);
+            // this.addVoxelObject('voxel_block', new THREE.Vector3(0, 6, 5), new THREE.Vector3(32, 48, 32), 0.25, true);
             this.addModel('witch', 'witch_glb', new THREE.Vector3(0, 1, -1), new THREE.Vector3(1, 1, 1), new THREE.Euler(0, Math.PI * 0.25, 0), assets);
         }
     }
