@@ -95,13 +95,34 @@ export class EnvironmentManager {
             this.addWall('platform_top_north', new THREE.Vector3(0, 9.75, -19), new THREE.Vector3(36, 0.5, 4), false, 'wood_floor_texture');
             this.addWall('platform_top_south', new THREE.Vector3(0, 9.75, 19), new THREE.Vector3(36, 0.5, 4), false, 'wood_floor_texture');
             this.addWall('platform_top_east', new THREE.Vector3(16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
+            // upper floor, small building
             this.addWall('platform_top_west ', new THREE.Vector3(-16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
-
+            this.addWall('floor_upper_platform', new THREE.Vector3(0, 9.75, 4.5), new THREE.Vector3(10, 0.5, 10), false, 'wood_floor_texture');
+            this.addWall('roof_upper_platform', new THREE.Vector3(0, 14, 4.5), new THREE.Vector3(10, 0.5, 10), false);
+            this.addWall('south_wall_upper_platform', new THREE.Vector3(0, 12, 9.25), new THREE.Vector3(10, 4, 0.5), false);
+            this.addWall('east_wall_upper_platform', new THREE.Vector3(4.75, 12, 4.5), new THREE.Vector3(0.5, 4, 10), false);
+            this.addWall('west_wall_upper_platform', new THREE.Vector3(-4.75, 12, 4.5), new THREE.Vector3(0.5, 4, 10), false);
+            this.addWall('north_doorway_upper_platform', new THREE.Vector3(-3.25, 11.5, -0.25), new THREE.Vector3(3.5, 3, 0.5), false);
+            this.addWall('north_doorway2_upper_platform', new THREE.Vector3(3.25, 11.5, -0.25), new THREE.Vector3(3.5, 3, 0.5), false);
+            this.addWall('north_doorway3_upper_platform', new THREE.Vector3(0, 13.25, -0.25), new THREE.Vector3(10, 1, 0.5), false);
+            
             // Spawning Regions
-            this.addTargetSpawnZone(new THREE.Vector3(-4, 5.0, -14), new THREE.Vector3(4, 7, -6), 10); // center platform
-            this.addTargetSpawnZone(new THREE.Vector3(-17, 5, -13), new THREE.Vector3(-13, 7, 14), 5); // left walkway
-            this.addTargetSpawnZone(new THREE.Vector3(-17, 0, -13), new THREE.Vector3(-13, 2, 14), 5); // base floor left
-            this.addTargetSpawnZone(new THREE.Vector3(13, 5, -13), new THREE.Vector3(17, 7, 14), 5); // right walkway
+            this.addTargetSpawnZone(new THREE.Vector3(-4, 5.0, -14), new THREE.Vector3(4, 7, -6), 10);  // center platform
+            this.addTargetSpawnZone(new THREE.Vector3(-17, 5, -13), new THREE.Vector3(-13, 7, 14), 5);  // left walkway
+            this.addTargetSpawnZone(new THREE.Vector3(-17, 0, -13), new THREE.Vector3(-13, 2, 14), 5);  // base floor left
+            this.addTargetSpawnZone(new THREE.Vector3(13, 5, -13), new THREE.Vector3(17, 7, 14), 5);    // right walkway
+
+            this.addModel('witch', 'witch_glb', 
+                new THREE.Vector3(3, 11, 2), new THREE.Vector3(1, 1, 1), 
+                new THREE.Euler(0, -Math.PI * 0.5, 0), assets,
+                new THREE.Vector3(0, -1, 1), false
+            );
+            this.addModel('bears', 'bears_glb', 
+                new THREE.Vector3(-3, 11, 7), new THREE.Vector3(0.25, 0.25, 0.25), 
+                new THREE.Euler(0, Math.PI * 0.25, 0), assets,
+                new THREE.Vector3(0, -1, 1), false
+            );
+            
         } else if (mapType === 'moving') {
             // bounding objects
             this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(30, 1, 35), false, 'terrain_texture');
@@ -114,11 +135,6 @@ export class EnvironmentManager {
             this.addVoxelObject('voxel_center_block', new THREE.Vector3(0, 3, -10), new THREE.Vector3(4, 6 ,4), densityString, true);
             this.addSlope('ramp_center', new THREE.Vector3(0, 2.5, 10), new THREE.Vector3(3, 5.0, 5.0), 12.5, 7.5, 0, 5.0);
             this.addVoxelObject('voxel_walkway_south', new THREE.Vector3(0, 4.5, 5.5), new THREE.Vector3(16, 1, 4), densityString, true);
-            this.addModel('witch', 'witch_glb', 
-                new THREE.Vector3(7, 6, 4.5), new THREE.Vector3(1, 1, 1), 
-                new THREE.Euler(0, -Math.PI * 0.5, 0), assets,
-                new THREE.Vector3(0, -1, 1)
-            );
 
             // mvoing targets box boundaries
             this.mapBounds.set(

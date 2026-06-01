@@ -59,7 +59,8 @@ export class AssetManager {
 
         const modelAssets = {
             'witch_glb': './assets/models/Witch.glb',
-            'forest_glb': './assets/models/Forest.glb'
+            'forest_glb': './assets/models/Forest.glb',
+            'bears_glb': './assets/models/we_bare_bears_low_poly.glb'
         };
 
         // Load audio
