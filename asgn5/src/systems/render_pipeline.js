@@ -77,6 +77,7 @@ export class RenderPipeline {
         this.scene.add(this.debugHitboxesGroup);
 
         this.voxelMeshMap = new Map();
+        // re-render environment counter each time grahpics or map changes
         this.currentEnvVersion = -1;
 
         // InstancedMesh Setup (Shared across maps)
