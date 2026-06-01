@@ -23,11 +23,11 @@ export class AssetManager {
         };
 
         // Manifest of targets to fetch
-        const soundAssets = {
-            shoot: './assets/sounds/shoot.mp3',
-            hit: './assets/sounds/hit.mp3',
-            miss: './assets/sounds/miss.mp3'
-        };
+        // const soundAssets = {
+        //     shoot: './assets/sounds/shoot.mp3',
+        //     hit: './assets/sounds/hit.mp3',
+        //     miss: './assets/sounds/miss.mp3'
+        // };
 
         const textureAssets = {
             'asphalt_floor_texture': {
@@ -53,8 +53,7 @@ export class AssetManager {
         };
 
         const exrAssets = {
-            "sky_texture": './assets/citrus_orchard_road_puresky_2k.exr',
-            "sky_night_texture": './assets/kloppenheim_02_puresky_2k.exr'
+            "sky_texture": './assets/citrus_orchard_road_puresky_2k.exr'
         }
 
         const modelAssets = {
@@ -63,16 +62,16 @@ export class AssetManager {
             'bears_glb': './assets/models/we_bare_bears_low_poly.glb'
         };
 
-        // Load audio
-        const audioPromises = Object.entries(soundAssets).map(async ([key, path]) => {
-            try {
-                const buffer = await this.loadAudioFile(path, audioContext);
-                this.sounds.set(key, buffer);
-            } catch (e) {
-                console.warn(`Could not load audio file: ${path}. Synthesizing dynamic fallbacks.`);
-                this.sounds.set(key, null); // Marked for runtime synthesis
-            }
-        });
+        // Load audio (no audio yet)
+        // const audioPromises = Object.entries(soundAssets).map(async ([key, path]) => {
+        //     try {
+        //         const buffer = await this.loadAudioFile(path, audioContext);
+        //         this.sounds.set(key, buffer);
+        //     } catch (e) {
+        //         console.warn(`Could not load audio file: ${path}. Synthesizing dynamic fallbacks.`);
+        //         this.sounds.set(key, null); // Marked for runtime synthesis
+        //     }
+        // });
 
         // load sky box texture
         const exrPromises = Object.entries(exrAssets).map(async ([key, path]) => {
@@ -104,7 +103,8 @@ export class AssetManager {
             }
         });
 
-        await Promise.all([...audioPromises, ...texturePromises, ...modelPromises]);
+        // await Promise.all([...audioPromises, ...texturePromises, ...modelPromises]); No audio yet
+        await Promise.all([...texturePromises, ...modelPromises]);
         
         // Artificial brief delay for loading screens transitions
         await new Promise(r => setTimeout(r, 1000));
