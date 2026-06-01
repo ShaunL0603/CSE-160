@@ -133,7 +133,7 @@ export class Engine {
         // Calculate interpolation alpha (0.0 to 1.0)
         const alpha = this.isPaused ? 1.0 : this.accumulator / this.fixedTimeStep;
         // Feed pure state values + alpha directly to rendering pipeline
-        this.renderer.render(this.logic, alpha, this.assets, frameTime);
+        this.renderer.render(this.logic, alpha, this.assets, frameTime, this.isPaused);
         // update HUD display values
         if (!this.isPaused) {
             this.ui.updateHUD(this.logic.score, this.logic.shotsFired, this.logic.currentMode);

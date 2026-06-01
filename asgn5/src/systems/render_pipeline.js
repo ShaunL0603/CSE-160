@@ -425,7 +425,7 @@ export class RenderPipeline {
     }
 
     // Renders the visual frame, interpolating the logic states via the calculated alpha
-    render(logic, alpha, assets, dt) {
+    render(logic, alpha, assets, dt, isPaused) {
         const player = logic.player;
         // ensure stable camera (no stuttering), interpolate
         this.camera.position.lerpVectors(player.prevPosition, player.position, alpha);
@@ -458,8 +458,7 @@ export class RenderPipeline {
             this.strobeLights[i].visible = isStaticMap && strobesEnabled;
         }
         // Execute light animations static map
-        console.log(logic.isPaused);
-        if (isStaticMap && strobesEnabled && !logic.isPaused && dt > 0) {
+        if (isStaticMap && strobesEnabled && !isPaused && dt > 0) {
             // Throttle the math and GPU color uploads to 30Hz for performance
             this.strobeUpdateTimer += dt;
             if (this.strobeUpdateTimer >= 0.033) {
@@ -534,7 +533,7 @@ export class RenderPipeline {
             this.targetMeshInstances.setMatrixAt(i, this._matrix);
         }
 
-        if (!logic.isPaused && dt > 0) {
+        if (!isPaused && dt > 0) {
             for (let i = 0; i < this.animationMixers.length; i++) {
                 this.animationMixers[i].update(dt);
             }
