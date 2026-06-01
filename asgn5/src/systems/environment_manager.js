@@ -67,6 +67,9 @@ export class EnvironmentManager {
             this.addWall('wall_west', new THREE.Vector3(-25, 2, 0), new THREE.Vector3(1, 4, 70), false, 'wall_texture');
 
             // --- Map objects ---
+            this.addWall('solid_east_wall', new THREE.Vector3(17.5, 5, 0), new THREE.Vector3(1.01, 10.01, 30.01), false);
+            this.addWall('solid_west_wall', new THREE.Vector3(-17.5, 5, 0), new THREE.Vector3(1.01, 10.01, 30.01), false);
+            this.addVoxelObject('voxel_wall_north', new THREE.Vector3(0, 5, -21.5), new THREE.Vector3(36, 10, 1), densityString, true);
             // first floor main platform
             this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 4.5, -10), new THREE.Vector3(10, 1, 10), densityString, true,);
             this.addSlope('ramp_center', new THREE.Vector3(0, 2.5, -2.75), new THREE.Vector3(3, 5.0, 5.0), -0.5, -5, 0, 5.0);
@@ -74,7 +77,7 @@ export class EnvironmentManager {
             this.addWall('platform_right_connector', new THREE.Vector3(9, 4.75, -10), new THREE.Vector3(8, 0.5, 4), false, 'wood_floor_texture');
 
             // side walkways
-            this.addVoxelObject('voxel_wall_left', new THREE.Vector3(-17, 1, 0), new THREE.Vector3(0.5, 2, 10), densityString, true);
+            this.addVoxelObject('voxel_wall_left', new THREE.Vector3(-12, 1, 0), new THREE.Vector3(0.5, 2, 10), densityString, true);
             this.addVoxelObject('voxel_walkway_left', new THREE.Vector3(-15, 4.5, 0), new THREE.Vector3(4, 1, 30), densityString, true,);
             this.addSlope('ramp_left', new THREE.Vector3(-15, 2.5, 17.5), new THREE.Vector3(3, 5.0, 5.0), 20, 15, 0, 5.0);
             // ramps: coords so physical and collision match
@@ -95,9 +98,10 @@ export class EnvironmentManager {
             this.addWall('platform_top_west ', new THREE.Vector3(-16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
 
             // Spawning Regions
-            // this.addTargetSpawnZone(new THREE.Vector3(-4, 5.0, -14), new THREE.Vector3(4, 7, -6), 4); // center platform
-            this.addTargetSpawnZone(new THREE.Vector3(-17, 5, -13), new THREE.Vector3(-12, 7, 14), 4);
-            // this.addTargetSpawnZone(new THREE.Vector3(4, 0, -15), new THREE.Vector3(10, 3, -5), 4);
+            this.addTargetSpawnZone(new THREE.Vector3(-4, 5.0, -14), new THREE.Vector3(4, 7, -6), 10); // center platform
+            this.addTargetSpawnZone(new THREE.Vector3(-17, 5, -13), new THREE.Vector3(-13, 7, 14), 5); // left walkway
+            this.addTargetSpawnZone(new THREE.Vector3(-17, 0, -13), new THREE.Vector3(-13, 2, 14), 5); // base floor left
+            this.addTargetSpawnZone(new THREE.Vector3(13, 5, -13), new THREE.Vector3(17, 7, 14), 5); // right walkway
         } else if (mapType === 'moving') {
             // bounding objects
             this.addWall('base_floor', new THREE.Vector3(0, -0.5, 0), new THREE.Vector3(30, 1, 35), false, 'terrain_texture');

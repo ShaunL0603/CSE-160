@@ -47,7 +47,7 @@ export class GameLogic {
 
         // this.environment.loadMap(this.config.gameplay.mapType, null, this.config.graphics.voxelDensity);
         // Calculate initial spawns: Static map gets exactly 20 targets, Moving map gets slider count
-        const initialCount = this.config.gameplay.mapType === 'static' ? 20 : this.config.gameplay.targetCount;
+        const initialCount = this.config.gameplay.mapType === 'static' ? 50 : this.config.gameplay.targetCount;
         this.targetManager.spawnInitial(
             initialCount, 
             this.config.gameplay, 
