@@ -139,7 +139,7 @@ export class GameLogic {
                 this._ray.set(this._tempVector, this._lookDir);
 
                 let closestVoxelObj = null;
-                let closestDist = Infinity;
+                let closestDist = 25;
                 
                 const voxelObjects = this.environment.voxelObjects;
 
