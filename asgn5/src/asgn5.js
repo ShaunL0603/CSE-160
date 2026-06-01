@@ -12,9 +12,9 @@ function main() {
     canvas.height = window.innerHeight;
     
     const engine = new Engine(canvas);
-    engine.start();
-
-    // window.engineInstance = engine;
+    engine.ui.bindMainMenu(engine);
+    // show initial solid black main menu screen
+    engine.ui.showMainMenu(true, false); // menu visible, engine has not started
 }
 
 window.addEventListener('DOMContentLoaded', main);

@@ -30,6 +30,30 @@
             <div class="hud-item stats-item"><span id="fps-val">0</span> FPS (<span id="ms-val">0</span> ms)</div>
         </div>
 
+        <div id="main-menu">
+            <div class="main-menu-content">
+                <h1>Exploring a High Level Graphics Library</h1>
+                <p class="instruction">Welcome!</p>
+                <!-- Column grid -->
+                <div class="info-columns">
+                    <div class="info-box">
+                        <h3>[Info]</h3>
+                        <p>Placeholder</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>[Info]</h3>
+                        <p>Placeholder</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>[Info]</h3>
+                        <p>Placeholder</p>
+                    </div>
+                </div>
+
+                <button id="btn-start" class="menu-btn">START</button>
+            </div>
+        </div>
+
         <!-- Pause / Settings Overlay -->
         <div id="settings-menu" class="hidden">
             <div class="menu-content">
@@ -42,8 +66,6 @@
                     <button class="tab-btn" data-target="tab-graphics">Graphics</button>
                     <button class="tab-btn" data-target="tab-maps">Maps</button>
                 </div>
-
-                <button id="btn-resume" class="menu-btn">RESUME</button>
 
                 <!-- Graphical Settings -->
                  <div id="tab-graphics" class="tab-pane">
@@ -73,6 +95,12 @@
 
                 <!-- Settings Tab -->
                 <div id="tab-settings" class="tab-pane active">
+                    <fieldset>
+                        <legend>Game</legend>
+                        <button id="btn-reset" class="menu-btn danger">RESET GAME</button>
+                        <button id="btn-resume" class="menu-btn">RESUME</button>
+                    </fieldset>
+                    
                     <fieldset>
                         <legend>Camera & Controls</legend>
                         <div class="setting-row">
@@ -152,11 +180,6 @@
                             <input type="checkbox" id="toggle-debug-hitboxes">
                         </div>
                     </fieldset>
-
-                    <fieldset>
-                        <legend>Game</legend>
-                        <button id="btn-reset" class="menu-btn danger">RESET GAME</button>
-                    </fieldset>
                 </div>
 
                 <!-- Maps Tab -->
@@ -176,7 +199,7 @@
             </div>
         </div>
 
-        <div id="loading">
+        <div id="loading" class="hidden">
             <div class="loading-content">
                 <h1>LOADING ASSETS</h1>
                 <div class="progress">

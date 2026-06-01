@@ -2,6 +2,7 @@ export class UIManager {
     constructor() {
         this.loadingScreen = document.querySelector('#loading');
         this.settingsMenu = document.querySelector('#settings-menu');
+        this.mainMenu = document.querySelector('#main-menu');
 
         this.scoreVal = document.querySelector('#score-val');
         this.accuracyVal = document.querySelector('#accuracy-val');
@@ -15,6 +16,50 @@ export class UIManager {
         this._lastMode = '';
 
         this.initTabs();
+    }
+
+    showMainMenu(visible, hasStarted) {
+        if (visible) {
+            this.mainMenu.classList.remove('hidden');
+            const startBtn = document.querySelector('#btn-start');
+            if (startBtn) {
+                // Change text and styles depending on game state
+                startBtn.textContent = hasStarted ? "RESUME" : "START";
+            }
+            if (hasStarted) {
+                this.mainMenu.classList.add('started'); // Turn background transparent
+            } else {
+                this.mainMenu.classList.remove('started'); // Solid black background
+            }
+        } else {
+            this.mainMenu.classList.add('hidden');
+        }
+    }
+
+    bindMainMenu(engine) {
+        const startBtn = document.querySelector('#btn-start');
+        const mainMenu = document.querySelector('#main-menu');
+        
+        if (startBtn) {
+            startBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!engine.hasStarted) {
+                    // One-time start execution
+                    engine.start();
+                } else {
+                    // Subsequent resume execution
+                    engine.input.lockPointer();
+                }
+            });
+        }
+        // Allow clicking the darkened backdrop to resume when the menu is transparent
+        if (mainMenu) {
+            mainMenu.addEventListener('click', (e) => {
+                if (e.target === mainMenu && engine.hasStarted) {
+                    engine.input.lockPointer();
+                }
+            });
+        }
     }
 
     updateStats(fps, ms) {

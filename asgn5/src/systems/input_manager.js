@@ -19,7 +19,8 @@ export class InputManager {
             sprint: false,
             noclip: false,
             fire: false,
-            modeToggle: false
+            modeToggle: false,
+            info: false         // toggle info menu
         }
 
         // Accumulated mouse coordinates between ticks
@@ -30,6 +31,15 @@ export class InputManager {
     }
 
     initListeners() {
+        // Capture "I" key press, relase pointer and show info menu
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyI') {
+                if (this.isLocked) {
+                    this.triggers.info = true; // Flag that we requested the info menu
+                    document.exitPointerLock(); // Trigger lock release
+                }
+            }
+        });
         // Request Pointer Lock on canvas click
         this.canvas.addEventListener('click', () => {
             if (!this.isLocked) this.lockPointer(); // only lock if settings menu is hidden

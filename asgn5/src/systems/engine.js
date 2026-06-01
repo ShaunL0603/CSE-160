@@ -19,6 +19,7 @@ export class Engine {
         this.rafId = null;
 
         this.isPaused = true;
+        this.hasStarted = false; // Track game initialization
 
         this.perfFrameCount = 0;
         this.perfAccumulator = 0;
@@ -37,20 +38,26 @@ export class Engine {
         if (this.isRunning) return;
         this.audio.init();
 
+        this.ui.showLoading(true);
+        this.ui.showMainMenu(false, true); // Hide menu while loading
+
         await this.assets.loadAll(this.audio.context);
         this.ui.hideLoading();
 
         // map loads when assets are fully downloaded
-        this.logic.applyConfigChanges(this.assets);
+        // this.logic.applyConfigChanges(this.assets);
 
         this.ui.bindSettings(this.logic, this.assets);
         this.setupLockHandlers();
 
+        this.hasStarted = true; // Mark game as started
         this.isRunning = true; 
         this.isPaused = false;
         // Establish timing baseline
         this.lastTime = performance.now() * 0.001;
         this.accumulator = 0;
+
+        this.input.lockPointer(); // Lock pointer on first start
         
         this.rafId = requestAnimationFrame((time) => this.loop(time));
     }
@@ -63,21 +70,36 @@ export class Engine {
 
             if (locked) {
                 // hide render first when graphics are changed
-                this.ui.showLoading(true);
+                // this.ui.showLoading(true);
                 this.ui.showSettings(false);
+                this.ui.showMainMenu(false, true);
                 
-                setTimeout(() => {
-                    this.logic.applyConfigChanges(this.assets);
-                    this.isPaused = false;
-                    // reset lastTime to current instance
-                    this.lastTime = performance.now() * 0.001;
-                    this.ui.showLoading(false); // Hide loading screen
-                }, 50);
+                // setTimeout(() => {
+                //     this.logic.applyConfigChanges(this.assets);
+                //     this.isPaused = false;
+                //     // reset lastTime to current instance
+                //     this.lastTime = performance.now() * 0.001;
+                //     this.ui.showLoading(false); // Hide loading screen
+                // }, 50);
+                this.logic.applyConfigChanges(this.assets);
+                this.isPaused = false;
+                this.lastTime = performance.now() * 0.001;
             } else {
                 this.input.resetKeys();
-                this.ui.showSettings(true);
-                this.ui.syncForm(this.logic);
+                // this.ui.showSettings(true);
+                // this.ui.syncForm(this.logic);
+                // this.isPaused = true;
+
                 this.isPaused = true;
+                // Menu Routing
+                if (this.input.triggers.info) {
+                    // Player requested the Info Menu via 'I' key
+                    this.ui.showMainMenu(true, true);
+                } else {
+                    // Default (e.g. Esc or out of winow): show settings menu
+                    this.ui.showSettings(true);
+                    this.ui.syncForm(this.logic);
+                }
             }
         });
     }
