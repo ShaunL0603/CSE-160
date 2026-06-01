@@ -6,6 +6,7 @@ export class EnvironmentManager {
         this.walls = []; // Non-voxel solids
         this.voxelObjects = [];
         this.targetSpawnZones = [];
+        this.mapBounds = new THREE.Box3();
         this.models = [];
         this.currentMap = '';
         this.currentDensity = '';
@@ -22,6 +23,7 @@ export class EnvironmentManager {
         this.walls = [];
         this.voxelObjects = [];
         this.targetSpawnZones = [];
+        this.mapBounds.makeEmpty();
         this.models = []
 
         // Forest by Poly by Google [CC-BY] via Poly Pizza
@@ -112,6 +114,12 @@ export class EnvironmentManager {
                 new THREE.Vector3(7, 6, 4.5), new THREE.Vector3(1, 1, 1), 
                 new THREE.Euler(0, -Math.PI * 0.5, 0), assets,
                 new THREE.Vector3(0, -1, 1)
+            );
+
+            // mvoing targets box boundaries
+            this.mapBounds.set(
+                new THREE.Vector3(-12, 1.5, -15), // Min X, Y, Z
+                new THREE.Vector3(12, 7.5, -5)    // Max X, Y, Z
             );
         }
     }

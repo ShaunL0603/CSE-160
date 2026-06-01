@@ -23,13 +23,7 @@ export class TargetManager {
         // Generate a pre-allocated pool of target states
         this.targets = Array.from({ length: this.poolSize }, (_, idx) => new TargetState(idx));
 
-        this.spawnBounds = new THREE.Box3(
-            new THREE.Vector3(-12, 1.5, -15), // Min X, Y, Z
-            new THREE.Vector3(12, 7.5, -5)    // Max X, Y, Z
-        )
-
         this._boundsSize = new THREE.Vector3();
-        this.spawnBounds.getSize(this._boundsSize);
         this._tempVector = new THREE.Vector3();
         this._helperClosest = new THREE.Vector3();
     }
@@ -88,9 +82,11 @@ export class TargetManager {
                 targetY = zoneBox.min.y + 1.6; 
                 this._tempVector.y = targetY;
             } else {
-                // Standard moving map bounding box spawning
+                // moving map bounding box spawning
                 // Position target randomly within spawn bounding region
-                const min = this.spawnBounds.min;
+                const min = environment.mapBounds.min;
+                environment.mapBounds.getSize(this._boundsSize);
+
                 this._tempVector.set(
                     min.x + Math.random() * this._boundsSize.x,
                     min.y + Math.random() * this._boundsSize.y,
@@ -213,8 +209,10 @@ export class TargetManager {
         }
     }
 
-    update(dt) {
-        const bounds = this.spawnBounds;
+    update(dt, environment) {
+        // don't need to do calculations on static map
+        if (environment.currentMap === 'static') return;
+        const bounds = environment.mapBounds;
         for (let i = 0; i < this.poolSize; ++i) {
             const target = this.targets[i];
             if (!target.active) continue;

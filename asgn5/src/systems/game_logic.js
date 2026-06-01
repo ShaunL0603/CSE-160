@@ -93,7 +93,7 @@ export class GameLogic {
         // move player
         this.player.update(dt, input, this.config);
         // move targets
-        this.targetManager.update(dt);
+        this.targetManager.update(dt, this.environment);
         // resolve collisions
         if (!this.player.isNoclip) this.physics.resolveEntityCollisions(this.player, 0.6, this.environment.walls, true);
         this.physics.resolveTargetCollisions(this.targetManager.targets);
