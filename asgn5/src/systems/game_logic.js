@@ -28,7 +28,8 @@ export class GameLogic {
             },
             graphics: {
                 shadowQuality: 'normal', // 'low' | 'normal'
-                voxelDensity: 'normal'   // 'low' | 'normal' | 'high'
+                voxelDensity: 'normal',  // 'low' | 'normal' | 'high'
+                enableStrobes: true
             },
             debug: {
                 showSpawnZones: false,

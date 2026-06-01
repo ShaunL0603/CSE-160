@@ -125,6 +125,7 @@ export class UIManager {
         document.getElementById('select-voxel-density').addEventListener('change', (e) => {
             logic.config.graphics.voxelDensity = e.target.value;
         });
+        bindCheckbox('toggle-strobe-lights', 'graphics.enableStrobes');
 
         // Map Selection
         document.getElementById('select-map').addEventListener('change', (e) => {
@@ -186,6 +187,7 @@ export class UIManager {
         if (shadowSelect) shadowSelect.value = logic.config.graphics.shadowQuality;
         const densitySelect = document.getElementById('select-voxel-density');
         if (densitySelect) densitySelect.value = logic.config.graphics.voxelDensity;
+        syncCheckbox('toggle-strobe-lights', logic.config.graphics.enableStrobes);
 
         // Debugger syncs
         syncCheckbox('toggle-debug-zones', logic.config.debug.showSpawnZones);

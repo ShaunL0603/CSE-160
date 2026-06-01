@@ -452,13 +452,14 @@ export class RenderPipeline {
         this.mapStatic.visible = isStaticMap;
         this.mapMoving.visible = !isStaticMap;
 
-
         // Strobelight
+        const strobesEnabled = logic.config.graphics.enableStrobes;
         for (let i = 0; i < 4; i++) {
-            this.strobeLights[i].visible = isStaticMap;
+            this.strobeLights[i].visible = isStaticMap && strobesEnabled;
         }
         // Execute light animations static map
-        if (isStaticMap && !logic.isPaused && dt > 0) {
+        console.log(logic.isPaused);
+        if (isStaticMap && strobesEnabled && !logic.isPaused && dt > 0) {
             // Throttle the math and GPU color uploads to 30Hz for performance
             this.strobeUpdateTimer += dt;
             if (this.strobeUpdateTimer >= 0.033) {
@@ -505,7 +506,6 @@ export class RenderPipeline {
                 }
             }
         }
-
 
         // sync visual meshes dynamically
         this.syncVisualEnvironment(logic, assets);
