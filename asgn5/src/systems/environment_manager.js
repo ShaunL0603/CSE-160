@@ -71,8 +71,8 @@ export class EnvironmentManager {
             this.addWall('solid_west_wall', new THREE.Vector3(-17.5, 5, 0), new THREE.Vector3(1.01, 10.01, 30.01), false);
             this.addVoxelObject('voxel_wall_north', new THREE.Vector3(0, 5, -21.5), new THREE.Vector3(36, 10, 1), densityString, true);
             // first floor main platform
-            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 4.5, -10), new THREE.Vector3(10, 1, 10), densityString, true,);
             this.addSlope('ramp_center', new THREE.Vector3(0, 2.5, -2.75), new THREE.Vector3(3, 5.0, 5.0), -0.5, -5, 0, 5.0);
+            this.addVoxelObject('voxel_platform_center', new THREE.Vector3(0, 4.5, -10), new THREE.Vector3(10, 1, 10), densityString, true,);
             this.addWall('platform_left_connector', new THREE.Vector3(-9, 4.75, -10), new THREE.Vector3(8, 0.5, 4), false, 'wood_floor_texture');
             this.addWall('platform_right_connector', new THREE.Vector3(9, 4.75, -10), new THREE.Vector3(8, 0.5, 4), false, 'wood_floor_texture');
 
@@ -95,8 +95,8 @@ export class EnvironmentManager {
             this.addWall('platform_top_north', new THREE.Vector3(0, 9.75, -19), new THREE.Vector3(36, 0.5, 4), false, 'wood_floor_texture');
             this.addWall('platform_top_south', new THREE.Vector3(0, 9.75, 19), new THREE.Vector3(36, 0.5, 4), false, 'wood_floor_texture');
             this.addWall('platform_top_east', new THREE.Vector3(16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
-            // upper floor, small building
             this.addWall('platform_top_west ', new THREE.Vector3(-16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
+            // small building
             this.addWall('floor_upper', new THREE.Vector3(0, 9.75, 4.5), new THREE.Vector3(10, 0.5, 10), false, 'wood_floor_texture');
             this.addWall('roof_upper', new THREE.Vector3(0, 14, 4.5), new THREE.Vector3(10, 0.5, 10), false);
             this.addWall('south_wall_upper', new THREE.Vector3(0, 12, 9.25), new THREE.Vector3(10, 4, 0.5), false);
@@ -105,7 +105,7 @@ export class EnvironmentManager {
             this.addWall('north_doorway_upper', new THREE.Vector3(-3.25, 11.5, -0.25), new THREE.Vector3(3.5, 3, 0.5), false);
             this.addWall('north_doorway2_upper', new THREE.Vector3(3.25, 11.5, -0.25), new THREE.Vector3(3.5, 3, 0.5), false);
             this.addWall('north_doorway3_upper', new THREE.Vector3(0, 13.25, -0.25), new THREE.Vector3(10, 1, 0.5), false);
-                        
+
             // Spawning Regions
             this.addTargetSpawnZone(new THREE.Vector3(-4, 5.0, -14), new THREE.Vector3(4, 7, -6), 10);  // center platform
             this.addTargetSpawnZone(new THREE.Vector3(-17, 5, -13), new THREE.Vector3(-13, 7, 14), 5);  // left walkway
@@ -114,7 +114,7 @@ export class EnvironmentManager {
 
             this.addModel('witch', 'witch_glb', 
                 new THREE.Vector3(3, 11, 2), new THREE.Vector3(1, 1, 1), 
-                new THREE.Euler(0, -Math.PI * 0.5, 0), assets,
+                new THREE.Euler(0, -3 * Math.PI * 0.25, 0), assets,
                 new THREE.Vector3(0, -1, 1), false
             );
             this.addModel('bears', 'bears_glb', 
@@ -206,8 +206,8 @@ export class EnvironmentManager {
             position: position.clone(),
             size: size.clone(),
             colliderType: 'SLOPE',
-            yStart: physicalYStart + 0.25,
-            yEnd: physicalYEnd + 0.25,
+            yStart: physicalYStart + 0.3,
+            yEnd: physicalYEnd + 0.3,
             isDestructible: false,
             textureKey
         };
