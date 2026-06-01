@@ -97,15 +97,15 @@ export class EnvironmentManager {
             this.addWall('platform_top_east', new THREE.Vector3(16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
             // upper floor, small building
             this.addWall('platform_top_west ', new THREE.Vector3(-16, 9.75, 0), new THREE.Vector3(4, 0.5, 30), false, 'wood_floor_texture');
-            this.addWall('floor_upper_platform', new THREE.Vector3(0, 9.75, 4.5), new THREE.Vector3(10, 0.5, 10), false, 'wood_floor_texture');
-            this.addWall('roof_upper_platform', new THREE.Vector3(0, 14, 4.5), new THREE.Vector3(10, 0.5, 10), false);
-            this.addWall('south_wall_upper_platform', new THREE.Vector3(0, 12, 9.25), new THREE.Vector3(10, 4, 0.5), false);
-            this.addWall('east_wall_upper_platform', new THREE.Vector3(4.75, 12, 4.5), new THREE.Vector3(0.5, 4, 10), false);
-            this.addWall('west_wall_upper_platform', new THREE.Vector3(-4.75, 12, 4.5), new THREE.Vector3(0.5, 4, 10), false);
-            this.addWall('north_doorway_upper_platform', new THREE.Vector3(-3.25, 11.5, -0.25), new THREE.Vector3(3.5, 3, 0.5), false);
-            this.addWall('north_doorway2_upper_platform', new THREE.Vector3(3.25, 11.5, -0.25), new THREE.Vector3(3.5, 3, 0.5), false);
-            this.addWall('north_doorway3_upper_platform', new THREE.Vector3(0, 13.25, -0.25), new THREE.Vector3(10, 1, 0.5), false);
-            
+            this.addWall('floor_upper', new THREE.Vector3(0, 9.75, 4.5), new THREE.Vector3(10, 0.5, 10), false, 'wood_floor_texture');
+            this.addWall('roof_upper', new THREE.Vector3(0, 14, 4.5), new THREE.Vector3(10, 0.5, 10), false);
+            this.addWall('south_wall_upper', new THREE.Vector3(0, 12, 9.25), new THREE.Vector3(10, 4, 0.5), false);
+            this.addWall('east_wall_upper', new THREE.Vector3(4.75, 12, 4.5), new THREE.Vector3(0.5, 4, 10), false);
+            this.addWall('west_wall_upper', new THREE.Vector3(-4.75, 12, 4.5), new THREE.Vector3(0.5, 4, 10), false);
+            this.addWall('north_doorway_upper', new THREE.Vector3(-3.25, 11.5, -0.25), new THREE.Vector3(3.5, 3, 0.5), false);
+            this.addWall('north_doorway2_upper', new THREE.Vector3(3.25, 11.5, -0.25), new THREE.Vector3(3.5, 3, 0.5), false);
+            this.addWall('north_doorway3_upper', new THREE.Vector3(0, 13.25, -0.25), new THREE.Vector3(10, 1, 0.5), false);
+                        
             // Spawning Regions
             this.addTargetSpawnZone(new THREE.Vector3(-4, 5.0, -14), new THREE.Vector3(4, 7, -6), 10);  // center platform
             this.addTargetSpawnZone(new THREE.Vector3(-17, 5, -13), new THREE.Vector3(-13, 7, 14), 5);  // left walkway

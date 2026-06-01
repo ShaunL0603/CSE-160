@@ -20,8 +20,7 @@ export class RenderPipeline {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x0a0a0e);
 
-        this.animationMixers = [];
-
+        
         // Perspective camera configuration
         const fov = 75;
         const aspect = this.canvas.clientWidth / this.canvas.clientHeight;
@@ -29,12 +28,18 @@ export class RenderPipeline {
         const far = 1000;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         this.camera.rotation.order = 'YXZ';
-
+        
         this._pos = new THREE.Vector3();
         this._scale = new THREE.Vector3();
         this._quat = new THREE.Quaternion();
         this._matrix = new THREE.Matrix4();
         this._zeroScale = new THREE.Vector3(0, 0, 0); // hide inactive targets
+        
+        this.animationMixers = [];
+        this.strobeLights = [];
+        this.strobeTargets = [];
+        this.strobeTimer = 0;
+        this.strobeColor = new THREE.Color();
 
         this.initEnvironment();
         this.initResizeHandler();
@@ -42,40 +47,7 @@ export class RenderPipeline {
 
     initEnvironment() {
         // Lighting
-        const ambient = new THREE.AmbientLight(0xffffff, 0.1);
-        this.scene.add(ambient);
-
-        let dirLightX = 25;
-        let dirLightY = 20;
-        let dirLightZ = 25;
-        // temporary, this.dirLight
-        this.dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
-        this.dirLight.position.set(dirLightX, dirLightY, dirLightZ);
-        this.dirLight.target.position.set(0, 0, -5);
-        this.dirLight.shadow.intensity = 1.0;
-        this.dirLight.castShadow = true;
-        // Access the underlying orthographic camera
-        const cam = this.dirLight.shadow.camera;
-        // Define the boundaries of the shadow's orthographic view volume
-        cam.left = -40;
-        cam.right = 40;
-        cam.top = 20;
-        cam.bottom = -20;
-        // Set near and far clipping planes for the shadow
-        cam.near = 0.5;
-        cam.far = 70;
-        // visualize the shadow camera boundaries in scene
-        // const helper = new THREE.CameraHelper(cam);
-        // this.scene.add(helper);
-        this.scene.add(this.dirLight);
-        this.scene.add(this.dirLight.target);
-
-        const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-        const dirLightCube = new THREE.Mesh( geometry, material );
-        dirLightCube.position.set(dirLightX, dirLightY, dirLightZ);
-        dirLightCube.scale.set(0.5, 0.5, 0.5);
-        this.scene.add( dirLightCube );
+        this.initLighting();
 
         // --- Map 1: Moving Targets ---
         this.mapMoving = new THREE.Group();
@@ -118,6 +90,60 @@ export class RenderPipeline {
         this.targetMeshInstances.castShadow = true;
         this.targetMeshInstances.receiveShadow = true;
         this.scene.add(this.targetMeshInstances);
+    }
+
+    initLighting() {
+        const ambient = new THREE.AmbientLight(0xffffff, 0.1);
+        this.scene.add(ambient);
+
+        let dirLightX = 25;
+        let dirLightY = 20;
+        let dirLightZ = 25;
+        // temporary, this.dirLight
+        this.dirLight = new THREE.DirectionalLight(0xffffff, 1.4);
+        this.dirLight.position.set(dirLightX, dirLightY, dirLightZ);
+        this.dirLight.target.position.set(0, 0, -5);
+        this.dirLight.shadow.intensity = 1.0;
+        this.dirLight.castShadow = true;
+        // Access the underlying orthographic camera
+        const cam = this.dirLight.shadow.camera;
+        // Define the boundaries of the shadow's orthographic view volume
+        cam.left = -40;
+        cam.right = 40;
+        cam.top = 20;
+        cam.bottom = -20;
+        // Set near and far clipping planes for the shadow
+        cam.near = 0.5;
+        cam.far = 70;
+        // visualize the shadow camera boundaries in scene
+        // const helper = new THREE.CameraHelper(cam);
+        // this.scene.add(helper);
+        this.scene.add(this.dirLight);
+        this.scene.add(this.dirLight.target);
+
+        const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        const dirLightCube = new THREE.Mesh( geometry, material );
+        dirLightCube.position.set(dirLightX, dirLightY, dirLightZ);
+        dirLightCube.scale.set(0.5, 0.5, 0.5);
+        this.scene.add( dirLightCube );
+
+        const strobeCeilingPos = new THREE.Vector3(0, 13.75, 4.5);
+        // Creating 4 spotlights 
+        for (let i = 0; i < 4; i++) {
+            // Narrow angle (Math.PI / 8)
+            const light = new THREE.SpotLight(0xff0000, 15.0, 6.0, Math.PI / 8, 0.5, 1.0);
+            light.position.copy(strobeCeilingPos);
+            this.scene.add(light);
+            this.strobeLights.push(light);
+
+            const target = new THREE.Object3D();
+            target.position.set(0, 10.0, 4.5);
+            this.scene.add(target);
+            this.strobeTargets.push(target);
+            
+            light.target = target;
+        }
     }
 
     syncVisualEnvironment(logic, assets) {
@@ -427,6 +453,56 @@ export class RenderPipeline {
         const isStaticMap = logic.config.gameplay.mapType === 'static';
         this.mapStatic.visible = isStaticMap;
         this.mapMoving.visible = !isStaticMap;
+
+        // strobelight
+        for (let i = 0; i < 4; i++) {
+            this.strobeLights[i].visible = isStaticMap;
+        }
+        // Strobe Animations on the static map 
+        if (isStaticMap && !logic.isPaused && dt > 0) {
+            const elapsed = performance.now() * 0.001;
+            const orbitSpeed = 1.6; 
+            const orbitRadius = 3.5; 
+            const colorSpeed = 0.20; 
+
+            // Update the 3 lights, orbit, triangular pattern
+            for (let i = 0; i < 3; i++) {
+                // Offset each light by 120 degrees
+                const angleOffset = i * ((Math.PI * 2) / 3);
+                const currentAngle = (elapsed * orbitSpeed) + angleOffset;
+                this.strobeTargets[i].position.set(
+                    Math.cos(currentAngle) * orbitRadius,
+                    10.0, 
+                    4.5 + Math.sin(currentAngle) * orbitRadius 
+                );
+                // Offset color spectrum, always different colors
+                const colorOffset = i * 0.33; 
+                this.strobeColor.setHSL(((elapsed * colorSpeed) + colorOffset) % 1.0, 1.0, 0.5);
+                this.strobeLights[i].color.copy(this.strobeColor);
+            }
+            // 4th strobelight is random
+            // Overlapping sine waves of different frequencies to create chaotic motion
+            this.strobeTargets[3].position.set(
+                Math.cos(elapsed * 2.5) * Math.sin(elapsed * 1.1) * orbitRadius,
+                10.0,
+                4.5 + Math.sin(elapsed * 3.1) * Math.cos(elapsed * 0.8) * orbitRadius
+            );
+            this.strobeColor.setHSL((1.0 - (elapsed * 0.5)) % 1.0, 1.0, 0.5);
+            this.strobeLights[3].color.copy(this.strobeColor);
+
+            // Strobe flashing timer (Square-Wave intensity toggle)
+            this.strobeTimer += dt;
+            const flashRate = 0.12; // Flashes every 120ms
+            if (this.strobeTimer >= flashRate) {
+                this.strobeTimer = 0;
+                
+                // Toggle all lights simultaneously
+                for (let i = 0; i < 4; i++) {
+                    const isOff = this.strobeLights[i].intensity === 0;
+                    this.strobeLights[i].intensity = isOff ? 15.0 : 0;
+                }
+            }
+        }
 
         // sync visual meshes dynamically
         this.syncVisualEnvironment(logic, assets);
