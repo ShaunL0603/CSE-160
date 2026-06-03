@@ -33,16 +33,31 @@
         <div id="main-menu">
             <div class="main-menu-content">
                 <h1>Exploring a High Level Graphics Library</h1>
-                <!-- <h2 class="instruction">Welcome!</h2> -->
+                <h4 class="instruction">
+                    Press start to load in. you can can come back to this menu during gameplay at any time by pressing
+                    the 'I' key.
+                </h4>
                 <!-- Column grid -->
                 <div class="info-columns">
                     <div class="info-box">
                         <h3>Description</h3>
-                        <p>Lorem ipsum</p>
+                        <p>
+                            This is a an expansion to my previous assignments aim trainer style game. You're still able to
+                            shoot, move, and look with a camera.
+                            New featuers added includes the ability to zoom/aim down sights, jump, crouch, and sprint.
+                            You also collide with most objects, apart from the targets and complex models.
+                            The newest and largest addition is the voxel-based destructible environment. Instead of the
+                            MINE mode from the previous assignment, there is a "Destruction" mode where you can left
+                            click (same button as shooting) to destroy voxels. Destruction is based on a blast radius that 
+                            can be changed in the settings. The "physics" is limited to the player and targets. Voxels are  
+                            static and do not fall, but players and targets can interat with them in limited ways.
+                            You can press escape to pause and access settings. Clicking off the tab/browser will also pause 
+                            and bring up the settings menu.
+                        </p>
                     </div>
                     <div class="info-box">
                         <h3>Controls</h3>
-                        <ul>
+                        <ul style="padding-left: 1.2em;">
                             <li>WASD to move</li>
                             <li>SPACE to jump</li>
                             <li>LEFT SHIFT to sprint</li>
@@ -50,13 +65,33 @@
                             <li>V to toggle noclip</li>
                             <li>Z to toggle mode</li>
                             <li>Use mouse to look around</li>
-                            <li>LEFT CLICK to shoot</li>
+                            <li>LEFT CLICK to shoot/destroy</li>
                             <li>RIGHT CLICK to zoom in</li>
+                            <li>ESCAPE to pause and access settings</li>
                         </ul>
                     </div>
                     <div class="info-box">
-                        <h3>Bugs</h3>
-                        <p></p>
+                        <h3>Known Bugs/Issues</h3>
+                        <ul style="padding-left: 1.2em;">
+                            <li>Falling onto a voxel object sometimes causes the player to slide all the way off.</li>
+                            <li>Camera jitters, especially at lower sensitivities.</li>
+                            <li>
+                                With my limited hardware testing, my computer. I typically achieve around 60 FPS. This
+                                can not be said for other devices. Set voxel density and shadow quality to low in the
+                                graphics tab in pause menu for better performance.
+                            </li>
+                            <li>
+                                There's an option to view hitboxes. These were for complex models (e.g. not voxels or 
+                                simple geoemtric shapes) inside the map boundaries. Unfortunately, they don't work, 
+                                don't show up so you, and you can clip through the models.
+                            </li>
+                            <li>Targets on the moving map sometimes slide up the center voxel object.</li>
+                            <li>
+                                There's "strobelights" in the static map. They eat at performance. There intensity is very
+                                low but <span style="color: #ff0000;">do be careful if prone to seizures</span>. 
+                                They can be toggled on or off in the graphics tab of the pause menu.
+                            </li>
+                        </ul>
                     </div>
                 </div>
 

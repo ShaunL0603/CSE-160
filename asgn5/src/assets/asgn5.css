@@ -344,7 +344,13 @@ select {
 }
 
 .info-box p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    color: #88889a;
+    line-height: 1.4;
+}
+
+.info-box ul {
+    font-size: 0.85rem;
     color: #88889a;
     line-height: 1.4;
 }
