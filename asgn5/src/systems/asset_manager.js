@@ -107,7 +107,7 @@ export class AssetManager {
         await Promise.all([...texturePromises, ...modelPromises]);
         
         // Artificial brief delay for loading screens transitions
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise(r => setTimeout(r, 2000));
     }
 
     async loadAudioFile(url, audioContext) {
