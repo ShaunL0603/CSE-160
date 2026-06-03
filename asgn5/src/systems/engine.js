@@ -73,28 +73,18 @@ export class Engine {
                 // this.ui.showLoading(true);
                 this.ui.showSettings(false);
                 this.ui.showMainMenu(false, true);
-                
-                // setTimeout(() => {
-                //     this.logic.applyConfigChanges(this.assets);
-                //     this.isPaused = false;
-                //     // reset lastTime to current instance
-                //     this.lastTime = performance.now() * 0.001;
-                //     this.ui.showLoading(false); // Hide loading screen
-                // }, 50);
+
                 this.logic.applyConfigChanges(this.assets);
                 this.isPaused = false;
                 this.lastTime = performance.now() * 0.001;
             } else {
                 this.input.resetKeys();
-                // this.ui.showSettings(true);
-                // this.ui.syncForm(this.logic);
-                // this.isPaused = true;
-
                 this.isPaused = true;
                 // Menu Routing
-                if (this.input.triggers.info) {
+                if (this.input.requestInfoMenu) {
                     // Player requested the Info Menu via 'I' key
                     this.ui.showMainMenu(true, true);
+                    this.input.requestInfoMenu = false; // reset flag
                 } else {
                     // Default (e.g. Esc or out of winow): show settings menu
                     this.ui.showSettings(true);

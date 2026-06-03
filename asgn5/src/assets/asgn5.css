@@ -146,7 +146,7 @@ select {
 }
 
 .instruction {
-    font-size: 0.9rem;
+    font-size: 1.25srem;
     color: #88889a;
     margin-bottom: 30px;
 }

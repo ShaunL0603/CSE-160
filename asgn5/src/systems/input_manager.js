@@ -20,9 +20,9 @@ export class InputManager {
             noclip: false,
             fire: false,
             modeToggle: false,
-            info: false         // toggle info menu
         }
 
+        this.requestInfoMenu = false; // player pressed 'I'
         // Accumulated mouse coordinates between ticks
         this.mouseDelta = { x: 0, y: 0 };
         this.isLocked = false;
@@ -35,7 +35,7 @@ export class InputManager {
         window.addEventListener('keydown', (e) => {
             if (e.code === 'KeyI') {
                 if (this.isLocked) {
-                    this.triggers.info = true; // Flag that we requested the info menu
+                    this.requestInfoMenu = true; // Flag that we requested the info menu
                     document.exitPointerLock(); // Trigger lock release
                 }
             }
@@ -149,7 +149,7 @@ export class InputManager {
                 break;
             case 'KeyZ':
                 if (!e.repeat) this.triggers.modeToggle = true;
-                break;
+                break; 
         }
     }
 
