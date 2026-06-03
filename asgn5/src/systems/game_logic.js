@@ -46,7 +46,6 @@ export class GameLogic {
         this.environment = new EnvironmentManager();
         this.physics = new PhysicsSystem();
 
-        // this.environment.loadMap(this.config.gameplay.mapType, null, this.config.graphics.voxelDensity);
         // Calculate initial spawns: Static map gets exactly 20 targets, Moving map gets slider count
         const initialCount = this.config.gameplay.mapType === 'static' ? 50 : this.config.gameplay.targetCount;
         this.targetManager.spawnInitial(
@@ -62,6 +61,12 @@ export class GameLogic {
         this._marchPos = new THREE.Vector3();
         this._tempIntersect = new THREE.Vector3();
         this._localHitPoint = new THREE.Vector3();
+        this._intersectPool = Array.from({ length: 10}, () => ({
+            obj: null,
+            dist: 0,
+            entryPoint: new THREE.Vector3()
+        }));
+        this._intersectCount = 0;
 
         this.score = 0;
         this.shotsFired = 0;
@@ -139,46 +144,64 @@ export class GameLogic {
                 // Initialize math ray from camera
                 this._ray.set(this._tempVector, this._lookDir);
 
-                let closestVoxelObj = null;
-                let closestDist = 25;
-                
+                // let closestVoxelObj = null;
+                // let closestDist = 25;
+                this._intersectCount = 0;
                 const voxelObjects = this.environment.voxelObjects;
 
                 // Broad-phase: find closest voxel master bounding box intersected
                 for (let i = 0; i < voxelObjects.length; i++) {
                     const voxelObj = voxelObjects[i];
-
+                    // Player is inside voxel object's bounding box
                     if (voxelObj.boundingBox.containsPoint(this._tempVector)) {
-                        closestVoxelObj = voxelObj;
-                        closestDist = 0;
-                        this._marchPos.copy(this._tempVector);
-                        break;
+                        const entry = this._intersectPool[this._intersectCount];
+                        entry.obj = voxelObj;
+                        entry.dist = 0;
+                        entry.entryPoint.copy(this._tempVector);
+                        this._intersectCount++;
                     }
-
-                    const intersectPoint = this._ray.intersectBox(voxelObj.boundingBox, this._tempIntersect);
-                    if (intersectPoint !== null) {
-                        const dist = this._tempVector.distanceTo(intersectPoint);
-                        if (dist < closestDist) {
-                            closestDist = dist;
-                            closestVoxelObj = voxelObj;
-                            this._marchPos.copy(intersectPoint); // Start raymarching at entry point
+                    // ray intersects bounding box from outside
+                    else {
+                        const intersectPoint = this._ray.intersectBox(voxelObj.boundingBox, this._tempIntersect);
+                        if (intersectPoint !== null) {
+                            const entry = this._intersectPool[this._intersectCount];
+                            entry.obj = voxelObj;
+                            entry.dist = this._tempVector.distanceTo(intersectPoint);
+                            entry.entryPoint.copy(intersectPoint);
+                            this._intersectCount++;
                         }
                     }
                 }
 
-                // Narrow-phase: parametric Ray-Marching inside the voxel object
-                if (closestVoxelObj !== null) {
-                    const s = closestVoxelObj.voxelScale;
-                    const maxMarchDist = 15.0; // Max depth to search
+                // In-place insertion sort to sort intersected objects by distance
+                for (let i = 1; i < this._intersectCount; i++) {
+                    let j = i;
+                    while (j > 0 && this._intersectPool[j].dist < this._intersectPool[j - 1].dist) {
+                        const temp = this._intersectPool[j];
+                        this._intersectPool[j] = this._intersectPool[j - 1];
+                        this._intersectPool[j - 1] = temp;
+                        j--;
+                    }
+                }
+
+                let hitVoxel = false;
+
+                // Narrow-phase: sequentially ray-march through sorted voxel objects
+                for (let k = 0; k < this._intersectCount; k++) {
+                    const entry = this._intersectPool[k];
+                    const voxelObj = entry.obj;
+                    const s = voxelObj.voxelScale;
+                    const maxMarchDist = 25.0; // Max depth to search
                     const stepSize = s * 0.5;  // Half voxel size step to gurantee zero voxel skips
-                    
-                    let hitVoxel = false;
+
+                    this._marchPos.copy(entry.entryPoint);
+                    let hitVoxelInThisObject = false;
 
                     for (let distWalked = 0; distWalked < maxMarchDist; distWalked += stepSize) {
                         // Transform world coordinates to local offsets relative to center
-                        this._localHitPoint.copy(this._marchPos).sub(closestVoxelObj.position);
+                        this._localHitPoint.copy(this._marchPos).sub(voxelObj.position);
 
-                        const { x: w, y: h, z: d } = closestVoxelObj.dimensions;
+                        const { x: w, y: h, z: d } = voxelObj.dimensions;
                         const offsetScalarX = (w - 1) * 0.5;
                         const x = Math.round(this._localHitPoint.x / s + offsetScalarX);
 
@@ -188,9 +211,10 @@ export class GameLogic {
                         const offsetScalarZ = (d - 1) * 0.5;
                         const z = Math.round(this._localHitPoint.z / s + offsetScalarZ);
 
-                        if (closestVoxelObj.isSolid(x, y, z)) {
+                        if (voxelObj.isSolid(x, y, z)) {
                             // First solid voxel found! Trigger destruction
-                            closestVoxelObj.applyExplosion(this._localHitPoint, this.config.gameplay.destructionRadius);
+                            voxelObj.applyExplosion(this._localHitPoint, this.config.gameplay.destructionRadius);
+                            hitVoxelInThisObject = true;
                             hitVoxel = true;
                             break;
                         }
@@ -199,13 +223,13 @@ export class GameLogic {
                         this._marchPos.addScaledVector(this._lookDir, stepSize);
                     }
 
-                    if (hitVoxel) {
-                        audio.synthesizeBeep(120, 0.20, 'sawtooth'); // Deep explosion beep
-                    } else {
-                        audio.synthesizeBeep(220, 0.1, 'sine'); // Solid boundary miss
-                    }
+                    if (hitVoxelInThisObject) break;
+                }
+
+                if (hitVoxel) {
+                    audio.synthesizeBeep(120, 0.20, 'sawtooth'); // Deep explosion beep
                 } else {
-                    audio.synthesizeBeep(220, 0.1, 'sine'); // Complete miss
+                    audio.synthesizeBeep(220, 0.1, 'sine'); // Solid boundary miss
                 }
             }
         }
